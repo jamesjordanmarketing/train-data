@@ -1,0 +1,809 @@
+2025-10-11T22:57:24.400Z [info] 📥 [Extract API] Received extraction request
+2025-10-11T22:57:24.401Z [info] 📥 [Extract API] Document ID: a37e4010-0304-478b-8668-1360778acc48, Force Re-extract: undefined
+2025-10-11T22:57:24.401Z [info] ✅ [Extract API] Environment variables verified
+2025-10-11T22:57:24.402Z [info] ✅ [Extract API] User authenticated: No (using null)
+2025-10-11T22:57:24.402Z [info] 🔍 [Extract API] Checking for existing chunks...
+2025-10-11T22:57:24.517Z [info] 📊 [Extract API] Found 0 existing chunks
+2025-10-11T22:57:24.517Z [info] 🚀 [Extract API] Starting chunk extraction...
+2025-10-11T22:57:25.851Z [info] Starting chunk extraction for document: Shoestring AI SaaS MVP Marketing Guide Short V4
+2025-10-11T22:57:25.851Z [info] Document length: 96077 characters
+2025-10-11T22:57:25.851Z [info] Category: Complete Systems & Methodologies
+2025-10-11T22:57:25.854Z [info] Detected 47 sections, 24688 tokens
+2025-10-11T22:58:24.500Z [info] AI response length: 12790 characters
+2025-10-11T22:58:24.500Z [info] AI response preview: ```json
+[
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.95,
+    "start_line": 1,
+    "end_line": 10,
+    "section_heading": "The Guerrilla AI Launch: Introduction and Part I Overview",
+    "reasoning": "Top-level structural section introducing the document and Part I"
+  },
+  {
+2025-10-11T22:58:24.500Z [info] 🔍 [AI Chunker] Starting to parse AI response...
+2025-10-11T22:58:24.500Z [info] 📝 [AI Chunker] Response length: 12790
+2025-10-11T22:58:24.500Z [info] 📝 [AI Chunker] Response preview: ```json
+[
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.95,
+    "start_line": 1,
+    "end_line": 10,
+    "section_heading": "The Guerrilla AI Launch: Introduction and Part I Overview
+2025-10-11T22:58:24.500Z [info] ℹ️ [AI Chunker] No markdown wrapping detected, using raw response
+2025-10-11T22:58:24.500Z [error] ❌ [AI Chunker] No JSON array found in AI response
+2025-10-11T22:58:24.501Z [error] ❌ [AI Chunker] Full response: ```json
+[
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.95,
+    "start_line": 1,
+    "end_line": 10,
+    "section_heading": "The Guerrilla AI Launch: Introduction and Part I Overview",
+    "reasoning": "Top-level structural section introducing the document and Part I"
+  },
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.98,
+    "start_line": 11,
+    "end_line": 86,
+    "section_heading": "Chapter 1: The Paid-First MVP Mindset: From Minimum Viable to Minimum Valuable",
+    "reasoning": "Major chapter covering the foundational mindset for paid MVPs"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.92,
+    "start_line": 17,
+    "end_line": 47,
+    "section_heading": "Redefining the MVP for a Paid World",
+    "reasoning": "Claim about MVP redefinition with evidence from sources and reasoning about prioritization"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.94,
+    "start_line": 32,
+    "end_line": 47,
+    "section_heading": "MVP Feature Prioritization Questions",
+    "reasoning": "Step-by-step procedure with 5 critical questions for feature prioritization"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.90,
+    "start_line": 51,
+    "end_line": 75,
+    "section_heading": "The Psychology of 'Early Access' vs. 'Beta Testing'",
+    "reasoning": "Claim about language framing with evidence about psychological impact and positioning"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.93,
+    "start_line": 79,
+    "end_line": 119,
+    "section_heading": "Validating the Problem and the Price Point Simultaneously",
+    "reasoning": "Claim about concurrent validation with evidence and reasoning about customer interviews"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.96,
+    "start_line": 95,
+    "end_line": 107,
+    "section_heading": "Validation Interview Question Framework",
+    "reasoning": "Procedural steps for conducting validation interviews with specific question examples"
+  },
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.98,
+    "start_line": 121,
+    "end_line": 221,
+    "section_heading": "Chapter 2: Crafting a High-Resonance Value Proposition for AI",
+    "reasoning": "Major chapter on value proposition development for AI SaaS"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.95,
+    "start_line": 129,
+    "end_line": 162,
+    "section_heading": "The Anatomy of a SaaS Value Proposition",
+    "reasoning": "Step-by-step breakdown of three essential elements for value propositions"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.91,
+    "start_line": 166,
+    "end_line": 215,
+    "section_heading": "The AI Translation Layer: Messaging for a Mixed Audience",
+    "reasoning": "Claim about audience segmentation with evidence for different messaging strategies"
+  },
+  {
+    "chunk_type": "Example_Scenario",
+    "confidence": 0.89,
+    "start_line": 172,
+    "end_line": 185,
+    "section_heading": "Messaging for AI Enthusiasts and Developers",
+    "reasoning": "Specific example scenario with sample value proposition for technical audience"
+  },
+  {
+    "chunk_type": "Example_Scenario",
+    "confidence": 0.88,
+    "start_line": 186,
+    "end_line": 200,
+    "section_heading": "Messaging for Corporate AI Implementers",
+    "reasoning": "Case example of messaging strategy for IT managers with sample value prop"
+  },
+  {
+    "chunk_type": "Example_Scenario",
+    "confidence": 0.87,
+    "start_line": 201,
+    "end_line": 215,
+    "section_heading": "Messaging for Non-Technical Business Owners",
+    "reasoning": "Example scenario showing how to simplify AI messaging for non-technical audience"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.90,
+    "start_line": 219,
+    "end_line": 246,
+    "section_heading": "Addressing AI-Specific Concerns: Privacy and Ethics",
+    "reasoning": "Claim about privacy-first marketing with evidence and reasoning about trust building"
+  },
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.98,
+    "start_line": 248,
+    "end_line": 355,
+    "section_heading": "Chapter 3: Strategic Pricing and Positioning for Early Adopters",
+    "reasoning": "Major chapter covering pricing strategies for MVP launch"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.94,
+    "start_line": 259,
+    "end_line": 310,
+    "section_heading": "Choosing Your MVP Pricing Model",
+    "reasoning": "Procedural guide through five different pricing models with implementation details"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.91,
+    "start_line": 314,
+    "end_line": 337,
+    "section_heading": "The 'Early Adopter' Landing Page",
+    "reasoning": "Claim about landing page positioning with evidence about language and waitlist strategy"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.89,
+    "start_line": 341,
+    "end_line": 355,
+    "section_heading": "Communicating Value to Justify the Cost",
+    "reasoning": "Claim about value communication with reasoning about pricing as quality indicator"
+  },
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.97,
+    "start_line": 357,
+    "end_line": 364,
+    "section_heading": "Part II: The Organic Engine: Building Authority and Community from Day Zero",
+    "reasoning": "Top-level structural section introducing Part II"
+  },
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.98,
+    "start_line": 366,
+    "end_line": 476,
+    "section_heading": "Chapter 4: Content as a Trojan Horse: Establishing Technical Authority",
+    "reasoning": "Major chapter on content strategy for technical credibility"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.96,
+    "start_line": 376,
+    "end_line": 422,
+    "section_heading": "Mapping Content to the AI Buyer Journey",
+    "reasoning": "Step-by-step procedure mapping content types to three buyer stages"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.92,
+    "start_line": 426,
+    "end_line": 451,
+    "section_heading": "Choosing the Right Content Formats for a Technical Audience",
+    "reasoning": "Claim about content format effectiveness with evidence for technical audiences"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.93,
+    "start_line": 455,
+    "end_line": 476,
+    "section_heading": "Writing for Developers: Clarity, Accuracy, and No Fluff",
+    "reasoning": "Claim about writing style with evidence and reasoning about developer preferences"
+  },
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.98,
+    "start_line": 478,
+    "end_line": 596,
+    "section_heading": "Chapter 5: The Long-Tail SEO Gambit: Winning Niche Search without a Budget",
+    "reasoning": "Major chapter on long-tail SEO strategy for bootstrapped startups"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.94,
+    "start_line": 486,
+    "end_line": 513,
+    "section_heading": "The Philosophy of Long-Tail Keywords for B2B SaaS",
+    "reasoning": "Claim about long-tail keyword advantages with evidence about conversion and competition"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.97,
+    "start_line": 517,
+    "end_line": 565,
+    "section_heading": "Step-by-Step Niche Keyword Research Process",
+    "reasoning": "Detailed 5-step procedure for finding and prioritizing long-tail keywords"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.92,
+    "start_line": 569,
+    "end_line": 596,
+    "section_heading": "Building Topical Authority with Content Clusters",
+    "reasoning": "Claim about topic cluster model with evidence about internal linking and SEO authority"
+  },
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.98,
+    "start_line": 598,
+    "end_line": 706,
+    "section_heading": "Chapter 6: The Build-in-Public Flywheel: From Transparency to Trust",
+    "reasoning": "Major chapter on building in public strategy"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.91,
+    "start_line": 606,
+    "end_line": 630,
+    "section_heading": "The 'Build in Public' (BiP) Framework",
+    "reasoning": "Claim about radical transparency with evidence about trust building and community"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.95,
+    "start_line": 634,
+    "end_line": 660,
+    "section_heading": "Choosing Your Channels and Transparency Level",
+    "reasoning": "Procedural guide for selecting platforms and transparency levels for BiP"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.96,
+    "start_line": 664,
+    "end_line": 706,
+    "section_heading": "A Practical Content Calendar for BiP on Twitter/X and LinkedIn",
+    "reasoning": "Step-by-step content calendar with daily, weekly, and monthly posting procedures"
+  },
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.98,
+    "start_line": 708,
+    "end_line": 826,
+    "section_heading": "Chapter 7: Mastering Niche Communities: Reddit & Hacker News Engagement",
+    "reasoning": "Major chapter on community engagement strategies"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.94,
+    "start_line": 720,
+    "end_line": 755,
+    "section_heading": "The Unwritten Rules of Reddit Marketing",
+    "reasoning": "Procedural guide with specific steps for authentic Reddit engagement"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.97,
+    "start_line": 759,
+    "end_line": 826,
+    "section_heading": "The Hacker News 'Show HN' Playbook",
+    "reasoning": "Detailed step-by-step procedure for successful Hacker News launch"
+  },
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.97,
+    "start_line": 828,
+    "end_line": 835,
+    "section_heading": "Part III: The Launchpad: Generating High-Impact Buzz",
+    "reasoning": "Top-level structural section introducing Part III"
+  },
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.98,
+    "start_line": 837,
+    "end_line": 947,
+    "section_heading": "Chapter 8: Guerrilla Marketing for the Digital Age",
+    "reasoning": "Major chapter on guerrilla marketing tactics"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.90,
+    "start_line": 847,
+    "end_line": 865,
+    "section_heading": "Core Principles of Digital Guerrilla Marketing",
+    "reasoning": "Claim about guerrilla marketing principles with evidence about creativity and targeting"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.95,
+    "start_line": 869,
+    "end_line": 947,
+    "section_heading": "Digital Guerrilla Tactics for an AI SaaS MVP",
+    "reasoning": "Five-tactic procedural guide with specific implementation steps for each tactic"
+  },
+  {
+    "chunk_type": "Example_Scenario",
+    "confidence": 0.88,
+    "start_line": 872,
+    "end_line": 893,
+    "section_heading": "Crash the Party Digitally Tactic",
+    "reasoning": "Detailed example scenario of competitor event hijacking with execution steps"
+  },
+  {
+    "chunk_type": "Example_Scenario",
+    "confidence": 0.87,
+    "start_line": 894,
+    "end_line": 912,
+    "section_heading": "The Free Tool or Snippet Offer Tactic",
+    "reasoning": "Case example of lead magnet strategy with HubSpot reference"
+  },
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.98,
+    "start_line": 949,
+    "end_line": 1042,
+    "section_heading": "Chapter 9: The Product Hunt Launch Blueprint",
+    "reasoning": "Major chapter providing comprehensive Product Hunt launch strategy"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.97,
+    "start_line": 959,
+    "end_line": 997,
+    "section_heading": "Pre-Launch (2-4 Weeks Before)",
+    "reasoning": "Detailed procedural checklist for Product Hunt pre-launch preparation"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.96,
+    "start_line": 1001,
+    "end_line": 1024,
+    "section_heading": "Launch Day (The 24-Hour Sprint)",
+    "reasoning": "Step-by-step procedure for executing Product Hunt launch day activities"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.93,
+    "start_line": 1028,
+    "end_line": 1042,
+    "section_heading": "Post-Launch",
+    "reasoning": "Procedural steps for post-launch follow-through and analysis"
+  },
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.98,
+    "start_line": 1044,
+    "end_line": 1166,
+    "section_heading": "Chapter 10: Punching Above Your Weight: The Scrappy PR and Media Plan",
+    "reasoning": "Major chapter on guerrilla PR strategy without agency budget"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.92,
+    "start_line": 1054,
+    "end_line": 1078,
+    "section_heading": "Finding Your Newsworthy Story Angle",
+    "reasoning": "Claim about story framing with evidence about what journalists want"
+2025-10-11T22:58:24.501Z [error] ❌ [AI Chunker] Processed jsonText: ```json
+[
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.95,
+    "start_line": 1,
+    "end_line": 10,
+    "section_heading": "The Guerrilla AI Launch: Introduction and Part I Overview",
+    "reasoning": "Top-level structural section introducing the document and Part I"
+  },
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.98,
+    "start_line": 11,
+    "end_line": 86,
+    "section_heading": "Chapter 1: The Paid-First MVP Mindset: From Minimum Viable to Minimum Valuable",
+    "reasoning": "Major chapter covering the foundational mindset for paid MVPs"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.92,
+    "start_line": 17,
+    "end_line": 47,
+    "section_heading": "Redefining the MVP for a Paid World",
+    "reasoning": "Claim about MVP redefinition with evidence from sources and reasoning about prioritization"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.94,
+    "start_line": 32,
+    "end_line": 47,
+    "section_heading": "MVP Feature Prioritization Questions",
+    "reasoning": "Step-by-step procedure with 5 critical questions for feature prioritization"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.90,
+    "start_line": 51,
+    "end_line": 75,
+    "section_heading": "The Psychology of 'Early Access' vs. 'Beta Testing'",
+    "reasoning": "Claim about language framing with evidence about psychological impact and positioning"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.93,
+    "start_line": 79,
+    "end_line": 119,
+    "section_heading": "Validating the Problem and the Price Point Simultaneously",
+    "reasoning": "Claim about concurrent validation with evidence and reasoning about customer interviews"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.96,
+    "start_line": 95,
+    "end_line": 107,
+    "section_heading": "Validation Interview Question Framework",
+    "reasoning": "Procedural steps for conducting validation interviews with specific question examples"
+  },
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.98,
+    "start_line": 121,
+    "end_line": 221,
+    "section_heading": "Chapter 2: Crafting a High-Resonance Value Proposition for AI",
+    "reasoning": "Major chapter on value proposition development for AI SaaS"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.95,
+    "start_line": 129,
+    "end_line": 162,
+    "section_heading": "The Anatomy of a SaaS Value Proposition",
+    "reasoning": "Step-by-step breakdown of three essential elements for value propositions"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.91,
+    "start_line": 166,
+    "end_line": 215,
+    "section_heading": "The AI Translation Layer: Messaging for a Mixed Audience",
+    "reasoning": "Claim about audience segmentation with evidence for different messaging strategies"
+  },
+  {
+    "chunk_type": "Example_Scenario",
+    "confidence": 0.89,
+    "start_line": 172,
+    "end_line": 185,
+    "section_heading": "Messaging for AI Enthusiasts and Developers",
+    "reasoning": "Specific example scenario with sample value proposition for technical audience"
+  },
+  {
+    "chunk_type": "Example_Scenario",
+    "confidence": 0.88,
+    "start_line": 186,
+    "end_line": 200,
+    "section_heading": "Messaging for Corporate AI Implementers",
+    "reasoning": "Case example of messaging strategy for IT managers with sample value prop"
+  },
+  {
+    "chunk_type": "Example_Scenario",
+    "confidence": 0.87,
+    "start_line": 201,
+    "end_line": 215,
+    "section_heading": "Messaging for Non-Technical Business Owners",
+    "reasoning": "Example scenario showing how to simplify AI messaging for non-technical audience"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.90,
+    "start_line": 219,
+    "end_line": 246,
+    "section_heading": "Addressing AI-Specific Concerns: Privacy and Ethics",
+    "reasoning": "Claim about privacy-first marketing with evidence and reasoning about trust building"
+  },
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.98,
+    "start_line": 248,
+    "end_line": 355,
+    "section_heading": "Chapter 3: Strategic Pricing and Positioning for Early Adopters",
+    "reasoning": "Major chapter covering pricing strategies for MVP launch"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.94,
+    "start_line": 259,
+    "end_line": 310,
+    "section_heading": "Choosing Your MVP Pricing Model",
+    "reasoning": "Procedural guide through five different pricing models with implementation details"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.91,
+    "start_line": 314,
+    "end_line": 337,
+    "section_heading": "The 'Early Adopter' Landing Page",
+    "reasoning": "Claim about landing page positioning with evidence about language and waitlist strategy"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.89,
+    "start_line": 341,
+    "end_line": 355,
+    "section_heading": "Communicating Value to Justify the Cost",
+    "reasoning": "Claim about value communication with reasoning about pricing as quality indicator"
+  },
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.97,
+    "start_line": 357,
+    "end_line": 364,
+    "section_heading": "Part II: The Organic Engine: Building Authority and Community from Day Zero",
+    "reasoning": "Top-level structural section introducing Part II"
+  },
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.98,
+    "start_line": 366,
+    "end_line": 476,
+    "section_heading": "Chapter 4: Content as a Trojan Horse: Establishing Technical Authority",
+    "reasoning": "Major chapter on content strategy for technical credibility"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.96,
+    "start_line": 376,
+    "end_line": 422,
+    "section_heading": "Mapping Content to the AI Buyer Journey",
+    "reasoning": "Step-by-step procedure mapping content types to three buyer stages"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.92,
+    "start_line": 426,
+    "end_line": 451,
+    "section_heading": "Choosing the Right Content Formats for a Technical Audience",
+    "reasoning": "Claim about content format effectiveness with evidence for technical audiences"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.93,
+    "start_line": 455,
+    "end_line": 476,
+    "section_heading": "Writing for Developers: Clarity, Accuracy, and No Fluff",
+    "reasoning": "Claim about writing style with evidence and reasoning about developer preferences"
+  },
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.98,
+    "start_line": 478,
+    "end_line": 596,
+    "section_heading": "Chapter 5: The Long-Tail SEO Gambit: Winning Niche Search without a Budget",
+    "reasoning": "Major chapter on long-tail SEO strategy for bootstrapped startups"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.94,
+    "start_line": 486,
+    "end_line": 513,
+    "section_heading": "The Philosophy of Long-Tail Keywords for B2B SaaS",
+    "reasoning": "Claim about long-tail keyword advantages with evidence about conversion and competition"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.97,
+    "start_line": 517,
+    "end_line": 565,
+    "section_heading": "Step-by-Step Niche Keyword Research Process",
+    "reasoning": "Detailed 5-step procedure for finding and prioritizing long-tail keywords"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.92,
+    "start_line": 569,
+    "end_line": 596,
+    "section_heading": "Building Topical Authority with Content Clusters",
+    "reasoning": "Claim about topic cluster model with evidence about internal linking and SEO authority"
+  },
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.98,
+    "start_line": 598,
+    "end_line": 706,
+    "section_heading": "Chapter 6: The Build-in-Public Flywheel: From Transparency to Trust",
+    "reasoning": "Major chapter on building in public strategy"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.91,
+    "start_line": 606,
+    "end_line": 630,
+    "section_heading": "The 'Build in Public' (BiP) Framework",
+    "reasoning": "Claim about radical transparency with evidence about trust building and community"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.95,
+    "start_line": 634,
+    "end_line": 660,
+    "section_heading": "Choosing Your Channels and Transparency Level",
+    "reasoning": "Procedural guide for selecting platforms and transparency levels for BiP"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.96,
+    "start_line": 664,
+    "end_line": 706,
+    "section_heading": "A Practical Content Calendar for BiP on Twitter/X and LinkedIn",
+    "reasoning": "Step-by-step content calendar with daily, weekly, and monthly posting procedures"
+  },
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.98,
+    "start_line": 708,
+    "end_line": 826,
+    "section_heading": "Chapter 7: Mastering Niche Communities: Reddit & Hacker News Engagement",
+    "reasoning": "Major chapter on community engagement strategies"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.94,
+    "start_line": 720,
+    "end_line": 755,
+    "section_heading": "The Unwritten Rules of Reddit Marketing",
+    "reasoning": "Procedural guide with specific steps for authentic Reddit engagement"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.97,
+    "start_line": 759,
+    "end_line": 826,
+    "section_heading": "The Hacker News 'Show HN' Playbook",
+    "reasoning": "Detailed step-by-step procedure for successful Hacker News launch"
+  },
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.97,
+    "start_line": 828,
+    "end_line": 835,
+    "section_heading": "Part III: The Launchpad: Generating High-Impact Buzz",
+    "reasoning": "Top-level structural section introducing Part III"
+  },
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.98,
+    "start_line": 837,
+    "end_line": 947,
+    "section_heading": "Chapter 8: Guerrilla Marketing for the Digital Age",
+    "reasoning": "Major chapter on guerrilla marketing tactics"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.90,
+    "start_line": 847,
+    "end_line": 865,
+    "section_heading": "Core Principles of Digital Guerrilla Marketing",
+    "reasoning": "Claim about guerrilla marketing principles with evidence about creativity and targeting"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.95,
+    "start_line": 869,
+    "end_line": 947,
+    "section_heading": "Digital Guerrilla Tactics for an AI SaaS MVP",
+    "reasoning": "Five-tactic procedural guide with specific implementation steps for each tactic"
+  },
+  {
+    "chunk_type": "Example_Scenario",
+    "confidence": 0.88,
+    "start_line": 872,
+    "end_line": 893,
+    "section_heading": "Crash the Party Digitally Tactic",
+    "reasoning": "Detailed example scenario of competitor event hijacking with execution steps"
+  },
+  {
+    "chunk_type": "Example_Scenario",
+    "confidence": 0.87,
+    "start_line": 894,
+    "end_line": 912,
+    "section_heading": "The Free Tool or Snippet Offer Tactic",
+    "reasoning": "Case example of lead magnet strategy with HubSpot reference"
+  },
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.98,
+    "start_line": 949,
+    "end_line": 1042,
+    "section_heading": "Chapter 9: The Product Hunt Launch Blueprint",
+    "reasoning": "Major chapter providing comprehensive Product Hunt launch strategy"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.97,
+    "start_line": 959,
+    "end_line": 997,
+    "section_heading": "Pre-Launch (2-4 Weeks Before)",
+    "reasoning": "Detailed procedural checklist for Product Hunt pre-launch preparation"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.96,
+    "start_line": 1001,
+    "end_line": 1024,
+    "section_heading": "Launch Day (The 24-Hour Sprint)",
+    "reasoning": "Step-by-step procedure for executing Product Hunt launch day activities"
+  },
+  {
+    "chunk_type": "Instructional_Unit",
+    "confidence": 0.93,
+    "start_line": 1028,
+    "end_line": 1042,
+    "section_heading": "Post-Launch",
+    "reasoning": "Procedural steps for post-launch follow-through and analysis"
+  },
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.98,
+    "start_line": 1044,
+    "end_line": 1166,
+    "section_heading": "Chapter 10: Punching Above Your Weight: The Scrappy PR and Media Plan",
+    "reasoning": "Major chapter on guerrilla PR strategy without agency budget"
+  },
+  {
+    "chunk_type": "CER",
+    "confidence": 0.92,
+    "start_line": 1054,
+    "end_line": 1078,
+    "section_heading": "Finding Your Newsworthy Story Angle",
+    "reasoning": "Claim about story framing with evidence about what journalists want"
+2025-10-11T22:58:24.502Z [error] Failed to parse extraction response: Error: No JSON array found in response
+    at h.parseExtractionResponse (/var/task/src/.next/server/app/api/chunks/extract/route.js:89:834)
+    at h.extractChunks (/var/task/src/.next/server/app/api/chunks/extract/route.js:1:3392)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async p.extractChunksForDocument (/var/task/src/.next/server/app/api/chunks/extract/route.js:92:327)
+    at async k (/var/task/src/.next/server/app/api/chunks/extract/route.js:92:3525)
+    at async /var/task/src/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38411
+    at async e_.execute (/var/task/src/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:27880)
+    at async e_.handle (/var/task/src/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:39943)
+    at async en (/var/task/src/node_modules/next/dist/compiled/next-server/server.runtime.prod.js:16:25561)
+    at async ea.responseCache.get.routeKind (/var/task/src/node_modules/next/dist/compiled/next-server/server.runtime.prod.js:17:1028)
+2025-10-11T22:58:24.502Z [error] Response was: ```json
+[
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.95,
+    "start_line": 1,
+    "end_line": 10,
+    "section_heading": "The Guerrilla AI Launch: Introduction and Part I Overview",
+    "reasoning": "Top-level structural section introducing the document and Part I"
+  },
+  {
+    "chunk_type": "Chapter_Sequential",
+    "confidence": 0.98,
+    "start_line": 11,
+    "end_line": 86,
+    "section_heading": "Chapter 1: The Paid-First MVP Mindset: From Minimum Viable to Minimum Valu
+2025-10-11T22:58:24.502Z [info] Parsed 0 chunk candidates from AI response
+2025-10-11T22:58:24.502Z [info] After applying limits: 0 chunks
+2025-10-11T22:58:24.971Z [info] ✅ [Extract API] Extracted 0 chunks
+2025-10-11T22:58:24.971Z [info] 📝 [Extract API] Updating extraction job status...
+2025-10-11T22:58:25.198Z [info] ✅ [Extract API] Updated job fc16e05f-697c-4c45-94a7-4b162618eafa to generating_dimensions
+2025-10-11T22:58:25.198Z [info] 🎯 [Extract API] Starting dimension generation...
+2025-10-11T22:58:26.059Z [info] ✅ [Extract API] Dimension generation completed with run ID: 942b2e4f-3893-4f2a-8d3a-7fe0445d8088
+2025-10-11T22:58:26.173Z [info] ✅ [Extract API] Updated job fc16e05f-697c-4c45-94a7-4b162618eafa to completed
+2025-10-11T22:58:26.173Z [info] 🎉 [Extract API] Extraction successful! Returning response...

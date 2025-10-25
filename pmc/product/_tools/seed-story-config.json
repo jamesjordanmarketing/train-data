@@ -1,0 +1,62 @@
+{
+  "seed-narrative": {
+    "promptPath": "../_prompt_engineering/00-product-seed-narrative-prompt-template_v1.md",
+    "required_placeholders": {
+      "PROJECT_NAME": {
+        "type": "text",
+        "default": "{{project_name}}"
+      },
+      "SEED_NARRATIVE_TEMPLATE_PATH": {
+        "type": "template_path",
+        "default": "product/_templates/00-seed-narrative-template.md"
+      },
+      "RAW_DATA_PATH": {
+        "type": "seed_path",
+        "default": "product/_seeds/seed-narrative-v1.md"
+      },
+      "REFERENCE_EXAMPLE_PATH": {
+        "type": "example_path",
+        "default": "product/_examples/00-aplio-mod-1-seed-narrative.md"
+      },
+      "OUTPUT_PATH": {
+        "type": "product_path",
+        "default": "00-{{project_abbreviation}}-seed-narrative.md"
+      }
+    },
+    "conditional_sections": {
+      "current_status": {
+        "path_variable": "CODEBASE_REVIEW_PATH"
+      }
+    }
+  },
+  "seed-story": {
+    "promptPath": "../_prompt_engineering/00-product-seed-story-prompt-template_v1.md",
+    "required_placeholders": {
+      "PROJECT_NAME": {
+        "type": "text",
+        "default": "{{project_name}}"
+      },
+      "SEED_STORY_TEMPLATE_PATH": {
+        "type": "template_path",
+        "default": "product/_templates/00-seed-story-template.md"
+      },
+      "SEED_NARRATIVE_PATH": {
+        "type": "product_path",
+        "default": "product/00-{{project_abbreviation}}-seed-narrative.md"
+      },
+      "REFERENCE_EXAMPLE_PATH": {
+        "type": "example_path",
+        "default": "product/_examples/00-aplio-mod-1-seed-story.md"
+      },
+      "OUTPUT_PATH": {
+        "type": "product_path",
+        "default": "product/00-{{project_abbreviation}}-seed-story.md"
+      }
+    },
+    "conditional_sections": {
+      "current_status": {
+        "path_variable": "CODEBASE_REVIEW_PATH"
+      }
+    }
+  }
+} 

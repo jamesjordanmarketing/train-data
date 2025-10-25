@@ -1,0 +1,61 @@
+Field,Description,Type,Allowed_Values_Format,Example
+Doc_ID,Unique identifier for the source document.,string,,DOC_2025_001
+Doc_Title,Human-readable title of the document.,string,,Bright Run Playbook v2
+Doc_Version,Document version tag or semver.,string,,v1.3.0
+Source_Type,Ingest source format.,enum,pdf | docx | html | markdown | email | transcript | notion | spreadsheet | image+OCR,pdf
+Source_URL,Canonical URL or file path for provenance.,string(url|uri),,https://example.com/playbook.pdf
+Author,Document author or organization.,string,,BRAND Team
+Doc_Date,Date of original authorship or publication.,date(YYYY-MM-DD),,2025-07-15
+Chunk_ID,Stable unique ID for this chunk.,string,,DOC_2025_001#C032
+Chunk_Type,Structural role of the chunk.,enum,Chapter_Sequential | Instructional_Unit | CER | Example_Scenario (extensible),Instructional_Unit
+Primary_Category,User-centric category (pick one) for business meaning.,enum,"Core IP — Complete System (Author: BRAND) | Core IP — Major System Component (Author: BRAND) | Proprietary Strategy/Method (Author: BRAND) | Proprietary Insight/Framework Fragment (Author: BRAND) | Operational Playbook / Step-by-Step (Author: BRAND) | Signature Story / Origin / Distinctive Narrative (Author: BRAND) | Marketing Narrative — Benefits (Author: BRAND, non-divulgence) | Customer Conversation / Proof h-1 / h-2 / h-3 | External / Third-Party — Non-IP",Operational Playbook / Step-by-Step (Author: BRAND)
+Section_Heading,Nearest section or heading title.,string,,Stage 2: Categorize Documents
+Page_Start,First page number covered by the chunk.,integer,>=1,12
+Page_End,Last page number covered by the chunk.,integer,>=Page_Start,13
+Char_Start,Character index start in the document (0-based).,integer,>=0,8450
+Char_End,Character index end (exclusive).,integer,>Char_Start,9875
+Token_Count,Model token count for the chunk text.,integer,>=1,512
+Overlap_Tokens,Number of tokens overlapped with previous chunk.,integer,>=0,64
+Chunk_Handle,Short slug/handle for referencing the chunk.,string,,stage2-categorize-overview
+Chunk_Summary_1s,One-sentence summary (<= 30 words).,string,<= 240 chars,Explains how to label document chunks for LoRA training and compliance.
+Key_Terms,Pipe- or comma-separated salient terms.,list[string],comma or pipe delimited,LoRA|brand voice|categorization|instruction-tuning
+Audience,Intended reader/user persona.,string,,SMB Owners; Ops Managers
+Intent,Author’s primary intent for this chunk.,enum,educate | instruct | persuade | inform | narrate | summarize | compare | evaluate,instruct
+Tone_Voice_Tags,Style/voice descriptors.,list[string],comma or pipe delimited,"authoritative, pragmatic, clear"
+Brand_Persona_Tags,Brand identity traits relevant to voice.,list[string],comma or pipe delimited,"trusted advisor, data-driven"
+Domain_Tags,Topic/domain taxonomy labels.,list[string],comma or pipe delimited,"B2B Marketing, AI Ops"
+Task_Name,Primary task/procedure name captured by the chunk.,string,,Create Document Categories
+Preconditions,Requirements before executing the task.,string,,Access to the Categorization module; documents uploaded
+Inputs,Inputs/resources needed to perform the task.,string,,Uploaded PDFs; taxonomy definitions
+Steps_JSON,Canonical steps in minimal JSON.,json,"[{""step"":""..."", ""details"":""...""}]","[{""step"":""Open Categorizer""},{""step"":""Assign Primary Category""}]"
+Expected_Output,What success looks like if steps are followed.,string,,Each chunk labeled with Primary Category and Chunk Type
+Warnings_Failure_Modes,Known pitfalls and failure conditions.,string,,Mislabeling CER as Example; missing citations
+Claim,Main assertion stated in this chunk.,string,,Structured chunk labels improve model faithfulness.
+Evidence_Snippets,Quoted or paraphrased evidence supporting the claim.,list[string],comma/pipe delimited or JSON array,"""A/B tests showed 9% fewer hallucinations"""
+Reasoning_Sketch,High-level rationale (concise; no verbose chain-of-thought).,string,,Labels constrain retrieval and guide selection → more faithful answers.
+Citations,Sources/links/DOIs supporting evidence.,list[string],comma/pipe delimited,https://example.com/whitepaper
+Factual_Confidence_0_1,Confidence score for factuality (0–1).,float,0.0–1.0,0.85
+Scenario_Type,Type of example or application.,enum,case_study | dialogue | Q&A | walkthrough | anecdote,case_study
+Problem_Context,Real-world context of the example.,string,,Local HVAC company launching a maintenance plan
+Solution_Action,Action taken in the example.,string,,Applied categorizer; built instruction-tuning pairs
+Outcome_Metrics,Measured results or KPIs.,string,,+18% response rate; 2x faster drafting
+Style_Notes,Narrative/style attributes to mimic.,string,,"Conversational, concrete, with numbers"
+Prompt_Candidate,Potential user prompt distilled from the chunk.,string,,Draft a step-by-step checklist to categorize documents.
+Target_Answer,"Ideal answer (concise, brand-aligned).",string,,A numbered checklist with compliance notes.
+Style_Directives,Formatting/voice directives for answers.,string,,Use numbered steps; avoid jargon; keep to 150–250 words.
+Safety_Tags,Sensitive-topic flags for filtering/guardrails.,list[string],comma or pipe delimited,"medical_advice, legal_disclaimer"
+Coverage_Tag,How central this chunk is to the domain.,enum/string,core | supporting | edge,core
+Novelty_Tag,Whether content is common or unique IP.,enum/string,novel | common | disputed,novel
+IP_Sensitivity,Confidentiality level for IP handling.,enum,Public | Internal | Confidential | Trade_Secret,Confidential
+PII_Flag,Indicates presence of personal data.,boolean,true | false,FALSE
+Compliance_Flags,Regulatory or policy flags.,list[string],comma or pipe delimited,"copyright_third_party, trademark"
+Embedding_ID,Identifier for stored vector embedding.,string,,embed_3f9ac2
+Vector_Checksum,Checksum/hash for the vector payload.,string,,sha256:7b9...
+Label_Source_Auto_Manual_Mixed,Provenance of labels.,enum,auto | manual | mixed,mixed
+Label_Model,Model name/version used for auto-labels.,string,,gpt-5-large-2025-09
+Labeled_By,Human labeler (name/initials) or 'auto'.,string,,auto
+Label_Timestamp_ISO,Timestamp when labels were created.,datetime(ISO8601),YYYY-MM-DDThh:mm:ssZ,2025-09-28T15:20:11Z
+Review_Status,Human QA review status.,enum,unreviewed | approved | needs_changes | rejected,unreviewed
+Include_In_Training_YN,Whether to use this chunk in training.,boolean,Y | N | true | false,Y
+Data_Split_Train_Dev_Test,Dataset split allocation.,enum,train | dev | test,train
+Augmentation_Notes,Notes on paraphrase/style/noise augmentation.,string,,Paraphrase x2; style-transfer to 'friendly'

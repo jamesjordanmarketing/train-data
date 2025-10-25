@@ -1,0 +1,5 @@
+{
+  "SEED_STORY_PATH": "00-bmo-seed-story.md",
+  "OVERVIEW_TEMPLATE_PATH": "_templates/01-overview-template.md",
+  "REFERENCE_EXAMPLE_PATH": "_examples/01-aplio-mod-1-overview.md"
+}

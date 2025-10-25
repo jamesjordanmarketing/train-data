@@ -1,0 +1,41 @@
+Conv ID,Template Type (A-E),Topic,Persona Age,Persona Income,Emotional Start,Emotional End,Turn Count,Key Learning Objective,Notes
+11,A,Roth IRA conversion confusion,52,145000,Confusion,Clarity,4,Tax bracket impact analysis,Mid-career professional approaching retirement
+12,A,HSA vs FSA decision paralysis,29,68000,Overwhelm,Clarity,4,Healthcare account selection,Young professional with health concerns
+13,A,Pension vs lump sum choice,61,95000,Confusion,Confidence,5,Retirement income strategy,Near-retirement decision point
+14,A,Backdoor Roth mechanics,44,185000,Confusion,Clarity,4,High-income tax strategy,Exceeds Roth income limits
+15,A,Mega backdoor Roth setup,38,165000,Overwhelm,Confidence,4,Advanced retirement strategy,Tech worker with 401k flexibility
+16,A,Self-employment tax confusion,33,72000,Confusion,Clarity,5,Quarterly tax estimates,New freelancer transition
+17,A,529 vs UTMA college savings,35,98000,Confusion,Clarity,4,College funding vehicle selection,Parent of young children
+18,A,International move tax implications,41,135000,Overwhelm,Clarity,5,Cross-border financial planning,Relocating for job opportunity
+19,A,Stock option exercise timing,36,125000,Confusion,Confidence,4,ISO vs NSO strategy,Startup employee with options
+20,A,Required minimum distributions,72,88000,Confusion,Clarity,4,RMD compliance and strategy,First year of RMDs
+21,B,Career change income drop shame,39,55000,Shame,Acceptance,4,Value-aligned career decisions,Took lower paying mission-driven job
+22,B,Bankruptcy consideration shame,47,41000,Shame,Acceptance,5,Financial reset after medical crisis,Medical debt overwhelming
+23,B,Student loan default shame,31,38000,Shame,Determination,4,Loan rehabilitation strategy,Been avoiding for 5 years
+24,B,Adult child financial support shame,58,105000,Shame,Acceptance,4,Boundary setting with family,Supporting adult child chronically
+25,B,Credit score after divorce shame,44,67000,Shame,Confidence,5,Credit rebuilding post-split,Ex-spouse ruined joint credit
+26,B,Side hustle tax surprise shame,34,82000,Shame,Acceptance,4,Understanding 1099 obligations,Owe $8K unexpectedly
+27,B,Inheritance spending guilt,29,48000,Shame,Permission,4,Using windfall for debt payoff,Feels should invest instead
+28,B,Overspending habit shame,36,94000,Shame,Acceptance,5,Identifying emotional spending triggers,Living paycheck to paycheck despite income
+29,C,Retirement timeline disagreement,58/56,185000,Conflict,Alignment,5,Partner retirement planning,One wants to retire at 60 one at 65
+30,C,Risk tolerance mismatch,42/44,145000,Conflict,Alignment,4,Investment strategy for couple,One conservative one aggressive
+31,C,Parent financial support disagreement,49/51,125000,Conflict,Alignment,5,Eldercare funding decisions,His parents vs her parents needs
+32,C,Home purchase budget conflict,33/35,165000,Conflict,Alignment,4,Housing affordability limits,Want different price ranges
+33,C,Private school vs public disagreement,39/41,195000,Conflict,Alignment,5,Education spending priorities,Kids education philosophy differs
+34,C,Career relocation conflict,37/38,148000,Conflict,Alignment,4,Job opportunity vs stability,One has offer in different city
+35,C,Prenup discussion conflict,31/32,210000,Conflict,Alignment,5,Financial protection boundaries,Income disparity causing tension
+36,C,Vacation spending disagreement,45/46,112000,Conflict,Alignment,4,Lifestyle vs savings balance,Different priority on experiences
+37,D,Job loss financial anxiety,42,92000,Anxiety,Confidence,4,Emergency fund utilization,Recently laid off with 3 months savings
+38,D,Market downturn retirement anxiety,63,145000,Anxiety,Confidence,5,Staying the course during volatility,Portfolio down 20 percent in year
+39,D,First-time home buying anxiety,28,78000,Anxiety,Confidence,4,Affordability analysis and timing,Worried about buying at peak
+40,D,Small business cash flow anxiety,44,Variable,Anxiety,Confidence,5,Revenue smoothing strategies,Feast or famine income pattern
+41,D,Medical diagnosis cost anxiety,51,88000,Anxiety,Confidence,4,Insurance and savings coordination,Chronic condition requires treatment
+42,D,Child special needs cost anxiety,37,105000,Anxiety,Confidence,5,Long-term care planning,Autism support costs uncertain
+43,D,Aging parent care cost anxiety,54,118000,Anxiety,Confidence,4,Eldercare financial preparation,Parents declining health no plan
+44,D,Identity theft resolution anxiety,33,72000,Anxiety,Confidence,5,Credit restoration and protection,Accounts compromised extensive damage
+45,E,Parent death estate settlement,48,95000,Grief,Healing,4,Inheritance management while grieving,Lost mother suddenly
+46,E,Divorce financial separation,39,115000,Grief,Healing,5,Asset division and fresh start,20-year marriage ending
+47,E,Job termination identity loss,56,125000,Grief,Healing,4,Career transition after long tenure,Laid off after 25 years same company
+48,E,Miscarriage IVF cost processing,34,145000,Grief,Acceptance,5,Medical expense and trying again,Multiple failed attempts depleted savings
+49,E,Home loss natural disaster,45,88000,Grief,Healing,4,Insurance recovery and rebuilding,Fire destroyed home underinsured
+50,E,Business closure grief,52,Variable,Grief,Acceptance,5,Financial recovery after failure,Family business closed after 20 years

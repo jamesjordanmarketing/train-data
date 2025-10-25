@@ -1,0 +1,8 @@
+id,name,description,multi_select,required,sort_order,created_at,updated_at
+550e8400-e29b-41d4-a716-446655440003,Authorship,Who created or contributed to this content,false,true,1,2025-09-21 02:06:04.822352+00,2025-09-21 02:06:04.822352+00
+550e8400-e29b-41d4-a716-446655440004,Content Format,The format and structure of the content,true,false,2,2025-09-21 02:06:04.822352+00,2025-09-21 02:06:04.822352+00
+550e8400-e29b-41d4-a716-446655440005,Disclosure Risk,Risk level if this content were to be publicly disclosed,false,true,3,2025-09-21 02:06:04.822352+00,2025-09-21 02:06:04.822352+00
+550e8400-e29b-41d4-a716-446655440006,Intended Use,How this content is intended to be used,true,true,4,2025-09-21 02:06:04.822352+00,2025-09-21 02:06:04.822352+00
+550e8400-e29b-41d4-a716-446655440021,Evidence Types,Types of evidence and proof points contained in the document,true,false,5,2025-09-22 00:07:12.014274+00,2025-09-22 00:28:15.235666+00
+550e8400-e29b-41d4-a716-446655440022,Audience Level,Target audience and accessibility level,true,false,6,2025-09-22 00:07:12.014274+00,2025-09-22 00:07:12.014274+00
+550e8400-e29b-41d4-a716-446655440023,Gating Level,Access control and sharing restrictions,false,false,7,2025-09-22 00:07:12.014274+00,2025-09-22 00:07:12.014274+00

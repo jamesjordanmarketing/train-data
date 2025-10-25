@@ -1,0 +1,16 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "functions": {
+    "app/api/chunks/extract/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/chunks/regenerate/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/chunks/generate-dimensions/route.ts": {
+      "maxDuration": 300
+    }
+  }
+}

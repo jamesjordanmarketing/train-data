@@ -1,0 +1,18 @@
+Field,Description,Type,Allowed_Values_Format,Example
+Chunk_ID,Stable unique ID for this chunk.,string,,DOC_2025_001#C032
+Section_Heading,Nearest section or heading title.,string,,Stage 2: Categorize Documents
+Page_Start,First page number covered by the chunk.,integer,>=1,12
+Page_End,Last page number covered by the chunk.,integer,>=Page_Start,13
+Char_Start,Character index start in the document (0-based).,integer,>=0,8450
+Char_End,Character index end (exclusive).,integer,>Char_Start,9875
+Token_Count,Model token count for the chunk text.,integer,>=1,512
+Overlap_Tokens,Number of tokens overlapped with previous chunk.,integer,>=0,64
+Chunk_Handle,Short slug/handle for referencing the chunk.,string,,stage2-categorize-overview
+Embedding_ID,Identifier for stored vector embedding.,string,,embed_3f9ac2
+Vector_Checksum,Checksum/hash for the vector payload.,string,,sha256:7b9...
+Label_Source_Auto_Manual_Mixed,Provenance of labels.,enum,auto | manual | mixed,mixed
+Label_Model,Model name/version used for auto-labels.,string,,gpt-5-large-2025-09
+Labeled_By,Human labeler (name/initials) or 'auto'.,string,,auto
+Label_Timestamp_ISO,Timestamp when labels were created.,datetime(ISO8601),YYYY-MM-DDThh:mm:ssZ,2025-09-28T15:20:11Z
+Review_Status,Human QA review status.,enum,unreviewed | approved | needs_changes | rejected,unreviewed
+Data_Split_Train_Dev_Test,Dataset split allocation.,enum,train | dev | test,train

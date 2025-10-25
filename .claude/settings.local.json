@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/james/Master/BrightHub/brun/mock-data/chunks-alpha-data/**)",
+      "Bash(npm run build)",
+      "Bash(npm run:*)",
+      "Bash(npx tsc:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

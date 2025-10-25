@@ -1,0 +1,9 @@
+Field,Description,Type,Allowed_Values_Format,Example
+Doc_ID,Unique identifier for the source document.,string,,DOC_2025_001
+Doc_Title,Human-readable title of the document.,string,,Bright Run Playbook v2
+Doc_Version,Document version tag or semver.,string,,v1.3.0
+Source_Type,Ingest source format.,enum,pdf | docx | html | markdown | email | transcript | notion | spreadsheet | image+OCR,pdf
+Source_URL,Canonical URL or file path for provenance.,string(url|uri),,https://example.com/playbook.pdf
+Author,Document author or organization.,string,,BRAND Team
+Doc_Date,Date of original authorship or publication.,date(YYYY-MM-DD),,2025-07-15
+Primary_Category,User-centric category (pick one) for business meaning.,enum,"Core IP — Complete System (Author: BRAND) | Core IP — Major System Component (Author: BRAND) | Proprietary Strategy/Method (Author: BRAND) | Proprietary Insight/Framework Fragment (Author: BRAND) | Operational Playbook / Step-by-Step (Author: BRAND) | Signature Story / Origin / Distinctive Narrative (Author: BRAND) | Marketing Narrative — Benefits (Author: BRAND, non-divulgence) | Customer Conversation / Proof h-1 / h-2 / h-3 | External / Third-Party — Non-IP",Operational Playbook / Step-by-Step (Author: BRAND)

@@ -1,0 +1,600 @@
+"TimeUTC","timestampInMs","requestPath","requestMethod","requestQueryString","responseStatusCode","requestId","requestUserAgent","level","environment","branch","vercelCache","type","function","host","deploymentDomain","deploymentId","durationMs","region","maxMemoryUsed","memorySize","message","projectId","traceId","sessionId","invocationId","instanceId","concurrency"
+"2025-10-11 22:57:48",1760223468807,"chunks-alpha.vercel.app/api/chunks/templates","GET","",200,"nflqn-1760223468764-670eee7f18e6","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/chunks/templates","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",124,"iad1",92,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQWFCEEFCJ2ACYCERGP171","r6RcJ0TjcrwK",2
+"2025-10-11 22:57:48",1760223468599,"chunks-alpha.vercel.app/api/chunks/runs","GET","documentId=a37e4010-0304-478b-8668-1360778acc48",200,"c4zdt-1760223468546-dc8ef57a3c96","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/chunks/runs","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",114,"iad1",92,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQWFCEEFCJ2ACYCERGP171","r6RcJ0TjcrwK",2
+"2025-10-11 22:57:48",1760223468322,"chunks-alpha.vercel.app/api/chunks","GET","documentId=a37e4010-0304-478b-8668-1360778acc48",200,"c4zdt-1760223468284-ffcd4db52db6","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/chunks","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",118,"iad1",91,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQWFCEEFCJ2ACYCERGP171","r6RcJ0TjcrwK",2
+"2025-10-11 22:57:47",1760223467720,"chunks-alpha.vercel.app/api/documents/a37e4010-0304-478b-8668-1360778acc48","GET","",-1,"c4zdt-1760223467657-9f0277ce34d9","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/[id]","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[MetadataAPI] GET request for document: a37e4010-0304-478b-8668-1360778acc48","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQX65NXTA2A63JZ5WBEW18","",-1
+"2025-10-11 22:57:47",1760223467701,"chunks-alpha.vercel.app/api/documents/a37e4010-0304-478b-8668-1360778acc48","GET","",200,"c4zdt-1760223467657-9f0277ce34d9","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/[id]","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",389,"iad1",123,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQX65NXTA2A63JZ5WBEW18","JqDB3REVwzTb",1
+"2025-10-11 22:57:47",1760223467246,"chunks-alpha.vercel.app/chunks/a37e4010-0304-478b-8668-1360778acc48","GET","",200,"554bm-1760223467086-cf1158ef1037","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/chunks/[documentId]","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",103,"iad1",133,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQX5QE9MPA8G7GDC7P114K","wUNdXwnCXVLu",1
+"2025-10-11 22:57:26",1760223446672,"chunks-alpha.vercel.app/api/chunks/templates","GET","",200,"c4zdt-1760223446514-9bc83ad505ea","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/chunks/templates","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",113,"iad1",90,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQWFCEEFCJ2ACYCERGP171","r6RcJ0TjcrwK",2
+"2025-10-11 22:57:26",1760223446212,"chunks-alpha.vercel.app/api/chunks/runs","GET","documentId=a37e4010-0304-478b-8668-1360778acc48",200,"c4zdt-1760223446065-fbd4b5d5f995","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/chunks/runs","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",252,"iad1",90,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQWFCEEFCJ2ACYCERGP171","r6RcJ0TjcrwK",2
+"2025-10-11 22:57:25",1760223445917,"chunks-alpha.vercel.app/api/chunks","GET","documentId=a37e4010-0304-478b-8668-1360778acc48",200,"c4zdt-1760223445766-8582d79786df","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/chunks","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",102,"iad1",90,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQWFCEEFCJ2ACYCERGP171","r6RcJ0TjcrwK",2
+"2025-10-11 22:57:25",1760223445854,"chunks-alpha.vercel.app/api/chunks/extract","POST","",-1,"q2rtz-1760223444191-7dadfa9d40ef","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/chunks/extract","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Detected 47 sections, 24688 tokens","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQWFCEEFCJ2ACYCERGP171","",-1
+"2025-10-11 22:57:25",1760223445851,"chunks-alpha.vercel.app/api/chunks/extract","POST","",-1,"q2rtz-1760223444191-7dadfa9d40ef","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/chunks/extract","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Category: Complete Systems & Methodologies","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQWFCEEFCJ2ACYCERGP171","",-1
+"2025-10-11 22:57:25",1760223445851,"chunks-alpha.vercel.app/api/chunks/extract","POST","",-1,"q2rtz-1760223444191-7dadfa9d40ef","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/chunks/extract","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Document length: 96077 characters","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQWFCEEFCJ2ACYCERGP171","",-1
+"2025-10-11 22:57:25",1760223445851,"chunks-alpha.vercel.app/api/chunks/extract","POST","",-1,"q2rtz-1760223444191-7dadfa9d40ef","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/chunks/extract","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Starting chunk extraction for document: Shoestring AI SaaS MVP Marketing Guide Short V4","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQWFCEEFCJ2ACYCERGP171","",-1
+"2025-10-11 22:57:25",1760223445213,"chunks-alpha.vercel.app/api/documents/a37e4010-0304-478b-8668-1360778acc48","GET","",-1,"c4zdt-1760223444963-0d1379989179","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/[id]","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[MetadataAPI] GET request for document: a37e4010-0304-478b-8668-1360778acc48","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQWG55RYP6DYS3EYM0E7RP","",-1
+"2025-10-11 22:57:25",1760223445157,"chunks-alpha.vercel.app/api/documents/a37e4010-0304-478b-8668-1360778acc48","GET","",200,"c4zdt-1760223444963-0d1379989179","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/[id]","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",486,"iad1",123,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQWG55RYP6DYS3EYM0E7RP","JqDB3REVwzTb",1
+"2025-10-11 22:57:24",1760223444858,"chunks-alpha.vercel.app/chunks/a37e4010-0304-478b-8668-1360778acc48","GET","",200,"z7rrm-1760223444697-7eb6ad9159aa","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/chunks/[documentId]","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",18,"iad1",130,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQWFVTZZ96YAHJA1FRV8D4","wUNdXwnCXVLu",1
+"2025-10-11 22:57:24",1760223444517,"chunks-alpha.vercel.app/api/chunks/extract","POST","",-1,"q2rtz-1760223444191-7dadfa9d40ef","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/chunks/extract","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"🚀 [Extract API] Starting chunk extraction...","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQWFCEEFCJ2ACYCERGP171","",-1
+"2025-10-11 22:57:24",1760223444517,"chunks-alpha.vercel.app/api/chunks/extract","POST","",-1,"q2rtz-1760223444191-7dadfa9d40ef","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/chunks/extract","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"📊 [Extract API] Found 0 existing chunks","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQWFCEEFCJ2ACYCERGP171","",-1
+"2025-10-11 22:57:24",1760223444402,"chunks-alpha.vercel.app/api/chunks/extract","POST","",-1,"q2rtz-1760223444191-7dadfa9d40ef","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/chunks/extract","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"🔍 [Extract API] Checking for existing chunks...","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQWFCEEFCJ2ACYCERGP171","",-1
+"2025-10-11 22:57:24",1760223444402,"chunks-alpha.vercel.app/api/chunks/extract","POST","",-1,"q2rtz-1760223444191-7dadfa9d40ef","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/chunks/extract","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"✅ [Extract API] User authenticated: No (using null)","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQWFCEEFCJ2ACYCERGP171","",-1
+"2025-10-11 22:57:24",1760223444401,"chunks-alpha.vercel.app/api/chunks/extract","POST","",-1,"q2rtz-1760223444191-7dadfa9d40ef","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/chunks/extract","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"✅ [Extract API] Environment variables verified","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQWFCEEFCJ2ACYCERGP171","",-1
+"2025-10-11 22:57:24",1760223444401,"chunks-alpha.vercel.app/api/chunks/extract","POST","",-1,"q2rtz-1760223444191-7dadfa9d40ef","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/chunks/extract","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"📥 [Extract API] Document ID: a37e4010-0304-478b-8668-1360778acc48, Force Re-extract: undefined","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQWFCEEFCJ2ACYCERGP171","",-1
+"2025-10-11 22:57:24",1760223444400,"chunks-alpha.vercel.app/api/chunks/extract","POST","",-1,"q2rtz-1760223444191-7dadfa9d40ef","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/chunks/extract","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"📥 [Extract API] Received extraction request","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQWFCEEFCJ2ACYCERGP171","",-1
+"2025-10-11 22:57:03",1760223423939,"chunks-alpha.vercel.app/dashboard","GET","",200,"h6xhg-1760223423727-4489477bc62c","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","PRERENDER","static","/dashboard","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"",-1,-1,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","","",-1
+"2025-10-11 22:56:59",1760223419455,"chunks-alpha.vercel.app/workflow/a37e4010-0304-478b-8668-1360778acc48/complete","GET","workflowId=b4204894-b007-495e-806a-83cefa979ecb",200,"7rzss-1760223419413-a1dc05b7725a","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/workflow/[documentId]/complete","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",586,"iad1",130,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVQ2028Q2KTY4W2HW73CT","wUNdXwnCXVLu",1
+"2025-10-11 22:56:59",1760223419364,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"7rzss-1760223418036-4e6b6563c1ad","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Workflow completed successfully with normalized structure: b4204894-b007-495e-806a-83cefa979ecb","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVNQDH08SFKFYVNMTNRDJ","",-1
+"2025-10-11 22:56:58",1760223418460,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"7rzss-1760223418036-4e6b6563c1ad","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Transformed tags for normalized structure: [
+  {
+    tagId: '550e8400-e29b-41d4-a716-446655440007',
+    dimensionId: '550e8400-e29b-41d4-a716-446655440003'
+  },
+  {
+    tagId: '550e8400-e29b-41d4-a716-446655440009',
+    dimensionId: '550e8400-e29b-41d4-a716-446655440005'
+  },
+  {
+    tagId: '550e8400-e29b-41d4-a716-446655440010',
+    dimensionId: '550e8400-e29b-41d4-a716-446655440006'
+  }
+]","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVNQDH08SFKFYVNMTNRDJ","",-1
+"2025-10-11 22:56:58",1760223418460,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"7rzss-1760223418036-4e6b6563c1ad","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","warning","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Unknown dimension key: content-format","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVNQDH08SFKFYVNMTNRDJ","",-1
+"2025-10-11 22:56:58",1760223418460,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"7rzss-1760223418036-4e6b6563c1ad","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Using existing workflow session: b4204894-b007-495e-806a-83cefa979ecb","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVNQDH08SFKFYVNMTNRDJ","",-1
+"2025-10-11 22:56:58",1760223418354,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"7rzss-1760223418036-4e6b6563c1ad","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"User authenticated: f15f4a68-3268-452d-b4b0-e863f807db58","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVNQDH08SFKFYVNMTNRDJ","",-1
+"2025-10-11 22:56:58",1760223418116,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"7rzss-1760223418036-4e6b6563c1ad","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Getting user from token...","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVNQDH08SFKFYVNMTNRDJ","",-1
+"2025-10-11 22:56:58",1760223418115,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"7rzss-1760223418036-4e6b6563c1ad","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Environment check: {
+  hasSupabaseUrl: true,
+  hasSupabaseKey: true,
+  urlPrefix: 'https://hqhtbxlgzysf'
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVNQDH08SFKFYVNMTNRDJ","",-1
+"2025-10-11 22:56:58",1760223418114,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"7rzss-1760223418036-4e6b6563c1ad","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Token received: eyJhbGciOiJIUzI1NiIsImtpZCI6IlBMdlJON2ExWnoycFNKbj...","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVNQDH08SFKFYVNMTNRDJ","",-1
+"2025-10-11 22:56:58",1760223418114,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"7rzss-1760223418036-4e6b6563c1ad","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"UUID conversions applied: {
+  originalDocumentId: 'a37e4010-0304-478b-8668-1360778acc48',
+  realDocumentId: 'a37e4010-0304-478b-8668-1360778acc48',
+  originalCategoryId: 'complete-systems-methodologies',
+  realCategoryId: '550e8400-e29b-41d4-a716-446655440001'
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVNQDH08SFKFYVNMTNRDJ","",-1
+"2025-10-11 22:56:58",1760223418114,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"7rzss-1760223418036-4e6b6563c1ad","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Converting mock category ID to real UUID: complete-systems-methodologies -> 550e8400-e29b-41d4-a716-446655440001","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVNQDH08SFKFYVNMTNRDJ","",-1
+"2025-10-11 22:56:58",1760223418114,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"7rzss-1760223418036-4e6b6563c1ad","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Parsed values: {
+  documentId: 'a37e4010-0304-478b-8668-1360778acc48',
+  belongingRating: 5,
+  selectedCategory: 'complete-systems-methodologies',
+  action: 'submit',
+  step: 'A'
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVNQDH08SFKFYVNMTNRDJ","",-1
+"2025-10-11 22:56:58",1760223418114,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"7rzss-1760223418036-4e6b6563c1ad","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Request body: {
+  ""action"": ""submit"",
+  ""documentId"": ""a37e4010-0304-478b-8668-1360778acc48"",
+  ""belongingRating"": 5,
+  ""selectedCategory"": {
+    ""id"": ""complete-systems-methodologies"",
+    ""name"": ""Complete Systems & Methodologies"",
+    ""description"": ""End-to-end business systems, frameworks, or methodologies that provide comprehensive solutions"",
+    ""examples"": [
+      ""Customer onboarding systems"",
+      ""Sales frameworks"",
+      ""Implementation methodologies""
+    ],
+    ""isHighValue"": true,
+    ""impact"": ""High training value - provides complete business context and methodology"",
+    ""detailedDescription"": ""End-to-end business systems, frameworks, or methodologies that provide comprehensive solutions"",
+    ""processingStrategy"": ""Deep Analysis"",
+    ""businessValueClassification"": ""High Value"",
+    ""usageAnalytics"": {
+      ""totalSelections"": 632,
+      ""recentActivity"": 17
+    },
+    ""valueDistribution"": {
+      ""highValue"": 30,
+      ""mediumValue"": 46,
+      ""standardValue"": 40
+    }
+  },
+  ""selectedTags"": {
+    ""authorship"": [
+      ""brand-company""
+    ],
+    ""content-format"": [
+      ""how-to-guide""
+    ],
+    ""disclosure-risk"": [
+      ""level-1-minimal-risk""
+    ],
+    ""intended-use"": [
+      ""training""
+    ]
+  },
+  ""customTags"": [],
+  ""step"": ""A""
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVNQDH08SFKFYVNMTNRDJ","",-1
+"2025-10-11 22:56:58",1760223418114,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"7rzss-1760223418036-4e6b6563c1ad","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"=== WORKFLOW API CALLED ===","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVNQDH08SFKFYVNMTNRDJ","",-1
+"2025-10-11 22:56:58",1760223418093,"chunks-alpha.vercel.app/api/workflow","POST","",200,"7rzss-1760223418036-4e6b6563c1ad","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",1258,"iad1",125,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVNQDH08SFKFYVNMTNRDJ","r6RcJ0TjcrwK",1
+"2025-10-11 22:56:55",1760223415506,"chunks-alpha.vercel.app/workflow/a37e4010-0304-478b-8668-1360778acc48/complete","GET","",200,"55plk-1760223415359-c8510d37e6e3","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/workflow/[documentId]/complete","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",340,"iad1",130,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVK6KBXPB0CGM3JYYWGGA","wUNdXwnCXVLu",1
+"2025-10-11 22:56:53",1760223413780,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"47l7z-1760223413485-f173fdc3b460","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Draft saved successfully: b4204894-b007-495e-806a-83cefa979ecb","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVH8PPXBKMSHB79KJ9HGX","",-1
+"2025-10-11 22:56:53",1760223413666,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"47l7z-1760223413485-f173fdc3b460","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Draft data: {
+  document_id: 'a37e4010-0304-478b-8668-1360778acc48',
+  user_id: 'f15f4a68-3268-452d-b4b0-e863f807db58',
+  step: 'A',
+  belonging_rating: 5,
+  selected_category_id: '550e8400-e29b-41d4-a716-446655440001',
+  selected_tags: {
+    authorship: [ 'brand-company' ],
+    'content-format': [ 'how-to-guide' ],
+    'disclosure-risk': [ 'level-1-minimal-risk' ],
+    'intended-use': [ 'training' ]
+  },
+  custom_tags: [],
+  is_draft: true,
+  completed_steps: [ 'A' ]
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVH8PPXBKMSHB79KJ9HGX","",-1
+"2025-10-11 22:56:53",1760223413666,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"47l7z-1760223413485-f173fdc3b460","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Saving draft for user: f15f4a68-3268-452d-b4b0-e863f807db58 document: a37e4010-0304-478b-8668-1360778acc48","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVH8PPXBKMSHB79KJ9HGX","",-1
+"2025-10-11 22:56:53",1760223413666,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"47l7z-1760223413485-f173fdc3b460","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"User authenticated: f15f4a68-3268-452d-b4b0-e863f807db58","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVH8PPXBKMSHB79KJ9HGX","",-1
+"2025-10-11 22:56:53",1760223413547,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"47l7z-1760223413485-f173fdc3b460","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Getting user from token...","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVH8PPXBKMSHB79KJ9HGX","",-1
+"2025-10-11 22:56:53",1760223413547,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"47l7z-1760223413485-f173fdc3b460","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Environment check: {
+  hasSupabaseUrl: true,
+  hasSupabaseKey: true,
+  urlPrefix: 'https://hqhtbxlgzysf'
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVH8PPXBKMSHB79KJ9HGX","",-1
+"2025-10-11 22:56:53",1760223413547,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"47l7z-1760223413485-f173fdc3b460","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Token received: eyJhbGciOiJIUzI1NiIsImtpZCI6IlBMdlJON2ExWnoycFNKbj...","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVH8PPXBKMSHB79KJ9HGX","",-1
+"2025-10-11 22:56:53",1760223413546,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"47l7z-1760223413485-f173fdc3b460","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"UUID conversions applied: {
+  originalDocumentId: 'a37e4010-0304-478b-8668-1360778acc48',
+  realDocumentId: 'a37e4010-0304-478b-8668-1360778acc48',
+  originalCategoryId: 'complete-systems-methodologies',
+  realCategoryId: '550e8400-e29b-41d4-a716-446655440001'
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVH8PPXBKMSHB79KJ9HGX","",-1
+"2025-10-11 22:56:53",1760223413546,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"47l7z-1760223413485-f173fdc3b460","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Converting mock category ID to real UUID: complete-systems-methodologies -> 550e8400-e29b-41d4-a716-446655440001","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVH8PPXBKMSHB79KJ9HGX","",-1
+"2025-10-11 22:56:53",1760223413546,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"47l7z-1760223413485-f173fdc3b460","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Parsed values: {
+  documentId: 'a37e4010-0304-478b-8668-1360778acc48',
+  belongingRating: 5,
+  selectedCategory: 'complete-systems-methodologies',
+  action: 'save_draft',
+  step: 'A'
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVH8PPXBKMSHB79KJ9HGX","",-1
+"2025-10-11 22:56:53",1760223413546,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"47l7z-1760223413485-f173fdc3b460","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Request body: {
+  ""action"": ""save_draft"",
+  ""documentId"": ""a37e4010-0304-478b-8668-1360778acc48"",
+  ""belongingRating"": 5,
+  ""selectedCategory"": {
+    ""id"": ""complete-systems-methodologies"",
+    ""name"": ""Complete Systems & Methodologies"",
+    ""description"": ""End-to-end business systems, frameworks, or methodologies that provide comprehensive solutions"",
+    ""examples"": [
+      ""Customer onboarding systems"",
+      ""Sales frameworks"",
+      ""Implementation methodologies""
+    ],
+    ""isHighValue"": true,
+    ""impact"": ""High training value - provides complete business context and methodology"",
+    ""detailedDescription"": ""End-to-end business systems, frameworks, or methodologies that provide comprehensive solutions"",
+    ""processingStrategy"": ""Deep Analysis"",
+    ""businessValueClassification"": ""High Value"",
+    ""usageAnalytics"": {
+      ""totalSelections"": 632,
+      ""recentActivity"": 17
+    },
+    ""valueDistribution"": {
+      ""highValue"": 30,
+      ""mediumValue"": 46,
+      ""standardValue"": 40
+    }
+  },
+  ""selectedTags"": {
+    ""authorship"": [
+      ""brand-company""
+    ],
+    ""content-format"": [
+      ""how-to-guide""
+    ],
+    ""disclosure-risk"": [
+      ""level-1-minimal-risk""
+    ],
+    ""intended-use"": [
+      ""training""
+    ]
+  },
+  ""customTags"": [],
+  ""step"": ""A""
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVH8PPXBKMSHB79KJ9HGX","",-1
+"2025-10-11 22:56:53",1760223413546,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"47l7z-1760223413485-f173fdc3b460","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"=== WORKFLOW API CALLED ===","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVH8PPXBKMSHB79KJ9HGX","",-1
+"2025-10-11 22:56:53",1760223413526,"chunks-alpha.vercel.app/api/workflow","POST","",200,"47l7z-1760223413485-f173fdc3b460","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",246,"iad1",125,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVH8PPXBKMSHB79KJ9HGX","r6RcJ0TjcrwK",1
+"2025-10-11 22:56:50",1760223410746,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"ddkbq-1760223410478-d43b81a293ea","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Draft saved successfully: acca6560-024d-406b-9b47-b96083373239","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVEAN4YWXHX7H5QS0PBD4","",-1
+"2025-10-11 22:56:50",1760223410629,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"ddkbq-1760223410478-d43b81a293ea","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Draft data: {
+  document_id: 'a37e4010-0304-478b-8668-1360778acc48',
+  user_id: 'f15f4a68-3268-452d-b4b0-e863f807db58',
+  step: 'A',
+  belonging_rating: 5,
+  selected_category_id: '550e8400-e29b-41d4-a716-446655440001',
+  selected_tags: {
+    authorship: [ 'brand-company' ],
+    'content-format': [ 'how-to-guide' ],
+    'disclosure-risk': [ 'level-1-minimal-risk' ]
+  },
+  custom_tags: [],
+  is_draft: true,
+  completed_steps: [ 'A' ]
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVEAN4YWXHX7H5QS0PBD4","",-1
+"2025-10-11 22:56:50",1760223410629,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"ddkbq-1760223410478-d43b81a293ea","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Saving draft for user: f15f4a68-3268-452d-b4b0-e863f807db58 document: a37e4010-0304-478b-8668-1360778acc48","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVEAN4YWXHX7H5QS0PBD4","",-1
+"2025-10-11 22:56:50",1760223410629,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"ddkbq-1760223410478-d43b81a293ea","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"User authenticated: f15f4a68-3268-452d-b4b0-e863f807db58","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVEAN4YWXHX7H5QS0PBD4","",-1
+"2025-10-11 22:56:50",1760223410536,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"ddkbq-1760223410478-d43b81a293ea","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Getting user from token...","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVEAN4YWXHX7H5QS0PBD4","",-1
+"2025-10-11 22:56:50",1760223410536,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"ddkbq-1760223410478-d43b81a293ea","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Environment check: {
+  hasSupabaseUrl: true,
+  hasSupabaseKey: true,
+  urlPrefix: 'https://hqhtbxlgzysf'
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVEAN4YWXHX7H5QS0PBD4","",-1
+"2025-10-11 22:56:50",1760223410536,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"ddkbq-1760223410478-d43b81a293ea","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Token received: eyJhbGciOiJIUzI1NiIsImtpZCI6IlBMdlJON2ExWnoycFNKbj...","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVEAN4YWXHX7H5QS0PBD4","",-1
+"2025-10-11 22:56:50",1760223410536,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"ddkbq-1760223410478-d43b81a293ea","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"UUID conversions applied: {
+  originalDocumentId: 'a37e4010-0304-478b-8668-1360778acc48',
+  realDocumentId: 'a37e4010-0304-478b-8668-1360778acc48',
+  originalCategoryId: 'complete-systems-methodologies',
+  realCategoryId: '550e8400-e29b-41d4-a716-446655440001'
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVEAN4YWXHX7H5QS0PBD4","",-1
+"2025-10-11 22:56:50",1760223410535,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"ddkbq-1760223410478-d43b81a293ea","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Converting mock category ID to real UUID: complete-systems-methodologies -> 550e8400-e29b-41d4-a716-446655440001","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVEAN4YWXHX7H5QS0PBD4","",-1
+"2025-10-11 22:56:50",1760223410535,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"ddkbq-1760223410478-d43b81a293ea","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Parsed values: {
+  documentId: 'a37e4010-0304-478b-8668-1360778acc48',
+  belongingRating: 5,
+  selectedCategory: 'complete-systems-methodologies',
+  action: 'save_draft',
+  step: 'A'
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVEAN4YWXHX7H5QS0PBD4","",-1
+"2025-10-11 22:56:50",1760223410535,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"ddkbq-1760223410478-d43b81a293ea","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Request body: {
+  ""action"": ""save_draft"",
+  ""documentId"": ""a37e4010-0304-478b-8668-1360778acc48"",
+  ""belongingRating"": 5,
+  ""selectedCategory"": {
+    ""id"": ""complete-systems-methodologies"",
+    ""name"": ""Complete Systems & Methodologies"",
+    ""description"": ""End-to-end business systems, frameworks, or methodologies that provide comprehensive solutions"",
+    ""examples"": [
+      ""Customer onboarding systems"",
+      ""Sales frameworks"",
+      ""Implementation methodologies""
+    ],
+    ""isHighValue"": true,
+    ""impact"": ""High training value - provides complete business context and methodology"",
+    ""detailedDescription"": ""End-to-end business systems, frameworks, or methodologies that provide comprehensive solutions"",
+    ""processingStrategy"": ""Deep Analysis"",
+    ""businessValueClassification"": ""High Value"",
+    ""usageAnalytics"": {
+      ""totalSelections"": 632,
+      ""recentActivity"": 17
+    },
+    ""valueDistribution"": {
+      ""highValue"": 30,
+      ""mediumValue"": 46,
+      ""standardValue"": 40
+    }
+  },
+  ""selectedTags"": {
+    ""authorship"": [
+      ""brand-company""
+    ],
+    ""content-format"": [
+      ""how-to-guide""
+    ],
+    ""disclosure-risk"": [
+      ""level-1-minimal-risk""
+    ]
+  },
+  ""customTags"": [],
+  ""step"": ""A""
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVEAN4YWXHX7H5QS0PBD4","",-1
+"2025-10-11 22:56:50",1760223410535,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"ddkbq-1760223410478-d43b81a293ea","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"=== WORKFLOW API CALLED ===","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVEAN4YWXHX7H5QS0PBD4","",-1
+"2025-10-11 22:56:50",1760223410517,"chunks-alpha.vercel.app/api/workflow","POST","",200,"ddkbq-1760223410478-d43b81a293ea","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",222,"iad1",125,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVEAN4YWXHX7H5QS0PBD4","r6RcJ0TjcrwK",1
+"2025-10-11 22:56:48",1760223408090,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"pztf9-1760223407803-38271d2f19bd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Draft saved successfully: cd0540b9-8b27-4518-8605-1728f120c89e","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVBQ0WTJXVVTAP02G4GAT","",-1
+"2025-10-11 22:56:47",1760223407980,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"pztf9-1760223407803-38271d2f19bd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Draft data: {
+  document_id: 'a37e4010-0304-478b-8668-1360778acc48',
+  user_id: 'f15f4a68-3268-452d-b4b0-e863f807db58',
+  step: 'A',
+  belonging_rating: 5,
+  selected_category_id: '550e8400-e29b-41d4-a716-446655440001',
+  selected_tags: {
+    authorship: [ 'brand-company' ],
+    'content-format': [ 'how-to-guide' ]
+  },
+  custom_tags: [],
+  is_draft: true,
+  completed_steps: [ 'A' ]
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVBQ0WTJXVVTAP02G4GAT","",-1
+"2025-10-11 22:56:47",1760223407980,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"pztf9-1760223407803-38271d2f19bd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Saving draft for user: f15f4a68-3268-452d-b4b0-e863f807db58 document: a37e4010-0304-478b-8668-1360778acc48","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVBQ0WTJXVVTAP02G4GAT","",-1
+"2025-10-11 22:56:47",1760223407980,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"pztf9-1760223407803-38271d2f19bd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"User authenticated: f15f4a68-3268-452d-b4b0-e863f807db58","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVBQ0WTJXVVTAP02G4GAT","",-1
+"2025-10-11 22:56:47",1760223407872,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"pztf9-1760223407803-38271d2f19bd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Getting user from token...","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVBQ0WTJXVVTAP02G4GAT","",-1
+"2025-10-11 22:56:47",1760223407872,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"pztf9-1760223407803-38271d2f19bd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Environment check: {
+  hasSupabaseUrl: true,
+  hasSupabaseKey: true,
+  urlPrefix: 'https://hqhtbxlgzysf'
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVBQ0WTJXVVTAP02G4GAT","",-1
+"2025-10-11 22:56:47",1760223407872,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"pztf9-1760223407803-38271d2f19bd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Token received: eyJhbGciOiJIUzI1NiIsImtpZCI6IlBMdlJON2ExWnoycFNKbj...","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVBQ0WTJXVVTAP02G4GAT","",-1
+"2025-10-11 22:56:47",1760223407872,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"pztf9-1760223407803-38271d2f19bd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"UUID conversions applied: {
+  originalDocumentId: 'a37e4010-0304-478b-8668-1360778acc48',
+  realDocumentId: 'a37e4010-0304-478b-8668-1360778acc48',
+  originalCategoryId: 'complete-systems-methodologies',
+  realCategoryId: '550e8400-e29b-41d4-a716-446655440001'
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVBQ0WTJXVVTAP02G4GAT","",-1
+"2025-10-11 22:56:47",1760223407872,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"pztf9-1760223407803-38271d2f19bd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Converting mock category ID to real UUID: complete-systems-methodologies -> 550e8400-e29b-41d4-a716-446655440001","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVBQ0WTJXVVTAP02G4GAT","",-1
+"2025-10-11 22:56:47",1760223407872,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"pztf9-1760223407803-38271d2f19bd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Parsed values: {
+  documentId: 'a37e4010-0304-478b-8668-1360778acc48',
+  belongingRating: 5,
+  selectedCategory: 'complete-systems-methodologies',
+  action: 'save_draft',
+  step: 'A'
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVBQ0WTJXVVTAP02G4GAT","",-1
+"2025-10-11 22:56:47",1760223407871,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"pztf9-1760223407803-38271d2f19bd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Request body: {
+  ""action"": ""save_draft"",
+  ""documentId"": ""a37e4010-0304-478b-8668-1360778acc48"",
+  ""belongingRating"": 5,
+  ""selectedCategory"": {
+    ""id"": ""complete-systems-methodologies"",
+    ""name"": ""Complete Systems & Methodologies"",
+    ""description"": ""End-to-end business systems, frameworks, or methodologies that provide comprehensive solutions"",
+    ""examples"": [
+      ""Customer onboarding systems"",
+      ""Sales frameworks"",
+      ""Implementation methodologies""
+    ],
+    ""isHighValue"": true,
+    ""impact"": ""High training value - provides complete business context and methodology"",
+    ""detailedDescription"": ""End-to-end business systems, frameworks, or methodologies that provide comprehensive solutions"",
+    ""processingStrategy"": ""Deep Analysis"",
+    ""businessValueClassification"": ""High Value"",
+    ""usageAnalytics"": {
+      ""totalSelections"": 632,
+      ""recentActivity"": 17
+    },
+    ""valueDistribution"": {
+      ""highValue"": 30,
+      ""mediumValue"": 46,
+      ""standardValue"": 40
+    }
+  },
+  ""selectedTags"": {
+    ""authorship"": [
+      ""brand-company""
+    ],
+    ""content-format"": [
+      ""how-to-guide""
+    ]
+  },
+  ""customTags"": [],
+  ""step"": ""A""
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVBQ0WTJXVVTAP02G4GAT","",-1
+"2025-10-11 22:56:47",1760223407871,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"pztf9-1760223407803-38271d2f19bd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"=== WORKFLOW API CALLED ===","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVBQ0WTJXVVTAP02G4GAT","",-1
+"2025-10-11 22:56:47",1760223407840,"chunks-alpha.vercel.app/api/workflow","POST","",200,"pztf9-1760223407803-38271d2f19bd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",228,"iad1",125,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQVBQ0WTJXVVTAP02G4GAT","r6RcJ0TjcrwK",1
+"2025-10-11 22:56:45",1760223405822,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"db6f2-1760223405518-9bccd28762fd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Draft saved successfully: 8815eb5f-4df5-4f61-8b40-7865b36d7e8c","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV9FPPXHV3Z2537WSWFQ8","",-1
+"2025-10-11 22:56:45",1760223405700,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"db6f2-1760223405518-9bccd28762fd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Draft data: {
+  document_id: 'a37e4010-0304-478b-8668-1360778acc48',
+  user_id: 'f15f4a68-3268-452d-b4b0-e863f807db58',
+  step: 'A',
+  belonging_rating: 5,
+  selected_category_id: '550e8400-e29b-41d4-a716-446655440001',
+  selected_tags: { authorship: [ 'brand-company' ] },
+  custom_tags: [],
+  is_draft: true,
+  completed_steps: [ 'A' ]
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV9FPPXHV3Z2537WSWFQ8","",-1
+"2025-10-11 22:56:45",1760223405699,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"db6f2-1760223405518-9bccd28762fd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Saving draft for user: f15f4a68-3268-452d-b4b0-e863f807db58 document: a37e4010-0304-478b-8668-1360778acc48","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV9FPPXHV3Z2537WSWFQ8","",-1
+"2025-10-11 22:56:45",1760223405699,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"db6f2-1760223405518-9bccd28762fd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"User authenticated: f15f4a68-3268-452d-b4b0-e863f807db58","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV9FPPXHV3Z2537WSWFQ8","",-1
+"2025-10-11 22:56:45",1760223405585,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"db6f2-1760223405518-9bccd28762fd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Getting user from token...","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV9FPPXHV3Z2537WSWFQ8","",-1
+"2025-10-11 22:56:45",1760223405585,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"db6f2-1760223405518-9bccd28762fd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Environment check: {
+  hasSupabaseUrl: true,
+  hasSupabaseKey: true,
+  urlPrefix: 'https://hqhtbxlgzysf'
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV9FPPXHV3Z2537WSWFQ8","",-1
+"2025-10-11 22:56:45",1760223405585,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"db6f2-1760223405518-9bccd28762fd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Token received: eyJhbGciOiJIUzI1NiIsImtpZCI6IlBMdlJON2ExWnoycFNKbj...","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV9FPPXHV3Z2537WSWFQ8","",-1
+"2025-10-11 22:56:45",1760223405585,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"db6f2-1760223405518-9bccd28762fd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"UUID conversions applied: {
+  originalDocumentId: 'a37e4010-0304-478b-8668-1360778acc48',
+  realDocumentId: 'a37e4010-0304-478b-8668-1360778acc48',
+  originalCategoryId: 'complete-systems-methodologies',
+  realCategoryId: '550e8400-e29b-41d4-a716-446655440001'
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV9FPPXHV3Z2537WSWFQ8","",-1
+"2025-10-11 22:56:45",1760223405584,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"db6f2-1760223405518-9bccd28762fd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Converting mock category ID to real UUID: complete-systems-methodologies -> 550e8400-e29b-41d4-a716-446655440001","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV9FPPXHV3Z2537WSWFQ8","",-1
+"2025-10-11 22:56:45",1760223405584,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"db6f2-1760223405518-9bccd28762fd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Parsed values: {
+  documentId: 'a37e4010-0304-478b-8668-1360778acc48',
+  belongingRating: 5,
+  selectedCategory: 'complete-systems-methodologies',
+  action: 'save_draft',
+  step: 'A'
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV9FPPXHV3Z2537WSWFQ8","",-1
+"2025-10-11 22:56:45",1760223405584,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"db6f2-1760223405518-9bccd28762fd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Request body: {
+  ""action"": ""save_draft"",
+  ""documentId"": ""a37e4010-0304-478b-8668-1360778acc48"",
+  ""belongingRating"": 5,
+  ""selectedCategory"": {
+    ""id"": ""complete-systems-methodologies"",
+    ""name"": ""Complete Systems & Methodologies"",
+    ""description"": ""End-to-end business systems, frameworks, or methodologies that provide comprehensive solutions"",
+    ""examples"": [
+      ""Customer onboarding systems"",
+      ""Sales frameworks"",
+      ""Implementation methodologies""
+    ],
+    ""isHighValue"": true,
+    ""impact"": ""High training value - provides complete business context and methodology"",
+    ""detailedDescription"": ""End-to-end business systems, frameworks, or methodologies that provide comprehensive solutions"",
+    ""processingStrategy"": ""Deep Analysis"",
+    ""businessValueClassification"": ""High Value"",
+    ""usageAnalytics"": {
+      ""totalSelections"": 632,
+      ""recentActivity"": 17
+    },
+    ""valueDistribution"": {
+      ""highValue"": 30,
+      ""mediumValue"": 46,
+      ""standardValue"": 40
+    }
+  },
+  ""selectedTags"": {
+    ""authorship"": [
+      ""brand-company""
+    ]
+  },
+  ""customTags"": [],
+  ""step"": ""A""
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV9FPPXHV3Z2537WSWFQ8","",-1
+"2025-10-11 22:56:45",1760223405583,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"db6f2-1760223405518-9bccd28762fd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"=== WORKFLOW API CALLED ===","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV9FPPXHV3Z2537WSWFQ8","",-1
+"2025-10-11 22:56:45",1760223405557,"chunks-alpha.vercel.app/api/workflow","POST","",200,"db6f2-1760223405518-9bccd28762fd","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",251,"iad1",125,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV9FPPXHV3Z2537WSWFQ8","r6RcJ0TjcrwK",1
+"2025-10-11 22:56:43",1760223403763,"chunks-alpha.vercel.app/workflow/a37e4010-0304-478b-8668-1360778acc48/stage3","GET","",-1,"db6f2-1760223403113-7d7bae924e98","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/workflow/[documentId]/stage3","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Loaded tag dimensions from database: 7","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV79TYC2ET116VHDN4ES8","",-1
+"2025-10-11 22:56:43",1760223403322,"chunks-alpha.vercel.app/workflow/a37e4010-0304-478b-8668-1360778acc48/stage3","GET","",200,"db6f2-1760223403113-7d7bae924e98","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/workflow/[documentId]/stage3","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",438,"iad1",130,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV79TYC2ET116VHDN4ES8","wUNdXwnCXVLu",1
+"2025-10-11 22:56:40",1760223400957,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"pztf9-1760223400098-7df8d576c098","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Draft saved successfully: 8a43cc07-cc52-4b1b-a966-4fc8f0b4c976","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV46AAYY15FNKKFW8HBC4","",-1
+"2025-10-11 22:56:40",1760223400807,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"pztf9-1760223400098-7df8d576c098","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Draft data: {
+  document_id: 'a37e4010-0304-478b-8668-1360778acc48',
+  user_id: 'f15f4a68-3268-452d-b4b0-e863f807db58',
+  step: 'A',
+  belonging_rating: 5,
+  selected_category_id: '550e8400-e29b-41d4-a716-446655440001',
+  selected_tags: {},
+  custom_tags: [],
+  is_draft: true,
+  completed_steps: [ 'A' ]
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV46AAYY15FNKKFW8HBC4","",-1
+"2025-10-11 22:56:40",1760223400806,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"pztf9-1760223400098-7df8d576c098","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Saving draft for user: f15f4a68-3268-452d-b4b0-e863f807db58 document: a37e4010-0304-478b-8668-1360778acc48","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV46AAYY15FNKKFW8HBC4","",-1
+"2025-10-11 22:56:40",1760223400806,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"pztf9-1760223400098-7df8d576c098","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"User authenticated: f15f4a68-3268-452d-b4b0-e863f807db58","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV46AAYY15FNKKFW8HBC4","",-1
+"2025-10-11 22:56:40",1760223400640,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"pztf9-1760223400098-7df8d576c098","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Getting user from token...","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV46AAYY15FNKKFW8HBC4","",-1
+"2025-10-11 22:56:40",1760223400640,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"pztf9-1760223400098-7df8d576c098","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Environment check: {
+  hasSupabaseUrl: true,
+  hasSupabaseKey: true,
+  urlPrefix: 'https://hqhtbxlgzysf'
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV46AAYY15FNKKFW8HBC4","",-1
+"2025-10-11 22:56:40",1760223400639,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"pztf9-1760223400098-7df8d576c098","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Token received: eyJhbGciOiJIUzI1NiIsImtpZCI6IlBMdlJON2ExWnoycFNKbj...","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV46AAYY15FNKKFW8HBC4","",-1
+"2025-10-11 22:56:40",1760223400639,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"pztf9-1760223400098-7df8d576c098","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"UUID conversions applied: {
+  originalDocumentId: 'a37e4010-0304-478b-8668-1360778acc48',
+  realDocumentId: 'a37e4010-0304-478b-8668-1360778acc48',
+  originalCategoryId: 'complete-systems-methodologies',
+  realCategoryId: '550e8400-e29b-41d4-a716-446655440001'
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV46AAYY15FNKKFW8HBC4","",-1
+"2025-10-11 22:56:40",1760223400639,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"pztf9-1760223400098-7df8d576c098","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Converting mock category ID to real UUID: complete-systems-methodologies -> 550e8400-e29b-41d4-a716-446655440001","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV46AAYY15FNKKFW8HBC4","",-1
+"2025-10-11 22:56:40",1760223400638,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"pztf9-1760223400098-7df8d576c098","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Parsed values: {
+  documentId: 'a37e4010-0304-478b-8668-1360778acc48',
+  belongingRating: 5,
+  selectedCategory: 'complete-systems-methodologies',
+  action: 'save_draft',
+  step: 'A'
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV46AAYY15FNKKFW8HBC4","",-1
+"2025-10-11 22:56:40",1760223400638,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"pztf9-1760223400098-7df8d576c098","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Request body: {
+  ""action"": ""save_draft"",
+  ""documentId"": ""a37e4010-0304-478b-8668-1360778acc48"",
+  ""belongingRating"": 5,
+  ""selectedCategory"": {
+    ""id"": ""complete-systems-methodologies"",
+    ""name"": ""Complete Systems & Methodologies"",
+    ""description"": ""End-to-end business systems, frameworks, or methodologies that provide comprehensive solutions"",
+    ""examples"": [
+      ""Customer onboarding systems"",
+      ""Sales frameworks"",
+      ""Implementation methodologies""
+    ],
+    ""isHighValue"": true,
+    ""impact"": ""High training value - provides complete business context and methodology"",
+    ""detailedDescription"": ""End-to-end business systems, frameworks, or methodologies that provide comprehensive solutions"",
+    ""processingStrategy"": ""Deep Analysis"",
+    ""businessValueClassification"": ""High Value"",
+    ""usageAnalytics"": {
+      ""totalSelections"": 632,
+      ""recentActivity"": 17
+    },
+    ""valueDistribution"": {
+      ""highValue"": 30,
+      ""mediumValue"": 46,
+      ""standardValue"": 40
+    }
+  },
+  ""selectedTags"": {},
+  ""customTags"": [],
+  ""step"": ""A""
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV46AAYY15FNKKFW8HBC4","",-1
+"2025-10-11 22:56:40",1760223400634,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"pztf9-1760223400098-7df8d576c098","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"=== WORKFLOW API CALLED ===","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV46AAYY15FNKKFW8HBC4","",-1
+"2025-10-11 22:56:40",1760223400138,"chunks-alpha.vercel.app/api/workflow","POST","",200,"pztf9-1760223400098-7df8d576c098","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",676,"iad1",125,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV46AAYY15FNKKFW8HBC4","r6RcJ0TjcrwK",1
+"2025-10-11 22:56:38",1760223398172,"chunks-alpha.vercel.app/workflow/a37e4010-0304-478b-8668-1360778acc48/stage2","GET","",-1,"5jfxc-1760223397289-9f89529556ab","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/workflow/[documentId]/stage2","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Loaded categories from database: 10","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV1HPN85ES13EPNNJV455","",-1
+"2025-10-11 22:56:37",1760223397430,"chunks-alpha.vercel.app/workflow/a37e4010-0304-478b-8668-1360778acc48/stage2","GET","",200,"5jfxc-1760223397289-9f89529556ab","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/workflow/[documentId]/stage2","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",852,"iad1",130,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV1HPN85ES13EPNNJV455","wUNdXwnCXVLu",1
+"2025-10-11 22:56:36",1760223396566,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"wv2qf-1760223395904-5e9ae78db42b","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Draft saved successfully: 81929f08-f3c3-444c-bbf4-144297fba06e","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV07P4P8NTCJY0PF77R6E","",-1
+"2025-10-11 22:56:36",1760223396445,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"wv2qf-1760223395904-5e9ae78db42b","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Draft data: {
+  document_id: 'a37e4010-0304-478b-8668-1360778acc48',
+  user_id: 'f15f4a68-3268-452d-b4b0-e863f807db58',
+  step: 'A',
+  belonging_rating: 5,
+  selected_category_id: undefined,
+  selected_tags: {},
+  custom_tags: [],
+  is_draft: true,
+  completed_steps: [ 'A' ]
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV07P4P8NTCJY0PF77R6E","",-1
+"2025-10-11 22:56:36",1760223396444,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"wv2qf-1760223395904-5e9ae78db42b","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Saving draft for user: f15f4a68-3268-452d-b4b0-e863f807db58 document: a37e4010-0304-478b-8668-1360778acc48","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV07P4P8NTCJY0PF77R6E","",-1
+"2025-10-11 22:56:36",1760223396444,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"wv2qf-1760223395904-5e9ae78db42b","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"User authenticated: f15f4a68-3268-452d-b4b0-e863f807db58","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV07P4P8NTCJY0PF77R6E","",-1
+"2025-10-11 22:56:36",1760223396280,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"wv2qf-1760223395904-5e9ae78db42b","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Getting user from token...","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV07P4P8NTCJY0PF77R6E","",-1
+"2025-10-11 22:56:36",1760223396279,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"wv2qf-1760223395904-5e9ae78db42b","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Environment check: {
+  hasSupabaseUrl: true,
+  hasSupabaseKey: true,
+  urlPrefix: 'https://hqhtbxlgzysf'
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV07P4P8NTCJY0PF77R6E","",-1
+"2025-10-11 22:56:36",1760223396279,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"wv2qf-1760223395904-5e9ae78db42b","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Token received: eyJhbGciOiJIUzI1NiIsImtpZCI6IlBMdlJON2ExWnoycFNKbj...","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV07P4P8NTCJY0PF77R6E","",-1
+"2025-10-11 22:56:36",1760223396279,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"wv2qf-1760223395904-5e9ae78db42b","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"UUID conversions applied: {
+  originalDocumentId: 'a37e4010-0304-478b-8668-1360778acc48',
+  realDocumentId: 'a37e4010-0304-478b-8668-1360778acc48',
+  originalCategoryId: undefined,
+  realCategoryId: undefined
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV07P4P8NTCJY0PF77R6E","",-1
+"2025-10-11 22:56:36",1760223396278,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"wv2qf-1760223395904-5e9ae78db42b","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Parsed values: {
+  documentId: 'a37e4010-0304-478b-8668-1360778acc48',
+  belongingRating: 5,
+  selectedCategory: 'none',
+  action: 'save_draft',
+  step: 'A'
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV07P4P8NTCJY0PF77R6E","",-1
+"2025-10-11 22:56:36",1760223396278,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"wv2qf-1760223395904-5e9ae78db42b","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Request body: {
+  ""action"": ""save_draft"",
+  ""documentId"": ""a37e4010-0304-478b-8668-1360778acc48"",
+  ""belongingRating"": 5,
+  ""selectedCategory"": null,
+  ""selectedTags"": {},
+  ""customTags"": [],
+  ""step"": ""A""
+}","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV07P4P8NTCJY0PF77R6E","",-1
+"2025-10-11 22:56:36",1760223396274,"chunks-alpha.vercel.app/api/workflow","POST","",-1,"wv2qf-1760223395904-5e9ae78db42b","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"=== WORKFLOW API CALLED ===","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV07P4P8NTCJY0PF77R6E","",-1
+"2025-10-11 22:56:36",1760223396086,"chunks-alpha.vercel.app/api/workflow","POST","",200,"wv2qf-1760223395904-5e9ae78db42b","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/workflow","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",533,"iad1",129,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQV07P4P8NTCJY0PF77R6E","nnn6FcRObTO7",1
+"2025-10-11 22:56:33",1760223393013,"chunks-alpha.vercel.app/workflow/a37e4010-0304-478b-8668-1360778acc48/stage1","GET","",200,"xngzs-1760223392820-ad63e4a89e60","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/workflow/[documentId]/stage1","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",825,"iad1",137,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQTX7NV92EFN7XYQTKJYTE","AnZey1fcisEC",1
+"2025-10-11 22:55:35",1760223335431,"chunks-alpha.vercel.app/api/documents/status","GET","ids=a37e4010-0304-478b-8668-1360778acc48,3bf4634b-7124-4408-8d2d-d6720dc961de,5472e3b5-29c3-43b1-80ff-37aa77041441,96543b40-9c94-4944-b405-7d7d055801ce,0fbf44f1-9348-4725-84c0-1cf796578645,abd3063f-9cec-475d-a363-0b4e19ac9aa1,fcba2ebf-dbc1-4b9e-9c95-020a85",-1,"szfn4-1760223335247-872be8cb5957","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/status","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[StatusAPI] Fetching status for 7 document(s)","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQS4VN1HCPGQBMWT2SX2X2","",-1
+"2025-10-11 22:55:35",1760223335314,"chunks-alpha.vercel.app/api/documents/status","GET","ids=a37e4010-0304-478b-8668-1360778acc48,3bf4634b-7124-4408-8d2d-d6720dc961de,5472e3b5-29c3-43b1-80ff-37aa77041441,96543b40-9c94-4944-b405-7d7d055801ce,0fbf44f1-9348-4725-84c0-1cf796578645,abd3063f-9cec-475d-a363-0b4e19ac9aa1,fcba2ebf-dbc1-4b9e-9c95-020a85",-1,"szfn4-1760223335247-872be8cb5957","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/status","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[StatusAPI] Received status request","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQS4VN1HCPGQBMWT2SX2X2","",-1
+"2025-10-11 22:55:35",1760223335285,"chunks-alpha.vercel.app/api/documents/status","GET","ids=a37e4010-0304-478b-8668-1360778acc48,3bf4634b-7124-4408-8d2d-d6720dc961de,5472e3b5-29c3-43b1-80ff-37aa77041441,96543b40-9c94-4944-b405-7d7d055801ce,0fbf44f1-9348-4725-84c0-1cf796578645,abd3063f-9cec-475d-a363-0b4e19ac9aa1,fcba2ebf-dbc1-4b9e-9c95-020a85",200,"szfn4-1760223335247-872be8cb5957","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/status","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",250,"iad1",123,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQS4VN1HCPGQBMWT2SX2X2","JqDB3REVwzTb",1
+"2025-10-11 22:55:34",1760223334579,"chunks-alpha.vercel.app/api/documents/process","POST","",-1,"st26z-1760223331060-a45648bfbdf3","node","info","production","main","","lambda","/api/documents/process","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[ProcessAPI] Processing successful. Extracted 96077 characters","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQS0SP79VJYQGJPZ4SAWFT","",-1
+"2025-10-11 22:55:34",1760223334579,"chunks-alpha.vercel.app/api/documents/process","POST","",-1,"st26z-1760223331060-a45648bfbdf3","node","info","production","main","","lambda","/api/documents/process","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[DocumentProcessor] Processing completed successfully for a37e4010-0304-478b-8668-1360778acc48","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQS0SP79VJYQGJPZ4SAWFT","",-1
+"2025-10-11 22:55:34",1760223334349,"chunks-alpha.vercel.app/api/documents/process","POST","",-1,"st26z-1760223331060-a45648bfbdf3","node","info","production","main","","lambda","/api/documents/process","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[DocumentProcessor] Updating database with extracted content...","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQS0SP79VJYQGJPZ4SAWFT","",-1
+"2025-10-11 22:55:33",1760223333925,"chunks-alpha.vercel.app/api/documents/process","POST","",-1,"st26z-1760223331060-a45648bfbdf3","node","info","production","main","","lambda","/api/documents/process","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[DocumentProcessor] Text extracted: 96077 characters","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQS0SP79VJYQGJPZ4SAWFT","",-1
+"2025-10-11 22:55:33",1760223333401,"chunks-alpha.vercel.app/api/documents/status","GET","ids=a37e4010-0304-478b-8668-1360778acc48,3bf4634b-7124-4408-8d2d-d6720dc961de,5472e3b5-29c3-43b1-80ff-37aa77041441,96543b40-9c94-4944-b405-7d7d055801ce,0fbf44f1-9348-4725-84c0-1cf796578645,abd3063f-9cec-475d-a363-0b4e19ac9aa1,fcba2ebf-dbc1-4b9e-9c95-020a85",-1,"4g6p2-1760223333235-6049fa440ac1","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/status","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[StatusAPI] Fetching status for 7 document(s)","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQS2WXWEC111J42G1A4T7S","",-1
+"2025-10-11 22:55:33",1760223333293,"chunks-alpha.vercel.app/api/documents/status","GET","ids=a37e4010-0304-478b-8668-1360778acc48,3bf4634b-7124-4408-8d2d-d6720dc961de,5472e3b5-29c3-43b1-80ff-37aa77041441,96543b40-9c94-4944-b405-7d7d055801ce,0fbf44f1-9348-4725-84c0-1cf796578645,abd3063f-9cec-475d-a363-0b4e19ac9aa1,fcba2ebf-dbc1-4b9e-9c95-020a85",-1,"4g6p2-1760223333235-6049fa440ac1","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/status","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[StatusAPI] Received status request","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQS2WXWEC111J42G1A4T7S","",-1
+"2025-10-11 22:55:33",1760223333276,"chunks-alpha.vercel.app/api/documents/status","GET","ids=a37e4010-0304-478b-8668-1360778acc48,3bf4634b-7124-4408-8d2d-d6720dc961de,5472e3b5-29c3-43b1-80ff-37aa77041441,96543b40-9c94-4944-b405-7d7d055801ce,0fbf44f1-9348-4725-84c0-1cf796578645,abd3063f-9cec-475d-a363-0b4e19ac9aa1,fcba2ebf-dbc1-4b9e-9c95-020a85",200,"4g6p2-1760223333235-6049fa440ac1","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/status","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",235,"iad1",123,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQS2WXWEC111J42G1A4T7S","JqDB3REVwzTb",1
+"2025-10-11 22:55:32",1760223332864,"chunks-alpha.vercel.app/api/documents/process","POST","",-1,"st26z-1760223331060-a45648bfbdf3","node","info","production","main","","lambda","/api/documents/process","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[DocumentProcessor] Extracting text from pdf file...","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQS0SP79VJYQGJPZ4SAWFT","",-1
+"2025-10-11 22:55:32",1760223332749,"chunks-alpha.vercel.app/api/documents/process","POST","",-1,"st26z-1760223331060-a45648bfbdf3","node","info","production","main","","lambda","/api/documents/process","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[DocumentProcessor] File downloaded: 654752 bytes","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQS0SP79VJYQGJPZ4SAWFT","",-1
+"2025-10-11 22:55:31",1760223331809,"chunks-alpha.vercel.app/api/documents/process","POST","",-1,"st26z-1760223331060-a45648bfbdf3","node","info","production","main","","lambda","/api/documents/process","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[DocumentProcessor] Downloading file from storage: f15f4a68-3268-452d-b4b0-e863f807db58/1760223330020-Shoestring_AI_SaaS_MVP_Marketing_Guide_Short_V4.pdf","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQS0SP79VJYQGJPZ4SAWFT","",-1
+"2025-10-11 22:55:31",1760223331693,"chunks-alpha.vercel.app/api/documents/process","POST","",-1,"st26z-1760223331060-a45648bfbdf3","node","info","production","main","","lambda","/api/documents/process","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[DocumentProcessor] Updating status to 'processing'...","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQS0SP79VJYQGJPZ4SAWFT","",-1
+"2025-10-11 22:55:31",1760223331608,"chunks-alpha.vercel.app/api/documents/status","GET","ids=a37e4010-0304-478b-8668-1360778acc48,3bf4634b-7124-4408-8d2d-d6720dc961de,5472e3b5-29c3-43b1-80ff-37aa77041441,96543b40-9c94-4944-b405-7d7d055801ce,0fbf44f1-9348-4725-84c0-1cf796578645,abd3063f-9cec-475d-a363-0b4e19ac9aa1,fcba2ebf-dbc1-4b9e-9c95-020a85",-1,"wwmx6-1760223331268-1dc6aa8977f3","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/status","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[StatusAPI] Fetching status for 7 document(s)","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQS0ZG2Z4JF6V354XZ4A60","",-1
+"2025-10-11 22:55:31",1760223331581,"chunks-alpha.vercel.app/api/documents/process","POST","",-1,"st26z-1760223331060-a45648bfbdf3","node","info","production","main","","lambda","/api/documents/process","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[DocumentProcessor] Fetching document record...","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQS0SP79VJYQGJPZ4SAWFT","",-1
+"2025-10-11 22:55:31",1760223331580,"chunks-alpha.vercel.app/api/documents/process","POST","",-1,"st26z-1760223331060-a45648bfbdf3","node","info","production","main","","lambda","/api/documents/process","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[DocumentProcessor] Starting processing for document: a37e4010-0304-478b-8668-1360778acc48","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQS0SP79VJYQGJPZ4SAWFT","",-1
+"2025-10-11 22:55:31",1760223331580,"chunks-alpha.vercel.app/api/documents/process","POST","",-1,"st26z-1760223331060-a45648bfbdf3","node","info","production","main","","lambda","/api/documents/process","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[ProcessAPI] Starting text extraction for a37e4010-0304-478b-8668-1360778acc48...","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQS0SP79VJYQGJPZ4SAWFT","",-1
+"2025-10-11 22:55:31",1760223331456,"chunks-alpha.vercel.app/api/documents/process","POST","",-1,"st26z-1760223331060-a45648bfbdf3","node","info","production","main","","lambda","/api/documents/process","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[ProcessAPI] Processing document: a37e4010-0304-478b-8668-1360778acc48 for user: f15f4a68-3268-452d-b4b0-e863f807db58","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQS0SP79VJYQGJPZ4SAWFT","",-1
+"2025-10-11 22:55:31",1760223331351,"chunks-alpha.vercel.app/api/documents/status","GET","ids=a37e4010-0304-478b-8668-1360778acc48,3bf4634b-7124-4408-8d2d-d6720dc961de,5472e3b5-29c3-43b1-80ff-37aa77041441,96543b40-9c94-4944-b405-7d7d055801ce,0fbf44f1-9348-4725-84c0-1cf796578645,abd3063f-9cec-475d-a363-0b4e19ac9aa1,fcba2ebf-dbc1-4b9e-9c95-020a85",-1,"wwmx6-1760223331268-1dc6aa8977f3","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/status","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[StatusAPI] Received status request","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQS0ZG2Z4JF6V354XZ4A60","",-1
+"2025-10-11 22:55:31",1760223331311,"chunks-alpha.vercel.app/api/documents/status","GET","ids=a37e4010-0304-478b-8668-1360778acc48,3bf4634b-7124-4408-8d2d-d6720dc961de,5472e3b5-29c3-43b1-80ff-37aa77041441,96543b40-9c94-4944-b405-7d7d055801ce,0fbf44f1-9348-4725-84c0-1cf796578645,abd3063f-9cec-475d-a363-0b4e19ac9aa1,fcba2ebf-dbc1-4b9e-9c95-020a85",200,"wwmx6-1760223331268-1dc6aa8977f3","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/status","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",415,"iad1",123,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQS0ZG2Z4JF6V354XZ4A60","JqDB3REVwzTb",1
+"2025-10-11 22:55:31",1760223331299,"chunks-alpha.vercel.app/api/documents/process","POST","",-1,"st26z-1760223331060-a45648bfbdf3","node","info","production","main","","lambda","/api/documents/process","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[ProcessAPI] Received processing request","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQS0SP79VJYQGJPZ4SAWFT","",-1
+"2025-10-11 22:55:31",1760223331126,"chunks-alpha.vercel.app/api/documents/process","POST","",200,"st26z-1760223331060-a45648bfbdf3","node","info","production","main","","lambda","/api/documents/process","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",3592,"iad1",193,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQS0SP79VJYQGJPZ4SAWFT","w6pBV2ndTijb",1
+"2025-10-11 22:55:30",1760223330993,"chunks-alpha.vercel.app/api/documents/upload","POST","",-1,"2t6dv-1760223328843-8aa57a7796f0","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/upload","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Successfully uploaded document: a37e4010-0304-478b-8668-1360778acc48","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQRZ5444TZB01C9C0H3YX7","",-1
+"2025-10-11 22:55:30",1760223330990,"chunks-alpha.vercel.app/api/documents/upload","POST","",-1,"2t6dv-1760223328843-8aa57a7796f0","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/upload","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[Upload] Processing trigger attempt 1/3 for document a37e4010-0304-478b-8668-1360778acc48","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQRZ5444TZB01C9C0H3YX7","",-1
+"2025-10-11 22:55:30",1760223330990,"chunks-alpha.vercel.app/api/documents/upload","POST","",-1,"2t6dv-1760223328843-8aa57a7796f0","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/upload","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[Upload] Triggering text extraction for document a37e4010-0304-478b-8668-1360778acc48 at https://chunks-alpha.vercel.app/api/documents/process","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQRZ5444TZB01C9C0H3YX7","",-1
+"2025-10-11 22:55:30",1760223330036,"chunks-alpha.vercel.app/api/documents/upload","POST","",-1,"2t6dv-1760223328843-8aa57a7796f0","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/upload","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"Uploading file: Shoestring AI SaaS MVP Marketing Guide Short V4.pdf (654752 bytes) to f15f4a68-3268-452d-b4b0-e863f807db58/1760223330020-Shoestring_AI_SaaS_MVP_Marketing_Guide_Short_V4.pdf","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQRZ5444TZB01C9C0H3YX7","",-1
+"2025-10-11 22:55:29",1760223329442,"chunks-alpha.vercel.app/api/documents/upload","POST","",201,"2t6dv-1760223328843-8aa57a7796f0","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/upload","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",1567,"iad1",146,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQRZ5444TZB01C9C0H3YX7","cDw5uTHOloCr",1
+"2025-10-11 22:54:59",1760223299552,"chunks-alpha.vercel.app/api/documents/status","GET","ids=3bf4634b-7124-4408-8d2d-d6720dc961de,5472e3b5-29c3-43b1-80ff-37aa77041441,96543b40-9c94-4944-b405-7d7d055801ce,0fbf44f1-9348-4725-84c0-1cf796578645,abd3063f-9cec-475d-a363-0b4e19ac9aa1,fcba2ebf-dbc1-4b9e-9c95-020a85a488ea",-1,"fhx79-1760223299377-6163fddaa8ac","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/status","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[StatusAPI] Fetching status for 6 document(s)","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQR1TX39XBZHYAYHV4KNZ5","",-1
+"2025-10-11 22:54:59",1760223299439,"chunks-alpha.vercel.app/api/documents/status","GET","ids=3bf4634b-7124-4408-8d2d-d6720dc961de,5472e3b5-29c3-43b1-80ff-37aa77041441,96543b40-9c94-4944-b405-7d7d055801ce,0fbf44f1-9348-4725-84c0-1cf796578645,abd3063f-9cec-475d-a363-0b4e19ac9aa1,fcba2ebf-dbc1-4b9e-9c95-020a85a488ea",-1,"fhx79-1760223299377-6163fddaa8ac","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/status","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[StatusAPI] Received status request","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQR1TX39XBZHYAYHV4KNZ5","",-1
+"2025-10-11 22:54:59",1760223299421,"chunks-alpha.vercel.app/api/documents/status","GET","ids=3bf4634b-7124-4408-8d2d-d6720dc961de,5472e3b5-29c3-43b1-80ff-37aa77041441,96543b40-9c94-4944-b405-7d7d055801ce,0fbf44f1-9348-4725-84c0-1cf796578645,abd3063f-9cec-475d-a363-0b4e19ac9aa1,fcba2ebf-dbc1-4b9e-9c95-020a85a488ea",200,"fhx79-1760223299377-6163fddaa8ac","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/status","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",218,"iad1",123,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQR1TX39XBZHYAYHV4KNZ5","JqDB3REVwzTb",1
+"2025-10-11 22:54:53",1760223293287,"chunks-alpha.vercel.app/api/documents/status","GET","ids=25cb608d-c95a-4035-ac74-690e23e307a0,3bf4634b-7124-4408-8d2d-d6720dc961de,5472e3b5-29c3-43b1-80ff-37aa77041441,96543b40-9c94-4944-b405-7d7d055801ce,0fbf44f1-9348-4725-84c0-1cf796578645,abd3063f-9cec-475d-a363-0b4e19ac9aa1,fcba2ebf-dbc1-4b9e-9c95-020a85",-1,"5pzww-1760223293100-4c85ba78f88f","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/status","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[StatusAPI] Fetching status for 7 document(s)","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQQVPVZJSKKKYD3D75YMBP","",-1
+"2025-10-11 22:54:53",1760223293174,"chunks-alpha.vercel.app/api/documents/status","GET","ids=25cb608d-c95a-4035-ac74-690e23e307a0,3bf4634b-7124-4408-8d2d-d6720dc961de,5472e3b5-29c3-43b1-80ff-37aa77041441,96543b40-9c94-4944-b405-7d7d055801ce,0fbf44f1-9348-4725-84c0-1cf796578645,abd3063f-9cec-475d-a363-0b4e19ac9aa1,fcba2ebf-dbc1-4b9e-9c95-020a85",-1,"5pzww-1760223293100-4c85ba78f88f","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/status","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[StatusAPI] Received status request","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQQVPVZJSKKKYD3D75YMBP","",-1
+"2025-10-11 22:54:53",1760223293147,"chunks-alpha.vercel.app/api/documents/status","GET","ids=25cb608d-c95a-4035-ac74-690e23e307a0,3bf4634b-7124-4408-8d2d-d6720dc961de,5472e3b5-29c3-43b1-80ff-37aa77041441,96543b40-9c94-4944-b405-7d7d055801ce,0fbf44f1-9348-4725-84c0-1cf796578645,abd3063f-9cec-475d-a363-0b4e19ac9aa1,fcba2ebf-dbc1-4b9e-9c95-020a85",200,"5pzww-1760223293100-4c85ba78f88f","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/status","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",238,"iad1",123,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQQVPVZJSKKKYD3D75YMBP","JqDB3REVwzTb",1
+"2025-10-11 22:54:47",1760223287766,"chunks-alpha.vercel.app/api/documents/status","GET","ids=25cb608d-c95a-4035-ac74-690e23e307a0,b272cf82-0d49-496d-bcc4-078c371bd192,3bf4634b-7124-4408-8d2d-d6720dc961de,5472e3b5-29c3-43b1-80ff-37aa77041441,96543b40-9c94-4944-b405-7d7d055801ce,0fbf44f1-9348-4725-84c0-1cf796578645,abd3063f-9cec-475d-a363-0b4e19",-1,"qkpl4-1760223287481-4df68460fc2c","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/status","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[StatusAPI] Fetching status for 8 document(s)","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQQP75C97YXA8YBB2X22K5","",-1
+"2025-10-11 22:54:47",1760223287595,"chunks-alpha.vercel.app/api/documents/status","GET","ids=25cb608d-c95a-4035-ac74-690e23e307a0,b272cf82-0d49-496d-bcc4-078c371bd192,3bf4634b-7124-4408-8d2d-d6720dc961de,5472e3b5-29c3-43b1-80ff-37aa77041441,96543b40-9c94-4944-b405-7d7d055801ce,0fbf44f1-9348-4725-84c0-1cf796578645,abd3063f-9cec-475d-a363-0b4e19",-1,"qkpl4-1760223287481-4df68460fc2c","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/status","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[StatusAPI] Received status request","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQQP75C97YXA8YBB2X22K5","",-1
+"2025-10-11 22:54:47",1760223287525,"chunks-alpha.vercel.app/api/documents/status","GET","ids=25cb608d-c95a-4035-ac74-690e23e307a0,b272cf82-0d49-496d-bcc4-078c371bd192,3bf4634b-7124-4408-8d2d-d6720dc961de,5472e3b5-29c3-43b1-80ff-37aa77041441,96543b40-9c94-4944-b405-7d7d055801ce,0fbf44f1-9348-4725-84c0-1cf796578645,abd3063f-9cec-475d-a363-0b4e19",200,"qkpl4-1760223287481-4df68460fc2c","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/status","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",353,"iad1",123,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQQP75C97YXA8YBB2X22K5","JqDB3REVwzTb",1
+"2025-10-11 22:54:39",1760223279310,"chunks-alpha.vercel.app/api/documents/status","GET","ids=25cb608d-c95a-4035-ac74-690e23e307a0,b272cf82-0d49-496d-bcc4-078c371bd192,7e589b59-7585-4682-a2a6-d54f319070ed,3bf4634b-7124-4408-8d2d-d6720dc961de,5472e3b5-29c3-43b1-80ff-37aa77041441,96543b40-9c94-4944-b405-7d7d055801ce,0fbf44f1-9348-4725-84c0-1cf796",-1,"dn7qj-1760223278792-efc90d36d790","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/status","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[StatusAPI] Fetching status for 9 document(s)","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQQDV6MVNV6M807QMAFC6P","",-1
+"2025-10-11 22:54:39",1760223279132,"chunks-alpha.vercel.app/api/documents/status","GET","ids=25cb608d-c95a-4035-ac74-690e23e307a0,b272cf82-0d49-496d-bcc4-078c371bd192,7e589b59-7585-4682-a2a6-d54f319070ed,3bf4634b-7124-4408-8d2d-d6720dc961de,5472e3b5-29c3-43b1-80ff-37aa77041441,96543b40-9c94-4944-b405-7d7d055801ce,0fbf44f1-9348-4725-84c0-1cf796",-1,"dn7qj-1760223278792-efc90d36d790","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/status","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"iad1",-1,-1,"[StatusAPI] Received status request","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQQDV6MVNV6M807QMAFC6P","",-1
+"2025-10-11 22:54:38",1760223278950,"chunks-alpha.vercel.app/api/documents/status","GET","ids=25cb608d-c95a-4035-ac74-690e23e307a0,b272cf82-0d49-496d-bcc4-078c371bd192,7e589b59-7585-4682-a2a6-d54f319070ed,3bf4634b-7124-4408-8d2d-d6720dc961de,5472e3b5-29c3-43b1-80ff-37aa77041441,96543b40-9c94-4944-b405-7d7d055801ce,0fbf44f1-9348-4725-84c0-1cf796",200,"dn7qj-1760223278792-efc90d36d790","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","","lambda","/api/documents/status","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",526,"iad1",128,2048,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","01K7AQQDV6MVNV6M807QMAFC6P","4tx0ilgW3Csv",1
+"2025-10-11 22:54:35",1760223275428,"chunks-alpha.vercel.app/upload","GET","",200,"ppczw-1760223275206-b40d7a9ada2c","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","PRERENDER","static","/upload","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"",-1,-1,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","","",-1
+"2025-10-11 22:54:29",1760223269872,"chunks-alpha.vercel.app/dashboard","GET","",200,"5jfxc-1760223269785-e150919f8bd6","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36","info","production","main","PRERENDER","static","/dashboard","chunks-alpha.vercel.app","chunks-alpha.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"",-1,-1,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","","",-1
+"2025-10-11 22:52:22",1760223142121,"chunks-alpha-f8uvcb4ge-james-jamesjordanms-projects.vercel.app/signin","GET","",200,"pf8s4-1760223141912-c081dd7827ca","vercel-screenshot/1.0","info","production","main","PRERENDER","static","/signin","chunks-alpha-f8uvcb4ge-james-jamesjordanms-projects.vercel.app","chunks-alpha-f8uvcb4ge-james-jamesjordanms-projects.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"",-1,-1,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","","",-1
+"2025-10-11 22:52:22",1760223142118,"chunks-alpha-f8uvcb4ge-james-jamesjordanms-projects.vercel.app/signin","GET","",200,"zwt65-1760223142020-f16c1381846c","vercel-screenshot/1.0","info","production","main","PRERENDER","static","/signin","chunks-alpha-f8uvcb4ge-james-jamesjordanms-projects.vercel.app","chunks-alpha-f8uvcb4ge-james-jamesjordanms-projects.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"",-1,-1,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","","",-1
+"2025-10-11 22:52:21",1760223141481,"chunks-alpha-f8uvcb4ge-james-jamesjordanms-projects.vercel.app/dashboard","GET","",200,"8c4j9-1760223141217-77ffc868e4fd","vercel-screenshot/1.0","info","production","main","PRERENDER","static","/dashboard","chunks-alpha-f8uvcb4ge-james-jamesjordanms-projects.vercel.app","chunks-alpha-f8uvcb4ge-james-jamesjordanms-projects.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"",-1,-1,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","","",-1
+"2025-10-11 22:52:21",1760223141470,"chunks-alpha-f8uvcb4ge-james-jamesjordanms-projects.vercel.app/dashboard","GET","",200,"n8nv8-1760223141170-014e2aa60b1c","vercel-screenshot/1.0","info","production","main","PRERENDER","static","/dashboard","chunks-alpha-f8uvcb4ge-james-jamesjordanms-projects.vercel.app","chunks-alpha-f8uvcb4ge-james-jamesjordanms-projects.vercel.app","dpl_D9SWTtQNFD7QtPDBrcfyQgnRorP8",-1,"",-1,-1,"","prj_eInD4p3kogeSoNKQeAmMnwbLifV3","","","","",-1

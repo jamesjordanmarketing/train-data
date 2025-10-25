@@ -1,0 +1,10 @@
+{
+  "template": "_prompt_engineering/05-product-implementation-patterns-prompt_v1.md",
+  "implementationTemplate": "_templates/05-implementation-patterns-template.md",
+  "structure": "04-bmo-structure.md",
+  "functionalRequirements": "03-bmo-functional-requirements.md",
+  "overview": "01-bmo-overview.md",
+  "userStories": "02-bmo-user-stories.md",
+  "example": "_examples/05-bmo-implementation-patterns.md",
+  "outputPath": "05-bmo-implementation-patterns.md"
+}

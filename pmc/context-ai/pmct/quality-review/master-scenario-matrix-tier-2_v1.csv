@@ -1,0 +1,36 @@
+Conv ID,Scenario Name,Complexity Level,Topic Category,Primary Emotions,Special Considerations,Turn Count,Expert Review Required (Finance/Therapy/Legal),Notes
+51,Elderly Immigrant Parent Support,High,Family Finance + Cultural,Obligation + Guilt + Anxiety,Cultural norms around elder care language barriers,6,Finance + Therapy,Non-citizen parents need support ESL considerations
+52,Disability Accommodation Career Pivot,High,Career + Legal + Finance,Fear + Determination + Uncertainty,ADA implications long-term disability planning,6,Finance + Legal,Progressive condition requiring career change
+53,Domestic Abuse Financial Escape,Very High,Safety + Rebuilding,Fear + Shame + Hope,Safety planning hidden account building,5,Therapy + Finance + Legal,Need referrals to DV resources
+54,Transgender Transition Costs,High,Identity + Finance,Anxiety + Hope + Vulnerability,Medical costs legal name changes,6,Therapy + Finance,Healthcare coverage discrimination issues
+55,Wrongful Termination Settlement,High,Legal + Career + Finance,Anger + Vindication + Confusion,Settlement structure tax implications,5,Finance + Legal,Lump sum vs annuity decision
+56,Crypto Investment Loss Recovery,Medium,Investment + Psychology,Regret + Shame + Determination,Speculative loss tax harvesting,5,Finance + Therapy,Lost 80K in crypto crash
+57,MLM Exit and Debt Cleanup,Medium,Debt + Psychology + Career,Shame + Anger + Relief,Predatory business model garage full of inventory,5,Finance + Therapy,Multi-level marketing victim
+58,Sandwich Generation Crisis,High,Family Finance + Career,Overwhelm + Guilt + Exhaustion,Caring for kids and parents simultaneously,6,Finance + Therapy,Both generations need support
+59,Green Card Sponsorship Job Lock,Medium,Immigration + Career + Finance,Frustration + Fear + Hope,Cannot change jobs during process opportunity cost,5,Finance + Legal,H1B to green card transition
+60,Addiction Recovery Financial Rebuild,High,Recovery + Finance,Shame + Hope + Determination,Past financial chaos now in recovery,6,Therapy + Finance,18 months sober rebuilding credit
+61,Infertility Treatment Funding,High,Family Planning + Medical,Grief + Hope + Anxiety,IVF costs insurance gaps emotional toll,6,Therapy + Finance,Multiple failed cycles considering next steps
+62,Small Business PPP Loan Forgiveness,Medium,Business + Legal,Confusion + Anxiety,Pandemic loan forgiveness requirements documentation,5,Finance + Legal,Sole proprietor navigating forgiveness
+63,Widowed Young with Children,Very High,Grief + Family Finance,Grief + Fear + Overwhelm,Life insurance estate survivor benefits,6,Finance + Therapy,Spouse died suddenly age 39
+64,Gender Pay Gap Discovery Response,Medium,Career + Equity,Anger + Determination,Learned of significant pay disparity negotiation strategy,5,Finance + Legal,Discovered earning 20 percent less than male peers
+65,Religious Community Financial Pressure,Medium,Faith + Finance + Community,Guilt + Conflict + Determination,Tithing expectations vs personal goals boundary setting,5,Finance + Therapy,Expected to give 10 percent struggling financially
+66,Adult ADHD Financial Management,Medium,Mental Health + Finance,Frustration + Hope,Executive function challenges with money management systems,5,Finance + Therapy,Recently diagnosed seeking accommodations
+67,Gig Economy Retirement Planning,Medium,Career + Retirement,Anxiety + Confusion,Multiple income streams no employer benefits,5,Finance,Uber driver plus freelance writer
+68,Interracial Couple Family Money Tensions,High,Relationships + Culture + Finance,Conflict + Frustration + Hope,Different cultural money scripts family interference,6,Therapy + Finance,His family vs her family money values clash
+69,Climate Anxiety Investment Alignment,Medium,Values + Investment,Anxiety + Hope + Determination,ESG investing fossil fuel divestment returns concerns,5,Finance,Wants portfolio aligned with climate values
+70,Neurodivergent Child Support Planning,High,Special Needs + Future Planning,Anxiety + Love + Overwhelm,Lifelong support needs legal structures trust planning,6,Finance + Legal,Autistic child will need adult support
+71,Boomerang Adult Child Boundaries,Medium,Family + Boundaries,Frustration + Guilt + Determination,Adult child moved back in setting financial expectations,5,Finance + Therapy,28-year-old living at home contributing nothing
+72,Medical Bankruptcy Post-Recovery,High,Health Crisis + Debt + Rebuilding,Shame + Relief + Determination,Discharged medical debt rebuilding credit,5,Finance + Therapy,Cancer treatment led to bankruptcy 2 years ago
+73,Toxic Workplace Golden Handcuffs,High,Career + Mental Health + Finance,Anxiety + Trapped + Determination,Unvested equity keeping in bad situation,6,Therapy + Finance,4-year vest need to leave for mental health
+74,Inheritance Family Conflict,High,Family Dynamics + Legal + Finance,Grief + Anger + Guilt,Unequal distribution sibling resentment,6,Finance + Legal + Therapy,Parent left more to one sibling creating rift
+75,Late-Life Career Change,Medium,Career + Identity + Finance,Fear + Hope + Determination,Age 50+ starting over income drop,5,Finance + Therapy,Leaving corporate job to teach income cut in half
+76,Algorithmic Trading Loss,Medium,Investment + Technology,Regret + Confusion + Determination,Automated system lost significant funds understanding risk,5,Finance,Robo-advisor or bot trading gone wrong
+77,Expatriate Tax Complexity,High,International + Tax + Legal,Overwhelm + Frustration,FATCA FBAR working abroad tax obligations,6,Finance + Legal,US citizen working in Asia tax treaty issues
+78,Polyamorous Household Finance,Medium,Relationships + Finance,Complexity + Hope,Multiple partner financial planning legal structures,5,Finance + Legal,Three-partner household shared expenses planning
+79,Unpaid Caregiver Retirement Gap,High,Caregiving + Gender + Finance,Anxiety + Resentment + Determination,Years out of workforce caring for family retirement shortfall,6,Finance + Therapy,Left career to care for disabled child
+80,Startup Equity Underwater Options,Medium,Compensation + Career,Disappointment + Uncertainty,Company valuation dropped options worthless stay or leave,5,Finance,Stock options out of the money company struggling
+81,Faith Transition Financial Impact,Medium,Identity + Community + Finance,Grief + Liberation + Anxiety,Leaving religious community lifestyle cost changes,5,Therapy + Finance,Left high-demand religion adjusting to secular life costs
+82,Whistleblower Settlement Planning,High,Legal + Career + Finance,Vindication + Anxiety + Relief,Legal settlement after reporting wrongdoing career impact,6,Finance + Legal,Won settlement but industry blacklisted
+83,Long COVID Disability Planning,High,Health + Disability + Career,Frustration + Fear + Determination,Chronic illness unable to work disability application,6,Finance + Therapy + Legal,Can no longer perform job seeking disability benefits
+84,Blended Family Estate Planning,High,Family + Legal + Finance,Conflict + Love + Complexity,His kids her kids our kids equitable planning,6,Finance + Legal,Second marriages with children from previous
+85,Digital Nomad Tax and Retirement,Medium,International + Career + Finance,Freedom + Anxiety + Confusion,Location-independent income tax domicile retirement,5,Finance + Legal,Remote worker living in different countries

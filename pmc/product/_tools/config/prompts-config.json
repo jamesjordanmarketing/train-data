@@ -1,0 +1,45 @@
+{
+  "documents": [
+    {
+      "type": "overview",
+      "prompt_template_path": "pmc/product/_prompt_engineering/01-product-overview-prompt-template_v1.md",
+      "template_config": {
+        "required_placeholders": {
+          "PROJECT_NAME": "{project_name}",
+          "SEED_STORY_PATH": "00-{{project_abbreviation}}-seed-story.md",
+          "OVERVIEW_TEMPLATE_PATH": "_templates/01-overview-template.md",
+          "REFERENCE_EXAMPLE_PATH": "_examples/01-aplio-mod-1-overview.md",
+          "OUTPUT_PATH": "01-{{project_abbreviation}}-overview.md"
+        },
+        "conditional_sections": {
+          "current_status": {
+            "placeholders": {
+              "CODEBASE_REVIEW_PATH": "codebase_path_here"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "user-stories",
+      "prompt_template_path": "pmc/product/_prompt_engineering/02-product-user-stories-prompt-template_v1.md",
+      "template_config": {
+        "required_placeholders": {
+          "PROJECT_NAME": "{{project_name}}",
+          "USER_STORIES_TEMPLATE_PATH": "_templates/02-user-stories-template.md",
+          "SEED_STORY_PATH": "00-{{project_abbreviation}}-seed-story.md",
+          "OVERVIEW_PATH": "01-{{project_abbreviation}}-overview.md",
+          "REFERENCE_EXAMPLE_PATH": "_examples/02-aplio-mod-1-user-stories.md",
+          "OUTPUT_PATH": "02-{{project_abbreviation}}-user-stories.md"
+        },
+        "conditional_sections": {
+          "current_status": {
+            "placeholders": {
+              "CODEBASE_REVIEW_PATH": "codebase_path_here"
+            }
+          }
+        }
+      }
+    }
+  ]
+} 

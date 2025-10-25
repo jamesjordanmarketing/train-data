@@ -1,0 +1,9 @@
+{
+  "template": "_prompt_engineering/04-product-structure-prompt_v1.md",
+  "structureTemplate": "_templates/04-structure-specification-template.md",
+  "functionalRequirements": "03-bmo-functional-requirements.md",
+  "overview": "01-bmo-overview.md",
+  "userStories": "02-bmo-user-stories.md",
+  "example": "_examples/04-bmo-structure.md",
+  "outputPath": "04-bmo-structure.md"
+}

@@ -1,0 +1,364 @@
+{
+  "$schema": "https://json-schema.org/draft/2025-10/schema",
+  "$id": "https://brightrun.ai/schemas/emotional-lora-training-v3.4.json",
+  "title": "Emotionally-Aware LoRA Training Dataset Format v3.4",
+  "description": "State-of-the-art JSON structure for training emotionally intelligent conversational AI using modern LoRA techniques (October 2025)",
+  
+  "metadata": {
+    "version": "3.4.0",
+    "created_date": "2025-10-16",
+    "dataset_name": "Bright Run Emotional Intelligence Training Set",
+    "target_model": "7B-70B parameter LLMs",
+    "training_method": "LoRA with full layer adaptation",
+    "emotional_framework": "Goleman EI + VAD Model",
+    "minimum_samples": 1000,
+    "recommended_samples": 10000,
+    "supported_languages": ["en", "zh", "es", "fr", "de"],
+    "cultural_contexts": ["western", "eastern", "global"]
+  },
+  
+  "training_configuration": {
+    "lora_settings": {
+      "rank": 16,
+      "alpha": 32,
+      "dropout": 0.1,
+      "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
+      "learning_rate_multiplier": 10,
+      "trainable_parameters_percentage": 0.2,
+      "apply_to_mlp_layers": true,
+      "apply_to_attention_layers": true
+    },
+    "optimization": {
+      "batch_size": 16,
+      "gradient_accumulation_steps": 4,
+      "warmup_steps": 100,
+      "max_epochs": 5,
+      "early_stopping_patience": 3
+    }
+  },
+  
+  "conversation_structure": {
+    "conversation_id": "string",
+    "timestamp": "ISO 8601",
+    "domain": "string",
+    "scenario_type": "string",
+    "participant_count": "integer",
+    "total_turns": "integer",
+    "emotional_complexity_score": "float (0-1)",
+    "therapeutic_framework": "string",
+    "cultural_context": "string",
+    "language": "string",
+    "quality_metrics": {
+      "coherence_score": "float (0-1)",
+      "empathy_score": "float (0-1)",
+      "strategy_effectiveness": "float (0-1)",
+      "human_review_score": "float (0-1)",
+      "confidence_level": "float (0-1)"
+    }
+  },
+  
+  "persona_definitions": {
+    "assistant_persona": {
+      "name": "string",
+      "role": "string",
+      "background": "string",
+      "philosophy": "array of strings",
+      "communication_style": {
+        "tone": "string",
+        "formality_level": "float (0-1)",
+        "empathy_baseline": "float (0-1)",
+        "expertise_areas": "array of strings"
+      },
+      "emotional_intelligence_profile": {
+        "self_awareness": "float (0-1)",
+        "self_regulation": "float (0-1)",
+        "social_awareness": "float (0-1)",
+        "relationship_management": "float (0-1)"
+      }
+    },
+    "user_personas": [
+      {
+        "persona_id": "string",
+        "archetype": "string",
+        "emotional_baseline": {
+          "typical_valence": "float (-1 to 1)",
+          "typical_arousal": "float (0-1)",
+          "typical_dominance": "float (0-1)"
+        },
+        "communication_patterns": "array of strings",
+        "trigger_points": "array of strings",
+        "coping_mechanisms": "array of strings"
+      }
+    ]
+  },
+  
+  "conversation_turns": [
+    {
+      "turn_id": "string",
+      "turn_number": "integer",
+      "speaker": "string",
+      "timestamp_offset": "float (seconds)",
+      
+      "input": {
+        "text": "string",
+        "tokens": "integer",
+        "linguistic_features": {
+          "sentiment_polarity": "float (-1 to 1)",
+          "subjectivity": "float (0-1)",
+          "formality": "float (0-1)",
+          "urgency": "float (0-1)"
+        }
+      },
+      
+      "emotional_analysis": {
+        "detected_emotions": {
+          "primary": {
+            "emotion": "string",
+            "intensity": "float (0-1)",
+            "confidence": "float (0-1)"
+          },
+          "secondary": {
+            "emotion": "string",
+            "intensity": "float (0-1)",
+            "confidence": "float (0-1)"
+          },
+          "tertiary": {
+            "emotion": "string",
+            "intensity": "float (0-1)",
+            "confidence": "float (0-1)"
+          }
+        },
+        "emotional_dimensions": {
+          "valence": "float (-1 to 1)",
+          "arousal": "float (0-1)",
+          "dominance": "float (0-1)"
+        },
+        "emotional_progression": {
+          "from_previous_turn": "string",
+          "trajectory": "string (escalating/de-escalating/stable/fluctuating)",
+          "rate_of_change": "float",
+          "inflection_point": "boolean"
+        },
+        "cognitive_indicators": {
+          "cognitive_load": "float (0-1)",
+          "emotional_complexity": "float (0-1)",
+          "ambiguity_level": "float (0-1)",
+          "defense_mechanisms": "array of strings"
+        },
+        "behavioral_cues": [
+          {
+            "cue_type": "string",
+            "cue_description": "string",
+            "significance": "float (0-1)"
+          }
+        ]
+      },
+      
+      "context_tracking": {
+        "conversation_history_summary": "string",
+        "relevant_previous_turns": "array of turn_ids",
+        "topic_continuity": "float (0-1)",
+        "emotional_thread": "string",
+        "unresolved_issues": "array of strings"
+      },
+      
+      "response_planning": {
+        "identified_needs": [
+          "string"
+        ],
+        "empathy_requirement": "float (0-1)",
+        "support_type_needed": "string",
+        "risk_indicators": {
+          "escalation_risk": "float (0-1)",
+          "disengagement_risk": "float (0-1)",
+          "misunderstanding_risk": "float (0-1)"
+        }
+      },
+      
+      "response_generation": {
+        "selected_strategies": [
+          {
+            "strategy_name": "string",
+            "priority": "integer",
+            "application_strength": "float (0-1)",
+            "rationale": "string"
+          }
+        ],
+        "response_text": "string",
+        "response_breakdown": [
+          {
+            "segment_id": "string",
+            "text": "string",
+            "function": "string",
+            "emotional_impact": "string",
+            "strategy_applied": "string"
+          }
+        ],
+        "tone_modulation": {
+          "warmth": "float (0-1)",
+          "authority": "float (0-1)",
+          "formality": "float (0-1)",
+          "directness": "float (0-1)"
+        },
+        "therapeutic_elements": {
+          "validation_present": "boolean",
+          "normalization_present": "boolean",
+          "reframing_present": "boolean",
+          "education_present": "boolean",
+          "action_planning_present": "boolean"
+        }
+      },
+      
+      "quality_control": {
+        "coherence_check": {
+          "logical_consistency": "float (0-1)",
+          "emotional_consistency": "float (0-1)",
+          "persona_consistency": "float (0-1)"
+        },
+        "appropriateness_check": {
+          "cultural_sensitivity": "float (0-1)",
+          "therapeutic_alignment": "float (0-1)",
+          "ethical_compliance": "float (0-1)"
+        },
+        "effectiveness_prediction": {
+          "likely_emotional_impact": "string",
+          "engagement_probability": "float (0-1)",
+          "resolution_probability": "float (0-1)"
+        }
+      },
+      
+      "self_improvement_layer": {
+        "correction_history": [
+          {
+            "timestamp": "ISO 8601",
+            "correction_type": "string",
+            "original_value": "any",
+            "corrected_value": "any",
+            "source": "string (human/automated/model)",
+            "confidence_change": "float"
+          }
+        ],
+        "learning_signals": {
+          "should_reinforce": "boolean",
+          "should_modify": "boolean",
+          "modification_suggestions": "array of strings"
+        },
+        "adaptation_markers": {
+          "domain_specific": "boolean",
+          "user_specific": "boolean",
+          "culture_specific": "boolean"
+        }
+      },
+      
+      "metadata": {
+        "annotation_version": "string",
+        "annotator_id": "string",
+        "annotation_confidence": "float (0-1)",
+        "review_status": "string",
+        "flags": "array of strings",
+        "notes": "string"
+      }
+    }
+  ],
+  
+  "conversation_summary": {
+    "emotional_arc": {
+      "starting_emotional_state": "string",
+      "ending_emotional_state": "string",
+      "peak_emotional_intensity": "float (0-1)",
+      "emotional_resolution_achieved": "boolean",
+      "key_emotional_transitions": [
+        {
+          "from_turn": "integer",
+          "to_turn": "integer",
+          "transition_type": "string"
+        }
+      ]
+    },
+    "strategy_effectiveness": {
+      "most_effective_strategies": "array of strings",
+      "least_effective_strategies": "array of strings",
+      "strategy_adaptation_count": "integer",
+      "overall_effectiveness_score": "float (0-1)"
+    },
+    "learning_outcomes": {
+      "key_insights": "array of strings",
+      "patterns_identified": "array of strings",
+      "recommendations_for_similar_cases": "array of strings"
+    }
+  },
+  
+  "training_directives": {
+    "primary_learning_objective": "string",
+    "secondary_objectives": "array of strings",
+    "focus_areas": "array of strings",
+    "avoid_patterns": "array of strings",
+    "reinforcement_weight": "float (0.5-2.0)",
+    "synthetic_generation_config": {
+      "allow_synthetic_expansion": "boolean",
+      "expansion_factor": "integer (1-100)",
+      "variation_dimensions": [
+        "emotion_intensity",
+        "topic_variation",
+        "strategy_variation",
+        "linguistic_style"
+      ],
+      "preserve_elements": [
+        "persona_voice",
+        "therapeutic_framework",
+        "core_methodology"
+      ]
+    }
+  },
+  
+  "dataset_statistics": {
+    "emotion_distribution": {
+      "emotion_name": "percentage"
+    },
+    "strategy_distribution": {
+      "strategy_name": "percentage"
+    },
+    "conversation_length_distribution": {
+      "1-3_turns": "percentage",
+      "4-6_turns": "percentage",
+      "7-10_turns": "percentage",
+      "10+_turns": "percentage"
+    },
+    "quality_distribution": {
+      "high_confidence": "percentage",
+      "medium_confidence": "percentage",
+      "low_confidence": "percentage",
+      "human_reviewed": "percentage"
+    }
+  },
+  
+  "integration_hooks": {
+    "rag_compatibility": {
+      "semantic_anchors": "array of strings",
+      "knowledge_base_queries": "array of strings",
+      "fact_emotion_bindings": "object"
+    },
+    "multimodal_placeholders": {
+      "audio_features": {
+        "prosody": "object",
+        "voice_quality": "object"
+      },
+      "visual_features": {
+        "facial_expressions": "object",
+        "body_language": "object"
+      }
+    },
+    "external_apis": {
+      "sentiment_analysis": "string",
+      "knowledge_retrieval": "string",
+      "fact_checking": "string"
+    }
+  },
+  
+  "version_control": {
+    "schema_version": "3.4.0",
+    "backwards_compatible_to": "3.0.0",
+    "migration_notes": "string",
+    "deprecation_warnings": "array of strings"
+  }
+}

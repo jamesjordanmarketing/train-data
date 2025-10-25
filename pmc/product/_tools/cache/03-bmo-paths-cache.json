@@ -1,0 +1,17 @@
+{
+  "preprocess-paths": {
+    "template": "_prompt_engineering/3a-preprocess-functional-requirements-prompt_v1.md",
+    "functionalRequirements": "03-bmo-functional-requirements.md",
+    "overview": "01-bmo-overview.md",
+    "userStories": "02-bmo-user-stories.md",
+    "userJourney": "03.5-bmo-user-journey.md"
+  },
+  "enhance-paths": {
+    "template": "_prompt_engineering/3b-functional-requirements-prompt_v1.md",
+    "functionalRequirements": "03-bmo-functional-requirements.md",
+    "overview": "01-bmo-overview.md",
+    "userStories": "02-bmo-user-stories.md",
+    "userJourney": "03.5-bmo-user-journey.md",
+    "example": "../product/_examples/03-bmo-functional-requirements.md"
+  }
+}

@@ -1,0 +1,298 @@
+id,template_name,template_type,prompt_text,response_schema,applicable_chunk_types,version,is_active,created_at,updated_at,created_by,notes
+13ceeb1e-fa3f-40d9-9262-2ed3596a2f4e,task_extraction_v1,task_extraction,"Extract task/procedure information from the following instructional chunk.
+
+CHUNK TEXT:
+---
+{chunk_text}
+---
+
+Extract and return the following in JSON format:
+- task_name: Name of the primary task/procedure
+- preconditions: Requirements before executing
+- inputs: Required inputs/resources
+- steps_json: Array of step objects with ""step"" and ""details"" keys
+- expected_output: What success looks like
+- warnings_failure_modes: Known pitfalls
+
+Return ONLY valid JSON with these exact keys.","{""type"":""object"",""required"":[""task_name"",""expected_output""],""properties"":{""inputs"":{""type"":""string""},""task_name"":{""type"":""string""},""steps_json"":{""type"":""array"",""items"":{""type"":""object"",""properties"":{""step"":{""type"":""string""},""details"":{""type"":""string""}}}},""preconditions"":{""type"":""string""},""expected_output"":{""type"":""string""},""warnings_failure_modes"":{""type"":""string""}}}","[""Instructional_Unit""]",1,true,2025-10-06 04:40:24.238204+00,2025-10-06 04:40:24.238204+00,,Extracts procedural/task information from instructional chunks
+203fc1aa-540b-475d-99db-2461f8aa2b43,content_analysis_v1,content_analysis,"Analyze the following content chunk and extract key metadata.
+
+CHUNK TYPE: {chunk_type}
+DOCUMENT TITLE: {doc_title}
+DOCUMENT CATEGORY: {primary_category}
+CHUNK TEXT:
+---
+{chunk_text}
+---
+
+Extract and return the following dimensions in JSON format:
+- chunk_summary_1s: One sentence summary (<= 240 characters)
+- key_terms: Array of 3-5 salient terms
+- audience: Intended reader/user persona
+- intent: Primary intent (educate|instruct|persuade|inform|narrate|summarize|compare|evaluate)
+- tone_voice_tags: Array of style/voice descriptors
+- brand_persona_tags: Array of brand identity traits
+- domain_tags: Array of topic/domain taxonomy labels
+
+Return ONLY valid JSON with these exact keys.","{""type"":""object"",""required"":[""chunk_summary_1s"",""key_terms"",""audience"",""intent""],""properties"":{""intent"":{""enum"":[""educate"",""instruct"",""persuade"",""inform"",""narrate"",""summarize"",""compare"",""evaluate""],""type"":""string""},""audience"":{""type"":""string""},""key_terms"":{""type"":""array"",""items"":{""type"":""string""}},""domain_tags"":{""type"":""array"",""items"":{""type"":""string""}},""tone_voice_tags"":{""type"":""array"",""items"":{""type"":""string""}},""chunk_summary_1s"":{""type"":""string"",""maxLength"":240},""brand_persona_tags"":{""type"":""array"",""items"":{""type"":""string""}}}}","[""Chapter_Sequential"",""Instructional_Unit"",""CER"",""Example_Scenario""]",1,true,2025-10-06 04:40:24.238204+00,2025-10-06 04:40:24.238204+00,,Basic content analysis applicable to all chunk types
+2a5f224c-bb5e-4e0e-bca9-e96c84c28523,risk_assessment,risk_assessment,"Assess the risk and compliance factors for this chunk.
+
+**Document Context:**
+- Title: {doc_title}
+- Category: {primary_category}
+- Chunk Type: {chunk_type}
+
+**Chunk Text:**
+{chunk_text}
+
+**Required Analysis:**
+
+Provide a JSON response with the following structure:
+
+```json
+{
+  ""safety_tags"": [],
+  ""coverage_tag"": ""core"",
+  ""novelty_tag"": ""novel"",
+  ""ip_sensitivity"": ""Internal"",
+  ""pii_flag"": false,
+  ""compliance_flags"": []
+}
+```
+
+**Instructions:**
+1. **safety_tags**: Flag sensitive topics for filtering/guardrails (empty array if none)
+2. **coverage_tag**: Assess how central this content is to the domain (core, supporting, or edge)
+3. **novelty_tag**: Determine if content is novel, common, or disputed
+4. **ip_sensitivity**: Rate as Public, Internal, Confidential, or Trade_Secret
+5. **pii_flag**: Boolean - does this contain personal data?
+6. **compliance_flags**: List regulatory concerns (empty array if none)
+
+**Important:** Respond with valid JSON only, no additional text or markdown code blocks.",,,1,true,2025-10-10 23:14:28.092781+00,2025-10-10 23:14:28.092781+00,,
+49033dc7-fd37-4642-88f5-e7d307ea2f6e,cer_analysis,cer_analysis,"Extract the claim-evidence-reasoning structure from this chunk.
+
+**Document Context:**
+- Title: {doc_title}
+
+**Chunk Text:**
+{chunk_text}
+
+**Required Analysis:**
+
+Provide a JSON response with the following structure:
+
+```json
+{
+  ""claim"": ""Main assertion stated in this chunk"",
+  ""evidence_snippets"": [""Evidence 1"", ""Evidence 2""],
+  ""reasoning_sketch"": ""High-level rationale connecting evidence to claim"",
+  ""citations"": [""https://example.com/source1""],
+  ""factual_confidence_0_1"": 0.85
+}
+```
+
+**Instructions:**
+1. **claim**: Identify the main assertion or thesis
+2. **evidence_snippets**: Extract quoted or paraphrased evidence supporting the claim
+3. **reasoning_sketch**: Provide concise rationale (max 300 chars) connecting evidence to claim
+4. **citations**: List any sources, links, or references mentioned
+5. **factual_confidence_0_1**: Rate confidence in factuality from 0.0 to 1.0
+
+**Important:** Respond with valid JSON only, no additional text or markdown code blocks.",,"[""CER""]",1,true,2025-10-10 23:14:28.092781+00,2025-10-10 23:14:28.092781+00,,
+5be846ba-b780-472d-b3fa-f305ef5245b3,task_extraction,task_extraction,"Extract the instructional components from this chunk.
+
+**Document Context:**
+- Title: {doc_title}
+- Category: {primary_category}
+
+**Chunk Text:**
+{chunk_text}
+
+**Required Analysis:**
+
+Provide a JSON response with the following structure:
+
+```json
+{
+  ""task_name"": ""Primary task/procedure name"",
+  ""preconditions"": ""Requirements before executing the task"",
+  ""inputs"": ""Inputs/resources needed"",
+  ""steps_json"": [
+    {""step"": ""Step 1"", ""details"": ""Detailed instructions""},
+    {""step"": ""Step 2"", ""details"": ""Detailed instructions""}
+  ],
+  ""expected_output"": ""What success looks like"",
+  ""warnings_failure_modes"": ""Known pitfalls and failure conditions""
+}
+```
+
+**Instructions:**
+1. **task_name**: Identify the primary task or procedure described
+2. **preconditions**: List requirements that must be met before starting
+3. **inputs**: Describe what resources, data, or access is needed
+4. **steps_json**: Break down the task into sequential steps with details
+5. **expected_output**: Describe what success/completion looks like
+6. **warnings_failure_modes**: Identify common mistakes or failure points
+
+**Important:** Respond with valid JSON only, no additional text or markdown code blocks.",,"[""Instructional_Unit""]",1,true,2025-10-10 23:14:28.092781+00,2025-10-10 23:14:28.092781+00,,
+7d6a3fd4-6158-435b-85a4-62e1c425b073,scenario_extraction,scenario_extraction,"Extract the scenario structure from this example chunk.
+
+**Document Context:**
+- Title: {doc_title}
+- Category: {primary_category}
+
+**Chunk Text:**
+{chunk_text}
+
+**Required Analysis:**
+
+Provide a JSON response with the following structure:
+
+```json
+{
+  ""scenario_type"": ""case_study"",
+  ""problem_context"": ""Real-world context of the example"",
+  ""solution_action"": ""Action taken in the example"",
+  ""outcome_metrics"": ""Measured results or KPIs"",
+  ""style_notes"": ""Narrative/style attributes to mimic""
+}
+```
+
+**Instructions:**
+1. **scenario_type**: Categorize as case_study, dialogue, Q&A, walkthrough, or anecdote
+2. **problem_context**: Describe the situation or challenge
+3. **solution_action**: Explain what was done to address it
+4. **outcome_metrics**: Quantify results if available
+5. **style_notes**: Note stylistic elements (e.g., ""Conversational, concrete, with numbers"")
+
+**Important:** Respond with valid JSON only, no additional text or markdown code blocks.",,"[""Example_Scenario""]",1,true,2025-10-10 23:14:28.092781+00,2025-10-10 23:14:28.092781+00,,
+8115c781-8537-4bdf-acca-adf2d39e09fb,training_pair_generation,training_pair_generation,"Generate a training pair from this chunk for LoRA fine-tuning.
+
+**Document Context:**
+- Title: {doc_title}
+- Category: {primary_category}
+- Chunk Type: {chunk_type}
+
+**Chunk Text:**
+{chunk_text}
+
+**Required Analysis:**
+
+Provide a JSON response with the following structure:
+
+```json
+{
+  ""prompt_candidate"": ""Natural user prompt that would elicit this knowledge"",
+  ""target_answer"": ""Ideal answer capturing the chunk wisdom"",
+  ""style_directives"": ""Formatting/voice directives for answers""
+}
+```
+
+**Instructions:**
+1. **prompt_candidate**: Formulate a question/request a user might ask
+2. **target_answer**: Provide the ideal response based on chunk content
+3. **style_directives**: Specify formatting (e.g., ""Use numbered steps; avoid jargon; 150-250 words"")
+
+**Important:** Respond with valid JSON only, no additional text or markdown code blocks.",,,1,true,2025-10-10 23:14:28.092781+00,2025-10-10 23:14:28.092781+00,,
+a68000d0-7a28-47d0-9445-a61e431824ab,cer_analysis_v1,cer_analysis,"Analyze the following chunk for Claims, Evidence, and Reasoning.
+
+CHUNK TEXT:
+---
+{chunk_text}
+---
+
+Extract and return the following in JSON format:
+- claim: Main assertion stated
+- evidence_snippets: Array of quoted/paraphrased evidence
+- reasoning_sketch: High-level rationale (concise)
+- citations: Array of sources/links/DOIs
+- factual_confidence_0_1: Confidence score for factuality (0.0-1.0)
+
+Return ONLY valid JSON with these exact keys.","{""type"":""object"",""required"":[""claim"",""reasoning_sketch""],""properties"":{""claim"":{""type"":""string""},""citations"":{""type"":""array"",""items"":{""type"":""string""}},""reasoning_sketch"":{""type"":""string""},""evidence_snippets"":{""type"":""array"",""items"":{""type"":""string""}},""factual_confidence_0_1"":{""type"":""number"",""maximum"":1,""minimum"":0}}}","[""CER""]",1,true,2025-10-06 04:40:24.238204+00,2025-10-06 04:40:24.238204+00,,Extracts claim-evidence-reasoning structure from CER chunks
+a75f556a-0a58-413b-9130-16e92c560c4d,content_analysis_comprehensive,content_analysis,"Analyze the following chunk of text and extract comprehensive content dimensions.
+
+**Document Context:**
+- Title: {doc_title}
+- Category: {primary_category}
+- Chunk Type: {chunk_type}
+
+**Chunk Text:**
+{chunk_text}
+
+**Required Analysis:**
+
+Provide a JSON response with the following structure:
+
+```json
+{
+  ""chunk_summary_1s"": ""One-sentence summary (max 30 words)"",
+  ""key_terms"": [""term1"", ""term2"", ""term3""],
+  ""audience"": ""Target audience description"",
+  ""intent"": ""educate"",
+  ""tone_voice_tags"": [""authoritative"", ""conversational""],
+  ""brand_persona_tags"": [""trusted advisor"", ""data-driven""],
+  ""domain_tags"": [""B2B Marketing"", ""AI Ops""]
+}
+```
+
+**Instructions:**
+1. **chunk_summary_1s**: Summarize the main point in one sentence, maximum 240 characters
+2. **key_terms**: Extract 3-10 salient terms and concepts from the chunk
+3. **audience**: Identify the intended reader/user persona (e.g., ""SMB Owners; Ops Managers"")
+4. **intent**: Choose the primary author intent from: educate, instruct, persuade, inform, narrate, summarize, compare, evaluate
+5. **tone_voice_tags**: Identify 2-6 style/voice descriptors (e.g., technical, conversational, authoritative, pragmatic, clear)
+6. **brand_persona_tags**: Identify 2-5 brand identity traits relevant to voice (e.g., trusted advisor, innovative, data-driven, empowering)
+7. **domain_tags**: Assign 1-5 topic/domain taxonomy labels (e.g., ""B2B Marketing"", ""AI Operations"", ""SaaS Business"")
+
+**Important:** Respond with valid JSON only, no additional text or markdown code blocks.",,,1,true,2025-10-10 23:14:28.092781+00,2025-10-10 23:14:28.092781+00,,
+bebeb80f-87c6-4a91-bcac-474a54e42a20,risk_assessment_v1,risk_assessment,"Assess risk and compliance factors for the following chunk.
+
+CHUNK TEXT:
+---
+{chunk_text}
+---
+
+Assess and return the following in JSON format:
+- safety_tags: Array of sensitive-topic flags (if any)
+- coverage_tag: Centrality to domain (core|supporting|edge)
+- novelty_tag: Content uniqueness (novel|common|disputed)
+- ip_sensitivity: Confidentiality level (Public|Internal|Confidential|Trade_Secret)
+- pii_flag: Contains personal data (true|false)
+- compliance_flags: Array of regulatory flags (if any)
+
+Return ONLY valid JSON with these exact keys.","{""type"":""object"",""required"":[""coverage_tag"",""novelty_tag"",""ip_sensitivity"",""pii_flag""],""properties"":{""pii_flag"":{""type"":""boolean""},""novelty_tag"":{""enum"":[""novel"",""common"",""disputed""],""type"":""string""},""safety_tags"":{""type"":""array"",""items"":{""type"":""string""}},""coverage_tag"":{""enum"":[""core"",""supporting"",""edge""],""type"":""string""},""ip_sensitivity"":{""enum"":[""Public"",""Internal"",""Confidential"",""Trade_Secret""],""type"":""string""},""compliance_flags"":{""type"":""array"",""items"":{""type"":""string""}}}}","[""Chapter_Sequential"",""Instructional_Unit"",""CER"",""Example_Scenario""]",1,true,2025-10-06 04:40:24.238204+00,2025-10-06 04:40:24.238204+00,,Assesses risk and compliance factors for all chunk types
+f283be9f-a2fc-4bce-9d5a-62edf6a9cd23,training_pair_generation_v1,training_pair_generation,"You are an expert at creating instruction-tuning training pairs for LoRA fine-tuning. You understand how to distill content into effective prompt-response pairs that teach AI models to respond in a specific brand voice.
+
+Create a training pair from this chunk.
+
+Chunk text:
+{chunk_text}
+
+Document context:
+- Document Title: {doc_title}
+- Primary Category: {primary_category}
+- Chunk Type: {chunk_type}
+
+Generate a potential user prompt that this content could answer, the ideal target answer, and style directives. Return ONLY valid JSON, no other text.
+
+Required output format (JSON):
+{
+  ""prompt_candidate"": ""A question or instruction a user might ask that this content addresses"",
+  ""target_answer"": ""The ideal response in brand voice (concise, 150-250 words)"",
+  ""style_directives"": ""Formatting and voice guidelines for the answer""
+}","{""type"":""object"",""required"":[""prompt_candidate"",""target_answer"",""style_directives""],""properties"":{""target_answer"":{""type"":""string""},""prompt_candidate"":{""type"":""string""},""style_directives"":{""type"":""string""}}}",,1,true,2025-10-08 00:30:15.053656+00,2025-10-08 00:30:15.053656+00,,
+fa886c91-d81b-45da-9b31-a4a80a80ecf9,scenario_extraction_v1,scenario_extraction,"Extract scenario/example information from the following chunk.
+
+CHUNK TEXT:
+---
+{chunk_text}
+---
+
+Extract and return the following in JSON format:
+- scenario_type: Type (case_study|dialogue|Q&A|walkthrough|anecdote)
+- problem_context: Real-world context
+- solution_action: Action taken
+- outcome_metrics: Measured results/KPIs
+- style_notes: Narrative/style attributes to mimic
+
+Return ONLY valid JSON with these exact keys.","{""type"":""object"",""required"":[""scenario_type"",""problem_context""],""properties"":{""style_notes"":{""type"":""string""},""scenario_type"":{""enum"":[""case_study"",""dialogue"",""Q&A"",""walkthrough"",""anecdote""],""type"":""string""},""outcome_metrics"":{""type"":""string""},""problem_context"":{""type"":""string""},""solution_action"":{""type"":""string""}}}","[""Example_Scenario""]",1,true,2025-10-06 04:40:24.238204+00,2025-10-06 04:40:24.238204+00,,Extracts scenario/example structure from example chunks
