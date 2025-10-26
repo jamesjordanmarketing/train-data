@@ -40,7 +40,7 @@ git commit -m "Initial commit"
 #### Step 4: Connect Local Repository to GitHub
 ```bash
 # Add the remote origin (replace with your actual GitHub URL)
-git remote add origin https://github.com/jamesjordanmarketing/br-kombai-7.git
+git remote add origin https://github.com/jamesjordanmarketing/train-data.git
 
 # Verify the remote was added
 git remote -v
