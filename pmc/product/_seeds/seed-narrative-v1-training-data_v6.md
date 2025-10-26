@@ -1,5 +1,8 @@
-**4-Word Vision:**  
-Interactive LoRA Conversation Generation
+# Interactive LoRA Conversation Generation
+**Version:** 1 
+**Date:** 2025-10-25  
+**Category:** LoRA Fine Tuning Pairs
+**Product Abbreviation:** train
 
 **One-Sentence Summary:**  
 The Bright Run Training Data Generation Module transforms the manual, console-based process of creating LoRA training conversations into an intuitive, UI-driven workflow that enables non-technical users to generate, review, and manage high-quality conversation datasets through intelligent prompt templates, dimensional filtering, and real-time progress tracking.
@@ -68,7 +71,7 @@ This module is the third stage in the larger LoRA training data creation pipelin
 
 ### **Current State: Console-Based Generation**
 
-The current system (documented in `c-alpha-build_v3.4-LoRA-FP-100-spec.md`) requires:
+The current system (documented in `C:\Users\james\Master\BrightHub\BRun\train-data\pmc\context-ai\pmct\c-alpha-build_v3.4-LoRA-FP-100-spec.md`) requires:
 1. User opens text editor with JSON prompt template
 2. User manually replaces placeholders (persona, emotion, topic, etc.)
 3. User copies entire prompt to Claude console
@@ -259,10 +262,10 @@ The 10 seed conversations currently stored as JSON files must be migrated to the
 
 Files to migrate:
 ```
-c-alpha-build_v3.4-LoRA-FP-convo-01-complete.json
-c-alpha-build_v3.4-LoRA-FP-convo-02-complete.json
+C:\Users\james\Master\BrightHub\BRun\train-data\pmc\context-ai\pmct\training-data-seeds\c-alpha-build_v3.4-LoRA-FP-convo-01-complete.json
+C:\Users\james\Master\BrightHub\BRun\train-data\pmc\context-ai\pmct\training-data-seeds\c-alpha-build_v3.4-LoRA-FP-convo-02-complete.json
 ...
-c-alpha-build_v3.4-LoRA-FP-convo-10-complete.json
+C:\Users\james\Master\BrightHub\BRun\train-data\pmc\context-ai\pmct\training-data-seeds\c-alpha-build_v3.4-LoRA-FP-convo-10-complete.json
 ```
 
 ---
@@ -415,7 +418,7 @@ The 10 existing seed conversations serve as:
 
 ## **Emotional Taxonomy & Persona Integration**
 
-### **Emotional Taxonomy** (From: `c-alpha-build_v3.4_emotional-dataset-emotional-taxonomy.md`)
+### **Emotional Taxonomy** (From: `C:\Users\james\Master\BrightHub\BRun\train-data\pmc\context-ai\pmct\training-data-seed-instructions\c-alpha-build_v3.4_emotional-dataset-emotional-taxonomy.md`)
 The system must incorporate the defined emotional dimensions:
 - Starting emotional state
 - Emotional progression/arc
@@ -423,7 +426,7 @@ The system must incorporate the defined emotional dimensions:
 - Emotional intensity levels
 - Emotional authenticity scoring
 
-### **Persona Profiles** (From: `financial-planner-demo-conversation-and-metadata_v1.txt`)
+### **Persona Profiles** (From: `C:\Users\james\Master\BrightHub\BRun\train-data\system\chunks-alpha-data\financial-planner-demo-conversation-and-metadata_v1.txt`)
 The system must support diverse persona types:
 - Demographics (age, career stage, life situation)
 - Financial background (experience level, current situation)
@@ -532,20 +535,20 @@ To maintain focus and ensure timely delivery, the following features are explici
 The following documents provide essential context and should be referenced during detailed specification development:
 
 ### **Process & Methodology**
-- `c-alpha-build_v3.4-LoRA-FP-100-spec.md` - Original console-based generation spec
-- `c-alpha-build_v3.4-LoRA-FP-generation_v3.md` - Generation process details
+- `C:\Users\james\Master\BrightHub\BRun\train-data\pmc\context-ai\pmct\c-alpha-build_v3.4-LoRA-FP-100-spec.md` - Original console-based generation spec
+- `C:\Users\james\Master\BrightHub\BRun\train-data\pmc\context-ai\pmct\training-data-seed-instructions\c-alpha-build_v3.4-LoRA-FP-generation_v3.md` - Generation process details
 - `GENERATION-COMPLETE-STATUS.md` - Current generation status and learnings
-- `c-alpha-build_v3.4-LoRA-FP-COMPLETE-DATASET-SUMMARY.md` - Dataset completeness criteria
+- `C:\Users\james\Master\BrightHub\BRun\train-data\pmc\context-ai\pmct\training-data-seed-instructions\c-alpha-build_v3.4-LoRA-FP-COMPLETE-DATASET-SUMMARY.md` - Dataset completeness criteria
 
 ### **Data Structures**
-- `c-alpha-build_v3.4_emotional-dataset-emotional-taxonomy.md` - Emotional dimension definitions
-- `financial-planner-demo-conversation-and-metadata_v1.txt` - Persona profiles
-- `c-alpha-build_v3.4-LoRA-FP-convo-10-complete.json` - Example seed conversation structure
+- `C:\Users\james\Master\BrightHub\BRun\train-data\pmc\context-ai\pmct\training-data-seed-instructions\c-alpha-build_v3.4_emotional-dataset-emotional-taxonomy.md` - Emotional dimension definitions
+- `C:\Users\james\Master\BrightHub\BRun\train-data\system\chunks-alpha-data\financial-planner-demo-conversation-and-metadata_v1.txt` - Persona profiles
+- `C:\Users\james\Master\BrightHub\BRun\train-data\pmc\context-ai\pmct\training-data-seeds\c-alpha-build_v3.4-LoRA-FP-convo-10-complete.json` - Example seed conversation structure
 
 ### **Product Context**
-- `01-bmo-overview-chunk-alpha_v2.md` - Overall product vision and architecture
-- `03-bmo-functional-requirements.md` - Functional requirements template
-- `04-bmo-FR-wireframes-output-E06.md` - FIGMA wireframe mapping example
+- `C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\01-bmo-overview-chunk-alpha_v2.md` - Overall product vision and architecture
+- `C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\03-bmo-functional-requirements.md` - Functional requirements template
+- `C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\_mapping\fr-maps\04-bmo-FR-wireframes-output-E06.md` - FIGMA wireframe mapping example
 
 ---
 
