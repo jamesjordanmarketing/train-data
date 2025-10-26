@@ -1,0 +1,18 @@
+{
+  "preprocess-paths": {
+    "template": "_prompt_engineering/3a-preprocess-functional-requirements-prompt_v1.md",
+    "functionalRequirements": "03-train-functional-requirements.md",
+    "overview": "01-train-overview.md",
+    "userStories": "02-train-user-stories.md",
+    "userJourney": "C:\\Users\\james\\Master\\BrightHub\\BRun\\train-data\\pmc\\product\\02.5-train-user-journey.md"
+  },
+  "enhance-paths": {
+    "template": "_prompt_engineering/3b-functional-requirements-prompt_v1.md",
+    "functionalRequirements": "03-train-functional-requirements.md",
+    "overview": "01-train-overview.md",
+    "userStories": "02-train-user-stories.md",
+    "userJourney": "C:\\Users\\james\\Master\\BrightHub\\BRun\\train-data\\pmc\\product\\02.5-train-user-journey.md",
+    "example": "C:\\Users\\james\\Master\\BrightHub\\BRun\\train-data\\pmc\\product\\_examples\\03-bmo-functional-requirements.md",
+    "codebase": "C:\\Users\\james\\Master\\BrightHub\\BRun\\train-data\\src"
+  }
+}

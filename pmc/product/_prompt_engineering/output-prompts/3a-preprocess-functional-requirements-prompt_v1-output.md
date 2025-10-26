@@ -11,8 +11,8 @@ You are a Senior Technical Product Manager. Your task is to organize the script-
 ## File Processing Instructions
 
 1. **Input/Output File**
-   - Process file: `C:/Users/james/Master/BrightHub/brun/brun8/pmc/product/03-bmo-functional-requirements.md`
-   - You MUST process the ENTIRE `C:/Users/james/Master/BrightHub/brun/brun8/pmc/product/03-bmo-functional-requirements.md` document from start to finish
+   - Process file: `C:/Users/james/Master/BrightHub/BRun/train-data/pmc/product/03-train-functional-requirements.md`
+   - You MUST process the ENTIRE `C:/Users/james/Master/BrightHub/BRun/train-data/pmc/product/03-train-functional-requirements.md` document from start to finish
    - Create complete inventory of all FRs before beginning reorganization
    - Verify no FRs are missing from original count
    - Modify this file directly - do not create new files
@@ -20,14 +20,14 @@ You are a Senior Technical Product Manager. Your task is to organize the script-
    - Maintain the existing markdown format
    
 2. **Reference Files**
-- **Overview Document:** `C:/Users/james/Master/BrightHub/brun/brun8/pmc/product/01-bmo-overview.md`
+- **Overview Document:** `C:/Users/james/Master/BrightHub/BRun/train-data/pmc/product/01-train-overview.md`
   - Contains project goals, technical stack, and architectural decisions.
-- **User Stories:** `C:/Users/james/Master/BrightHub/brun/brun8/pmc/product/02-bmo-user-stories.md`
+- **User Stories:** `C:/Users/james/Master/BrightHub/BRun/train-data/pmc/product/02-train-user-stories.md`
   - Details the functional requirements and user needs.
 
 3. **User Journey Integration**
-   - **User Journey Document:** `C:/Users/james/Master/BrightHub/brun/brun8/pmc/product/03.5-bmo-user-journey.md`
-   - Extract all UJ elements (UJ1.1.1 through UJ6.3.3)
+   - **User Journey Document:** `C:/Users/james/Master/BrightHub/BRun/train-data/pmc/product/02.5-train-user-journey.md`
+   - Extract all UJ elements
    - Map journey stages to FR categories
    - Consolidate persona-specific acceptance criteria
 
@@ -39,9 +39,9 @@ You are a Senior Technical Product Manager. Your task is to organize the script-
 ## Input Requirements
 
 1. Read and analyze:
-   - The script-generated FR document - `C:/Users/james/Master/BrightHub/brun/brun8/pmc/product/03-bmo-functional-requirements.md`
-   - User Stories `C:/Users/james/Master/BrightHub/brun/brun8/pmc/product/02-bmo-user-stories.md`
-   - Overview Document `C:/Users/james/Master/BrightHub/brun/brun8/pmc/product/01-bmo-overview.md`
+   - The script-generated FR document - `C:/Users/james/Master/BrightHub/BRun/train-data/pmc/product/03-train-functional-requirements.md`
+   - User Stories `C:/Users/james/Master/BrightHub/BRun/train-data/pmc/product/02-train-user-stories.md`
+   - Overview Document `C:/Users/james/Master/BrightHub/BRun/train-data/pmc/product/01-train-overview.md`
 
 ## Primary Tasks
 
@@ -170,7 +170,7 @@ IMPORTANT ORGANIZATION RULES:
    - Each FR has a blank section for the Functional Requirements Acceptance Criteria. That is NOT to be filled. It is to be left blank with the comment: "To be filled"
 
 4. **Change Logging Requirements**
-1. Each atomic change MUST be logged individually in `pmc/product/_tools/cache/bmo-fr-changes.log`:
+1. Each atomic change MUST be logged individually in `pmc/product/_tools/cache/train-fr-changes.log`:
    - Each FR modification MUST generate multiple log entries, one for each:
      * Acceptance criteria movement or modification
      * Priority or impact weight change

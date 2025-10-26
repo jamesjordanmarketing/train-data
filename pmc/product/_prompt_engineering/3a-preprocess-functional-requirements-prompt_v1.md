@@ -27,7 +27,7 @@ You are a Senior Technical Product Manager. Your task is to organize the script-
 
 3. **User Journey Integration**
    - **User Journey Document:** `{USER_JOURNEY_PATH}`
-   - Extract all UJ elements (UJ1.1.1 through UJ6.3.3)
+   - Extract all UJ elements
    - Map journey stages to FR categories
    - Consolidate persona-specific acceptance criteria
 

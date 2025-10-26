@@ -1,0 +1,1119 @@
+[
+  {
+    "id": "UJ1.1.1",
+    "name": "First-Time Platform Discovery",
+    "baseCriteria": [
+      "- GIVEN: I'm a business owner with valuable knowledge but no AI expertise\r",
+      "    - WHEN: I first arrive at Bright Run's interface\r",
+      "    - THEN: I see a clear value proposition explaining how my knowledge becomes AI training data in simple terms\r",
+      "    - AND: I understand the 6-stage journey ahead through visual workflow representation\r",
+      "    - AND: I feel confident I can succeed without technical knowledge\r",
+      "    - AND: I see example success stories from similar businesses"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: I'm a business owner with valuable knowledge but no AI expertise\r",
+        "[BASE]     - WHEN: I first arrive at Bright Run's interface\r",
+        "[BASE]     - THEN: I see a clear value proposition explaining how my knowledge becomes AI training data in simple terms\r",
+        "[BASE]     - AND: I understand the 6-stage journey ahead through visual workflow representation\r",
+        "[BASE]     - AND: I feel confident I can succeed without technical knowledge\r",
+        "[BASE]     - AND: I see example success stories from similar businesses"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ1.1.2",
+    "name": "Guided Project Setup",
+    "baseCriteria": [
+      "- GIVEN: I want to create my first knowledge transformation project\r",
+      "    - WHEN: I click \"Create New Project\"\r",
+      "    - THEN: I'm guided through a simple setup wizard with business-friendly language\r",
+      "    - AND: I can name my project with a descriptive business purpose\r",
+      "    - AND: I can specify my industry/domain for optimized processing\r",
+      "    - AND: I see estimated time and outcomes for my project type\r",
+      "    - AND: The system creates an organized workspace for my knowledge assets"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: I want to create my first knowledge transformation project\r",
+        "[BASE]     - WHEN: I click \"Create New Project\"\r",
+        "[BASE]     - THEN: I'm guided through a simple setup wizard with business-friendly language\r",
+        "[BASE]     - AND: I can name my project with a descriptive business purpose\r",
+        "[BASE]     - AND: I can specify my industry/domain for optimized processing\r",
+        "[BASE]     - AND: I see estimated time and outcomes for my project type\r",
+        "[BASE]     - AND: The system creates an organized workspace for my knowledge assets"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ1.1.3",
+    "name": "Knowledge Goals Definition",
+    "baseCriteria": [
+      "    - WHEN: I'm setting up my project goals\r",
+      "    - THEN: I can describe my unique value proposition in plain language\r",
+      "    - AND: I can specify my target audience and use cases\r",
+      "    - AND: I can indicate my voice style (formal, conversational, technical, etc.)\r",
+      "    - AND: The system translates this into training optimization settings automatically"
+    ],
+    "progressiveFeatures": [
+      "- GIVEN: I have specific expertise and business philosophy to preserve\r"
+    ],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE]     - WHEN: I'm setting up my project goals\r",
+        "[BASE]     - THEN: I can describe my unique value proposition in plain language\r",
+        "[BASE]     - AND: I can specify my target audience and use cases\r",
+        "[BASE]     - AND: I can indicate my voice style (formal, conversational, technical, etc.)\r",
+        "[BASE]     - AND: The system translates this into training optimization settings automatically",
+        "[PROGRESSIVE] - GIVEN: I have specific expertise and business philosophy to preserve\r"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ1.2.1",
+    "name": "Data Ownership Assurance",
+    "baseCriteria": [
+      "- GIVEN: I'm concerned about protecting my competitive advantages\r",
+      "    - WHEN: I review the privacy and ownership information\r",
+      "    - THEN: I see clear, plain-English explanations of data ownership\r",
+      "    - AND: I understand that all processing happens locally without external transmission\r",
+      "    - AND: I can export and delete all my data at any time\r",
+      "    - AND: I see visual indicators of privacy protection throughout the interface"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: I'm concerned about protecting my competitive advantages\r",
+        "[BASE]     - WHEN: I review the privacy and ownership information\r",
+        "[BASE]     - THEN: I see clear, plain-English explanations of data ownership\r",
+        "[BASE]     - AND: I understand that all processing happens locally without external transmission\r",
+        "[BASE]     - AND: I can export and delete all my data at any time\r",
+        "[BASE]     - AND: I see visual indicators of privacy protection throughout the interface"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ1.2.2",
+    "name": "Competitive Advantage Protection",
+    "baseCriteria": [
+      "- GIVEN: I need to protect my business methodologies from competitors\r",
+      "    - WHEN: I'm uploading sensitive business knowledge\r",
+      "    - THEN: I see confirmation that my data never leaves my control\r",
+      "    - AND: I understand there's no vendor lock-in or data retention\r",
+      "    - AND: I can see audit logs of all data processing activities\r",
+      "    - AND: I feel secure sharing my most valuable knowledge"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: I need to protect my business methodologies from competitors\r",
+        "[BASE]     - WHEN: I'm uploading sensitive business knowledge\r",
+        "[BASE]     - THEN: I see confirmation that my data never leaves my control\r",
+        "[BASE]     - AND: I understand there's no vendor lock-in or data retention\r",
+        "[BASE]     - AND: I can see audit logs of all data processing activities\r",
+        "[BASE]     - AND: I feel secure sharing my most valuable knowledge"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ1.3.1",
+    "name": "ROI Visualization",
+    "baseCriteria": [
+      "- GIVEN: I need to understand the return on my time investment\r",
+      "    - WHEN: I view the ROI calculator and projections\r",
+      "    - AND: I understand the 10-100x multiplication factor\r",
+      "    - AND: I can adjust parameters to see different ROI scenarios\r",
+      "    - AND: I feel motivated to continue with the process"
+    ],
+    "progressiveFeatures": [
+      "    - THEN: I see how 1 hour of my expert input becomes 100+ hours of training data\r"
+    ],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: I need to understand the return on my time investment\r",
+        "[BASE]     - WHEN: I view the ROI calculator and projections\r",
+        "[BASE]     - AND: I understand the 10-100x multiplication factor\r",
+        "[BASE]     - AND: I can adjust parameters to see different ROI scenarios\r",
+        "[BASE]     - AND: I feel motivated to continue with the process",
+        "[PROGRESSIVE]     - THEN: I see how 1 hour of my expert input becomes 100+ hours of training data\r"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ2.1.1",
+    "name": "Intuitive Document Upload Experience",
+    "baseCriteria": [
+      "- GIVEN: I have knowledge in various formats (PDFs, Word docs, transcripts, web pages)\r",
+      "    - WHEN: I want to upload my content to the platform\r",
+      "    - THEN: I can simply drag and drop files onto a clearly marked upload area\r",
+      "    - AND: I see immediate visual feedback that my files are being processed\r",
+      "    - AND: I can upload multiple files at once without waiting\r",
+      "    - AND: Each file shows a progress bar and estimated completion time\r",
+      "    - AND: I understand what's happening through simple status messages"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: I have knowledge in various formats (PDFs, Word docs, transcripts, web pages)\r",
+        "[BASE]     - WHEN: I want to upload my content to the platform\r",
+        "[BASE]     - THEN: I can simply drag and drop files onto a clearly marked upload area\r",
+        "[BASE]     - AND: I see immediate visual feedback that my files are being processed\r",
+        "[BASE]     - AND: I can upload multiple files at once without waiting\r",
+        "[BASE]     - AND: Each file shows a progress bar and estimated completion time\r",
+        "[BASE]     - AND: I understand what's happening through simple status messages"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ2.1.2",
+    "name": "Document Preview and Validation",
+    "baseCriteria": [
+      "- GIVEN: I've uploaded documents and want to verify they were read correctly\r",
+      "    - WHEN: I click on any uploaded document\r",
+      "    - THEN: I see a clean preview of the extracted content\r",
+      "    - AND: I can spot-check that important sections were captured\r",
+      "    - AND: I can flag any issues for manual correction\r",
+      "    - AND: The system shows me what will be used for training"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: I've uploaded documents and want to verify they were read correctly\r",
+        "[BASE]     - WHEN: I click on any uploaded document\r",
+        "[BASE]     - THEN: I see a clean preview of the extracted content\r",
+        "[BASE]     - AND: I can spot-check that important sections were captured\r",
+        "[BASE]     - AND: I can flag any issues for manual correction\r",
+        "[BASE]     - AND: The system shows me what will be used for training"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ2.2.1",
+    "name": "Intelligent Content Cleaning",
+    "baseCriteria": [
+      "- GIVEN: My documents contain headers, footers, page numbers, and formatting issues\r",
+      "    - WHEN: The system processes my uploaded content\r",
+      "    - THEN: I see a notification that cleaning is in progress with simple explanations\r",
+      "    - AND: Technical artifacts are automatically removed\r",
+      "    - AND: The content is normalized and organized\r",
+      "    - AND: I can review a before/after comparison if desired\r",
+      "    - AND: No technical knowledge is required on my part"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: My documents contain headers, footers, page numbers, and formatting issues\r",
+        "[BASE]     - WHEN: The system processes my uploaded content\r",
+        "[BASE]     - THEN: I see a notification that cleaning is in progress with simple explanations\r",
+        "[BASE]     - AND: Technical artifacts are automatically removed\r",
+        "[BASE]     - AND: The content is normalized and organized\r",
+        "[BASE]     - AND: I can review a before/after comparison if desired\r",
+        "[BASE]     - AND: No technical knowledge is required on my part"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ2.2.2",
+    "name": "Processing Status Transparency",
+    "baseCriteria": [
+      "- GIVEN: I want to know my valuable content is being handled properly\r",
+      "    - WHEN: Documents are being processed\r",
+      "    - THEN: I see a clear dashboard showing each document's status\r",
+      "    - AND: I understand what stage each document is in using simple terms\r",
+      "    - AND: I can see estimated completion times\r",
+      "    - AND: Any issues are explained in non-technical language\r",
+      "    - AND: I feel in control of the process"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: I want to know my valuable content is being handled properly\r",
+        "[BASE]     - WHEN: Documents are being processed\r",
+        "[BASE]     - THEN: I see a clear dashboard showing each document's status\r",
+        "[BASE]     - AND: I understand what stage each document is in using simple terms\r",
+        "[BASE]     - AND: I can see estimated completion times\r",
+        "[BASE]     - AND: Any issues are explained in non-technical language\r",
+        "[BASE]     - AND: I feel in control of the process"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ2.3.1",
+    "name": "Intelligent Document Categorization",
+    "baseCriteria": [
+      "- GIVEN: I've uploaded multiple documents covering different topics\r",
+      "    - WHEN: Processing completes\r",
+      "    - THEN: I see my documents organized in a clean table view\r",
+      "    - AND: Documents are automatically categorized by topic\r",
+      "    - AND: I can search and filter my document library\r",
+      "    - AND: I can manually adjust categories if needed\r",
+      "    - AND: The organization makes sense for my business"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: I've uploaded multiple documents covering different topics\r",
+        "[BASE]     - WHEN: Processing completes\r",
+        "[BASE]     - THEN: I see my documents organized in a clean table view\r",
+        "[BASE]     - AND: Documents are automatically categorized by topic\r",
+        "[BASE]     - AND: I can search and filter my document library\r",
+        "[BASE]     - AND: I can manually adjust categories if needed\r",
+        "[BASE]     - AND: The organization makes sense for my business"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ3.1.1",
+    "name": "Visual Knowledge Discovery",
+    "baseCriteria": [
+      "- GIVEN: My content has been processed and I want to explore the key concepts\r",
+      "    - WHEN: I enter the knowledge exploration interface\r",
+      "    - THEN: I see a visual map of my content's main topics and relationships\r",
+      "    - AND: I can click on any topic to see related content chunks\r",
+      "    - AND: Important insights are highlighted automatically\r",
+      "    - AND: I can navigate between related concepts easily\r",
+      "    - AND: The visualization helps me understand my knowledge structure"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: My content has been processed and I want to explore the key concepts\r",
+        "[BASE]     - WHEN: I enter the knowledge exploration interface\r",
+        "[BASE]     - THEN: I see a visual map of my content's main topics and relationships\r",
+        "[BASE]     - AND: I can click on any topic to see related content chunks\r",
+        "[BASE]     - AND: Important insights are highlighted automatically\r",
+        "[BASE]     - AND: I can navigate between related concepts easily\r",
+        "[BASE]     - AND: The visualization helps me understand my knowledge structure"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ3.1.2",
+    "name": "Intelligent Content Chunking",
+    "baseCriteria": [
+      "- GIVEN: My documents contain various topics and methodologies\r",
+      "    - WHEN: The system analyzes my content\r",
+      "    - THEN: Content is divided into logical, meaningful chunks\r",
+      "    - AND: Each chunk contains a complete thought or concept\r",
+      "    - AND: Relationships between chunks are preserved\r",
+      "    - AND: I can adjust chunk boundaries if needed\r"
+    ],
+    "progressiveFeatures": [
+      "    - AND: The chunking makes sense for my expertise area"
+    ],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: My documents contain various topics and methodologies\r",
+        "[BASE]     - WHEN: The system analyzes my content\r",
+        "[BASE]     - THEN: Content is divided into logical, meaningful chunks\r",
+        "[BASE]     - AND: Each chunk contains a complete thought or concept\r",
+        "[BASE]     - AND: Relationships between chunks are preserved\r",
+        "[BASE]     - AND: I can adjust chunk boundaries if needed\r",
+        "[PROGRESSIVE]     - AND: The chunking makes sense for my expertise area"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ3.2.1",
+    "name": "AI-Powered Topic Discovery",
+    "baseCriteria": [
+      "- GIVEN: I have specialized knowledge with my own categorization system\r",
+      "    - WHEN: The AI analyzes my content\r",
+      "    - THEN: It suggests relevant topic tags that make sense for my field\r",
+      "    - AND: I can accept, modify, or add my own tags\r",
+      "    - AND: The system learns from my corrections\r",
+      "    - AND: Topics align with my business terminology\r",
+      "    - AND: I maintain control over the final categorization"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: I have specialized knowledge with my own categorization system\r",
+        "[BASE]     - WHEN: The AI analyzes my content\r",
+        "[BASE]     - THEN: It suggests relevant topic tags that make sense for my field\r",
+        "[BASE]     - AND: I can accept, modify, or add my own tags\r",
+        "[BASE]     - AND: The system learns from my corrections\r",
+        "[BASE]     - AND: Topics align with my business terminology\r",
+        "[BASE]     - AND: I maintain control over the final categorization"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ3.2.2",
+    "name": "Value Identification Assistant",
+    "baseCriteria": [
+      "- GIVEN: I want to focus on my most valuable proprietary insights\r",
+      "    - WHEN: I review the analyzed content\r",
+      "    - THEN: The system highlights high-value knowledge nuggets\r",
+      "    - AND: Each nugget has an AI-generated summary\r",
+      "    - AND: I can see why it's considered valuable\r",
+      "    - AND: I can prioritize nuggets for training data generation\r",
+      "    - AND: My unique methodologies are properly identified"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: I want to focus on my most valuable proprietary insights\r",
+        "[BASE]     - WHEN: I review the analyzed content\r",
+        "[BASE]     - THEN: The system highlights high-value knowledge nuggets\r",
+        "[BASE]     - AND: Each nugget has an AI-generated summary\r",
+        "[BASE]     - AND: I can see why it's considered valuable\r",
+        "[BASE]     - AND: I can prioritize nuggets for training data generation\r",
+        "[BASE]     - AND: My unique methodologies are properly identified"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ3.3.1",
+    "name": "Expert Knowledge Refinement",
+    "baseCriteria": [
+      "- GIVEN: The AI has organized my knowledge but I need to ensure accuracy\r",
+      "    - WHEN: I review the organized knowledge chunks\r",
+      "    - THEN: I can easily validate or correct the AI's interpretation\r",
+      "    - AND: My corrections are immediately applied\r",
+      "    - AND: The system adapts to my preferences\r",
+      "    - AND: The process is efficient and not tedious"
+    ],
+    "progressiveFeatures": [
+      "    - AND: I feel confident the AI understands my expertise\r"
+    ],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: The AI has organized my knowledge but I need to ensure accuracy\r",
+        "[BASE]     - WHEN: I review the organized knowledge chunks\r",
+        "[BASE]     - THEN: I can easily validate or correct the AI's interpretation\r",
+        "[BASE]     - AND: My corrections are immediately applied\r",
+        "[BASE]     - AND: The system adapts to my preferences\r",
+        "[BASE]     - AND: The process is efficient and not tedious",
+        "[PROGRESSIVE]     - AND: I feel confident the AI understands my expertise\r"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ4.1.1",
+    "name": "Intelligent Question Creation",
+    "baseCriteria": [
+      "- GIVEN: I have knowledge chunks and need training questions\r",
+      "    - WHEN: I initiate question generation for my content\r",
+      "    - THEN: AI creates diverse, relevant questions for each knowledge chunk\r",
+      "    - AND: Questions reflect different cognitive levels (factual, analytical, creative)\r",
+      "    - AND: Questions align with my specified use cases\r",
+      "    - AND: I can regenerate questions with different parameters\r"
+    ],
+    "progressiveFeatures": [
+      "    - AND: The questions make sense for my expertise area"
+    ],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: I have knowledge chunks and need training questions\r",
+        "[BASE]     - WHEN: I initiate question generation for my content\r",
+        "[BASE]     - THEN: AI creates diverse, relevant questions for each knowledge chunk\r",
+        "[BASE]     - AND: Questions reflect different cognitive levels (factual, analytical, creative)\r",
+        "[BASE]     - AND: Questions align with my specified use cases\r",
+        "[BASE]     - AND: I can regenerate questions with different parameters\r",
+        "[PROGRESSIVE]     - AND: The questions make sense for my expertise area"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ4.1.2",
+    "name": "Question Refinement Interface",
+    "baseCriteria": [
+      "- GIVEN: AI has generated questions that need refinement\r",
+      "    - WHEN: I review the generated questions\r",
+      "    - THEN: I can easily edit questions inline\r",
+      "    - AND: I see suggestions for improvement\r",
+      "    - AND: Similar questions are grouped for batch editing\r",
+      "    - AND: My changes are saved automatically\r",
+      "    - AND: The interface feels responsive and efficient"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: AI has generated questions that need refinement\r",
+        "[BASE]     - WHEN: I review the generated questions\r",
+        "[BASE]     - THEN: I can easily edit questions inline\r",
+        "[BASE]     - AND: I see suggestions for improvement\r",
+        "[BASE]     - AND: Similar questions are grouped for batch editing\r",
+        "[BASE]     - AND: My changes are saved automatically\r",
+        "[BASE]     - AND: The interface feels responsive and efficient"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ4.2.1",
+    "name": "Expert Answer Enhancement",
+    "baseCriteria": [
+      "- GIVEN: AI has generated baseline answers to questions\r",
+      "    - THEN: I see a side-by-side comparison of generic vs. my custom answer\r",
+      "    - AND: I can edit in rich text with formatting options\r",
+      "    - AND: The system highlights where I'm adding unique value\r",
+      "    - AND: My methodology and voice are preserved\r"
+    ],
+    "progressiveFeatures": [
+      "    - WHEN: I customize answers to reflect my expertise\r",
+      "    - AND: I feel the answers truly represent my expertise"
+    ],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: AI has generated baseline answers to questions\r",
+        "[BASE]     - THEN: I see a side-by-side comparison of generic vs. my custom answer\r",
+        "[BASE]     - AND: I can edit in rich text with formatting options\r",
+        "[BASE]     - AND: The system highlights where I'm adding unique value\r",
+        "[BASE]     - AND: My methodology and voice are preserved\r",
+        "[PROGRESSIVE]     - WHEN: I customize answers to reflect my expertise\r",
+        "[PROGRESSIVE]     - AND: I feel the answers truly represent my expertise"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ4.2.2",
+    "name": "Value-Add Visualization",
+    "baseCriteria": [
+      "    - WHEN: I review my enhancements\r",
+      "    - THEN: I see a clear visual diff showing my additions\r",
+      "    - AND: Value metrics show the improvement percentage\r",
+      "    - AND: Key methodology insertions are highlighted\r",
+      "    - AND: I understand the impact of my customizations\r",
+      "    - AND: I feel proud of the value I'm adding"
+    ],
+    "progressiveFeatures": [
+      "- GIVEN: I've customized answers with my expertise\r"
+    ],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE]     - WHEN: I review my enhancements\r",
+        "[BASE]     - THEN: I see a clear visual diff showing my additions\r",
+        "[BASE]     - AND: Value metrics show the improvement percentage\r",
+        "[BASE]     - AND: Key methodology insertions are highlighted\r",
+        "[BASE]     - AND: I understand the impact of my customizations\r",
+        "[BASE]     - AND: I feel proud of the value I'm adding",
+        "[PROGRESSIVE] - GIVEN: I've customized answers with my expertise\r"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ4.3.1",
+    "name": "Comprehensive Metadata Tagging",
+    "baseCriteria": [
+      "- GIVEN: I need to organize my QA pairs for optimal training\r",
+      "    - WHEN: I tag my training data\r",
+      "    - THEN: I can assign topic, intent, style, and difficulty tags\r",
+      "    - AND: The system suggests appropriate tags based on content\r",
+      "    - AND: I can create custom tags for my specific needs\r",
+      "    - AND: Bulk tagging operations save time\r"
+    ],
+    "progressiveFeatures": [
+      "    - AND: The organization reflects my expertise structure"
+    ],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: I need to organize my QA pairs for optimal training\r",
+        "[BASE]     - WHEN: I tag my training data\r",
+        "[BASE]     - THEN: I can assign topic, intent, style, and difficulty tags\r",
+        "[BASE]     - AND: The system suggests appropriate tags based on content\r",
+        "[BASE]     - AND: I can create custom tags for my specific needs\r",
+        "[BASE]     - AND: Bulk tagging operations save time\r",
+        "[PROGRESSIVE]     - AND: The organization reflects my expertise structure"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ4.3.2",
+    "name": "Training Objective Alignment",
+    "baseCriteria": [
+      "- GIVEN: I have specific goals for how my AI should behave\r",
+      "    - WHEN: I organize my training data\r",
+      "    - THEN: I can map QA pairs to specific training objectives\r",
+      "    - AND: The system shows coverage of different objective areas\r",
+      "    - AND: I can identify gaps in my training data\r",
+      "    - AND: Recommendations help optimize training effectiveness\r",
+      "    - AND: My AI will learn what I want it to learn"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: I have specific goals for how my AI should behave\r",
+        "[BASE]     - WHEN: I organize my training data\r",
+        "[BASE]     - THEN: I can map QA pairs to specific training objectives\r",
+        "[BASE]     - AND: The system shows coverage of different objective areas\r",
+        "[BASE]     - AND: I can identify gaps in my training data\r",
+        "[BASE]     - AND: Recommendations help optimize training effectiveness\r",
+        "[BASE]     - AND: My AI will learn what I want it to learn"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ5.1.1",
+    "name": "Efficient Review Dashboard",
+    "baseCriteria": [
+      "- GIVEN: I need to review multiple QA pairs for quality\r",
+      "    - WHEN: I access the review dashboard\r",
+      "    - THEN: I see all pending reviews organized by priority\r",
+      "    - AND: Each item shows quality scores and key metrics\r",
+      "    - AND: I can filter by status, topic, or reviewer\r",
+      "    - AND: Progress indicators show review completion\r",
+      "    - AND: The workflow feels efficient and organized"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: I need to review multiple QA pairs for quality\r",
+        "[BASE]     - WHEN: I access the review dashboard\r",
+        "[BASE]     - THEN: I see all pending reviews organized by priority\r",
+        "[BASE]     - AND: Each item shows quality scores and key metrics\r",
+        "[BASE]     - AND: I can filter by status, topic, or reviewer\r",
+        "[BASE]     - AND: Progress indicators show review completion\r",
+        "[BASE]     - AND: The workflow feels efficient and organized"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ5.1.2",
+    "name": "Quality Diff Visualization",
+    "baseCriteria": [
+      "- GIVEN: I need to assess if customizations add value\r",
+      "    - WHEN: I review a QA pair\r",
+      "    - THEN: I see clear side-by-side comparison with differences highlighted\r",
+      "    - AND: Value additions are color-coded for easy scanning\r",
+      "    - AND: Quality metrics are displayed prominently\r",
+      "    - AND: I can quickly approve or request changes\r",
+      "    - AND: The interface minimizes cognitive load"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: I need to assess if customizations add value\r",
+        "[BASE]     - WHEN: I review a QA pair\r",
+        "[BASE]     - THEN: I see clear side-by-side comparison with differences highlighted\r",
+        "[BASE]     - AND: Value additions are color-coded for easy scanning\r",
+        "[BASE]     - AND: Quality metrics are displayed prominently\r",
+        "[BASE]     - AND: I can quickly approve or request changes\r",
+        "[BASE]     - AND: The interface minimizes cognitive load"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ5.2.1",
+    "name": "Team Review Coordination",
+    "baseCriteria": [
+      "- GIVEN: Multiple team members are reviewing training data\r",
+      "    - WHEN: I coordinate the review process\r",
+      "    - THEN: I can assign specific QA pairs to reviewers\r",
+      "    - AND: I see real-time progress for each team member\r",
+      "    - AND: Workload is automatically balanced\r",
+      "    - AND: Bottlenecks are identified early\r",
+      "    - AND: Team collaboration is smooth and efficient"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: Multiple team members are reviewing training data\r",
+        "[BASE]     - WHEN: I coordinate the review process\r",
+        "[BASE]     - THEN: I can assign specific QA pairs to reviewers\r",
+        "[BASE]     - AND: I see real-time progress for each team member\r",
+        "[BASE]     - AND: Workload is automatically balanced\r",
+        "[BASE]     - AND: Bottlenecks are identified early\r",
+        "[BASE]     - AND: Team collaboration is smooth and efficient"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ5.2.2",
+    "name": "Feedback and Improvement Loop",
+    "baseCriteria": [
+      "- GIVEN: I identify patterns that could improve quality\r",
+      "    - WHEN: I provide feedback during review\r",
+      "    - THEN: I can add specific improvement suggestions\r",
+      "    - AND: Common issues are tracked and analyzed\r",
+      "    - AND: The system learns from my feedback\r",
+      "    - AND: Future generations incorporate improvements\r",
+      "    - AND: Quality continuously improves"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: I identify patterns that could improve quality\r",
+        "[BASE]     - WHEN: I provide feedback during review\r",
+        "[BASE]     - THEN: I can add specific improvement suggestions\r",
+        "[BASE]     - AND: Common issues are tracked and analyzed\r",
+        "[BASE]     - AND: The system learns from my feedback\r",
+        "[BASE]     - AND: Future generations incorporate improvements\r",
+        "[BASE]     - AND: Quality continuously improves"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ5.3.1",
+    "name": "Expert Final Review",
+    "baseCriteria": [
+      "- GIVEN: QA pairs have passed initial review\r",
+      "    - THEN: I can make last-minute refinements inline\r",
+      "    - AND: I verify my methodology is accurately represented\r",
+      "    - AND: Voice consistency is maintained throughout\r",
+      "    - AND: I can approve with confidence\r"
+    ],
+    "progressiveFeatures": [
+      "    - WHEN: I perform final expert validation\r",
+      "    - AND: My expertise is truly captured"
+    ],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: QA pairs have passed initial review\r",
+        "[BASE]     - THEN: I can make last-minute refinements inline\r",
+        "[BASE]     - AND: I verify my methodology is accurately represented\r",
+        "[BASE]     - AND: Voice consistency is maintained throughout\r",
+        "[BASE]     - AND: I can approve with confidence\r",
+        "[PROGRESSIVE]     - WHEN: I perform final expert validation\r",
+        "[PROGRESSIVE]     - AND: My expertise is truly captured"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ5.3.2",
+    "name": "Bulk Approval Efficiency",
+    "baseCriteria": [
+      "- GIVEN: Multiple QA pairs meet quality standards\r",
+      "    - WHEN: I want to approve them efficiently\r",
+      "    - THEN: I can select multiple pairs for bulk approval\r",
+      "    - AND: Quality filters ensure only good pairs are included\r",
+      "    - AND: I can add bulk comments if needed\r",
+      "    - AND: Audit trail tracks all bulk actions\r",
+      "    - AND: The process saves significant time"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: Multiple QA pairs meet quality standards\r",
+        "[BASE]     - WHEN: I want to approve them efficiently\r",
+        "[BASE]     - THEN: I can select multiple pairs for bulk approval\r",
+        "[BASE]     - AND: Quality filters ensure only good pairs are included\r",
+        "[BASE]     - AND: I can add bulk comments if needed\r",
+        "[BASE]     - AND: Audit trail tracks all bulk actions\r",
+        "[BASE]     - AND: The process saves significant time"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ6.1.1",
+    "name": "Multiplication Factor Selection",
+    "baseCriteria": [
+      "- GIVEN: I have approved QA pairs ready for expansion\r",
+      "    - WHEN: I configure synthetic generation settings\r",
+      "    - THEN: I can choose multiplication factors (10x, 25x, 50x, 100x)\r",
+      "    - AND: I see estimated output size and generation time\r",
+      "    - AND: Quality impact is clearly explained\r",
+      "    - AND: I understand the tradeoff between quantity and quality\r",
+      "    - AND: Recommendations guide my decision"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: I have approved QA pairs ready for expansion\r",
+        "[BASE]     - WHEN: I configure synthetic generation settings\r",
+        "[BASE]     - THEN: I can choose multiplication factors (10x, 25x, 50x, 100x)\r",
+        "[BASE]     - AND: I see estimated output size and generation time\r",
+        "[BASE]     - AND: Quality impact is clearly explained\r",
+        "[BASE]     - AND: I understand the tradeoff between quantity and quality\r",
+        "[BASE]     - AND: Recommendations guide my decision"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ6.1.2",
+    "name": "Voice Preservation Settings",
+    "baseCriteria": [
+      "- GIVEN: I need variations to sound like my original content\r",
+      "    - WHEN: I configure voice preservation settings\r",
+      "    - THEN: I can set voice consistency requirements (strict/balanced/flexible)\r",
+      "    - AND: The system explains what each setting means\r",
+      "    - AND: I can preview sample variations before full generation\r",
+      "    - AND: My communication style will be preserved\r",
+      "    - AND: I feel confident in the authenticity"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: I need variations to sound like my original content\r",
+        "[BASE]     - WHEN: I configure voice preservation settings\r",
+        "[BASE]     - THEN: I can set voice consistency requirements (strict/balanced/flexible)\r",
+        "[BASE]     - AND: The system explains what each setting means\r",
+        "[BASE]     - AND: I can preview sample variations before full generation\r",
+        "[BASE]     - AND: My communication style will be preserved\r",
+        "[BASE]     - AND: I feel confident in the authenticity"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ6.2.1",
+    "name": "Real-Time Generation Dashboard",
+    "baseCriteria": [
+      "- GIVEN: Synthetic generation is running\r",
+      "    - WHEN: I monitor the process\r",
+      "    - THEN: I see real-time progress with completion percentage\r",
+      "    - AND: Sample variations appear as they're generated\r",
+      "    - AND: Quality metrics update continuously\r",
+      "    - AND: I can pause or adjust if needed\r",
+      "    - AND: I feel in control of the process"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: Synthetic generation is running\r",
+        "[BASE]     - WHEN: I monitor the process\r",
+        "[BASE]     - THEN: I see real-time progress with completion percentage\r",
+        "[BASE]     - AND: Sample variations appear as they're generated\r",
+        "[BASE]     - AND: Quality metrics update continuously\r",
+        "[BASE]     - AND: I can pause or adjust if needed\r",
+        "[BASE]     - AND: I feel in control of the process"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ6.2.2",
+    "name": "Quality Assurance Monitoring",
+    "baseCriteria": [
+      "- GIVEN: I need to ensure quality at scale\r",
+      "    - WHEN: Generation is in progress\r",
+      "    - THEN: I see quality scores for generated variations\r",
+      "    - AND: Voice consistency metrics are displayed\r",
+      "    - AND: Any quality drops trigger alerts\r",
+      "    - AND: I can adjust parameters mid-generation\r",
+      "    - AND: Final output meets my standards"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: I need to ensure quality at scale\r",
+        "[BASE]     - WHEN: Generation is in progress\r",
+        "[BASE]     - THEN: I see quality scores for generated variations\r",
+        "[BASE]     - AND: Voice consistency metrics are displayed\r",
+        "[BASE]     - AND: Any quality drops trigger alerts\r",
+        "[BASE]     - AND: I can adjust parameters mid-generation\r",
+        "[BASE]     - AND: Final output meets my standards"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ6.3.1",
+    "name": "Multiplication Success Visualization",
+    "baseCriteria": [
+      "- GIVEN: Generation is complete\r",
+      "    - WHEN: I view the results\r",
+      "    - THEN: I see impressive visualization of multiplication achieved\r",
+      "    - AND: ROI metrics show time saved and value created\r",
+      "    - AND: Quality distribution is clearly displayed\r",
+      "    - AND: I feel amazed by the amplification\r",
+      "    - AND: The value is undeniable"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: Generation is complete\r",
+        "[BASE]     - WHEN: I view the results\r",
+        "[BASE]     - THEN: I see impressive visualization of multiplication achieved\r",
+        "[BASE]     - AND: ROI metrics show time saved and value created\r",
+        "[BASE]     - AND: Quality distribution is clearly displayed\r",
+        "[BASE]     - AND: I feel amazed by the amplification\r",
+        "[BASE]     - AND: The value is undeniable"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ6.3.2",
+    "name": "Training Data Export",
+    "baseCriteria": [
+      "- GIVEN: I have thousands of generated training pairs\r",
+      "    - WHEN: I export my training data\r",
+      "    - THEN: I can choose export format (JSONL, HuggingFace, etc.)\r",
+      "    - AND: Data is properly formatted for LoRA training\r",
+      "    - AND: Export includes all metadata and organization\r",
+      "    - AND: Download is fast and reliable\r",
+      "    - AND: I own this valuable asset completely"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: I have thousands of generated training pairs\r",
+        "[BASE]     - WHEN: I export my training data\r",
+        "[BASE]     - THEN: I can choose export format (JSONL, HuggingFace, etc.)\r",
+        "[BASE]     - AND: Data is properly formatted for LoRA training\r",
+        "[BASE]     - AND: Export includes all metadata and organization\r",
+        "[BASE]     - AND: Download is fast and reliable\r",
+        "[BASE]     - AND: I own this valuable asset completely"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  },
+  {
+    "id": "UJ6.3.3",
+    "name": "Success Celebration and Next Steps",
+    "baseCriteria": [
+      "- GIVEN: I've successfully created thousands of training pairs\r",
+      "    - WHEN: I complete the workflow\r",
+      "    - THEN: The platform celebrates my achievement\r",
+      "    - AND: I receive a summary of what I've created\r",
+      "    - AND: Clear next steps for using the data are provided\r",
+      "    - AND: I feel proud of my accomplishment\r",
+      "    - AND: I want to create more training data"
+    ],
+    "progressiveFeatures": [],
+    "advancedOptions": [],
+    "unified": {
+      "description": "Unified requirement supporting all user types",
+      "acceptanceCriteria": [
+        "[BASE] - GIVEN: I've successfully created thousands of training pairs\r",
+        "[BASE]     - WHEN: I complete the workflow\r",
+        "[BASE]     - THEN: The platform celebrates my achievement\r",
+        "[BASE]     - AND: I receive a summary of what I've created\r",
+        "[BASE]     - AND: Clear next steps for using the data are provided\r",
+        "[BASE]     - AND: I feel proud of my accomplishment\r",
+        "[BASE]     - AND: I want to create more training data"
+      ],
+      "progressiveDisclosure": {
+        "level1": "Basic features for new users",
+        "level2": "Extended features for experienced users",
+        "level3": "Advanced features for power users"
+      }
+    }
+  }
+]

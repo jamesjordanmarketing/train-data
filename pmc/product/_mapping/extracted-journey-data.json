@@ -1,0 +1,325 @@
+{
+  "stages": [
+    {
+      "number": "1",
+      "name": "Discovery & Project Initialization",
+      "startLine": 6343
+    },
+    {
+      "number": "2",
+      "name": "Content Ingestion & Automated Processing",
+      "startLine": 15590
+    },
+    {
+      "number": "3",
+      "name": "Knowledge Exploration & Intelligent Organization",
+      "startLine": 22981
+    },
+    {
+      "number": "4",
+      "name": "Training Data Generation & Expert Customization",
+      "startLine": 30194
+    },
+    {
+      "number": "5",
+      "name": "Collaborative Quality Control & Final Validation",
+      "startLine": 38665
+    },
+    {
+      "number": "6",
+      "name": "Synthetic Data Expansion & Value Amplification",
+      "startLine": 46631
+    }
+  ],
+  "personas": [
+    {
+      "name": "Product Vision Alignment\r\nThe Bright Run user journey transforms non-technical domain experts into AI training data creators through an intuitive 6-stage workflow. Starting from zero AI knowledge, users progress through discovery, content upload, knowledge exploration, training data generation, quality control, and synthetic expansion - each stage delivering immediate value while building toward the complete solution of creating thousands of high-quality LoRA training pairs from their proprietary knowledge.\r\n\r\n### Key User Personas Overview\r\n- **Primary Users**: Small business owners and domain experts seeking to preserve their expertise in AI format\r\n- **Content Specialists**: Marketing experts and consultants needing to scale their unique methodologies\r\n- **Quality Controllers**: Reviewers ensuring training data maintains voice and methodology consistency\r\n- **Service Providers**: AI agencies delivering custom training data solutions to clients\r\n- **Non-Technical Focus**: All personas can succeed without technical AI/ML knowledge\r\n\r\n### Journey Scope and Boundaries\r\nThe journey encompasses the complete transformation from raw business knowledge",
+      "type": "documents, transcripts, expertise"
+    },
+    {
+      "name": "Success Definition\r\nSuccess is measured by users completing the full workflow in under 2 hours for their first project, achieving 95%+ approval rates for generated training pairs, and realizing 10-100x multiplication of their manual examples while maintaining their unique voice and methodology throughout all generated content.\r\n\r\n### Value Progression Story for Proof-of-Concept\r\nThe journey creates a compelling proof-of-concept by demonstrating immediate value in Stage 1",
+      "type": "project organization"
+    },
+    {
+      "name": "Small Business Owner",
+      "type": "Primary Decision Maker"
+    },
+    {
+      "name": "Domain Expert/Consultant",
+      "type": "Knowledge Provider"
+    },
+    {
+      "name": "Content Creator",
+      "type": "Daily User"
+    },
+    {
+      "name": "Quality Reviewer",
+      "type": "Validation Specialist"
+    },
+    {
+      "name": "AI Agency Professional",
+      "type": "Service Provider"
+    },
+    {
+      "name": "1.1 Project Workspace Creation\r\n\r\n- **UJ1.1.1: First-Time Platform Discovery**\r\n  * Description: User discovers Bright Run and immediately understands how it will transform their business knowledge into AI training data without technical expertise\r\n  * Impact Weighting: Strategic Growth\r\n  * Priority: High\r\n  * User Stories: US1.1.1, US1.1.4\r\n  * Tasks: [T reference numbers]\r\n  * User Journey Acceptance Criteria:\r\n    - GIVEN: I'm a business owner with valuable knowledge but no AI expertise\r\n    - WHEN: I first arrive at Bright Run's interface\r\n    - THEN: I see a clear value proposition explaining how my knowledge becomes AI training data in simple terms\r\n    - AND: I understand the 6-stage journey ahead through visual workflow representation\r\n    - AND: I feel confident I can succeed without technical knowledge\r\n    - AND: I see example success stories from similar businesses\r\n    * User Story Acceptance Criteria: derived and exapanded from this stage in: `C:\\Users\\james\\Master\\BrightHub\\BRun\\brun8\\pmc\\product\\02-bmo-user-stories.md`\r\n  * Technical Notes: Setup wizard with progressive disclosure, smart defaults based on industry\r\n  * Data Requirements: Example projects, success metrics, visual workflow representation\r\n  * Error Scenarios: If user feels overwhelmed, provide simplified \"AI basics\" tooltip explanations\r\n  * Performance Criteria: Page loads in <2 seconds with immediate value clarity\r\n  * User Experience Notes: Use business benefits language, avoid technical jargon, provide hoverable explanations\r\n\r\n- **UJ1.1.2: Guided Project Setup**\r\n  * Description: User creates their first project workspace with guided assistance that explains each step in business terms\r\n  * Impact Weighting: Strategic Growth\r\n  * Priority: High\r\n  * User Stories: US1.1.1\r\n  * Tasks: [T reference numbers]\r\n  * User Journey Acceptance Criteria:\r\n    - GIVEN: I want to create my first knowledge transformation project\r\n    - WHEN: I click \"Create New Project\"\r\n    - THEN: I'm guided through a simple setup wizard with business-friendly language\r\n    - AND: I can name my project with a descriptive business purpose\r\n    - AND: I can specify my industry/domain for optimized processing\r\n    - AND: I see estimated time and outcomes for my project type\r\n    - AND: The system creates an organized workspace for my knowledge assets\r\n  * User Story Acceptance Criteria: derived and exapanded from this stage in: `C:\\Users\\james\\Master\\BrightHub\\BRun\\brun8\\pmc\\product\\02-bmo-user-stories.md`\r\n  * Technical Notes: Setup wizard with progressive disclosure, smart defaults based on industry\r\n\r\n  * Data Requirements: Project metadata, industry templates, time estimates\r\n  * Error Scenarios: Validation prevents confusing project names, suggests improvements\r\n  * Performance Criteria: Project creation completes in <5 seconds\r\n  * User Experience Notes: Celebrate project creation, show clear next steps, maintain momentum\r\n\r\n- **UJ1.1.3: Knowledge Goals Definition**\r\n  * Description: User defines what they want their AI to learn and how it should represent their business\r\n  * Impact Weighting: Strategic Growth\r\n  * Priority: High\r\n  * User Stories: US1.1.4\r\n  * Tasks: [T reference numbers]\r\n  * User Journey Acceptance Criteria:\r\n    - GIVEN: I have specific expertise and business philosophy to preserve\r\n    - WHEN: I'm setting up my project goals\r\n    - THEN: I can describe my unique value proposition in plain language\r\n    - AND: I can specify my target audience and use cases\r\n    - AND: I can indicate my voice style",
+      "type": "formal, conversational, technical, etc."
+    },
+    {
+      "name": "2.1 Multi-Format Document Upload\r\n\r\n- **UJ2.1.1: Intuitive Document Upload Experience**\r\n  * Description: User easily uploads various document formats through a familiar, drag-and-drop interface\r\n  * Impact Weighting: Operational Efficiency\r\n  * Priority: High\r\n  * User Stories: US2.1.1\r\n  * Tasks: [T reference numbers]\r\n  * User Journey Acceptance Criteria:\r\n    - GIVEN: I have knowledge in various formats",
+      "type": "PDFs, Word docs, transcripts, web pages"
+    },
+    {
+      "name": "4.1 AI-Assisted Question Generation\r\n\r\n- **UJ4.1.1: Intelligent Question Creation**\r\n  * Description: AI generates relevant questions that extract the value from user's knowledge\r\n  * Impact Weighting: Operational Efficiency\r\n  * Priority: High\r\n  * User Stories: US4.1.1\r\n  * Tasks: [T reference numbers]\r\n  * User Journey Acceptance Criteria:\r\n    - GIVEN: I have knowledge chunks and need training questions\r\n    - WHEN: I initiate question generation for my content\r\n    - THEN: AI creates diverse, relevant questions for each knowledge chunk\r\n    - AND: Questions reflect different cognitive levels",
+      "type": "factual, analytical, creative"
+    },
+    {
+      "name": "6.1 Expansion Configuration\r\n\r\n- **UJ6.1.1: Multiplication Factor Selection**\r\n  * Description: User configures how much to expand their training data based on needs\r\n  * Impact Weighting: Revenue Impact\r\n  * Priority: High\r\n  * User Stories: US6.1.1\r\n  * Tasks: [T reference numbers]\r\n  * User Journey Acceptance Criteria:\r\n    - GIVEN: I have approved QA pairs ready for expansion\r\n    - WHEN: I configure synthetic generation settings\r\n    - THEN: I can choose multiplication factors",
+      "type": "10x, 25x, 50x, 100x"
+    },
+    {
+      "name": "6.2 Generation Monitoring\r\n\r\n- **UJ6.2.1: Real-Time Generation Dashboard**\r\n  * Description: User monitors synthetic generation progress with confidence\r\n  * Impact Weighting: Operational Efficiency\r\n  * Priority: High\r\n  * User Stories: US6.1.3\r\n  * Tasks: [T reference numbers]\r\n  * User Journey Acceptance Criteria:\r\n    - GIVEN: Synthetic generation is running\r\n    - WHEN: I monitor the process\r\n    - THEN: I see real-time progress with completion percentage\r\n    - AND: Sample variations appear as they're generated\r\n    - AND: Quality metrics update continuously\r\n    - AND: I can pause or adjust if needed\r\n    - AND: I feel in control of the process\r\n  * User Story Acceptance Criteria: derived and exapanded from this stage in: `C:\\Users\\james\\Master\\BrightHub\\BRun\\brun8\\pmc\\product\\02-bmo-user-stories.md`\r\n  * Technical Notes: Real-time updates, streaming samples, progress calculation\r\n  * Data Requirements: Generation progress, quality scores, sample stream\r\n  * Error Scenarios: If generation stalls, provide clear status and options\r\n  * Performance Criteria: Updates every second, instant pause response\r\n  * User Experience Notes: Engaging animations, sample showcase, control options\r\n\r\n- **UJ6.2.2: Quality Assurance Monitoring**\r\n  * Description: User ensures quality standards are maintained during expansion\r\n  * Impact Weighting: Strategic Growth\r\n  * Priority: High\r\n  * User Stories: US6.1.4\r\n  * Tasks: [T reference numbers]\r\n  * User Journey Acceptance Criteria:\r\n    - GIVEN: I need to ensure quality at scale\r\n    - WHEN: Generation is in progress\r\n    - THEN: I see quality scores for generated variations\r\n    - AND: Voice consistency metrics are displayed\r\n    - AND: Any quality drops trigger alerts\r\n    - AND: I can adjust parameters mid-generation\r\n    - AND: Final output meets my standards\r\n  * User Story Acceptance Criteria: derived and exapanded from this stage in: `C:\\Users\\james\\Master\\BrightHub\\BRun\\brun8\\pmc\\product\\02-bmo-user-stories.md`\r\n  * Technical Notes: Quality monitoring, alert system, parameter adjustment\r\n  * Data Requirements: Quality metrics, thresholds, alert triggers\r\n  * Error Scenarios: If quality drops, pause and request intervention\r\n  * Performance Criteria: Real-time quality scoring\r\n  * User Experience Notes: Clear metrics, proactive alerts, adjustment guidance\r\n\r\n### 6.3 Value Delivery and Export\r\n\r\n- **UJ6.3.1: Multiplication Success Visualization**\r\n  * Description: User sees compelling visualization of value multiplication achieved\r\n  * Impact Weighting: Revenue Impact\r\n  * Priority: High\r\n  * User Stories: US1.1.3\r\n  * Tasks: [T reference numbers]\r\n  * User Journey Acceptance Criteria:\r\n    - GIVEN: Generation is complete\r\n    - WHEN: I view the results\r\n    - THEN: I see impressive visualization of multiplication achieved\r\n    - AND: ROI metrics show time saved and value created\r\n    - AND: Quality distribution is clearly displayed\r\n    - AND: I feel amazed by the amplification\r\n    - AND: The value is undeniable\r\n  * User Story Acceptance Criteria: derived and exapanded from this stage in: `C:\\Users\\james\\Master\\BrightHub\\BRun\\brun8\\pmc\\product\\02-bmo-user-stories.md`\r\n  * Technical Notes: Data visualization, ROI calculation, distribution analysis\r\n  * Data Requirements: Final metrics, time tracking, value calculations\r\n  * Error Scenarios: Always show positive value achieved\r\n  * Performance Criteria: Instant visualization rendering\r\n  * User Experience Notes: Wow factor, clear value, shareable results\r\n\r\n- **UJ6.3.2: Training Data Export**\r\n  * Description: User exports their complete training dataset in LoRA-ready format\r\n  * Impact Weighting: Operational Efficiency\r\n  * Priority: High\r\n  * User Stories: US6.1.5\r\n  * Tasks: [T reference numbers]\r\n  * User Journey Acceptance Criteria:\r\n    - GIVEN: I have thousands of generated training pairs\r\n    - WHEN: I export my training data\r\n    - THEN: I can choose export format",
+      "type": "JSONL, HuggingFace, etc."
+    },
+    {
+      "name": "User Journey Flow\r\nThe complete user journey creates a seamless progression from knowledge discovery to value multiplication:\r\n\r\n1. **Discovery → Ingestion**: Natural transition from understanding value to uploading first document\r\n2. **Ingestion → Exploration**: Automatic progression from processed documents to knowledge discovery\r\n3. **Exploration → Generation**: Smooth flow from organized knowledge to QA pair creation\r\n4. **Generation → Review**: Clear handoff from customization to quality validation\r\n5. **Review → Expansion**: Confident progression from approved pairs to multiplication\r\n6. **Expansion → Success**: Triumphant completion with clear value demonstration\r\n\r\n### Value Amplification\r\nEach stage builds exponentially on the previous:\r\n- Stage 1: Creates organized foundation",
+      "type": "1x value"
+    },
+    {
+      "name": "Development Efficiency\r\nThe journey sequence optimizes development by:\r\n- Building foundation features first",
+      "type": "upload, processing"
+    },
+    {
+      "name": "Data Flow\r\nInformation flows seamlessly between stages:\r\n- Raw documents → Cleaned content → Knowledge chunks\r\n- Knowledge chunks → QA pairs → Reviewed pairs\r\n- Reviewed pairs → Synthetic variations → Training dataset\r\n- User feedback → System improvements → Better generation\r\n\r\n### Progressive Enhancement\r\nUser capabilities build naturally:\r\n- Learn platform value → Upload content confidently\r\n- Understand processing → Trust AI analysis\r\n- Refine organization → Customize effectively\r\n- Review efficiently → Expand confidently\r\n- Achieve success → Become platform advocate\r\n\r\n## Acceptance Criteria Inventory\r\n\r\n### Critical Priority",
+      "type": "Must-have for proof-of-concept"
+    },
+    {
+      "name": "High Priority",
+      "type": "Important for complete experience"
+    },
+    {
+      "name": "Medium Priority",
+      "type": "Enhances user satisfaction"
+    },
+    {
+      "name": "Suggested Development Sequence\r\n**Sprint 1-2: Foundation",
+      "type": "Weeks 1-4"
+    },
+    {
+      "name": "MVP vs. Enhanced Feature Delineation\r\n**MVP Features",
+      "type": "Core proof-of-concept"
+    }
+  ],
+  "ujElements": [
+    {
+      "id": "UJ1.1.1",
+      "name": "First-Time Platform Discovery",
+      "criteria": "- GIVEN: I'm a business owner with valuable knowledge but no AI expertise\r\n    - WHEN: I first arrive at Bright Run's interface\r\n    - THEN: I see a clear value proposition explaining how my knowledge becomes AI training data in simple terms\r\n    - AND: I understand the 6-stage journey ahead through visual workflow representation\r\n    - AND: I feel confident I can succeed without technical knowledge\r\n    - AND: I see example success stories from similar businesses",
+      "stage": 1
+    },
+    {
+      "id": "UJ1.1.2",
+      "name": "Guided Project Setup",
+      "criteria": "- GIVEN: I want to create my first knowledge transformation project\r\n    - WHEN: I click \"Create New Project\"\r\n    - THEN: I'm guided through a simple setup wizard with business-friendly language\r\n    - AND: I can name my project with a descriptive business purpose\r\n    - AND: I can specify my industry/domain for optimized processing\r\n    - AND: I see estimated time and outcomes for my project type\r\n    - AND: The system creates an organized workspace for my knowledge assets",
+      "stage": 1
+    },
+    {
+      "id": "UJ1.1.3",
+      "name": "Knowledge Goals Definition",
+      "criteria": "- GIVEN: I have specific expertise and business philosophy to preserve\r\n    - WHEN: I'm setting up my project goals\r\n    - THEN: I can describe my unique value proposition in plain language\r\n    - AND: I can specify my target audience and use cases\r\n    - AND: I can indicate my voice style (formal, conversational, technical, etc.)\r\n    - AND: The system translates this into training optimization settings automatically",
+      "stage": 1
+    },
+    {
+      "id": "UJ1.2.1",
+      "name": "Data Ownership Assurance",
+      "criteria": "- GIVEN: I'm concerned about protecting my competitive advantages\r\n    - WHEN: I review the privacy and ownership information\r\n    - THEN: I see clear, plain-English explanations of data ownership\r\n    - AND: I understand that all processing happens locally without external transmission\r\n    - AND: I can export and delete all my data at any time\r\n    - AND: I see visual indicators of privacy protection throughout the interface",
+      "stage": 1
+    },
+    {
+      "id": "UJ1.2.2",
+      "name": "Competitive Advantage Protection",
+      "criteria": "- GIVEN: I need to protect my business methodologies from competitors\r\n    - WHEN: I'm uploading sensitive business knowledge\r\n    - THEN: I see confirmation that my data never leaves my control\r\n    - AND: I understand there's no vendor lock-in or data retention\r\n    - AND: I can see audit logs of all data processing activities\r\n    - AND: I feel secure sharing my most valuable knowledge",
+      "stage": 1
+    },
+    {
+      "id": "UJ1.3.1",
+      "name": "ROI Visualization",
+      "criteria": "- GIVEN: I need to understand the return on my time investment\r\n    - WHEN: I view the ROI calculator and projections\r\n    - THEN: I see how 1 hour of my expert input becomes 100+ hours of training data\r\n    - AND: I understand the 10-100x multiplication factor\r\n    - AND: I can adjust parameters to see different ROI scenarios\r\n    - AND: I feel motivated to continue with the process",
+      "stage": 1
+    },
+    {
+      "id": "UJ2.1.1",
+      "name": "Intuitive Document Upload Experience",
+      "criteria": "- GIVEN: I have knowledge in various formats (PDFs, Word docs, transcripts, web pages)\r\n    - WHEN: I want to upload my content to the platform\r\n    - THEN: I can simply drag and drop files onto a clearly marked upload area\r\n    - AND: I see immediate visual feedback that my files are being processed\r\n    - AND: I can upload multiple files at once without waiting\r\n    - AND: Each file shows a progress bar and estimated completion time\r\n    - AND: I understand what's happening through simple status messages",
+      "stage": 2
+    },
+    {
+      "id": "UJ2.1.2",
+      "name": "Document Preview and Validation",
+      "criteria": "- GIVEN: I've uploaded documents and want to verify they were read correctly\r\n    - WHEN: I click on any uploaded document\r\n    - THEN: I see a clean preview of the extracted content\r\n    - AND: I can spot-check that important sections were captured\r\n    - AND: I can flag any issues for manual correction\r\n    - AND: The system shows me what will be used for training",
+      "stage": 2
+    },
+    {
+      "id": "UJ2.2.1",
+      "name": "Intelligent Content Cleaning",
+      "criteria": "- GIVEN: My documents contain headers, footers, page numbers, and formatting issues\r\n    - WHEN: The system processes my uploaded content\r\n    - THEN: I see a notification that cleaning is in progress with simple explanations\r\n    - AND: Technical artifacts are automatically removed\r\n    - AND: The content is normalized and organized\r\n    - AND: I can review a before/after comparison if desired\r\n    - AND: No technical knowledge is required on my part",
+      "stage": 2
+    },
+    {
+      "id": "UJ2.2.2",
+      "name": "Processing Status Transparency",
+      "criteria": "- GIVEN: I want to know my valuable content is being handled properly\r\n    - WHEN: Documents are being processed\r\n    - THEN: I see a clear dashboard showing each document's status\r\n    - AND: I understand what stage each document is in using simple terms\r\n    - AND: I can see estimated completion times\r\n    - AND: Any issues are explained in non-technical language\r\n    - AND: I feel in control of the process",
+      "stage": 2
+    },
+    {
+      "id": "UJ2.3.1",
+      "name": "Intelligent Document Categorization",
+      "criteria": "- GIVEN: I've uploaded multiple documents covering different topics\r\n    - WHEN: Processing completes\r\n    - THEN: I see my documents organized in a clean table view\r\n    - AND: Documents are automatically categorized by topic\r\n    - AND: I can search and filter my document library\r\n    - AND: I can manually adjust categories if needed\r\n    - AND: The organization makes sense for my business",
+      "stage": 2
+    },
+    {
+      "id": "UJ3.1.1",
+      "name": "Visual Knowledge Discovery",
+      "criteria": "- GIVEN: My content has been processed and I want to explore the key concepts\r\n    - WHEN: I enter the knowledge exploration interface\r\n    - THEN: I see a visual map of my content's main topics and relationships\r\n    - AND: I can click on any topic to see related content chunks\r\n    - AND: Important insights are highlighted automatically\r\n    - AND: I can navigate between related concepts easily\r\n    - AND: The visualization helps me understand my knowledge structure",
+      "stage": 3
+    },
+    {
+      "id": "UJ3.1.2",
+      "name": "Intelligent Content Chunking",
+      "criteria": "- GIVEN: My documents contain various topics and methodologies\r\n    - WHEN: The system analyzes my content\r\n    - THEN: Content is divided into logical, meaningful chunks\r\n    - AND: Each chunk contains a complete thought or concept\r\n    - AND: Relationships between chunks are preserved\r\n    - AND: I can adjust chunk boundaries if needed\r\n    - AND: The chunking makes sense for my expertise area",
+      "stage": 3
+    },
+    {
+      "id": "UJ3.2.1",
+      "name": "AI-Powered Topic Discovery",
+      "criteria": "- GIVEN: I have specialized knowledge with my own categorization system\r\n    - WHEN: The AI analyzes my content\r\n    - THEN: It suggests relevant topic tags that make sense for my field\r\n    - AND: I can accept, modify, or add my own tags\r\n    - AND: The system learns from my corrections\r\n    - AND: Topics align with my business terminology\r\n    - AND: I maintain control over the final categorization",
+      "stage": 3
+    },
+    {
+      "id": "UJ3.2.2",
+      "name": "Value Identification Assistant",
+      "criteria": "- GIVEN: I want to focus on my most valuable proprietary insights\r\n    - WHEN: I review the analyzed content\r\n    - THEN: The system highlights high-value knowledge nuggets\r\n    - AND: Each nugget has an AI-generated summary\r\n    - AND: I can see why it's considered valuable\r\n    - AND: I can prioritize nuggets for training data generation\r\n    - AND: My unique methodologies are properly identified",
+      "stage": 3
+    },
+    {
+      "id": "UJ3.3.1",
+      "name": "Expert Knowledge Refinement",
+      "criteria": "- GIVEN: The AI has organized my knowledge but I need to ensure accuracy\r\n    - WHEN: I review the organized knowledge chunks\r\n    - THEN: I can easily validate or correct the AI's interpretation\r\n    - AND: My corrections are immediately applied\r\n    - AND: The system adapts to my preferences\r\n    - AND: I feel confident the AI understands my expertise\r\n    - AND: The process is efficient and not tedious",
+      "stage": 3
+    },
+    {
+      "id": "UJ4.1.1",
+      "name": "Intelligent Question Creation",
+      "criteria": "- GIVEN: I have knowledge chunks and need training questions\r\n    - WHEN: I initiate question generation for my content\r\n    - THEN: AI creates diverse, relevant questions for each knowledge chunk\r\n    - AND: Questions reflect different cognitive levels (factual, analytical, creative)\r\n    - AND: Questions align with my specified use cases\r\n    - AND: I can regenerate questions with different parameters\r\n    - AND: The questions make sense for my expertise area",
+      "stage": 4
+    },
+    {
+      "id": "UJ4.1.2",
+      "name": "Question Refinement Interface",
+      "criteria": "- GIVEN: AI has generated questions that need refinement\r\n    - WHEN: I review the generated questions\r\n    - THEN: I can easily edit questions inline\r\n    - AND: I see suggestions for improvement\r\n    - AND: Similar questions are grouped for batch editing\r\n    - AND: My changes are saved automatically\r\n    - AND: The interface feels responsive and efficient",
+      "stage": 4
+    },
+    {
+      "id": "UJ4.2.1",
+      "name": "Expert Answer Enhancement",
+      "criteria": "- GIVEN: AI has generated baseline answers to questions\r\n    - WHEN: I customize answers to reflect my expertise\r\n    - THEN: I see a side-by-side comparison of generic vs. my custom answer\r\n    - AND: I can edit in rich text with formatting options\r\n    - AND: The system highlights where I'm adding unique value\r\n    - AND: My methodology and voice are preserved\r\n    - AND: I feel the answers truly represent my expertise",
+      "stage": 4
+    },
+    {
+      "id": "UJ4.2.2",
+      "name": "Value-Add Visualization",
+      "criteria": "- GIVEN: I've customized answers with my expertise\r\n    - WHEN: I review my enhancements\r\n    - THEN: I see a clear visual diff showing my additions\r\n    - AND: Value metrics show the improvement percentage\r\n    - AND: Key methodology insertions are highlighted\r\n    - AND: I understand the impact of my customizations\r\n    - AND: I feel proud of the value I'm adding",
+      "stage": 4
+    },
+    {
+      "id": "UJ4.3.1",
+      "name": "Comprehensive Metadata Tagging",
+      "criteria": "- GIVEN: I need to organize my QA pairs for optimal training\r\n    - WHEN: I tag my training data\r\n    - THEN: I can assign topic, intent, style, and difficulty tags\r\n    - AND: The system suggests appropriate tags based on content\r\n    - AND: I can create custom tags for my specific needs\r\n    - AND: Bulk tagging operations save time\r\n    - AND: The organization reflects my expertise structure",
+      "stage": 4
+    },
+    {
+      "id": "UJ4.3.2",
+      "name": "Training Objective Alignment",
+      "criteria": "- GIVEN: I have specific goals for how my AI should behave\r\n    - WHEN: I organize my training data\r\n    - THEN: I can map QA pairs to specific training objectives\r\n    - AND: The system shows coverage of different objective areas\r\n    - AND: I can identify gaps in my training data\r\n    - AND: Recommendations help optimize training effectiveness\r\n    - AND: My AI will learn what I want it to learn",
+      "stage": 4
+    },
+    {
+      "id": "UJ5.1.1",
+      "name": "Efficient Review Dashboard",
+      "criteria": "- GIVEN: I need to review multiple QA pairs for quality\r\n    - WHEN: I access the review dashboard\r\n    - THEN: I see all pending reviews organized by priority\r\n    - AND: Each item shows quality scores and key metrics\r\n    - AND: I can filter by status, topic, or reviewer\r\n    - AND: Progress indicators show review completion\r\n    - AND: The workflow feels efficient and organized",
+      "stage": 5
+    },
+    {
+      "id": "UJ5.1.2",
+      "name": "Quality Diff Visualization",
+      "criteria": "- GIVEN: I need to assess if customizations add value\r\n    - WHEN: I review a QA pair\r\n    - THEN: I see clear side-by-side comparison with differences highlighted\r\n    - AND: Value additions are color-coded for easy scanning\r\n    - AND: Quality metrics are displayed prominently\r\n    - AND: I can quickly approve or request changes\r\n    - AND: The interface minimizes cognitive load",
+      "stage": 5
+    },
+    {
+      "id": "UJ5.2.1",
+      "name": "Team Review Coordination",
+      "criteria": "- GIVEN: Multiple team members are reviewing training data\r\n    - WHEN: I coordinate the review process\r\n    - THEN: I can assign specific QA pairs to reviewers\r\n    - AND: I see real-time progress for each team member\r\n    - AND: Workload is automatically balanced\r\n    - AND: Bottlenecks are identified early\r\n    - AND: Team collaboration is smooth and efficient",
+      "stage": 5
+    },
+    {
+      "id": "UJ5.2.2",
+      "name": "Feedback and Improvement Loop",
+      "criteria": "- GIVEN: I identify patterns that could improve quality\r\n    - WHEN: I provide feedback during review\r\n    - THEN: I can add specific improvement suggestions\r\n    - AND: Common issues are tracked and analyzed\r\n    - AND: The system learns from my feedback\r\n    - AND: Future generations incorporate improvements\r\n    - AND: Quality continuously improves",
+      "stage": 5
+    },
+    {
+      "id": "UJ5.3.1",
+      "name": "Expert Final Review",
+      "criteria": "- GIVEN: QA pairs have passed initial review\r\n    - WHEN: I perform final expert validation\r\n    - THEN: I can make last-minute refinements inline\r\n    - AND: I verify my methodology is accurately represented\r\n    - AND: Voice consistency is maintained throughout\r\n    - AND: I can approve with confidence\r\n    - AND: My expertise is truly captured",
+      "stage": 5
+    },
+    {
+      "id": "UJ5.3.2",
+      "name": "Bulk Approval Efficiency",
+      "criteria": "- GIVEN: Multiple QA pairs meet quality standards\r\n    - WHEN: I want to approve them efficiently\r\n    - THEN: I can select multiple pairs for bulk approval\r\n    - AND: Quality filters ensure only good pairs are included\r\n    - AND: I can add bulk comments if needed\r\n    - AND: Audit trail tracks all bulk actions\r\n    - AND: The process saves significant time",
+      "stage": 5
+    },
+    {
+      "id": "UJ6.1.1",
+      "name": "Multiplication Factor Selection",
+      "criteria": "- GIVEN: I have approved QA pairs ready for expansion\r\n    - WHEN: I configure synthetic generation settings\r\n    - THEN: I can choose multiplication factors (10x, 25x, 50x, 100x)\r\n    - AND: I see estimated output size and generation time\r\n    - AND: Quality impact is clearly explained\r\n    - AND: I understand the tradeoff between quantity and quality\r\n    - AND: Recommendations guide my decision",
+      "stage": 6
+    },
+    {
+      "id": "UJ6.1.2",
+      "name": "Voice Preservation Settings",
+      "criteria": "- GIVEN: I need variations to sound like my original content\r\n    - WHEN: I configure voice preservation settings\r\n    - THEN: I can set voice consistency requirements (strict/balanced/flexible)\r\n    - AND: The system explains what each setting means\r\n    - AND: I can preview sample variations before full generation\r\n    - AND: My communication style will be preserved\r\n    - AND: I feel confident in the authenticity",
+      "stage": 6
+    },
+    {
+      "id": "UJ6.2.1",
+      "name": "Real-Time Generation Dashboard",
+      "criteria": "- GIVEN: Synthetic generation is running\r\n    - WHEN: I monitor the process\r\n    - THEN: I see real-time progress with completion percentage\r\n    - AND: Sample variations appear as they're generated\r\n    - AND: Quality metrics update continuously\r\n    - AND: I can pause or adjust if needed\r\n    - AND: I feel in control of the process",
+      "stage": 6
+    },
+    {
+      "id": "UJ6.2.2",
+      "name": "Quality Assurance Monitoring",
+      "criteria": "- GIVEN: I need to ensure quality at scale\r\n    - WHEN: Generation is in progress\r\n    - THEN: I see quality scores for generated variations\r\n    - AND: Voice consistency metrics are displayed\r\n    - AND: Any quality drops trigger alerts\r\n    - AND: I can adjust parameters mid-generation\r\n    - AND: Final output meets my standards",
+      "stage": 6
+    },
+    {
+      "id": "UJ6.3.1",
+      "name": "Multiplication Success Visualization",
+      "criteria": "- GIVEN: Generation is complete\r\n    - WHEN: I view the results\r\n    - THEN: I see impressive visualization of multiplication achieved\r\n    - AND: ROI metrics show time saved and value created\r\n    - AND: Quality distribution is clearly displayed\r\n    - AND: I feel amazed by the amplification\r\n    - AND: The value is undeniable",
+      "stage": 6
+    },
+    {
+      "id": "UJ6.3.2",
+      "name": "Training Data Export",
+      "criteria": "- GIVEN: I have thousands of generated training pairs\r\n    - WHEN: I export my training data\r\n    - THEN: I can choose export format (JSONL, HuggingFace, etc.)\r\n    - AND: Data is properly formatted for LoRA training\r\n    - AND: Export includes all metadata and organization\r\n    - AND: Download is fast and reliable\r\n    - AND: I own this valuable asset completely",
+      "stage": 6
+    },
+    {
+      "id": "UJ6.3.3",
+      "name": "Success Celebration and Next Steps",
+      "criteria": "- GIVEN: I've successfully created thousands of training pairs\r\n    - WHEN: I complete the workflow\r\n    - THEN: The platform celebrates my achievement\r\n    - AND: I receive a summary of what I've created\r\n    - AND: Clear next steps for using the data are provided\r\n    - AND: I feel proud of my accomplishment\r\n    - AND: I want to create more training data",
+      "stage": 6
+    }
+  ],
+  "acceptanceCriteria": []
+}

@@ -16,13 +16,13 @@ Your task is to enhance the already detailed functional requirements document by
    - ALL existing content must be preserved exactly as is
 
 2. **Document Completeness**
-   - You MUST process the ENTIRE `C:/Users/james/Master/BrightHub/brun/brun8/pmc/product/03-bmo-functional-requirements.md` document from start to finish
+   - You MUST process the ENTIRE `C:/Users/james/Master/BrightHub/BRun/train-data/pmc/product/03-train-functional-requirements.md` document from start to finish
    - You MUST maintain ALL existing sections
    - You MUST maintain the existing section numbering and structure
 
 3. **Legacy Code Reference Approach**
    - For each acceptance criterion in the document:
-     a. Examine the legacy codebase at `{CODEBASE_REVIEW_PATH}`
+     a. Examine the legacy codebase at `C:/Users/james/Master/BrightHub/BRun/train-data/src`
      b. Identify the specific file path(s) and line number ranges that implement that criterion
      c. Add the reference directly underneath the criterion with proper indentation
      d. Do not modify the criterion itself in any way
@@ -36,7 +36,7 @@ Your task is to enhance the already detailed functional requirements document by
 
 ### 1. Input/Output File Handling
 1. File Specification:
-   - Input and output file: `C:/Users/james/Master/BrightHub/brun/brun8/pmc/product/03-bmo-functional-requirements.md`       
+   - Input and output file: `C:/Users/james/Master/BrightHub/BRun/train-data/pmc/product/03-train-functional-requirements.md`       
    - Modify this file directly - do not create new files
    - Only add legacy code references - do not modify existing content
    - Maintain the existing markdown format and indentation
@@ -48,7 +48,7 @@ Your task is to enhance the already detailed functional requirements document by
    - ENSURE ALL ACCEPTANCE CRITERIA RECEIVE REFERENCES
 
 3. **Change Logging Requirements**
-   - Each legacy code reference addition MUST be logged in `pmc/product/_tools/cache/bmo-fr-changes.log`:
+   - Each legacy code reference addition MUST be logged in `pmc/product/_tools/cache/train-fr-changes.log`:
    - Format: [FR-X.Y.Z-Criterion-N] -> [Add Legacy Reference] -> [File path] | REASON: [Traceability]
    - Append to the change log file, do not overwrite it.
 
@@ -63,9 +63,9 @@ Your task is to enhance the already detailed functional requirements document by
 ## Required Inputs
 Before adding references, you must read and fully understand the following:
 
-- **Functional Requirements:** `C:/Users/james/Master/BrightHub/brun/brun8/pmc/product/03-bmo-functional-requirements.md`
+- **Functional Requirements:** `C:/Users/james/Master/BrightHub/BRun/train-data/pmc/product/03-train-functional-requirements.md`
   - Contains all the requirements and acceptance criteria that need references.
-- **Legacy Codebase:** `{CODEBASE_REVIEW_PATH}`
+- **Legacy Codebase:** `C:/Users/james/Master/BrightHub/BRun/train-data/src`
   - Contains all the legacy code files you need to reference.
   - You MUST thoroughly explore this codebase to find appropriate file references.
 

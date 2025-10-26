@@ -1,0 +1,227 @@
+{
+  "stage1": {
+    "goals": [
+      "First-time platform discovery",
+      "Guided project setup", 
+      "Privacy assurance and trust building",
+      "ROI understanding and value demonstration"
+    ],
+    "emotions": [
+      "Build confidence through simple language",
+      "Reduce anxiety with progress indicators", 
+      "Celebrate project creation",
+      "Provide reassurance about data security"
+    ],
+    "progressive": {
+      "level1": "Simple 3-step project creation wizard",
+      "level2": "Advanced project settings and customization",
+      "level3": "API configuration and integration options"
+    },
+    "success": [
+      "Clear value proposition understood",
+      "Project successfully created",
+      "User feels confident to proceed",
+      "Trust established with platform"
+    ]
+  },
+  "stage2": {
+    "goals": [
+      "Content ingestion and upload",
+      "Document processing and organization",
+      "Quality validation and preview",
+      "Batch processing capabilities"
+    ],
+    "emotions": [
+      "Show immediate feedback on upload",
+      "Maintain transparency during processing",
+      "Provide confidence through preview",
+      "Celebrate successful ingestion"
+    ],
+    "progressive": {
+      "level1": "Simple drag-and-drop upload",
+      "level2": "Batch operations and folder upload",
+      "level3": "Custom processing rules and automation"
+    },
+    "success": [
+      "Documents successfully uploaded",
+      "Processing completed without errors",
+      "Content properly organized",
+      "User ready for next stage"
+    ]
+  },
+  "stage3": {
+    "goals": [
+      "Knowledge exploration and discovery",
+      "Content categorization and tagging",
+      "Search and filtering capabilities",
+      "Knowledge gap identification"
+    ],
+    "emotions": [
+      "Excitement about knowledge discovery",
+      "Satisfaction with organization",
+      "Confidence in content quality",
+      "Anticipation for next steps"
+    ],
+    "progressive": {
+      "level1": "Basic browsing and search",
+      "level2": "Advanced filtering and categorization",
+      "level3": "Custom taxonomy and metadata management"
+    },
+    "success": [
+      "Knowledge properly categorized",
+      "Content easily discoverable",
+      "Quality validated",
+      "Ready for training data generation"
+    ]
+  },
+  "stage4": {
+    "goals": [
+      "Training data generation",
+      "QA pair creation and customization",
+      "Quality control and validation",
+      "Iterative improvement"
+    ],
+    "emotions": [
+      "Excitement about AI creation",
+      "Pride in knowledge transformation",
+      "Confidence in quality",
+      "Satisfaction with customization"
+    ],
+    "progressive": {
+      "level1": "Automated QA pair generation",
+      "level2": "Manual editing and refinement",
+      "level3": "Advanced prompt engineering and custom formats"
+    },
+    "success": [
+      "High-quality training data generated",
+      "QA pairs validated and approved",
+      "Custom requirements met",
+      "Ready for model training"
+    ]
+  },
+  "stage5": {
+    "goals": [
+      "Quality review and validation",
+      "Training data refinement",
+      "Performance testing",
+      "Final approval process"
+    ],
+    "emotions": [
+      "Confidence in quality control",
+      "Satisfaction with thoroughness",
+      "Pride in final product",
+      "Excitement for deployment"
+    ],
+    "progressive": {
+      "level1": "Basic quality checks and approval",
+      "level2": "Detailed review and editing tools",
+      "level3": "Advanced testing and validation metrics"
+    },
+    "success": [
+      "Quality standards met",
+      "Training data approved",
+      "Performance validated",
+      "Ready for expansion"
+    ]
+  },
+  "stage6": {
+    "goals": [
+      "Knowledge multiplication and expansion",
+      "Scaling and optimization",
+      "Advanced features utilization",
+      "Long-term value realization"
+    ],
+    "emotions": [
+      "Triumph and accomplishment",
+      "Excitement about scaling",
+      "Confidence in ROI",
+      "Satisfaction with transformation"
+    ],
+    "progressive": {
+      "level1": "Basic scaling and multiplication",
+      "level2": "Advanced optimization and tuning",
+      "level3": "Enterprise features and integration"
+    },
+    "success": [
+      "Knowledge successfully multiplied",
+      "ROI clearly demonstrated",
+      "Scaling objectives met",
+      "Long-term value achieved"
+    ]
+  },
+  "stage7": {
+    "goals": [
+      "Export and delivery preparation",
+      "Format customization",
+      "Integration setup",
+      "Deployment readiness"
+    ],
+    "emotions": [
+      "Anticipation for deployment",
+      "Confidence in deliverables",
+      "Satisfaction with completion",
+      "Pride in achievement"
+    ],
+    "progressive": {
+      "level1": "Standard export formats",
+      "level2": "Custom format configuration",
+      "level3": "Advanced integration and API setup"
+    },
+    "success": [
+      "Training data properly formatted",
+      "Export completed successfully",
+      "Integration ready",
+      "Deployment prepared"
+    ]
+  },
+  "stage8": {
+    "goals": [
+      "User experience optimization",
+      "Workflow guidance",
+      "Help and support",
+      "Continuous improvement"
+    ],
+    "emotions": [
+      "Confidence in user experience",
+      "Satisfaction with guidance",
+      "Comfort with support",
+      "Excitement for future improvements"
+    ],
+    "progressive": {
+      "level1": "Basic help and tutorials",
+      "level2": "Interactive guidance and tips",
+      "level3": "Advanced workflow customization"
+    },
+    "success": [
+      "User experience optimized",
+      "Workflow guidance effective",
+      "Support readily available",
+      "Continuous improvement enabled"
+    ]
+  },
+  "stage9": {
+    "goals": [
+      "Advanced features and capabilities",
+      "Power user functionality",
+      "Enterprise features",
+      "Custom integrations"
+    ],
+    "emotions": [
+      "Excitement about advanced capabilities",
+      "Confidence in power features",
+      "Satisfaction with customization",
+      "Pride in expertise"
+    ],
+    "progressive": {
+      "level1": "Basic advanced features",
+      "level2": "Power user tools and options",
+      "level3": "Enterprise and custom solutions"
+    },
+    "success": [
+      "Advanced features utilized",
+      "Power user capabilities enabled",
+      "Enterprise needs met",
+      "Custom integrations successful"
+    ]
+  }
+}

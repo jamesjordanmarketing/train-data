@@ -1,4 +1,4 @@
-# FR9.1.1 — Wireframe Generator Prompt (v4)
+# FR11.1.1 — Wireframe Generator Prompt (v4)
 
 ## FR Wireframes Prompt Generator (v4) — Generates a Figma-Ready Wireframe Prompt
 
@@ -8,67 +8,56 @@ Inputs (local to generator)
 - Overview: `pmc/product/01-bmo-overview.md`
 - User Stories: `pmc/product/02-bmo-user-stories.md`
 - Functional Requirements: `pmc/product/03-bmo-functional-requirements.md`
-- Task-Specific FR Map: `pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-E09.md`
+- Task-Specific FR Map: `pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-E11.md`
 - User Journey: `pmc/product/03.5-bmo-user-journey.md`
 
 Parameters
-- FR Number: FR9.1.1
-- Stage Name: Stage 9 — Cost Tracking & Transparency
-- Section ID: E09 (E.g., E01)
-- Journey Stage Number: 9 (1-6)
+- FR Number: FR11.1.1
+- Stage Name: Stage 11 — Administration & User Settings
+- Section ID: E11 (E.g., E01)
+- Journey Stage Number: 11 (1-6)
 - Minimum Page Count: 3 (default: 3)
-- FR Locate File: pmc/product/_mapping/fr-maps/prompts/04-FR-wireframes-prompt-E09.md
+- FR Locate File: pmc/product/_mapping/fr-maps/prompts/04-FR-wireframes-prompt-E11.md
 - FR Locate Line: 1
-- Output File (append): pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-E09.md
+- Output File (append): pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-E11.md
 
 Mandates
-- Locate FR FR9.1.1 in pmc/product/_mapping/fr-maps/prompts/04-FR-wireframes-prompt-E09.md at line 1.
-- Append the final Figma-ready prompt for this FR between explicit markers to: pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-E09.md.
+- Locate FR FR11.1.1 in pmc/product/_mapping/fr-maps/prompts/04-FR-wireframes-prompt-E11.md at line 1.
+- Append the final Figma-ready prompt for this FR between explicit markers to: pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-E11.md.
 - Use the following markers when writing the final output block:
-  - === BEGIN PROMPT FR: FR9.1.1 ===
-  - === END PROMPT FR: FR9.1.1 ===
+  - === BEGIN PROMPT FR: FR11.1.1 ===
+  - === END PROMPT FR: FR11.1.1 ===
 
 What to do
-0) Extract journey context for Stage 9:
+0) Extract journey context for Stage 11:
    - User goals and workflows for this stage
    - Emotional journey points
    - Success celebration moments
    - Progressive disclosure requirements
    - Persona-specific UI adaptations
-1) Identify FR FR9.1.1 in the Task-Specific FR Map (or the main FR file if not present) and collect all acceptance criteria:
+1) Identify FR FR11.1.1 in the Task-Specific FR Map (or the main FR file if not present) and collect all acceptance criteria:
    - User Story Acceptance Criteria mapped to this FR
    - Functional Requirements Acceptance Criteria for this FR
 2) Classify each criterion as UI-relevant vs Non-UI.
 3) Compute a Page Plan (≥ 3) to satisfy all UI-relevant criteria with clear flows and states.
 4) Generate a self-contained Figma Make AI prompt that embeds all UI-relevant criteria, includes annotations instructions, and does not require external file access.
 
-Final Output Format (append to pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-E09.md)
+Final Output Format (append to pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-E11.md)
 
-=== BEGIN PROMPT FR: FR9.1.1 ===
+=== BEGIN PROMPT FR: FR11.1.1 ===
 
 Title
-- FR FR9.1.1 Wireframes — Stage 9 — Cost Tracking & Transparency
+- FR FR11.1.1 Wireframes — Stage 11 — Administration & User Settings
 
 Context Summary
 - [2–4 sentences tailored to FR: scope, user value, constraints]
 
 Journey Integration
-- Stage 9 user goals: [extracted from journey]
+- Stage 11 user goals: [extracted from journey]
 - Key emotions: [confidence building, anxiety reduction, celebration]
 - Progressive disclosure levels: [basic, advanced, expert]
 - Persona adaptations: [unified interface serving all personas]
 
-
-
-### Journey-Informed Design Elements
-- User Goals: Advanced features and capabilities, Power user functionality, Enterprise features, Custom integrations
-- Emotional Requirements: Excitement about advanced capabilities, Confidence in power features, Satisfaction with customization, Pride in expertise
-- Progressive Disclosure:
-  * Basic: Basic advanced features
-  * Advanced: Power user tools and options
-  * Expert: Enterprise and custom solutions
-- Success Indicators: Advanced features utilized, Power user capabilities enabled, Enterprise needs met, Custom integrations successful
-  
 Wireframe Goals
 - [Bulleted goals mapped to this FR]
 
@@ -103,7 +92,7 @@ Non-UI Acceptance Criteria
 Estimated Page Count
 - [Number and brief rationale tied to criteria]
 
-=== END PROMPT FR: FR9.1.1 ===
+=== END PROMPT FR: FR11.1.1 ===
 
 Notes
 - Keep copy realistic for actionable UI. Avoid referencing local files in the Figma prompt content.
@@ -114,7 +103,7 @@ Notes
 
 
 
-# FR9.1.2 — Wireframe Generator Prompt (v4)
+# FR11.1.2 — Wireframe Generator Prompt (v4)
 
 ## FR Wireframes Prompt Generator (v4) — Generates a Figma-Ready Wireframe Prompt
 
@@ -124,67 +113,56 @@ Inputs (local to generator)
 - Overview: `pmc/product/01-bmo-overview.md`
 - User Stories: `pmc/product/02-bmo-user-stories.md`
 - Functional Requirements: `pmc/product/03-bmo-functional-requirements.md`
-- Task-Specific FR Map: `pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-E09.md`
+- Task-Specific FR Map: `pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-E11.md`
 - User Journey: `pmc/product/03.5-bmo-user-journey.md`
 
 Parameters
-- FR Number: FR9.1.2
-- Stage Name: Stage 9 — Cost Tracking & Transparency
-- Section ID: E09 (E.g., E01)
-- Journey Stage Number: 9 (1-6)
+- FR Number: FR11.1.2
+- Stage Name: Stage 11 — Administration & User Settings
+- Section ID: E11 (E.g., E01)
+- Journey Stage Number: 11 (1-6)
 - Minimum Page Count: 3 (default: 3)
-- FR Locate File: pmc/product/_mapping/fr-maps/prompts/04-FR-wireframes-prompt-E09.md
-- FR Locate Line: 118
-- Output File (append): pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-E09.md
+- FR Locate File: pmc/product/_mapping/fr-maps/prompts/04-FR-wireframes-prompt-E11.md
+- FR Locate Line: 107
+- Output File (append): pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-E11.md
 
 Mandates
-- Locate FR FR9.1.2 in pmc/product/_mapping/fr-maps/prompts/04-FR-wireframes-prompt-E09.md at line 118.
-- Append the final Figma-ready prompt for this FR between explicit markers to: pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-E09.md.
+- Locate FR FR11.1.2 in pmc/product/_mapping/fr-maps/prompts/04-FR-wireframes-prompt-E11.md at line 107.
+- Append the final Figma-ready prompt for this FR between explicit markers to: pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-E11.md.
 - Use the following markers when writing the final output block:
-  - === BEGIN PROMPT FR: FR9.1.2 ===
-  - === END PROMPT FR: FR9.1.2 ===
+  - === BEGIN PROMPT FR: FR11.1.2 ===
+  - === END PROMPT FR: FR11.1.2 ===
 
 What to do
-0) Extract journey context for Stage 9:
+0) Extract journey context for Stage 11:
    - User goals and workflows for this stage
    - Emotional journey points
    - Success celebration moments
    - Progressive disclosure requirements
    - Persona-specific UI adaptations
-1) Identify FR FR9.1.2 in the Task-Specific FR Map (or the main FR file if not present) and collect all acceptance criteria:
+1) Identify FR FR11.1.2 in the Task-Specific FR Map (or the main FR file if not present) and collect all acceptance criteria:
    - User Story Acceptance Criteria mapped to this FR
    - Functional Requirements Acceptance Criteria for this FR
 2) Classify each criterion as UI-relevant vs Non-UI.
 3) Compute a Page Plan (≥ 3) to satisfy all UI-relevant criteria with clear flows and states.
 4) Generate a self-contained Figma Make AI prompt that embeds all UI-relevant criteria, includes annotations instructions, and does not require external file access.
 
-Final Output Format (append to pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-E09.md)
+Final Output Format (append to pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-E11.md)
 
-=== BEGIN PROMPT FR: FR9.1.2 ===
+=== BEGIN PROMPT FR: FR11.1.2 ===
 
 Title
-- FR FR9.1.2 Wireframes — Stage 9 — Cost Tracking & Transparency
+- FR FR11.1.2 Wireframes — Stage 11 — Administration & User Settings
 
 Context Summary
 - [2–4 sentences tailored to FR: scope, user value, constraints]
 
 Journey Integration
-- Stage 9 user goals: [extracted from journey]
+- Stage 11 user goals: [extracted from journey]
 - Key emotions: [confidence building, anxiety reduction, celebration]
 - Progressive disclosure levels: [basic, advanced, expert]
 - Persona adaptations: [unified interface serving all personas]
 
-
-
-### Journey-Informed Design Elements
-- User Goals: Advanced features and capabilities, Power user functionality, Enterprise features, Custom integrations
-- Emotional Requirements: Excitement about advanced capabilities, Confidence in power features, Satisfaction with customization, Pride in expertise
-- Progressive Disclosure:
-  * Basic: Basic advanced features
-  * Advanced: Power user tools and options
-  * Expert: Enterprise and custom solutions
-- Success Indicators: Advanced features utilized, Power user capabilities enabled, Enterprise needs met, Custom integrations successful
-  
 Wireframe Goals
 - [Bulleted goals mapped to this FR]
 
@@ -219,7 +197,7 @@ Non-UI Acceptance Criteria
 Estimated Page Count
 - [Number and brief rationale tied to criteria]
 
-=== END PROMPT FR: FR9.1.2 ===
+=== END PROMPT FR: FR11.1.2 ===
 
 Notes
 - Keep copy realistic for actionable UI. Avoid referencing local files in the Figma prompt content.
@@ -230,7 +208,7 @@ Notes
 
 
 
-# FR9.2.1 — Wireframe Generator Prompt (v4)
+# FR11.2.1 — Wireframe Generator Prompt (v4)
 
 ## FR Wireframes Prompt Generator (v4) — Generates a Figma-Ready Wireframe Prompt
 
@@ -240,67 +218,56 @@ Inputs (local to generator)
 - Overview: `pmc/product/01-bmo-overview.md`
 - User Stories: `pmc/product/02-bmo-user-stories.md`
 - Functional Requirements: `pmc/product/03-bmo-functional-requirements.md`
-- Task-Specific FR Map: `pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-E09.md`
+- Task-Specific FR Map: `pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-E11.md`
 - User Journey: `pmc/product/03.5-bmo-user-journey.md`
 
 Parameters
-- FR Number: FR9.2.1
-- Stage Name: Stage 9 — Cost Tracking & Transparency
-- Section ID: E09 (E.g., E01)
-- Journey Stage Number: 9 (1-6)
+- FR Number: FR11.2.1
+- Stage Name: Stage 11 — Administration & User Settings
+- Section ID: E11 (E.g., E01)
+- Journey Stage Number: 11 (1-6)
 - Minimum Page Count: 3 (default: 3)
-- FR Locate File: pmc/product/_mapping/fr-maps/prompts/04-FR-wireframes-prompt-E09.md
-- FR Locate Line: 234
-- Output File (append): pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-E09.md
+- FR Locate File: pmc/product/_mapping/fr-maps/prompts/04-FR-wireframes-prompt-E11.md
+- FR Locate Line: 212
+- Output File (append): pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-E11.md
 
 Mandates
-- Locate FR FR9.2.1 in pmc/product/_mapping/fr-maps/prompts/04-FR-wireframes-prompt-E09.md at line 234.
-- Append the final Figma-ready prompt for this FR between explicit markers to: pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-E09.md.
+- Locate FR FR11.2.1 in pmc/product/_mapping/fr-maps/prompts/04-FR-wireframes-prompt-E11.md at line 212.
+- Append the final Figma-ready prompt for this FR between explicit markers to: pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-E11.md.
 - Use the following markers when writing the final output block:
-  - === BEGIN PROMPT FR: FR9.2.1 ===
-  - === END PROMPT FR: FR9.2.1 ===
+  - === BEGIN PROMPT FR: FR11.2.1 ===
+  - === END PROMPT FR: FR11.2.1 ===
 
 What to do
-0) Extract journey context for Stage 9:
+0) Extract journey context for Stage 11:
    - User goals and workflows for this stage
    - Emotional journey points
    - Success celebration moments
    - Progressive disclosure requirements
    - Persona-specific UI adaptations
-1) Identify FR FR9.2.1 in the Task-Specific FR Map (or the main FR file if not present) and collect all acceptance criteria:
+1) Identify FR FR11.2.1 in the Task-Specific FR Map (or the main FR file if not present) and collect all acceptance criteria:
    - User Story Acceptance Criteria mapped to this FR
    - Functional Requirements Acceptance Criteria for this FR
 2) Classify each criterion as UI-relevant vs Non-UI.
 3) Compute a Page Plan (≥ 3) to satisfy all UI-relevant criteria with clear flows and states.
 4) Generate a self-contained Figma Make AI prompt that embeds all UI-relevant criteria, includes annotations instructions, and does not require external file access.
 
-Final Output Format (append to pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-E09.md)
+Final Output Format (append to pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-E11.md)
 
-=== BEGIN PROMPT FR: FR9.2.1 ===
+=== BEGIN PROMPT FR: FR11.2.1 ===
 
 Title
-- FR FR9.2.1 Wireframes — Stage 9 — Cost Tracking & Transparency
+- FR FR11.2.1 Wireframes — Stage 11 — Administration & User Settings
 
 Context Summary
 - [2–4 sentences tailored to FR: scope, user value, constraints]
 
 Journey Integration
-- Stage 9 user goals: [extracted from journey]
+- Stage 11 user goals: [extracted from journey]
 - Key emotions: [confidence building, anxiety reduction, celebration]
 - Progressive disclosure levels: [basic, advanced, expert]
 - Persona adaptations: [unified interface serving all personas]
 
-
-
-### Journey-Informed Design Elements
-- User Goals: Advanced features and capabilities, Power user functionality, Enterprise features, Custom integrations
-- Emotional Requirements: Excitement about advanced capabilities, Confidence in power features, Satisfaction with customization, Pride in expertise
-- Progressive Disclosure:
-  * Basic: Basic advanced features
-  * Advanced: Power user tools and options
-  * Expert: Enterprise and custom solutions
-- Success Indicators: Advanced features utilized, Power user capabilities enabled, Enterprise needs met, Custom integrations successful
-  
 Wireframe Goals
 - [Bulleted goals mapped to this FR]
 
@@ -335,7 +302,7 @@ Non-UI Acceptance Criteria
 Estimated Page Count
 - [Number and brief rationale tied to criteria]
 
-=== END PROMPT FR: FR9.2.1 ===
+=== END PROMPT FR: FR11.2.1 ===
 
 Notes
 - Keep copy realistic for actionable UI. Avoid referencing local files in the Figma prompt content.
@@ -346,7 +313,7 @@ Notes
 
 
 
-# FR9.2.2 — Wireframe Generator Prompt (v4)
+# FR11.2.2 — Wireframe Generator Prompt (v4)
 
 ## FR Wireframes Prompt Generator (v4) — Generates a Figma-Ready Wireframe Prompt
 
@@ -356,67 +323,56 @@ Inputs (local to generator)
 - Overview: `pmc/product/01-bmo-overview.md`
 - User Stories: `pmc/product/02-bmo-user-stories.md`
 - Functional Requirements: `pmc/product/03-bmo-functional-requirements.md`
-- Task-Specific FR Map: `pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-E09.md`
+- Task-Specific FR Map: `pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-E11.md`
 - User Journey: `pmc/product/03.5-bmo-user-journey.md`
 
 Parameters
-- FR Number: FR9.2.2
-- Stage Name: Stage 9 — Cost Tracking & Transparency
-- Section ID: E09 (E.g., E01)
-- Journey Stage Number: 9 (1-6)
+- FR Number: FR11.2.2
+- Stage Name: Stage 11 — Administration & User Settings
+- Section ID: E11 (E.g., E01)
+- Journey Stage Number: 11 (1-6)
 - Minimum Page Count: 3 (default: 3)
-- FR Locate File: pmc/product/_mapping/fr-maps/prompts/04-FR-wireframes-prompt-E09.md
-- FR Locate Line: 350
-- Output File (append): pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-E09.md
+- FR Locate File: pmc/product/_mapping/fr-maps/prompts/04-FR-wireframes-prompt-E11.md
+- FR Locate Line: 317
+- Output File (append): pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-E11.md
 
 Mandates
-- Locate FR FR9.2.2 in pmc/product/_mapping/fr-maps/prompts/04-FR-wireframes-prompt-E09.md at line 350.
-- Append the final Figma-ready prompt for this FR between explicit markers to: pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-E09.md.
+- Locate FR FR11.2.2 in pmc/product/_mapping/fr-maps/prompts/04-FR-wireframes-prompt-E11.md at line 317.
+- Append the final Figma-ready prompt for this FR between explicit markers to: pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-E11.md.
 - Use the following markers when writing the final output block:
-  - === BEGIN PROMPT FR: FR9.2.2 ===
-  - === END PROMPT FR: FR9.2.2 ===
+  - === BEGIN PROMPT FR: FR11.2.2 ===
+  - === END PROMPT FR: FR11.2.2 ===
 
 What to do
-0) Extract journey context for Stage 9:
+0) Extract journey context for Stage 11:
    - User goals and workflows for this stage
    - Emotional journey points
    - Success celebration moments
    - Progressive disclosure requirements
    - Persona-specific UI adaptations
-1) Identify FR FR9.2.2 in the Task-Specific FR Map (or the main FR file if not present) and collect all acceptance criteria:
+1) Identify FR FR11.2.2 in the Task-Specific FR Map (or the main FR file if not present) and collect all acceptance criteria:
    - User Story Acceptance Criteria mapped to this FR
    - Functional Requirements Acceptance Criteria for this FR
 2) Classify each criterion as UI-relevant vs Non-UI.
 3) Compute a Page Plan (≥ 3) to satisfy all UI-relevant criteria with clear flows and states.
 4) Generate a self-contained Figma Make AI prompt that embeds all UI-relevant criteria, includes annotations instructions, and does not require external file access.
 
-Final Output Format (append to pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-E09.md)
+Final Output Format (append to pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-E11.md)
 
-=== BEGIN PROMPT FR: FR9.2.2 ===
+=== BEGIN PROMPT FR: FR11.2.2 ===
 
 Title
-- FR FR9.2.2 Wireframes — Stage 9 — Cost Tracking & Transparency
+- FR FR11.2.2 Wireframes — Stage 11 — Administration & User Settings
 
 Context Summary
 - [2–4 sentences tailored to FR: scope, user value, constraints]
 
 Journey Integration
-- Stage 9 user goals: [extracted from journey]
+- Stage 11 user goals: [extracted from journey]
 - Key emotions: [confidence building, anxiety reduction, celebration]
 - Progressive disclosure levels: [basic, advanced, expert]
 - Persona adaptations: [unified interface serving all personas]
 
-
-
-### Journey-Informed Design Elements
-- User Goals: Advanced features and capabilities, Power user functionality, Enterprise features, Custom integrations
-- Emotional Requirements: Excitement about advanced capabilities, Confidence in power features, Satisfaction with customization, Pride in expertise
-- Progressive Disclosure:
-  * Basic: Basic advanced features
-  * Advanced: Power user tools and options
-  * Expert: Enterprise and custom solutions
-- Success Indicators: Advanced features utilized, Power user capabilities enabled, Enterprise needs met, Custom integrations successful
-  
 Wireframe Goals
 - [Bulleted goals mapped to this FR]
 
@@ -451,7 +407,7 @@ Non-UI Acceptance Criteria
 Estimated Page Count
 - [Number and brief rationale tied to criteria]
 
-=== END PROMPT FR: FR9.2.2 ===
+=== END PROMPT FR: FR11.2.2 ===
 
 Notes
 - Keep copy realistic for actionable UI. Avoid referencing local files in the Figma prompt content.

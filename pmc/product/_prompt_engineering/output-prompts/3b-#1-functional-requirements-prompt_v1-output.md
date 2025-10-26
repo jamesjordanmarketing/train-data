@@ -19,12 +19,12 @@ Your task is to enhance and expand the functional requirements document for the 
    - ALL existing content must be preserved and/or enhanced
 
 2. **Document Completeness**
-   - You MUST process the ENTIRE `C:/Users/james/Master/BrightHub/brun/brun8/pmc/product/03-bmo-functional-requirements.md` document from start to finish
+   - You MUST process the ENTIRE `C:/Users/james/Master/BrightHub/BRun/train-data/pmc/product/03-train-functional-requirements.md` document from start to finish
    - You MUST maintain ALL existing sections
    - You MUST maintain the existing section numbering scheme
 
 3. **Enhancement Approach**
-   - Start with the existing document at `C:/Users/james/Master/BrightHub/brun/brun8/pmc/product/03-bmo-functional-requirements.md`
+   - Start with the existing document at `C:/Users/james/Master/BrightHub/BRun/train-data/pmc/product/03-train-functional-requirements.md`
    - For each section:
      a. Preserve all existing content
      b. Enhance existing requirements with more detail
@@ -42,8 +42,8 @@ Your task is to enhance and expand the functional requirements document for the 
 
 ### 1. Input/Output File Handling
 1. File Specification:
-   - Input and output file: `C:/Users/james/Master/BrightHub/brun/brun8/pmc/product/03-bmo-functional-requirements.md`       
-   - You MUST process the ENTIRE `C:/Users/james/Master/BrightHub/brun/brun8/pmc/product/03-bmo-functional-requirements.md` document from start to finish
+   - Input and output file: `C:/Users/james/Master/BrightHub/BRun/train-data/pmc/product/03-train-functional-requirements.md`       
+   - You MUST process the ENTIRE `C:/Users/james/Master/BrightHub/BRun/train-data/pmc/product/03-train-functional-requirements.md` document from start to finish
    - Modify this file directly - do not create new files
    - Generate a complete updated version of the entire document
    - Maintain the existing markdown format 
@@ -56,25 +56,15 @@ Your task is to enhance and expand the functional requirements document for the 
    - Maintain consistent level of detail across all requirements
    - ENSURE ALL SECTIONS ARE PROCESSED TO COMPLETION
 
-3. **Change Logging Requirements**
-   - Each atomic change MUST be logged individually in `pmc/product/_tools/cache/bmo-fr-changes.log`:
-   - Each FR modification MUST generate multiple log entries, one for each:
-     * Acceptance criteria movement or modification
-     * Priority or impact weight change
-     * Description modification
-     * User Story reference change
-     * Append to the change log file, do not overwrite it.
-   - FORMAT: [ID/Type] -> [Action] -> [Destination] | REASON: [Detailed Rationale]
-   - Related changes MUST be grouped using change group IDs:
 
 ### 2. Sequential Processing
 1. Process requirements in sequential order through ALL sections
 2. Maintain requirement hierarchy in the file structure
-3. Follow the template structure from `C:/Users/james/Master/BrightHub/brun/brun8/pmc/product/_prompt_engineering/3b-functional-requirements-prompt_v1.md`
+3. Follow the template structure from `C:/Users/james/Master/BrightHub/BRun/train-data/pmc/product/_prompt_engineering/3b-functional-requirements-prompt_v1.md`
 4. Track progress through sections to ensure completion
 
 ### 3. File Update Process
-1. Read the current content of `C:/Users/james/Master/BrightHub/brun/brun8/pmc/product/03-bmo-functional-requirements.md`
+1. Read the current content of `C:/Users/james/Master/BrightHub/BRun/train-data/pmc/product/03-train-functional-requirements.md`
 2. Process one section at a time
 3. For each section:
    a. Preserve existing content
@@ -87,18 +77,22 @@ Your task is to enhance and expand the functional requirements document for the 
 ## Required Inputs
 Before expanding this document, you must read and fully understand the following files:
 
-- **Template:** `C:/Users/james/Master/BrightHub/brun/brun8/pmc/product/_prompt_engineering/3b-functional-requirements-prompt_v1.md`
+- **Template:** `C:/Users/james/Master/BrightHub/BRun/train-data/pmc/product/_prompt_engineering/3b-functional-requirements-prompt_v1.md`
   - Defines the required format for the resulting document.
-- **Overview Document:** `C:/Users/james/Master/BrightHub/brun/brun8/pmc/product/01-bmo-overview.md`
+- **Overview Document:** `C:/Users/james/Master/BrightHub/BRun/train-data/pmc/product/01-train-overview.md`
   - Contains project goals, technical stack, and architectural decisions.
-- **User Stories:** `C:/Users/james/Master/BrightHub/brun/brun8/pmc/product/02-bmo-user-stories.md`
+- **User Stories:** `C:/Users/james/Master/BrightHub/BRun/train-data/pmc/product/02-train-user-stories.md`
   - Details the functional requirements and user needs.
-- **Example:** `C:/Users/james/Master/BrightHub/brun/brun8/pmc/product/_examples/03-bmo-functional-requirements.md`
+- **Example:** `C:/Users/james/Master/BrightHub/BRun/train-data/pmc/product/_examples/03-bmo-functional-requirements.md`
   - Provides a reference for structure, depth, and quality expectations.
-- **User Journey:** `C:/Users/james/Master/BrightHub/brun/brun8/pmc/product/03.5-bmo-user-journey.md`
+- **User Journey:** `C:/Users/james/Master/BrightHub/BRun/train-data/pmc/product/02.5-train-user-journey.md`
   - Contains persona definitions and stage-specific acceptance criteria
   - Maps user workflows to system requirements
   - Defines success metrics and KPIs per stage
+
+- **Current Status:** `C:/Users/james/Master/BrightHub/BRun/train-data/src`
+  - The entire current codebase is here. You MUST read it for the purpose of improving functional requirements and finding functional requirements not yet discovered.
+  - Read all the files in all the folders & subfolders to determine the current state.
 
 
 ## Analysis Steps
