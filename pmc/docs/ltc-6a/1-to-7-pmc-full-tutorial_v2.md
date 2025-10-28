@@ -22,11 +22,16 @@ The complete PMC process follows these sequential steps:
 
 1. **Step 1**: Generate Overview Document
 2. **Step 2**: Generate User Stories 
-3. **Step 3**: Generate Functional Requirements (2-phase process)
-4. ~~**Step 4**: Generate Structure~~ (No longer done)
-5. ~~**Step 5**: Generate Implementation Patterns~~ (No longer done)  
-6. **Step 6**: Generate Tasks (multi-phase process)
-7. **Step 7**: Generate Test Mapping
+3. **Step 2.5**: Generate User Journey Document
+4. **Step 3**: Generate Functional Requirements (4-phase process)
+   - Phase 3A: Preprocessing Functional Requirements
+   - Phase 3B: Enhancement
+   - Phase 3C: Wireframe Enhancement with Figma Prompts
+   - Phase 3D: Combine Multiple Wireframe Prompts into One
+5. ~~**Step 4**: Generate Structure~~ (No longer done)
+6. ~~**Step 5**: Generate Implementation Patterns~~ (No longer done)  
+7. **Step 6**: Generate Tasks (multi-phase process)
+8. **Step 7**: Generate Test Mapping
 
 ---
 
@@ -145,15 +150,99 @@ Based on the wireframe output examples in `pmc/product/_mapping/fr-maps/04-bmo-F
 
 ---
 
-## Step 3: Generate Functional Requirements (2-Phase Process)
+## Step 2.5: Generate User Journey Document
 
 ### Purpose
-Transforms user stories into detailed technical requirements through preprocessing and enhancement phases.
+Creates a comprehensive user journey document that maps the complete user experience through progressive stages, providing granular acceptance criteria that enable precise functional requirements generation for the platform.
+
+### Input Files Required
+- **User Stories Document**: `pmc/product/02-bmo-user-stories.md`
+- **Overview Document**: `pmc/product/01-bmo-overview.md`
+- **User Journey Template**: `pmc/product/_templates/03-functional-requirements-template.md`
+- **User Journey Prompt**: `pmc/product/_prompt_engineering/02.5-user-journey-prompt_v8.md`
+
+### Output File
+- `pmc/product/02.5-bmo-user-journey.md`
+
+### Command Syntax
+```bash
+# No automated script - manual prompt processing
+# Copy prompt from: pmc/product/_prompt_engineering/02.5-user-journey-prompt_v8.md
+```
+
+### Process Flow
+1. Open the user journey prompt file: `pmc/product/_prompt_engineering/02.5-user-journey-prompt_v8.md`
+2. Copy the complete prompt content
+3. Paste into AI assistant along with the required input files:
+   - User Stories document (`02-bmo-user-stories.md`)
+   - Overview document (`01-bmo-overview.md`)
+   - Template file for structure reference
+4. AI generates comprehensive user journey document
+5. Save output as `pmc/product/02.5-bmo-user-journey.md`
+
+### Key Journey Components
+The user journey document includes:
+
+**Journey Architecture:**
+- **Progressive Stages**: Clearly defined stages from initial contact to final outcome
+- **Multiple Personas**: Different user types interacting at various stages
+- **Happy Path & Edge Cases**: Complete flow mapping for all scenarios
+- **Incremental Value**: Demonstrable user value at each stage completion
+
+**User Journey Organization:**
+- **Section 1**: Discovery & Project Initialization (UJ1.x.x)
+- **Section 2**: Content Ingestion & Automated Processing (UJ2.x.x)
+- **Section 3**: Knowledge Exploration & Intelligent Organization (UJ3.x.x)
+- **Section 4**: Training Data Generation & Expert Customization (UJ4.x.x)
+- **Section 5**: Collaborative Quality Control & Final Validation (UJ5.x.x)
+- **Section 6**: Synthetic Data Expansion & Value Amplification (UJ6.x.x)
+
+**Quality Standards:**
+- **Non-Technical Focus**: Interface terminology understandable by intelligent non-technical users
+- **Performance Targets**: 95%+ approval rates, 10-100x multiplication of expert examples
+- **Time Constraints**: Sub-2-hour completion for first knowledge project
+- **Consistency**: Voice preservation across all generated variations
+
+### User Journey Output Specifications
+
+**Context Integration Requirements:**
+- Each journey stage integrates specific goals, emotional requirements, and progressive disclosure levels
+- Stages adapt to unified interface serving all personas without technical barriers
+- Clear progression from discovery through value realization
+
+**Acceptance Criteria Format:**
+- Detailed stage-by-stage progression with measurable outcomes
+- Emotional journey mapping with user satisfaction checkpoints
+- Technical enablement requirements for each stage
+- Edge case handling and recovery flows
+
+**Example User Journey Stage Format:**
+```markdown
+### UJ2.1: Content Upload and Initial Processing
+- **Stage Goal**: Enable users to upload documents and initiate automated processing
+- **User Emotion**: Anticipation mixed with uncertainty about AI capabilities
+- **Progressive Disclosure**: Show processing steps without overwhelming technical details
+- **Success Criteria**:
+  - User successfully uploads documents in supported formats
+  - Real-time progress indicators show processing status
+  - Clear feedback on processing completion and next steps
+  - Error handling provides actionable guidance for resolution
+- **Value Delivered**: Confidence in system capability and clear path forward
+- **Next Stage Enablement**: Processed content ready for knowledge exploration
+```
+
+---
+
+## Step 3: Generate Functional Requirements (4-Phase Process)
+
+### Purpose
+Transforms user stories and user journey into detailed technical requirements through preprocessing, enhancement, and wireframe integration phases.
 
 ### Phase 3A: Preprocessing Functional Requirements
 
 #### Input Files Required
 - **User Stories**: `pmc/product/02-bmo-user-stories.md`  
+- **User Journey**: `pmc/product/02.5-bmo-user-journey.md`
 - **Overview**: `pmc/product/01-bmo-overview.md`
 - **Preprocessing Template**: `pmc/product/_prompt_engineering/3a-preprocess-functional-requirements-prompt_v1.md`
 
@@ -187,6 +276,70 @@ node 03-generate-functional-requirements.js "Bright Run LoRA Fine-Tuning Trainin
    - Breaking down complex requirements  
    - Filling identified gaps
    - Adding technical implementation details
+4. Save output as `pmc/product/03-bmo-functional-requirements-enhanced.md`
+
+### Phase 3C: Wireframe Enhancement with Figma Prompts
+
+#### Purpose
+Enhances functional requirements with comprehensive wireframe specifications and generates detailed Figma prompts for UI design.
+
+#### Input Files Required
+- **Enhanced FRs**: `pmc/product/03-bmo-functional-requirements-enhanced.md`
+- **Wireframe Enhancement Prompt**: `pmc/product/_prompt_engineering/3c-functional-requirements-with-wireframe-prompt_v1.md`
+
+#### Output Files
+- Enhanced FRs with wireframes: `pmc/product/03-bmo-functional-requirements-integrate-wireframe_v1.md`
+- Multiple wireframe prompt files in: `pmc/product/_mapping/fr-maps/prompts/`
+
+#### Process Flow
+1. Open wireframe enhancement prompt: `pmc/product/_prompt_engineering/3c-functional-requirements-with-wireframe-prompt_v1.md`
+2. Copy prompt content and paste into AI assistant
+3. Include the enhanced functional requirements file as input
+4. AI generates:
+   - Enhanced functional requirements with wireframe specifications
+   - Multiple detailed Figma prompts for different UI sections
+5. Save enhanced FRs and individual wireframe prompts
+
+#### Wireframe Enhancement Features
+- **UI Component Mapping**: Each FR mapped to specific UI components and states
+- **Interaction Flows**: Navigation and key user interactions defined
+- **Visual Feedback**: Progress indicators, status displays, loading states
+- **Accessibility Guidance**: Focus management, ARIA labels, screen reader compatibility
+- **Information Architecture**: Layout hierarchy and content organization
+- **Responsive Behavior**: Progressive enhancement patterns across devices
+
+### Phase 3D: Combine Multiple Wireframe Prompts into One
+
+#### Purpose
+Consolidates multiple wireframe prompts into a single comprehensive Figma prompt for efficient design implementation.
+
+#### Input Files Required
+- **Overview**: `pmc/product/01-bmo-overview.md`
+- **Multiple Wireframe Specs**: `pmc/product/_mapping/fr-maps/04-train-FR-wireframes-E03.md` through `E07.md`
+- **Multiple Wireframe Prompts**: `pmc/product/_mapping/fr-maps/prompts/04-FR-wireframes-prompt-E03.md` through `E07.md`
+- **Combination Prompt**: `pmc/product/_prompt_engineering/03d-train-turn-multiple-wf-prompts-to-one-prompt_v1.md`
+- **Format Reference**: `pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-E03-gather-module_v3.md`
+
+#### Output Files
+- **Combined Spec**: `pmc/product/_mapping/fr-maps/04-train-FR-wireframes-E03-E07.md`
+- **Combined Prompt**: `pmc/product/_mapping/fr-maps/prompts/04-train-FR-wireframes-prompt-E03-E07.md`
+
+#### Process Flow
+1. Open combination prompt: `pmc/product/_prompt_engineering/03d-train-turn-multiple-wf-prompts-to-one-prompt_v1.md`
+2. Copy prompt content and paste into AI assistant
+3. Include all required input files (overview, specs, and individual prompts)
+4. AI analyzes all wireframe specifications and prompts
+5. AI generates:
+   - Single comprehensive wireframe specification
+   - Single unified Figma prompt encompassing all UI features
+6. Save both the combined spec and prompt files
+
+#### Combined Prompt Features
+- **Unified UI Vision**: All UI elements and interactions in one cohesive design
+- **Complete Feature Coverage**: All functional requirements represented in wireframes
+- **Consistent Design Language**: Unified visual and interaction patterns
+- **Comprehensive Annotations**: Detailed notes linking acceptance criteria to UI components
+- **Mapping Tables**: Clear connections between requirements, screens, components, and user value
 
 #### Key FR Components
 Each functional requirement includes:
@@ -195,15 +348,11 @@ Each functional requirement includes:
 - **Impact Weighting**: Strategic/Revenue/Operational
 - **Priority**: High/Medium/Low  
 - **User Stories**: References to originating stories
+- **User Journey**: References to journey stages
 - **User Story Acceptance Criteria**: Preserved from stories
 - **Functional Requirements Acceptance Criteria**: Enhanced technical details
+- **Wireframe Specifications**: UI components, states, and interactions
 - **Tasks**: Placeholder for task references
-
----
-
-## Step 4 & 5: Structure and Implementation Patterns (No Longer Done)
-
-These steps have been removed from the current PMC workflow. The system now proceeds directly from Functional Requirements to Task generation.
 
 ---
 
@@ -215,7 +364,7 @@ Converts functional requirements into structured, implementable tasks with detai
 ### Phase 6A: Initial Task Generation
 
 #### Input Files Required
-- **Functional Requirements**: `pmc/product/03-bmo-functional-requirements.md`
+- **Functional Requirements**: `pmc/product/03-bmo-functional-requirements-integrate-wireframe_v1.md`
 
 #### Output File  
 - `pmc/product/06-bmo-tasks.md`
@@ -227,7 +376,7 @@ node 06a-generate-task-initial-v4.js "Bright Run LoRA Fine-Tuning Training Data 
 ```
 
 #### Process Flow
-1. Script reads functional requirements file
+1. Script reads functional requirements file (with wireframe integration)
 2. Converts FR-X.Y.Z identifiers to T-X.Y.Z task format
 3. Creates initial task structure with metadata
 4. Generates test locations and coverage requirements
@@ -403,23 +552,44 @@ After completing all steps, your project structure will include:
 ```
 pmc/
 ├── product/
-│   ├── 01-bmo-overview.md                    # Step 1 output
-│   ├── 02-bmo-user-stories.md                # Step 2 output  
-│   ├── 03-bmo-functional-requirements.md     # Step 3 output
-│   ├── 06-bmo-tasks.md                       # Step 6A output
+│   ├── 01-bmo-overview.md                              # Step 1 output
+│   ├── 02-bmo-user-stories.md                          # Step 2 output  
+│   ├── 02.5-bmo-user-journey.md                        # Step 2.5 output
+│   ├── 03-bmo-functional-requirements.md               # Step 3A output
+│   ├── 03-bmo-functional-requirements-enhanced.md      # Step 3B output
+│   ├── 03-bmo-functional-requirements-integrate-wireframe_v1.md  # Step 3C output
+│   ├── 06-bmo-tasks.md                                 # Step 6A output
 │   ├── _mapping/
-│   │   ├── task-file-maps/                   # Step 6B outputs
+│   │   ├── fr-maps/                                    # Step 3C & 3D outputs
+│   │   │   ├── 04-train-FR-wireframes-E03.md
+│   │   │   ├── 04-train-FR-wireframes-E04.md
+│   │   │   ├── 04-train-FR-wireframes-E05.md
+│   │   │   ├── 04-train-FR-wireframes-E06.md
+│   │   │   ├── 04-train-FR-wireframes-E07.md
+│   │   │   ├── 04-train-FR-wireframes-E03-E07.md       # Step 3D combined spec
+│   │   │   └── prompts/
+│   │   │       ├── 04-FR-wireframes-prompt-E03.md
+│   │   │       ├── 04-FR-wireframes-prompt-E04.md
+│   │   │       ├── 04-FR-wireframes-prompt-E05.md
+│   │   │       ├── 04-FR-wireframes-prompt-E06.md
+│   │   │       ├── 04-FR-wireframes-prompt-E07.md
+│   │   │       └── 04-train-FR-wireframes-prompt-E03-E07.md  # Step 3D combined prompt
+│   │   ├── task-file-maps/                             # Step 6B outputs
 │   │   │   ├── 6-bmo-tasks-E01.md
 │   │   │   ├── 6-bmo-tasks-E02.md
 │   │   │   ├── prompts/
 │   │   │   └── 6-bmo-tasks-index.md
-│   │   └── test-maps/                        # Step 7 outputs
+│   │   └── test-maps/                                  # Step 7 outputs
 │   │       ├── 06-bmo-task-test-mapping-E01.md
 │   │       ├── prompts/
 │   │       └── 06-bmo-task-test-mapping-index.md
-│   ├── _run-prompts/                         # Generated AI prompts
-│   └── _tools/                               # PMC scripts
-└── docs/ltc-6a/                              # This tutorial
+│   ├── _prompt_engineering/                            # Prompt templates
+│   │   ├── 02.5-user-journey-prompt_v8.md
+│   │   ├── 3c-functional-requirements-with-wireframe-prompt_v1.md
+│   │   └── 03d-train-turn-multiple-wf-prompts-to-one-prompt_v1.md
+│   ├── _run-prompts/                                   # Generated AI prompts
+│   └── _tools/                                         # PMC scripts
+└── docs/ltc-6a/                                        # This tutorial
 ```
 
 ---
@@ -454,7 +624,11 @@ After completing each step, verify:
 
 - [ ] **Step 1**: Overview includes all stakeholders, technical approach, and success metrics
 - [ ] **Step 2**: User stories cover all features with testable acceptance criteria  
-- [ ] **Step 3**: Functional requirements are in logical build order with enhanced criteria
+- [ ] **Step 2.5**: User journey maps complete experience with progressive stages and emotional checkpoints
+- [ ] **Step 3A**: Functional requirements are preprocessed and in logical build order
+- [ ] **Step 3B**: Functional requirements are enhanced with detailed technical criteria
+- [ ] **Step 3C**: Functional requirements include comprehensive wireframe specifications
+- [ ] **Step 3D**: Combined wireframe prompt encompasses all UI features in unified design
 - [ ] **Step 6**: Tasks include detailed elements with prep/implementation/validation phases
 - [ ] **Step 7**: Test mappings provide comprehensive coverage with human verification items
 

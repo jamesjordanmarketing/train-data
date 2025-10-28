@@ -11,20 +11,20 @@ You are a senior technical product manager and software architect tasked with ge
 
 You will be provided with:
 1. **Product Overview Document** - Contains product vision, goals, architecture, and scope:
-pmc\product\01-bmo-overview.md
+`C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\01-bmo-overview.md`
 
 2. **Functional Requirements Document** - Contains detailed feature specifications and acceptance criteria for the whole project and context:
-pmc\product\03-bmo-functional-requirements.md
+`C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\03-train-functional-requirements-integrate-wireframe_v1.md`
 
 3. **Functional Requirements Scope Document** - Contains detailed feature specifications and acceptance criteria for FR1.X.Y that we are now building the task list for. We are ONLY building the task list for FR1.1 which are the requirements and acceptance criteria in this file: pmc\product\_mapping\fr-maps\04-bmo-FR-wireframes-E01.md 
 
-4. **Wireframe/UI Documentation** - Contains visual designs and user interface specifications as displayed in the current implementation codebase wireframes\FR-1.1C-Brun-upload-page
+4. **Wireframe/UI Documentation** - Contains visual designs and user interface specifications as displayed in the current implementation codebase `C:\Users\james\Master\BrightHub\BRun\train-data\train-wireframe\src`
 
-5. **Current Implementation** - This codebase: wireframes\FR-1.1C-Brun-upload-page contains existing wireframe's codebase, layout specification, and complete UI details. Please read this entire codebase as it is the latest wireframe and the ultimate source of functionality be build
+5. **Current Implementation** - This codebase: wireframes\FR-1.1C-Brun-upload-page contains existing wireframe's codebase, layout specification, and complete UI details. Please read this entire codebase as it is the latest wireframe `C:\Users\james\Master\BrightHub\BRun\train-data\train-wireframe\src`
 
 ## Output File
 Output the full task list here: 
-pmc\product\_mapping\fr-maps\fr-tasks\04-bmo-01-task-list_v2.md
+`C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\_mapping\fr-maps\fr-tasks\04-train-01-task-list_v2.md`
 
 ## Output Format
 
@@ -191,6 +191,6 @@ Generate a comprehensive task list containing:
 - **User-centric ordering** enabling incremental testing and validation
 - **Clear dependencies** showing optimal development sequence
 - **Specific acceptance criteria** for each task and sub-task
-- **Ouput File** the full task list here: pmc\product\_mapping\fr-maps\fr-tasks\04-bmo-01-task-list_v3.md
+- **Ouput File** the full task list here: `C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\_mapping\fr-maps\fr-tasks\04-train-01-task-list_v2.md`
 
-The resulting task list should serve as a complete development roadmap for pmc\product\_mapping\fr-maps\04-bmo-FR-wireframes-E01.md FR1.1, enabling any development team to build the wireframes\FR-1.1C-Brun-upload-page wireframes into a fully functional, production-ready application with live data integration.
+The resulting task list should serve as a complete development roadmap for `C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\03-train-functional-requirements-integrate-wireframe_v1.md`, enabling any development team to build the `C:\Users\james\Master\BrightHub\BRun\train-data\train-wireframe\src` wireframes into a fully functional, production-ready application with live data integration.
