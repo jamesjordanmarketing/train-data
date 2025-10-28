@@ -11,7 +11,7 @@
 
 ## Product Summary & Value Proposition
 
-Bright Run is a revolutionary LoRA fine-tuning training data platform that transforms unstructured business knowledge into high-quality training datasets through an intuitive 6-stage workflow. We are creating the first user-friendly solution that enables non-technical domain experts to convert their proprietary knowledge—transcripts, documents, and expertise—into thousands of semantically diverse training pairs suitable for LoRA model fine-tuning.
+Bright Run is a revolutionary LoRA fine-tuning training data platform that transforms unstructured business knowledge into high-quality training datasets through an intuitive workflow. We are creating the first user-friendly solution that enables non-technical domain experts to convert their proprietary knowledge—transcripts, documents, and expertise—into thousands of semantically diverse training pairs suitable for LoRA model fine-tuning.
 
 
 ### What Problem Does This Product Solve?
@@ -26,7 +26,7 @@ Small business owners and domain experts possess invaluable proprietary knowledg
 
 ### Core Purpose
 
-Democratize access to custom AI development for small businesses by providing a complete 6-stage workflow that transforms proprietary knowledge into LoRA-ready training data without requiring technical expertise.
+Democratize access to custom AI development for small businesses by providing a complete workflow that transforms proprietary knowledge into LoRA-ready training data without requiring technical expertise.
 
 ### Business Value Delivered
 
@@ -90,7 +90,7 @@ Bright Run bridges the gap between human expertise and AI capability, enabling s
 
 ### Solutions Provided
 
-1. **Intuitive 6-Stage Workflow**
+1. **Intuitive Workflow**
    - Project & data ingestion with multi-format support
    - Automated content cleaning and preprocessing
    - Knowledge chunking and curation with expert control
@@ -141,7 +141,7 @@ Bright Run bridges the gap between human expertise and AI capability, enabling s
 ### Technical Goals
 
 1. **Workflow Completion Standards**
-   - 100% of users complete 6-stage workflow without technical intervention
+   - 100% of users complete workflow without technical intervention
    - Sub-2-hour completion time for first knowledge project
    - Real-time processing status updates and error handling
    - Clear progress indicators and transparency in processing steps
@@ -235,7 +235,7 @@ Bright Run bridges the gap between human expertise and AI capability, enabling s
 #### In Scope
 
 1. **Core LoRA Training Data Functionality**
-   - Complete 6-stage workflow from raw content to LoRA-ready training data
+   - Complete workflow from raw content to LoRA-ready training data
    - Multi-format content ingestion and processing
    - AI-powered content analysis and question generation
    - Expert-guided answer refinement and quality control
@@ -479,7 +479,7 @@ Bright Run LoRA Training Data Platform
 ### Performance Metrics
 
 1. **Workflow Completion Performance**
-   - 100% of users complete 6-stage workflow without technical intervention
+   - 100% of users complete workflow without technical intervention
    - Sub-2-hour completion time for first knowledge project
    - 90%+ workflow completion rate for new users
    - <5 minutes average time per stage for experienced users
@@ -623,7 +623,7 @@ Bright Run LoRA Training Data Platform
 
 1. **Strategic Knowledge Asset Creation (Small Business Owner)**
    - **Story:** Transform proprietary business knowledge into AI training assets for competitive advantage
-   - **Features:** Complete 6-stage workflow, voice preservation, privacy-first architecture
+   - **Features:** Complete workflow, voice preservation, privacy-first architecture
    - **Success Criteria:** Create dedicated workspace, upload multiple content types, preserve business methodology
 
 2. **ROI-Driven Knowledge Multiplication (Domain Expert)**
@@ -1008,6 +1008,6 @@ Bright Run LoRA Training Data Platform
 
 ## Summary
 
-**Bright Run democratizes LoRA training data creation for non-technical domain experts through an intuitive 6-stage workflow that transforms unstructured business knowledge into high-quality, semantically diverse training pairs. The platform preserves unique voice, methodology, and business philosophy throughout the AI training process while delivering exponential ROI through intelligent synthetic variation generation. With privacy-first architecture providing complete knowledge ownership and control, Bright Run enables small businesses to compete through proprietary AI cognitive assets without technical barriers or vendor lock-in.**
+**Bright Run democratizes LoRA training data creation for non-technical domain experts through an intuitive workflow that transforms unstructured business knowledge into high-quality, semantically diverse training pairs. The platform preserves unique voice, methodology, and business philosophy throughout the AI training process while delivering exponential ROI through intelligent synthetic variation generation. With privacy-first architecture providing complete knowledge ownership and control, Bright Run enables small businesses to compete through proprietary AI cognitive assets without technical barriers or vendor lock-in.**
 
 **This first iteration focuses exclusively on proof of concept demonstration, prioritizing the core LoRA Fine-Tuning Training Data functionality while explicitly excluding authentication, user settings, data isolation, privacy infrastructure, and encryption features. Every included feature contributes directly to the complete workflow from raw content ingestion to LoRA-ready training data export, enabling domain experts to achieve 10-100x multiplication of their manual examples while maintaining 95%+ approval rates in human review.**
