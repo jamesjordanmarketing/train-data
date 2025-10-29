@@ -136,6 +136,7 @@ function fillTemplateForFR(template, params) {
     journeyStageNumber,
     productAbbreviation,
     sectionNumber,
+    previousSectionId,
   } = params;
 
   let out = template;
@@ -143,6 +144,7 @@ function fillTemplateForFR(template, params) {
   // Replace new variables first
   out = out.replace(/\[prod-abbr\]/g, productAbbreviation);
   out = out.replace(/\[XX\]/g, sectionNumber);
+  out = out.replace(/\[PREVIOUS_SECTION_ID\]/g, previousSectionId || 'N/A');
 
   // Replace existing variables
   out = out.replace(/\[FR_NUMBER_PLACEHOLDER\]/g, frNumber);
@@ -156,6 +158,7 @@ function fillTemplateForFR(template, params) {
   // Safety second pass
   out = out.replace(/\[prod-abbr\]/g, productAbbreviation);
   out = out.replace(/\[XX\]/g, sectionNumber);
+  out = out.replace(/\[PREVIOUS_SECTION_ID\]/g, previousSectionId || 'N/A');
   out = out.replace(/\[FR_NUMBER_PLACEHOLDER\]/g, frNumber);
   out = out.replace(/\[STAGE_NAME_PLACEHOLDER\]/g, stageName);
   out = out.replace(/\[MINIMUM_PAGE_COUNT_PLACEHOLDER\]/g, String(minPageCount));
@@ -174,6 +177,10 @@ function generateExecutionPromptForSection(sectionId, sectionContent, executionT
 
   // Extract section number from sectionId (e.g., "E01" -> "01")
   const sectionNumber = sectionId.replace(/^E/, '');
+  
+  // Calculate previous section ID (e.g., "E02" -> "E01")
+  const currentSectionNum = parseInt(sectionNumber);
+  const previousSectionId = currentSectionNum > 1 ? `E${String(currentSectionNum - 1).padStart(2, '0')}` : null;
 
   const frList = parseFRList(sectionContent);
   if (frList.length === 0) {
@@ -181,7 +188,7 @@ function generateExecutionPromptForSection(sectionId, sectionContent, executionT
     return;
   }
 
-  const executionFilePath = path.join(promptsOutputDir, `04-FR-with-wireframes-execution-prompts_v1.md`);
+  const executionFilePath = path.join(promptsOutputDir, `04-FR-wireframes-execution-prompt-${sectionId}.md`);
 
   // Fill template with section-specific variables
   let filled = fillTemplateForFR(executionTemplate, {
@@ -195,6 +202,7 @@ function generateExecutionPromptForSection(sectionId, sectionContent, executionT
     journeyStageNumber: stageNumber,
     productAbbreviation,
     sectionNumber,
+    previousSectionId,
   });
 
   // Enhance with journey data

@@ -16,27 +16,29 @@ You must **think strategically** about the optimal way to structure implementati
 You will be provided with:
 
 1. **Task Inventory Document** - Contains the complete feature task breakdown:
-`C:\Users\james\Master\BrightHub\brun\train-data\pmc\product\_mapping\fr-maps\04-[prod-abbr]-FR-wireframes-E[XX]-output.md`
+`C:\Users\james\Master\BrightHub\brun\train-data\pmc\product\_mapping\fr-maps\04-train-FR-wireframes-E06-output.md`
 
 2. **Product Overview Document** - Contains product vision, goals, architecture, and scope:
-`C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\01-[prod-abbr]-overview.md`
+`C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\01-train-overview.md`
 
 3. **Functional Requirements Document** - Contains detailed feature specifications and acceptance criteria:
-`C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\03-[prod-abbr]-functional-requirements.md`
+`C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\03-train-functional-requirements.md`
 
 4. **Functional Requirements Scope Document** - Contains specific FR scope for this segment:
-`C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\_mapping\fr-maps\04-[prod-abbr]-FR-wireframes-E[XX].md`
+`C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\_mapping\fr-maps\04-train-FR-wireframes-E06.md`
 
 5. **Current Implementation Codebase** - The existing wireframe and application code:
 `C:\Users\james\Master\BrightHub\brun\train-data\train-wireframe\src`
 `C:\Users\james\Master\BrightHub\brun\train-data\src`
 
 6. **Previous Segment Deliverables** - Examine outputs from prior segments to understand context and dependencies:
-`C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\_mapping\fr-maps\prompts\04-FR-wireframes-execution-prompt-[PREVIOUS_SECTION_ID].md` (if exists)
+`C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\_mapping\fr-maps\prompts\04-FR-wireframes-execution-prompt-E05.md` (if exists)
 
 ## Output File
 Output the complete execution instructions here:
-`C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\_mapping\fr-maps\04-FR-wireframes-execution-E[XX].md`
+`C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\_mapping\fr-maps\04-FR-wireframes-execution-E06.md`
+
+Write the output file in batches, because it will be large.
 
 ## Core Implementation Philosophy
 
@@ -62,9 +64,9 @@ You must thoroughly examine:
 Generate execution instructions following this exact structure:
 
 ```
-# [Product Name] - Implementation Execution Instructions (E[XX])
+# [Product Name] - Implementation Execution Instructions (E06)
 **Generated**: [ISO Date]  
-**Segment**: E[XX] - [Segment Description]  
+**Segment**: E06 - [Segment Description]  
 **Total Prompts**: [Number]  
 **Estimated Implementation Time**: [Hours]
 
