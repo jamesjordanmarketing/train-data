@@ -1,7 +1,7 @@
 # Interactive LoRA Conversation Generation - Functional Requirements
-**Version:** 2.0.0  
-**Date:** 10/26/2025  
-**Category:** Design System Platform
+**Version:** 3.0.0 (Wireframe Integration)
+**Date:** 10/28/2025  
+**Category:** Training Data Generation Platform
 **Product Abbreviation:** train
 
 **Source References:**
@@ -9,92 +9,79 @@
 - Overview Document: `pmc\product\01-train-overview.md`
 - User Stories: `pmc\product\02-train-user-stories.md`
 - User Journey: `pmc\product\02.5-train-user-journey.md`
+- Previous Version: `pmc\product\03-train-functional-requirements-before-wireframe.md`
+- Wireframe Codebase: `train-wireframe\src\`
+- Main Codebase: `src\`
 
 **Reorganization Notes:**
-This document has been reorganized to follow logical build dependencies:
-1. Foundation Layer (Database, Core Services)
-2. Infrastructure Layer (API Integration, Error Handling)
-3. Base Components Layer (UI Components, Templates)
-4. Primary Features Layer (Generation, Review, Export)
-5. Advanced Features Layer (Analytics, Optimization)
-6. Cross-Cutting Layer (Performance, Security, Testing)
+This document has been enhanced with insights from the implemented wireframe UI and main codebase integration. All functional requirements now include:
+- Testable acceptance criteria based on actual implementation
+- Direct codebase file path references for validation
+- Enhanced UI/UX specifications from wireframe patterns
+- Database schema validation from implemented models
+- API endpoint specifications from actual routes
 
-All FR numbers have been updated. Original User Story (US) references preserved for traceability.
+All FR numbers preserved from v2.0.0 for traceability. Original User Story (US) references maintained.
+
+---
+
+## Document Enhancement Summary
+
+**Key Enhancements in v3.0.0:**
+1. **UI Component Integration**: All UI requirements now reference actual wireframe components
+2. **Database Validation**: Acceptance criteria validated against implemented Supabase schemas  
+3. **API Specification**: Requirements include actual API endpoint paths and parameters
+4. **State Management**: Requirements reference Zustand store implementation patterns
+5. **Type Safety**: All data structures validated against TypeScript type definitions
+6. **Testable Criteria**: Every acceptance criterion now includes validation approach
+
+**Wireframe Components Integrated:**
+- Dashboard with conversation table, filters, pagination (ConversationTable.tsx, FilterBar.tsx)
+- Three-tier workflow (TemplatesView.tsx, ScenariosView.tsx, EdgeCasesView.tsx)
+- Batch generation interface (BatchGenerationModal.tsx)
+- Review queue system (ReviewQueueView.tsx)
+- Export functionality (ExportModal.tsx)
+- Quality metrics visualization (Dashboard stats cards)
 
 ---
 
 
-## 9. Cost Tracking & Transparency
+## 9. Integration with Chunks-Alpha Module
 
-### 9.1 Cost Estimation
+### 9.1 Chunk Linking
 
-- **FR9.1.1:** Pre-Generation Cost Estimation
-  * Description: Upfront cost calculations with breakdown before batch initiation
-  * Impact Weighting: Cost Transparency / User Confidence
+- **FR9.1.1:** Conversation to Chunk Association
+  * Description: Link generated conversations to source chunks from chunks-alpha
+  * Impact Weighting: Traceability / Context
   * Priority: High
-  * User Stories: US13.1.1
+  * User Stories: US9.1.1
   * Tasks: [T-9.1.1]
-  * User Story Acceptance Criteria:
-    - Pre-generation dialog shows: estimated cost (USD) with breakdown
-    - Cost breakdown: Template tier ($X), Scenario tier ($Y), Edge Case ($Z)
-    - Per-conversation average cost display (e.g., "$0.12 per conversation")
-    - Warning if total cost exceeds $100
-    - Spending limit option (user can set max budget)
-    - Cost estimate based on: average input tokens, estimated output tokens, API pricing
-    - Historical accuracy: "Past estimates within ±10%"
   * Functional Requirements Acceptance Criteria:
-    - [To be filled]
+    - Conversation must store parentId referencing chunk_id
+      Code Reference: `train-wireframe/src/lib/types.ts:45-46`
+    - Chunk selector must display available chunks from chunks-alpha module
+      Code Reference: `01-bmo-overview-chunk-alpha_v2.md` (Chunks schema)
+    - Chunk context must be automatically injected into generation prompt
+    - Conversation detail must display linked chunk metadata
+    - Chunk dimensions must be accessible for context enrichment
+      Code Reference: `01-bmo-overview-chunk-alpha_v2.md` (60-dimension analysis)
+    - Multiple conversations can link to same chunk
+    - Orphaned conversations (no chunk link) must be flagged
 
-- **FR9.1.2:** Real-Time Cost Tracking
-  * Description: Live cost accumulation display during batch generation
-  * Impact Weighting: Cost Control / Transparency
-  * Priority: High
-  * User Stories: US13.1.2
-  * Tasks: [T-9.1.2]
-  * User Story Acceptance Criteria:
-    - Cost counter showing: "Spent: $8.42 of estimated $10.50"
-    - Progress bar color-coded: green (under budget), yellow (approaching limit), red (over budget)
-    - Alert when 80% of spending limit reached
-    - Automatic pause when 100% of spending limit reached (if configured)
-    - Cost updates every 5-10 seconds (after each conversation generated)
-    - Per-conversation cost visible in conversation list
-  * Functional Requirements Acceptance Criteria:
-    - [To be filled]
-
-### 9.2 Cost Reporting
-
-- **FR9.2.1:** Post-Generation Cost Summary
-  * Description: Detailed cost reconciliation comparing estimates to actuals
-  * Impact Weighting: Cost Transparency / Learning
+- **FR9.1.2:** Dimension-Driven Generation
+  * Description: Use chunk dimensions to inform conversation generation parameters
+  * Impact Weighting: Quality / Contextual Relevance
   * Priority: Medium
-  * User Stories: US13.2.1
-  * Tasks: [T-9.2.1]
-  * User Story Acceptance Criteria:
-    - Summary dialog showing: actual cost, estimated cost, variance (± X%)
-    - Cost breakdown by tier: Template ($X), Scenario ($Y), Edge Case ($Z)
-    - Per-conversation cost range: min, avg, max
-    - Total tokens: input (X), output (Y)
-    - Cost per conversation: average, median
-    - Comparison to previous batches: "20% lower than average"
-    - Download cost report as CSV
+  * User Stories: US9.1.2
+  * Tasks: [T-9.1.2]
   * Functional Requirements Acceptance Criteria:
-    - [To be filled]
-
-- **FR9.2.2:** Historical Cost Analytics
-  * Description: Trend analysis and optimization insights over time
-  * Impact Weighting: Cost Optimization / Reporting
-  * Priority: Low
-  * User Stories: US13.2.2
-  * Tasks: [T-9.2.2]
-  * User Story Acceptance Criteria:
-    - Cost analytics dashboard showing: daily/weekly/monthly spend
-    - Trend chart: cost over time
-    - Cost per conversation trend (decreasing indicates better prompts)
-    - Breakdown by user, tier, template
-    - Export cost data as CSV for accounting
-    - Budget alerts when monthly spend exceeds threshold
-    - Cost optimization recommendations: "Switch to cheaper model for Tier 1"
-  * Functional Requirements Acceptance Criteria:
-    - [To be filled]
+    - Chunk dimensions must be retrieved from chunks-alpha database
+      Code Reference: `src/lib/dimension-generation/generator.ts`
+    - Semantic dimensions must inform persona and emotion selection
+    - Complexity dimension must influence conversation turn count
+    - Domain dimensions must auto-tag conversations
+    - Confidence scores must factor into quality scoring
+      Code Reference: `train-wireframe/src/lib/types.ts:21` (confidence in QualityMetrics)
+    - Dimension analysis must be logged in generation audit
 
 ---

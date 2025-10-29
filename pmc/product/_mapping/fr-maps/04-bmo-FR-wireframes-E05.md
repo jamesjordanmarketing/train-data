@@ -1,79 +1,162 @@
-# Bright Run LoRA Fine Tuning Training Data Platform - Functional Requirements
-**Version:** 1.0.0  
-**Date:** 09/04/2025  
-**Category:** Design System Platform
-**Product Abbreviation:** bmo
+# Interactive LoRA Conversation Generation - Functional Requirements
+**Version:** 3.0.0 (Wireframe Integration)
+**Date:** 10/28/2025  
+**Category:** Training Data Generation Platform
+**Product Abbreviation:** train
 
 **Source References:**
-- Seed Story: `pmc\product\00-bmo-seed-story.md`
-- Overview Document: `pmc\product\01-bmo-overview.md`
-- User Stories: `pmc\product\02-bmo-user-stories.md`
+- Seed Story: `pmc\product\00-train-seed-story.md`
+- Overview Document: `pmc\product\01-train-overview.md`
+- User Stories: `pmc\product\02-train-user-stories.md`
+- User Journey: `pmc\product\02.5-train-user-journey.md`
+- Previous Version: `pmc\product\03-train-functional-requirements-before-wireframe.md`
+- Wireframe Codebase: `train-wireframe\src\`
+- Main Codebase: `src\`
+
+**Reorganization Notes:**
+This document has been enhanced with insights from the implemented wireframe UI and main codebase integration. All functional requirements now include:
+- Testable acceptance criteria based on actual implementation
+- Direct codebase file path references for validation
+- Enhanced UI/UX specifications from wireframe patterns
+- Database schema validation from implemented models
+- API endpoint specifications from actual routes
+
+All FR numbers preserved from v2.0.0 for traceability. Original User Story (US) references maintained.
+
+---
+
+## Document Enhancement Summary
+
+**Key Enhancements in v3.0.0:**
+1. **UI Component Integration**: All UI requirements now reference actual wireframe components
+2. **Database Validation**: Acceptance criteria validated against implemented Supabase schemas  
+3. **API Specification**: Requirements include actual API endpoint paths and parameters
+4. **State Management**: Requirements reference Zustand store implementation patterns
+5. **Type Safety**: All data structures validated against TypeScript type definitions
+6. **Testable Criteria**: Every acceptance criterion now includes validation approach
+
+**Wireframe Components Integrated:**
+- Dashboard with conversation table, filters, pagination (ConversationTable.tsx, FilterBar.tsx)
+- Three-tier workflow (TemplatesView.tsx, ScenariosView.tsx, EdgeCasesView.tsx)
+- Batch generation interface (BatchGenerationModal.tsx)
+- Review queue system (ReviewQueueView.tsx)
+- Export functionality (ExportModal.tsx)
+- Quality metrics visualization (Dashboard stats cards)
+
+---
 
 
-## 5. Quality Control and Review Workflow
+## 5. Export System
 
-- **FR5.1.1:** Collaborative Review Management
-  * Description: Implement comprehensive collaborative review management system with intelligent workload assignment, progress tracking, deadline management, performance metrics, and bulk operations to enable efficient team-based quality control of training data while maintaining audit trails and resolution workflows.
-  * Impact Weighting: Operational Efficiency
-  * Priority: Medium
-  * User Stories: US5.1.1, US5.1.3
-  * Tasks: [T-5.1.1], [T-5.1.3]
-  * User Story Acceptance Criteria:
-    - Assignment of QA pairs to specific reviewers with workload balancing
-    - Progress tracking and status monitoring for all team members
-    - Review deadline management and notification system
-    - Reviewer performance metrics and quality tracking
-    - Conflict resolution workflow for disagreements
-    - Batch selection and approval of multiple QA pairs
-    - Quality filtering for bulk operations (approve all above threshold)
-    - Bulk rejection with standardized feedback templates
-    - Review statistics and efficiency metrics
-    - Audit trail for all bulk approval actions
-  * Functional Requirements Acceptance Criteria:
-    - Intelligent assignment algorithm distributes QA pairs based on reviewer expertise, availability, and current workload with automatic balancing
-    - Progress dashboard displays real-time status for each reviewer including pending, in-progress, and completed reviews with completion percentages
-    - Deadline management system sets review targets, sends automated reminders, and escalates overdue items with customizable notification schedules
-    - Performance metrics track review speed, quality consistency, approval rates, and feedback quality with trend analysis and benchmarking
-    - Conflict resolution workflow manages disagreements between reviewers with escalation paths, expert consultation, and final arbitration processes
-    - Workload balancing automatically redistributes assignments when reviewers become unavailable or overloaded with fair redistribution algorithms
-    - Batch operations enable multi-select approval, rejection, and reassignment with quality threshold filtering and pattern-based selection
-    - Quality filtering allows bulk approval of items above configurable quality scores with safety checks and manual override capabilities
-    - Standardized feedback templates provide consistent rejection reasons and improvement suggestions with customizable categories and messages
-    - Review statistics generate efficiency reports showing throughput, quality trends, and reviewer performance comparisons with exportable dashboards
-    - Audit trail system maintains complete history of all assignments, decisions, and modifications with timestamp and user attribution
-    - Notification system provides customizable alerts for assignments, deadlines, conflicts, and status changes via email and in-app messaging
-    - Reviewer calibration tools ensure consistency across team members with training materials and quality benchmarking exercises
-    - Collaborative workspace enables reviewer communication, consultation, and shared decision-making with integrated messaging and notes
+### 5.1 Export Configuration
 
-- **FR5.1.2:** Quality Review and Validation Interface
-  * Description: Implement sophisticated quality review and validation interface with advanced diff visualization, side-by-side comparison, in-line editing capabilities, quality scoring, and comprehensive workflow management to enable efficient and accurate quality control with complete change tracking and expert validation.
-  * Impact Weighting: Operational Efficiency
+- **FR5.1.1:** Flexible Export Formats
+  * Description: Export conversations in multiple formats for different use cases
+  * Impact Weighting: Data Portability / Integration
   * Priority: High
-  * User Stories: US5.1.2, US5.1.4
-  * Tasks: [T-5.1.2], [T-5.1.4]
+  * User Stories: US5.1.1
+  * Tasks: [T-5.1.1]
   * User Story Acceptance Criteria:
-    - Clear diff visualization with highlighted changes and improvements
-    - Side-by-side comparison of original vs. refined content
-    - Quality scoring and improvement metrics display
-    - Approval/rejection workflow with comment capabilities
-    - Filtering by reviewer, status, and quality score
-    - In-line editing capabilities during review process
-    - Version control and change tracking for all modifications
-    - Final approval workflow with expert sign-off
-    - Quality assurance checkpoints before final approval
-    - Expert comment and rationale capture for edits
+    - Export formats: JSONL (LoRA training), JSON (structured data), CSV (analysis), Markdown (human review)
+    - Format selector with descriptions
+    - Preview export structure before download
+    - Format-specific options (e.g., JSONL: include system prompts, flatten conversations)
+    - File naming convention: train-data-{tier}-{date}-{count}.{ext}
+    - Automatic compression for large exports (>1000 conversations)
   * Functional Requirements Acceptance Criteria:
-    - Advanced diff visualization uses color coding, line-by-line comparison, and word-level highlighting to show all changes with intuitive visual indicators
-    - Side-by-side interface displays original and refined content with synchronized scrolling and expandable sections for detailed comparison
-    - Quality scoring dashboard shows improvement metrics including uniqueness increase, depth enhancement, and methodology integration scores
-    - Approval workflow provides clear accept/reject options with mandatory comment fields for rejections and optional enhancement suggestions
-    - Multi-criteria filtering enables searching by reviewer assignment, approval status, quality score ranges, and content categories
-    - In-line editing allows reviewers to make final refinements directly within the review interface with real-time preview capabilities
-    - Version control system maintains complete edit history with branching for different reviewer suggestions and merge conflict resolution
-    - Change tracking highlights all modifications with attribution, timestamps, and rationale capture for transparency and accountability
-    - Final approval workflow requires expert sign-off with digital signatures and final quality validation before training data inclusion
-    - Quality assurance checkpoints validate content accuracy, methodology alignment, and voice consistency before allowing final approval
-    - Expert comment system captures detailed rationale for edits, suggestions for improvement, and methodology validation notes
-    - Review interface optimization provides keyboard shortcuts, bulk action capabilities, and customizable layouts for reviewer efficiency
-    - Quality metrics display shows before/after comparisons with quantitative measures of improvement and value addition
-    - Integration validation ensures reviewed content meets training data format requirements and export specifications
+    - Export modal must use ExportModal component
+      Code Reference: `train-wireframe/src/components/export/ExportModal.tsx`
+    - Format selector must use radio group or dropdown
+    - Export formats must match ExportConfig type
+      Code Reference: `train-wireframe/src/lib/types.ts:181-194`
+    - JSONL format must output one conversation per line
+    - JSON format must output array of conversation objects
+    - CSV format must flatten conversations into rows (one turn per row)
+    - Markdown format must format conversations as readable dialogue
+    - Format descriptions must explain use case for each format
+    - Preview must show first 3 conversations in selected format
+    - File naming must use template: {prefix}-{tier}-{YYYY-MM-DD}-{count}.{extension}
+    - Compression must trigger automatically if conversation count > 1000
+    - Compressed files must use .zip format
+
+- **FR5.1.2:** Export Filtering and Selection
+  * Description: Export specific subsets of conversations based on filters or selection
+  * Impact Weighting: Precision / Efficiency
+  * Priority: High
+  * User Stories: US5.1.2
+  * Tasks: [T-5.1.2]
+  * User Story Acceptance Criteria:
+    - Export options: Selected conversations, Current filters, All approved, All data
+    - Conversation count displayed for each option
+    - Apply additional filters in export modal
+    - Option to exclude archived/rejected conversations
+    - Option to include/exclude metadata fields
+    - Sort order selection for export
+  * Functional Requirements Acceptance Criteria:
+    - Export scope selector must use radio group
+    - Selected conversations option must use selectedConversationIds
+      Code Reference: `train-wireframe/src/stores/useAppStore.ts:41`
+    - Current filters option must apply active filterConfig
+      Code Reference: `train-wireframe/src/stores/useAppStore.ts:42`
+    - All approved option must filter by status: 'approved'
+    - All data option must export without filters
+    - Conversation count must be calculated dynamically per option
+    - Additional filters must be available in export modal
+    - Exclude options must use checkboxes for status types
+    - Metadata inclusion must use checklist of fields
+    - Sort order must match table sort options (created_at, quality_score, etc.)
+    - Export API must accept filter parameters
+
+### 5.2 Export Execution
+
+- **FR5.2.1:** Background Export Processing
+  * Description: Handle large exports without blocking UI
+  * Impact Weighting: Performance / User Experience
+  * Priority: Medium
+  * User Stories: US5.2.1
+  * Tasks: [T-5.2.1]
+  * User Story Acceptance Criteria:
+    - Export starts in background for large datasets (>500 conversations)
+    - Toast notification: "Export started. You'll be notified when complete."
+    - Export progress visible in notification panel
+    - Download link appears in notification when complete
+    - Export history accessible from settings
+    - Retry failed exports
+  * Functional Requirements Acceptance Criteria:
+    - Large export threshold must be 500 conversations
+    - Background processing must use BatchJob system
+      Code Reference: `train-wireframe/src/lib/types.ts:130-141`
+    - Toast notification must confirm export initiation
+    - Progress must be tracked in BatchJob with percentage
+    - Notification panel must list active and completed exports
+    - Completed export must generate download URL
+    - Download link must expire after 24 hours
+    - Export history must be stored in database with retention policy (30 days)
+    - Retry must reuse original export configuration
+      Code Reference: `train-wireframe/src/lib/types.ts:181-194` (ExportConfig)
+    - Failed exports must log error message
+
+- **FR5.2.2:** Export Audit Trail
+  * Description: Track all export operations for compliance and auditing
+  * Impact Weighting: Security / Compliance
+  * Priority: Low
+  * User Stories: US5.2.2
+  * Tasks: [T-5.2.2]
+  * User Story Acceptance Criteria:
+    - Export log records: timestamp, user, format, filter criteria, conversation count, file size
+    - Export history view with sortable columns
+    - Filter export history by date range, user, format
+    - Download previous export files (if retained)
+    - Export log CSV for compliance reporting
+  * Functional Requirements Acceptance Criteria:
+    - Export audit must create log entry in export_logs table
+    - Log fields must include: id, timestamp, user_id, format, config, count, file_size, status
+      Code Reference: `src/lib/database.ts` (Audit log pattern)
+    - Export history view must be accessible from settings
+    - History table must support sorting by timestamp, user, format, count
+    - Filter must support date range picker and multi-select for format
+    - Previous export files must be retrievable if within retention period (7 days)
+    - Compliance report must export logs as CSV
+    - Log entries must be immutable (append-only)
+
+---

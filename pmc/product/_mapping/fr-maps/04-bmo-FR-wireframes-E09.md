@@ -1,87 +1,87 @@
-# Bright Run LoRA Fine Tuning Training Data Platform - Functional Requirements
-**Version:** 1.0.0  
-**Date:** 09/04/2025  
-**Category:** Design System Platform
-**Product Abbreviation:** bmo
+# Interactive LoRA Conversation Generation - Functional Requirements
+**Version:** 3.0.0 (Wireframe Integration)
+**Date:** 10/28/2025  
+**Category:** Training Data Generation Platform
+**Product Abbreviation:** train
 
 **Source References:**
-- Seed Story: `pmc\product\00-bmo-seed-story.md`
-- Overview Document: `pmc\product\01-bmo-overview.md`
-- User Stories: `pmc\product\02-bmo-user-stories.md`
+- Seed Story: `pmc\product\00-train-seed-story.md`
+- Overview Document: `pmc\product\01-train-overview.md`
+- User Stories: `pmc\product\02-train-user-stories.md`
+- User Journey: `pmc\product\02.5-train-user-journey.md`
+- Previous Version: `pmc\product\03-train-functional-requirements-before-wireframe.md`
+- Wireframe Codebase: `train-wireframe\src\`
+- Main Codebase: `src\`
+
+**Reorganization Notes:**
+This document has been enhanced with insights from the implemented wireframe UI and main codebase integration. All functional requirements now include:
+- Testable acceptance criteria based on actual implementation
+- Direct codebase file path references for validation
+- Enhanced UI/UX specifications from wireframe patterns
+- Database schema validation from implemented models
+- API endpoint specifications from actual routes
+
+All FR numbers preserved from v2.0.0 for traceability. Original User Story (US) references maintained.
+
+---
+
+## Document Enhancement Summary
+
+**Key Enhancements in v3.0.0:**
+1. **UI Component Integration**: All UI requirements now reference actual wireframe components
+2. **Database Validation**: Acceptance criteria validated against implemented Supabase schemas  
+3. **API Specification**: Requirements include actual API endpoint paths and parameters
+4. **State Management**: Requirements reference Zustand store implementation patterns
+5. **Type Safety**: All data structures validated against TypeScript type definitions
+6. **Testable Criteria**: Every acceptance criterion now includes validation approach
+
+**Wireframe Components Integrated:**
+- Dashboard with conversation table, filters, pagination (ConversationTable.tsx, FilterBar.tsx)
+- Three-tier workflow (TemplatesView.tsx, ScenariosView.tsx, EdgeCasesView.tsx)
+- Batch generation interface (BatchGenerationModal.tsx)
+- Review queue system (ReviewQueueView.tsx)
+- Export functionality (ExportModal.tsx)
+- Quality metrics visualization (Dashboard stats cards)
+
+---
 
 
-## 9. Advanced Features and Power User Capabilities
+## 9. Integration with Chunks-Alpha Module
 
-- **FR9.1.1:** Advanced Question Generation Parameters
-  * Description: Implement advanced question generation parameter control system that enables power users to fine-tune question complexity, style, focus areas, and types while providing specialized domain templates for expert-level customization of training data generation to meet specific learning objectives and domain requirements.
-  * Impact Weighting: Operational Efficiency
-  * Priority: Low
+### 9.1 Chunk Linking
+
+- **FR9.1.1:** Conversation to Chunk Association
+  * Description: Link generated conversations to source chunks from chunks-alpha
+  * Impact Weighting: Traceability / Context
+  * Priority: High
   * User Stories: US9.1.1
   * Tasks: [T-9.1.1]
-  * User Story Acceptance Criteria:
-    - Configurable complexity levels for question generation
-    - Style and tone parameter control
-    - Focus area specification for targeted question generation
-    - Question type variety control (factual, analytical, creative)
-    - Expert prompt templates for specialized domains
   * Functional Requirements Acceptance Criteria:
-    - Complexity configuration enables adjustment of question difficulty from basic recall to advanced synthesis with cognitive level targeting
-    - Style parameter controls adjust question tone, formality, and communication approach to match expert preferences and audience needs
-    - Focus area specification allows targeting of specific concepts, methodologies, or knowledge domains within content chunks
-    - Question type controls enable selection of factual, analytical, creative, problem-solving, and evaluation question varieties with distribution settings
-    - Expert prompt templates provide domain-specific question patterns for specialized fields with customizable frameworks and approaches
-    - Parameter presets offer quick configuration options for common scenarios with expert-recommended settings and optimization guidelines
-    - Advanced filtering combines multiple parameters to create precisely targeted question sets for specific training objectives
-    - Template customization enables creation and sharing of custom question generation patterns for organizational knowledge requirements
-    - Quality impact analysis shows how parameter changes affect question quality and training effectiveness with recommendation guidance
-    - Batch parameter application allows consistent settings across multiple content chunks with override capabilities for special cases
-    - Parameter export/import enables sharing of optimized configurations between projects and team members for consistency
+    - Conversation must store parentId referencing chunk_id
+      Code Reference: `train-wireframe/src/lib/types.ts:45-46`
+    - Chunk selector must display available chunks from chunks-alpha module
+      Code Reference: `01-bmo-overview-chunk-alpha_v2.md` (Chunks schema)
+    - Chunk context must be automatically injected into generation prompt
+    - Conversation detail must display linked chunk metadata
+    - Chunk dimensions must be accessible for context enrichment
+      Code Reference: `01-bmo-overview-chunk-alpha_v2.md` (60-dimension analysis)
+    - Multiple conversations can link to same chunk
+    - Orphaned conversations (no chunk link) must be flagged
 
-- **FR9.1.2:** Custom Methodology Integration
-  * Description: Implement custom methodology integration system that enables experts to define, manage, and enforce proprietary frameworks and techniques throughout training data generation, ensuring specialized approaches are preserved, amplified, and validated across all generated content for authentic expertise representation.
-  * Impact Weighting: Strategic Growth
-  * Priority: Low
+- **FR9.1.2:** Dimension-Driven Generation
+  * Description: Use chunk dimensions to inform conversation generation parameters
+  * Impact Weighting: Quality / Contextual Relevance
+  * Priority: Medium
   * User Stories: US9.1.2
   * Tasks: [T-9.1.2]
-  * User Story Acceptance Criteria:
-    - Methodology template creation and management
-    - Framework-specific question and answer patterns
-    - Methodology consistency enforcement across training pairs
-    - Proprietary technique preservation and amplification
-    - Custom methodology validation and quality scoring
   * Functional Requirements Acceptance Criteria:
-    - Methodology template system enables creation of custom frameworks with structured components, processes, and validation criteria
-    - Framework-specific patterns generate questions and answers that align with proprietary techniques and specialized approaches
-    - Consistency enforcement validates that generated content adheres to defined methodological principles with scoring and correction mechanisms
-    - Proprietary technique preservation identifies and maintains unique expert approaches throughout synthetic generation and scaling processes
-    - Custom validation scoring evaluates methodology adherence with domain-specific quality metrics and expert-defined success criteria
-    - Template management provides version control, sharing capabilities, and collaborative development of methodology frameworks
-    - Integration workflow ensures methodology templates influence all stages of generation from initial questions through final validation
-    - Technique amplification scales methodology application across generated variations while maintaining authenticity and effectiveness
-    - Quality assurance validates that methodology integration doesn't compromise content accuracy or training data effectiveness
-    - Expert feedback integration allows continuous refinement of methodology templates based on generation results and effectiveness metrics
+    - Chunk dimensions must be retrieved from chunks-alpha database
+      Code Reference: `src/lib/dimension-generation/generator.ts`
+    - Semantic dimensions must inform persona and emotion selection
+    - Complexity dimension must influence conversation turn count
+    - Domain dimensions must auto-tag conversations
+    - Confidence scores must factor into quality scoring
+      Code Reference: `train-wireframe/src/lib/types.ts:21` (confidence in QualityMetrics)
+    - Dimension analysis must be logged in generation audit
 
-- **FR9.1.3:** Advanced Analytics and Insights
-  * Description: Implement sophisticated advanced analytics and insights system that provides semantic diversity analysis, quality trending, training effectiveness predictions, benchmark comparisons, and professional reporting to enable data-driven optimization of training data generation and demonstrate value to clients and stakeholders.
-  * Impact Weighting: Revenue Impact
-  * Priority: Low
-  * User Stories: US9.1.3
-  * Tasks: [T-9.1.3]
-  * User Story Acceptance Criteria:
-    - Semantic diversity analysis and optimization recommendations
-    - Quality trend analysis across generation batches
-    - Training effectiveness predictions and scoring
-    - Comparative analysis against industry benchmarks
-    - Client reporting templates with professional visualizations
-  * Functional Requirements Acceptance Criteria:
-    - Semantic diversity analysis uses advanced NLP techniques to measure content variation and provides optimization recommendations for improved training effectiveness
-    - Quality trend analysis tracks performance metrics across generation batches with predictive modeling and early warning systems for quality degradation
-    - Training effectiveness prediction algorithms estimate model performance improvements based on dataset characteristics and historical training outcomes
-    - Benchmark comparison evaluates generated datasets against industry standards and best practices with competitive positioning analysis
-    - Professional reporting templates generate client-ready visualizations and executive summaries with customizable branding and presentation formats
-    - Advanced visualization creates interactive dashboards with drill-down capabilities for detailed analysis and insight discovery
-    - Performance forecasting predicts training data effectiveness and suggests optimization strategies based on content analysis and historical results
-    - Competitive analysis identifies unique value propositions and differentiation opportunities compared to standard training approaches
-    - ROI modeling calculates return on investment with sensitivity analysis and scenario planning for different training data strategies
-    - Insight generation uses machine learning to identify patterns, correlations, and optimization opportunities within training data characteristics
-    - Export capabilities provide analysis results in multiple formats suitable for technical teams, business stakeholders, and client presentations
+---

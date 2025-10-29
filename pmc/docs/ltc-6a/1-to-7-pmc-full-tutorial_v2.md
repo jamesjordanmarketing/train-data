@@ -354,8 +354,30 @@ Each functional requirement includes:
 - **Wireframe Specifications**: UI components, states, and interactions
 - **Tasks**: Placeholder for task references
 
----
+## Step 4
+1. Submit the FIGMA prompt just created to Figma make. Tweak the wireframe till ready.
 
+2. Then download the wireframe and unzip it into the Cursor project folder
+
+3. Then run the 
+$ node 04-generate-FR-wireframe-segments_v5.js "Bright Run Interactive LoRA Conversation Generation" train
+This will create super task segmented files for you to run the prompt of.
+Examples:
+The prompts:
+`C:\Users\james\Master\BrightHub\brun\train-data\pmc\product\_mapping\fr-maps\prompts\04-FR-wireframes-prompt-E[XX].md`
+`C:\Users\james\Master\BrightHub\brun\train-data\pmc\product\_mapping\fr-maps\prompts\04-FR-wireframes-execution-prompts-E[XX].md`
+and the spec file:
+`C:\Users\james\Master\BrightHub\brun\train-data\pmc\product\_mapping\fr-maps\04-train-FR-wireframes-E[XX].md`
+
+run the main prompt file. That will create the detailed task list:
+`C:\Users\james\Master\BrightHub\brun\train-data\pmc\product\_mapping\fr-maps\04-train-FR-wireframes-E[XX]-output.md`
+
+Then Run the execution prompt that will create the actual prompts here:
+`C:\Users\james\Master\BrightHub\brun\train-data\pmc\product\_mapping\fr-maps\prompts\04-FR-wireframes-execution-prompts-E[XX].md`
+
+
+---
+has the below been superceded?
 ## Step 6: Generate Tasks (Multi-Phase Process)
 
 ### Purpose

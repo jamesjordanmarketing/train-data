@@ -1,3 +1,17 @@
+| 1 | fp_marcus_002 | Marcus | RSUs confusion | Overwhelm→Confidence | 3 | 5/5 | convo-10-first_v1 |
+| 2 | fp_marcus_003 | Marcus | Benefits panic | Panic→Relief | 4 | 5/5 | convo-10-first_v1 |
+| 3 | fp_marcus_004 | Marcus | Inheritance guilt | Guilt→Permission | 4 | 5/5 | convo-10-first_v1 |
+| 4 | fp_marcus_005 | Marcus | Home buying fear | Anxiety→Clarity | 5 | 5/5 | convo-10-first_v1 |
+| 5 | fp_marcus_006 | Marcus | Debt shame | Shame→Determination | 4 | 5/5 | convo-10-first_v1 |
+| 6 | fp_jennifer_001 | Jennifer | Post-divorce investing | Skepticism→Hope | 4 | 5/5 | convo-10-first_v1 |
+| 7 | fp_jennifer_002 | Jennifer | Life insurance anxiety | Anxiety→Confidence | 3 | 5/5 | convo-10-first_v1 |
+| 8 | fp_jennifer_003 | Jennifer | College savings overwhelm | Inadequacy→Relief | 4 | 5/5 | convo-10-first_v1 |
+| 9 | fp_david_001 | David | Career transition | Excitement+Concern→Empowerment | 4 | 5/5 | convo-10-first_v1 |
+| 10 | fp_david_002 | David | Wedding debt vs house | Frustration→Clarity | 3 | 5/5 | convo-10-complete |
+
+
+--------done below---------
+
 ok this prompt is too long:
 
 
@@ -35,4 +49,11 @@ b. Generate multiple conversations = choose the checkboxes for all the conversat
 8. For the main conversation dashboard. Don't have two rows of data display. Totally remove the "Conversation Tiers" row/box
 
 Ok. Take all of this feedback and implement it into this current version of the data-train module.
+
+
+
+-------above done-------------
+
+
+
 

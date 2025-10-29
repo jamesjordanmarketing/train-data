@@ -1,378 +1,307 @@
-# Bright Run LoRA Fine Tuning Training Data Platform - Stage 1 Functional Requirements (Enhanced Critical Pipeline)
-**Version:** 1.3.0  
-**Date:** 01/20/2025  
-**Category:** LoRA Training Data Pipeline - Stage 1 (5 Critical Components)
-**Product Abbreviation:** bmo
+# Interactive LoRA Conversation Generation - Functional Requirements
+**Version:** 3.0.0 (Wireframe Integration)
+**Date:** 10/28/2025  
+**Category:** Training Data Generation Platform
+**Product Abbreviation:** train
 
 **Source References:**
-- Seed Story: `pmc\product\00-bmo-seed-story.md`
-- Overview Document: `pmc\product\01-bmo-overview.md`
-- User Stories: `pmc\product\02-bmo-user-stories.md`
-- Analysis Document: `pmc\product\_mapping\fr-maps\04-bmo-FR-wireframes-output-E01-spread-across.md`
+- Seed Story: `pmc\product\00-train-seed-story.md`
+- Overview Document: `pmc\product\01-train-overview.md`
+- User Stories: `pmc\product\02-train-user-stories.md`
+- User Journey: `pmc\product\02.5-train-user-journey.md`
+- Previous Version: `pmc\product\03-train-functional-requirements-before-wireframe.md`
+- Wireframe Codebase: `train-wireframe\src\`
+- Main Codebase: `src\`
 
-## Stage 1 Overview
+**Reorganization Notes:**
+This document has been enhanced with insights from the implemented wireframe UI and main codebase integration. All functional requirements now include:
+- Testable acceptance criteria based on actual implementation
+- Direct codebase file path references for validation
+- Enhanced UI/UX specifications from wireframe patterns
+- Database schema validation from implemented models
+- API endpoint specifications from actual routes
 
-This document defines the **5 Critical Components** for the Bright Run LoRA Training Data Platform proof of concept. Based on comprehensive analysis, Stage 1 includes the essential infrastructure components with robust specifications while excluding non-critical advanced features.
-
-### Critical Components Included (All 5 Required):
-- **FR1.1.1** - Core Infrastructure & Foundation (Project workspace management)
-- **FR1.1.0** - Document Processing (Basic file handling and validation)
-- **FR1.2.0** - Dataset Export Configuration (LoRA training data preparation)
-- **FR1.1.2** - Data Ownership & Processing Transparency (Simplified)
-- **FR1.1.3** - Error Handling and Recovery System
-
-### Excluded Components (Per Analysis):
-- ❌ **Advanced Privacy Control Center** - Simplified to basic data ownership in FR1.1.2
-- ❌ **Performance Dashboard** - Basic monitoring sufficient
-- ❌ **FR1.3.0 Training Platform** - Use external tools initially
-- ❌ **Advanced Collaborative Features** - Reserved for future phases
-
-### Stage 2 Integration:
-Stage 1 provides essential handoff points to Stage 2 (E02) advanced content processing pipeline.
-
-## 1. Core Infrastructure & Foundation (Critical - Stage 1)
-
-- **FR1.1.1:** Project Workspace Management
-  * Description: Implement a comprehensive project workspace management system that enables users to create, organize, and manage LoRA training projects with robust workspace persistence, clear boundaries, activity logging, and dashboard monitoring for efficient knowledge asset development.
-  * Impact Weighting: Strategic Growth
-  * Priority: Critical
-  * User Stories: US1.1.1
-  * Tasks: [T-1.1.1]
-  * User Story Acceptance Criteria:
-    - Can create new project workspaces with descriptive names and purposes
-    - Project workspace provides clear organization for all uploaded documents and configurations
-    - Can view comprehensive project overview with real-time status indicators and progress tracking
-    - Project workspace maintains complete separation between different knowledge domains
-    - Can access detailed project history and activity logs with timestamp tracking
-    - **Workspace persistence maintains all project state across browser sessions, device changes, and system restarts**
-  * Functional Requirements Acceptance Criteria:
-    
-    **Project Creation & Setup:**
-    - Project creation interface guides users through comprehensive setup wizard with business-friendly language, smart defaults, and validation
-    - Workspace initialization creates fully organized file structure with hierarchical organization, status tracking, and comprehensive metadata storage
-    - Project naming validation prevents conflicts, suggests improvements for clarity, and maintains consistent naming conventions
-    - Domain separation maintains complete isolation between different knowledge projects with zero data leakage or cross-contamination
-    
-    **Dashboard Overview (Essential for Pipeline Monitoring):**
-    - Status dashboard displays real-time progress indicators across all Stage 1 workflow components with visual progress bars and completion percentages
-    - Dashboard overview shows current processing stage, active operations, queued tasks, and next recommended actions
-    - Visual workflow map displays user position in overall LoRA training pipeline with clear navigation options
-    - Resource utilization indicators show file storage usage, processing queue status, and system health metrics
-    - Quick action panels provide one-click access to primary workflow functions (upload, configure, export)
-    
-    **Activity Logs (Critical for Debugging):**
-    - Activity logging captures all user actions, system processes, file operations, and milestone completions with precise timestamps and user context
-    - Detailed audit trail maintains complete operation history including file uploads, processing status changes, configuration modifications, and error events
-    - Log filtering and search capabilities enable users to find specific events, troubleshoot issues, and track processing history
-    - Activity timeline provides chronological view of all workspace operations with expandable detail views
-    - Export capabilities allow downloading activity logs for external analysis and troubleshooting
-    
-    **Workspace Persistence (Robust Implementation):**
-    - **Local Storage Architecture**: All workspace data stored using browser localStorage API with automatic backup to prevent data loss during browser updates
-    - **Session State Management**: Complete workspace state including active files, processing queues, configuration settings, and user interface state persists across browser sessions
-    - **Cross-Device Synchronization**: Workspace state synchronizes across multiple devices when user accesses same project using consistent local storage keys
-    - **Auto-Save Functionality**: Workspace configuration, file organization, and user settings automatically save every 30 seconds and on all user actions
-    - **Recovery Mechanisms**: Automatic workspace state recovery after browser crashes, unexpected shutdowns, or network interruptions with integrity validation
-    - **Version Control**: Workspace state versioning maintains history of configuration changes with rollback capabilities to previous stable states
-    - **Data Integrity Checks**: Regular validation of workspace persistence data with automatic corruption detection and repair mechanisms
-    - **Migration Support**: Workspace data migration capabilities support moving projects between environments or backing up/restoring complete workspace state
-    
-    **Project Organization & Navigation:**
-    - Navigation breadcrumbs maintain user orientation within complex project structures with clear hierarchical paths
-    - Quick access shortcuts enable rapid switching between active projects and recent activities with keyboard shortcuts and favorites system
-    - Project templates provide pre-configured settings for common LoRA training scenarios with industry-specific defaults
-    - Workspace cleanup procedures automatically organize completed operations, archive processed files, and maintain optimal performance
-    - **Stage 2 Integration**: Workspace structure, metadata, and persistence mechanisms carry forward seamlessly to E02 advanced processing
-    - **Scope**: Focus on essential workspace management for LoRA proof of concept with robust state persistence as foundation requirement
-
-## 2. Document Processing Layer (Critical - Stage 1)
-
-- **FR1.1.0:** Document Processing (Basic)
-  * Description: Implement comprehensive basic document processing capabilities for workspace setup that support essential file formats, extract content with high accuracy, provide robust validation, queue management, and visual feedback during file handling operations for LoRA training data preparation.
-  * Impact Weighting: Operational Efficiency
-  * Priority: Critical
-  * User Stories: US1.1.1
-  * Tasks: [T-1.1.0]
-  * User Story Acceptance Criteria:
-    - **Multi-file upload**: Support simultaneous upload of multiple documents with progress tracking and queue management
-    - **Queue management**: Robust batch processing with priority controls, pause/resume capabilities, and status monitoring
-    - **Validation**: Comprehensive file validation including format verification, integrity checks, and content analysis
-    - **Preview**: Detailed content preview capabilities for verifying uploaded documents and extracted data
-    - Support for PDF, text, markdown, and basic document formats with automatic format detection
-    - Error handling for corrupted or unsupported files with clear recovery guidance
-  * Functional Requirements Acceptance Criteria:
-    
-    **Multi-File Upload (Essential for Training Document Input):**
-    - Drag-and-drop interface supports simultaneous upload of up to 100 files with visual feedback, hover states, and upload confirmation
-    - File selection dialog enables multi-select with Ctrl/Cmd+click and bulk selection capabilities
-    - Upload progress tracking displays individual file progress, overall batch progress, estimated completion times, and throughput statistics
-    - Concurrent upload processing handles multiple files simultaneously with configurable thread limits and bandwidth management
-    - Upload resume functionality allows interrupted uploads to continue from breakpoint without restarting entire files
-    - File organization automatically categorizes uploaded documents by type, size, and content characteristics
-    
-    **Queue Management (Essential for Batch Processing):**
-    - Processing queue displays all uploaded files with clear status indicators (queued, processing, completed, error, paused)
-    - Queue priority management allows users to reorder files with drag-and-drop interface and priority level assignments
-    - Batch operations enable pause/resume functionality for entire queue or individual files with instant response
-    - Queue persistence maintains processing order and status across browser sessions and system interruptions
-    - Resource management optimizes queue processing based on file sizes, types, and available system resources
-    - Queue analytics provide processing time estimates, completion forecasts, and performance metrics
-    
-    **Validation (Critical for Data Quality):**
-    - File format validation performs automatic format detection for PDF, TXT, MD, DOC, DOCX with detailed format reporting
-    - Content integrity checks verify file corruption, accessibility, and extractability before processing
-    - File size validation ensures documents fall within processing limits (maximum 100MB per file) with clear limit explanations
-    - Virus scanning integration provides security validation of all uploaded content with quarantine capabilities
-    - Content validation analyzes extractable text quality, language detection, and readability scores
-    - Duplicate detection identifies similar or identical files with conflict resolution options
-    - Metadata validation ensures proper encoding, character set detection, and structural integrity
-    
-    **Preview (Important for Verifying Input Data):**
-    - Content preview displays extracted text with formatting preservation and structural markup
-    - Thumbnail generation creates visual representations of document pages for quick identification
-    - Metadata display shows file properties including creation date, author, size, format, and processing statistics
-    - Preview zoom and navigation enables detailed inspection of document content before processing
-    - Side-by-side comparison allows verification of extraction accuracy against original document
-    - Preview export enables saving preview content for verification and quality assurance
-    
-    **Processing & Integration:**
-    - Basic metadata preservation maintains document properties, structural information, and source attribution needed for workspace organization
-    - Error handling provides user-friendly error messages with specific next steps, suggested solutions, and recovery options
-    - Processing logs maintain comprehensive records of all file handling operations for debugging, transparency, and audit trails
-    - **Stage 2 Integration**: Processed files, extracted content, and validation results feed seamlessly into E02 advanced processing pipeline
-    - **Scope Limitation**: Focus on workspace setup file processing - production content processing handled by Stage 2
-
-## 3. Dataset Export Configuration (Critical - Stage 1)
-
-- **FR1.2.0:** Dataset Export Configuration
-  * Description: Implement comprehensive export functionality for LoRA training data preparation that generates datasets in multiple industry-standard formats with robust validation, batch processing capabilities, versioning controls, and quality assurance for immediate use in LoRA training pipelines.
-  * Impact Weighting: Operational Efficiency
-  * Priority: Critical
-  * User Stories: US2.3.1
-  * Tasks: [T-1.2.0]
-  * User Story Acceptance Criteria:
-    - **Export configuration**: Comprehensive interface for configuring LoRA training data exports with format selection and parameter controls
-    - **Validation**: Multi-layer validation ensuring data integrity, format compliance, and LoRA training compatibility
-    - **Batch processing**: Robust batch export capabilities handling large datasets with progress monitoring and resource management
-    - **Versioning**: Complete version control system tracking dataset iterations with changelog and rollback capabilities
-    - Native support for LoRA-compatible formats (JSON, JSONL) with proper training pair structure
-    - Export preview and verification capabilities with sample data inspection
-  * Functional Requirements Acceptance Criteria:
-    
-    **Export Configuration (Essential for LoRA Training Data Preparation):**
-    - Export configuration interface provides comprehensive settings panel with format selection, parameter controls, and advanced options
-    - LoRA training format support includes JSON and JSONL with proper structure for training pair data, metadata fields, and compatibility validation
-    - Format customization enables field mapping, data transformation rules, and output structure modification
-    - Template system provides pre-configured export settings for common LoRA training scenarios with industry best practices
-    - Configuration validation ensures selected parameters produce valid training data format with compatibility checking
-    - Smart defaults automatically configure optimal settings based on dataset characteristics and intended use case
-    - Configuration profiles allow saving and reusing export settings across different projects with named presets
-    
-    **Validation (Critical for Data Quality Assurance):**
-    - Multi-layer validation performs format compliance checking, data integrity verification, and LoRA training compatibility assessment
-    - Dataset validation ensures data completeness, proper encoding, and structural integrity with detailed error reporting
-    - Training pair validation verifies question-answer format, metadata consistency, and quality thresholds
-    - Export preview generates sample data outputs with full validation results and quality metrics
-    - Schema validation ensures exported data conforms to target format specifications with detailed compliance reporting
-    - Quality gates prevent export of datasets that fail validation criteria with clear remediation guidance
-    - Validation reporting provides comprehensive analysis of data quality, completeness, and export readiness
-    
-    **Batch Processing (Required for Large Dataset Handling):**
-    - Batch export operations support multiple format generation simultaneously with parallel processing and resource management
-    - Large dataset handling processes exports in chunks with progress tracking, memory optimization, and resume capabilities
-    - Export queue management prioritizes operations with user control over processing order and resource allocation
-    - Progress tracking provides real-time status updates, completion estimates, and throughput statistics
-    - Resource monitoring ensures optimal performance during export operations with automatic load balancing
-    - Background processing enables continued workspace use during large export operations
-    - Batch validation performs quality checks across entire dataset with summary reporting and exception handling
-    
-    **Versioning (Important for Dataset Iteration Tracking):**
-    - Version control system tracks all dataset iterations with semantic versioning, timestamps, and user attribution
-    - Changelog generation automatically documents changes between dataset versions with detailed modification history
-    - Rollback capabilities allow reverting to previous dataset versions with complete state restoration
-    - Version comparison tools highlight differences between dataset iterations with side-by-side analysis
-    - Branch management supports multiple dataset variations from same source with merge capabilities
-    - Export history maintains complete record of all export operations with metadata and configuration details
-    - Version tagging enables marking significant dataset milestones with descriptive labels and annotations
-    
-    **Quality Assurance & Integration:**
-    - Export validation verifies training data quality and completeness with actionable feedback and improvement suggestions
-    - Metadata management includes comprehensive dataset information needed for LoRA training reproducibility and tracking
-    - Format compatibility testing ensures exported data works correctly with common LoRA training frameworks and tools
-    - **Stage 2 Integration**: Export configuration settings inform E02 processing parameters and output requirements
-    - **Scope**: Essential export formats and validation for proof of concept - advanced delivery systems in future phases
-
-## 4. Data Ownership & Processing Transparency (Critical - Stage 1)
-
-- **FR1.1.2:** Data Ownership & Processing Transparency (Simplified)
-  * Description: Implement essential data ownership and processing transparency controls that ensure complete user data ownership, local processing capabilities, clear transparency in data handling, and robust export capabilities without external dependencies for maximum security and user control in LoRA training workflows.
-  * Impact Weighting: Strategic Growth
-  * Priority: Critical
-  * User Stories: US1.1.2
-  * Tasks: [T-1.1.2]
-  * User Story Acceptance Criteria:
-    - **Processing transparency**: Complete visibility into all LoRA pipeline operations with detailed activity logging and real-time status monitoring
-    - **Export capabilities**: Comprehensive data export functionality for accessing all processed data, configurations, and training materials
-    - **Data ownership**: Absolute user control over all data with local processing and zero external transmission
-    - Complete data ownership maintained throughout all processing stages with no external dependencies
-    - Local processing capabilities for all sensitive business knowledge and training data
-    - Clear transparency in all data handling and processing steps with detailed audit trails
-  * Functional Requirements Acceptance Criteria:
-    
-    **Processing Transparency (Critical for LoRA Pipeline Understanding):**
-    - Real-time processing dashboard displays current operations, processing stages, and system activities with visual indicators
-    - Detailed operation logging captures every data processing step including file handling, validation, export preparation, and system events
-    - Processing timeline provides chronological view of all operations with expandable detail views and context information
-    - Transparency reporting generates comprehensive summaries of all data processing activities with timestamps and user attribution
-    - Operation traceability maintains complete audit trail linking all processed data back to original source files
-    - Processing metrics display performance statistics, processing times, and resource utilization for optimization insights
-    - Visual process flow diagrams show data transformation steps and processing pathways for user understanding
-    
-    **Export Capabilities (Essential for Data Access):**
-    - Comprehensive data export functionality provides complete access to all workspace content, processed data, and configuration settings
-    - Multi-format export support includes JSON, CSV, XML formats for maximum compatibility and data portability
-    - Bulk export operations enable downloading entire workspace contents with hierarchical organization preservation
-    - Selective export capabilities allow users to choose specific files, configurations, or processed data for targeted exports
-    - Export validation ensures data integrity and completeness of all exported content with verification reports
-    - Export packaging creates organized archives with proper documentation and metadata for external use
-    - Export history maintains complete record of all data access and export operations for audit purposes
-    
-    **Data Ownership (Important for User Control):**
-    - Local data architecture ensures all user content and generated training data remains on user-controlled systems
-    - Zero external transmission policy prevents any data from leaving user environment without explicit user action
-    - Complete user control over all data lifecycle including creation, processing, storage, and deletion
-    - Data residency controls ensure content never leaves user-specified boundaries or environments
-    - Ownership transparency provides clear documentation of data location, processing, and access patterns
-    - User data deletion capabilities provide complete removal including temporary files, caches, and processing artifacts
-    - Competitive protection measures prevent any form of data aggregation, analysis, or external access
-    
-    **Architecture & Integration:**
-    - Local processing pipeline operates entirely within user environment without external API dependencies for core functions
-    - Processing transparency dashboard integrates with workspace activity logging for unified monitoring experience
-    - Export functionality supports both individual file access and complete workspace backup capabilities
-    - Open architecture prevents vendor lock-in by supporting standard formats and providing clear documentation
-    - **Stage 2 Integration**: Data ownership controls and transparency mechanisms extend to E02 processing operations
-    - **Scope**: Essential data ownership and transparency for proof of concept - advanced privacy controls in future phases
-
-## 5. Error Handling and Recovery (Critical - Stage 1)
-
-- **FR1.1.3:** Error Handling and Recovery System
-  * Description: Implement comprehensive error handling and recovery system that provides graceful degradation, detailed error diagnostics, robust recovery mechanisms, progress preservation, and user-friendly guidance to ensure users can successfully complete LoRA training workflows despite technical issues.
-  * Impact Weighting: Operational Efficiency
-  * Priority: Critical
-  * User Stories: US8.1.3
-  * Tasks: [T-8.1.3]
-  * User Story Acceptance Criteria:
-    - **Error messages**: Comprehensive error diagnostics with user-friendly explanations and specific debugging information for pipeline issues
-    - **Recovery guidance**: Detailed step-by-step recovery instructions with alternative approaches and expert assistance options
-    - **Progress preservation**: Robust progress preservation maintaining all user work state during interruptions with automatic recovery capabilities
-    - Graceful error handling with detailed explanations and contextual information
-    - Auto-save functionality preserving all user inputs and workspace state
-    - Error reporting system for continuous improvement and system stability
-  * Functional Requirements Acceptance Criteria:
-    
-    **Error Messages (Critical for Pipeline Issue Debugging):**
-    - Comprehensive error detection systems identify and categorize failures across all Stage 1 processing stages with detailed classification
-    - User-friendly error messages translate technical problems into actionable business language with specific next steps and context
-    - Error severity classification distinguishes between critical failures, warnings, and informational messages with appropriate visual indicators
-    - Contextual error information provides details about operation in progress, affected files, and system state at time of error
-    - Error code system enables precise error identification with detailed documentation and troubleshooting guides
-    - Multi-language error support provides clear explanations for technical and non-technical users
-    - Error aggregation groups related errors to prevent overwhelming users with redundant messages
-    
-    **Recovery Guidance (Essential for Processing Failure Handling):**
-    - Step-by-step recovery instructions provide detailed guidance tailored to specific error types and user context
-    - Alternative workflow paths offer manual overrides and workarounds when automated systems fail
-    - Recovery validation ensures restored functionality meets quality standards before allowing users to continue
-    - Expert assistance integration provides escalation paths with detailed error context and user environment information
-    - Recovery success tracking monitors effectiveness of recovery procedures with continuous improvement feedback
-    - Recovery documentation maintains knowledge base of common issues and proven solutions
-    - Guided recovery wizards walk users through complex recovery procedures with validation at each step
-    
-    **Progress Preservation (Important for Long-Running Training Operations):**
-    - Automatic progress preservation maintains complete user work state during all types of interruptions and system failures
-    - Comprehensive state management preserves workspace configuration, file processing status, export settings, and user interface state
-    - Recovery checkpoints create regular snapshots of workspace state with rollback capabilities to any saved checkpoint
-    - Transaction-based operations ensure atomic completion of critical operations with automatic rollback on failure
-    - Progress resumption enables continuing interrupted operations from exact point of failure without data loss
-    - State validation ensures recovered workspace maintains data integrity and operational consistency
-    - Cross-session persistence maintains progress state across browser sessions, device changes, and system restarts
-    
-    **System Resilience & User Support:**
-    - Auto-save functionality preserves user inputs every 30 seconds and at all critical workflow transition points
-    - Automatic retry mechanisms handle transient failures with intelligent exponential backoff and maximum attempt limits
-    - Graceful degradation provides alternative processing paths and reduced functionality when primary systems encounter failures
-    - Error reporting system captures anonymized failure patterns for system improvement without exposing user data
-    - Rollback capabilities allow users to return to previous stable states when errors corrupt current workspace
-    - Error escalation workflow provides clear paths to technical support with comprehensive error context
-    - **Stage 2 Integration**: Error handling patterns and recovery mechanisms extend seamlessly to E02 processing operations
-    - **Scope**: Comprehensive error handling for proof of concept with foundation for advanced support workflows
-
-## 6. Stage 1 Integration & Workflow
-
-### Complete Stage 1 User Journey:
-1. **Project Workspace Creation** (FR1.1.1)
-   - Create workspace with robust persistence and dashboard monitoring
-   - Initialize comprehensive activity logging and status tracking
-   - Set up file organization structure with metadata management
-
-2. **Document Upload & Processing** (FR1.1.0)
-   - Multi-file upload with comprehensive validation and queue management
-   - Batch processing with preview capabilities and quality assurance
-   - Content extraction and organization with error handling
-
-3. **Export Configuration** (FR1.2.0)
-   - Configure LoRA training data exports with validation and versioning
-   - Set up batch processing parameters with quality controls
-   - Preview and validate export structure with format compliance
-
-4. **Data Ownership Controls** (FR1.1.2)
-   - Establish processing transparency with comprehensive audit trails
-   - Configure export capabilities and data ownership controls
-   - Verify local processing architecture and user data control
-
-5. **Error Handling Implementation** (FR1.1.3)
-   - Set up comprehensive error detection and recovery mechanisms
-   - Configure progress preservation and auto-save functionality
-   - Test error handling workflows with recovery validation
-
-### Stage 2 Integration Points:
-- **Data Flow**: All workspace content and processing results feed into E02 pipeline
-- **Configuration Transfer**: Export settings and processing parameters inform E02 operations
-- **State Continuity**: Workspace persistence and activity logging extend to Stage 2
-- **Error Integration**: Error handling patterns provide foundation for E02 error management
-
-## 7. Success Criteria (All 5 Critical Components)
-
-### Functional Validation:
-- [ ] **FR1.1.1**: Robust workspace creation with comprehensive persistence and dashboard monitoring
-- [ ] **FR1.1.0**: Multi-file upload with validation, queue management, and preview capabilities
-- [ ] **FR1.2.0**: Complete export configuration with validation, batch processing, and versioning
-- [ ] **FR1.1.2**: Processing transparency with data ownership controls and export capabilities  
-- [ ] **FR1.1.3**: Comprehensive error handling with recovery guidance and progress preservation
-
-### Integration Success:
-- [ ] All Stage 2 handoff points properly implemented with data flow validation
-- [ ] Workspace persistence maintains state across sessions and stage transitions
-- [ ] Error handling provides robust foundation for E02 operations
-- [ ] Processing transparency extends seamlessly to advanced pipeline stages
-
-### User Experience Standards:
-- [ ] Intuitive workflow with comprehensive guidance and progress indicators
-- [ ] Robust error recovery with detailed guidance and alternative approaches
-- [ ] Complete data control with transparency and export capabilities
-- [ ] Professional-grade reliability with comprehensive state preservation
+All FR numbers preserved from v2.0.0 for traceability. Original User Story (US) references maintained.
 
 ---
 
-## Implementation Notes
+## Document Enhancement Summary
 
-**This specification includes ALL 5 critical components with robust, detailed specifications:**
+**Key Enhancements in v3.0.0:**
+1. **UI Component Integration**: All UI requirements now reference actual wireframe components
+2. **Database Validation**: Acceptance criteria validated against implemented Supabase schemas  
+3. **API Specification**: Requirements include actual API endpoint paths and parameters
+4. **State Management**: Requirements reference Zustand store implementation patterns
+5. **Type Safety**: All data structures validated against TypeScript type definitions
+6. **Testable Criteria**: Every acceptance criterion now includes validation approach
 
-✅ **FR1.1.1** - Core Infrastructure with comprehensive workspace persistence
-✅ **FR1.1.0** - Document Processing with multi-file upload and queue management  
-✅ **FR1.2.0** - Export Configuration with validation and batch processing
-✅ **FR1.1.2** - Data Ownership & Processing Transparency (simplified but comprehensive)
-✅ **FR1.1.3** - Error Handling with robust recovery and progress preservation
+**Wireframe Components Integrated:**
+- Dashboard with conversation table, filters, pagination (ConversationTable.tsx, FilterBar.tsx)
+- Three-tier workflow (TemplatesView.tsx, ScenariosView.tsx, EdgeCasesView.tsx)
+- Batch generation interface (BatchGenerationModal.tsx)
+- Review queue system (ReviewQueueView.tsx)
+- Export functionality (ExportModal.tsx)
+- Quality metrics visualization (Dashboard stats cards)
 
-Each component includes detailed acceptance criteria, comprehensive functional requirements, and clear Stage 2 integration points for seamless pipeline development.
+---
+
+
+## 1. Database Foundation & Core Schema
+
+### 1.1 Normalized Database Structure
+
+- **FR1.1.1:** Conversations Table Structure
+  * Description: Implement core conversations table with normalized schema storing conversation metadata and status
+  * Impact Weighting: Scalability / System Architecture
+  * Priority: High
+  * User Stories: US9.1.1
+  * Tasks: [T-1.1.1]
+  * User Story Acceptance Criteria:
+    - Conversations table with columns: id, conversation_id, document_id, chunk_id, persona, emotion, topic, intent, tone, tier, status, quality_score, turn_count, created_at, updated_at
+    - Conversation_turns table with columns: id, conversation_id, turn_number, role (user/assistant), content, created_at
+    - Foreign key constraints: conversation_id references conversations.id
+    - Indexes on frequently queried fields: status, quality_score, persona, emotion, tier, created_at
+    - Unique constraint on conversation_id
+    - Cascading delete: deleting conversation deletes all turns
+    - NOT NULL constraints on required fields
+  * Functional Requirements Acceptance Criteria:
+    - Primary key (id) must be UUID type with automatic generation
+      Code Reference: `src/lib/types.ts:26-46` (Conversation type definition), `train-wireframe/src/lib/types.ts:27`
+    - All timestamp fields use timestamptz for timezone-aware storage
+      Code Reference: `src/lib/database.ts:1-50` (Database service implementation)
+    - Status field must be constrained to enum values: draft, generated, pending_review, approved, rejected, needs_revision, none, failed
+      Code Reference: `train-wireframe/src/lib/types.ts:5` (ConversationStatus type)
+    - Tier field must be constrained to enum values: template, scenario, edge_case  
+      Code Reference: `train-wireframe/src/lib/types.ts:3` (TierType definition)
+    - Quality score must be numeric with range 0-10, precision to 1 decimal place
+      Code Reference: `train-wireframe/src/lib/types.ts:34` (qualityScore in Conversation type)
+    - Turn count must be non-negative integer
+      Code Reference: `train-wireframe/src/lib/types.ts:40` (totalTurns in Conversation type)
+    - Conversation_id must follow format: fp_[persona]_[###] for uniqueness and readability
+    - Database queries must use proper indexing achieving <100ms response for table scans up to 10,000 records
+      Code Reference: `src/lib/database.ts:6-10` (Query optimization with order_by)
+    - Foreign key on document_id must reference chunks-alpha documents table with CASCADE on delete
+    - Conversation turns must maintain sequential turn_number without gaps
+      Code Reference: `train-wireframe/src/lib/types.ts:7-12` (ConversationTurn type)
+    - Role field in turns table must be constrained to 'user' | 'assistant' only
+      Code Reference: `train-wireframe/src/lib/types.ts:8`
+
+- **FR1.1.2:** Flexible Metadata Storage  
+  * Description: Implement structured columns for core dimensions with JSONB for extensible metadata
+  * Impact Weighting: Data Accessibility / Query Performance  
+  * Priority: High  
+  * User Stories: US9.2.1  
+  * Tasks: [T-1.1.2]  
+  * User Story Acceptance Criteria:
+    - Structured columns for core dimensions: persona, emotion, topic, intent, tone, tier
+    - JSONB column for additional metadata (extensible)
+    - Efficient querying with indexed structured fields (< 500ms for filtered views)
+    - JSONB querying support for custom metadata keys
+    - Metadata validation ensuring consistency (valid persona values, etc.)
+    - Metadata update API for post-generation edits
+    - Migration support for adding new structured fields
+  * Functional Requirements Acceptance Criteria:
+    - Parameters field implemented as JSONB column storing flexible key-value pairs
+      Code Reference: `train-wireframe/src/lib/types.ts:44` (parameters: Record<string, any>)
+    - JSONB field must support GIN indexing for efficient key existence and containment queries
+    - Structured dimension fields (persona, emotion, topic, intent, tone) must have individual btree indexes
+    - Text search across persona, emotion, and topic fields must support case-insensitive ILIKE patterns
+      Code Reference: `train-wireframe/src/components/dashboard/DashboardView.tsx:28-31` (Search filter logic)
+    - Metadata validation must occur at application layer before database insertion
+      Code Reference: `src/lib/database.ts:27-36` (Create document with validation)
+    - Category field must support array of strings for multi-category assignment
+      Code Reference: `train-wireframe/src/lib/types.ts:32` (category: string[])
+    - Quality metrics object must be stored as nested JSONB with structured schema
+      Code Reference: `train-wireframe/src/lib/types.ts:14-24` (QualityMetrics type)
+    - Review history must be stored as JSONB array of review action objects
+      Code Reference: `train-wireframe/src/lib/types.ts:45,48-55` (reviewHistory and ReviewAction type)
+    - Parent references (parentId, parentType) must support linking conversations to templates/scenarios
+      Code Reference: `train-wireframe/src/lib/types.ts:42-43`
+    - Token count fields must be calculated and stored at generation time
+      Code Reference: `train-wireframe/src/lib/types.ts:10,41` (tokenCount fields)
+    - Update API endpoint must support partial updates without overwriting entire JSONB objects
+      Code Reference: `src/lib/database.ts:38-48` (Update method with partial data)
+
+### 1.2 Audit Trail & Logging Tables
+
+- **FR1.2.1:** Generation Audit Logging
+  * Description: Implement comprehensive logging of all API generation requests and responses
+  * Impact Weighting: Compliance / Debugging
+  * Priority: High
+  * User Stories: US9.3.1
+  * Tasks: [T-1.2.1]
+  * User Story Acceptance Criteria:
+    - Generation_logs table with columns: id, conversation_id, run_id, template_id, request_payload, response_payload, parameters, cost_usd, input_tokens, output_tokens, duration_ms, error_message, created_at
+    - Log entry created for every API call (success or failure)
+    - Logs retained for 90 days (configurable)
+    - Query logs by conversation, date range, user, template
+    - Export logs as CSV for auditing
+    - PII redaction in logs (if applicable)
+    - Log compression for long-term storage
+  * Functional Requirements Acceptance Criteria:
+    - API response logs table must capture full Claude API request/response cycle
+      Code Reference: `src/lib/api-response-log-service.ts` (Full API logging service)
+    - Log entries must include prompt template used for reproducibility
+      Code Reference: `src/app/api/chunks/generate-dimensions/route.ts` (Dimension generation logging)
+    - Cost tracking must calculate based on input/output token counts and current API pricing
+    - Duration measurement must use high-resolution timestamps (milliseconds precision)
+    - Error messages must be sanitized to remove sensitive API keys before storage
+    - Batch job logs must link individual conversation logs to parent job_id
+      Code Reference: `train-wireframe/src/lib/types.ts:125-144` (BatchJob type)
+    - Log query interface must support filtering by status, date range, tier, and template
+    - Export functionality must generate CSV with configurable column selection
+      Code Reference: `train-wireframe/src/lib/types.ts:205-214` (ExportConfig type)
+    - Log retention policy must be enforced via scheduled database cleanup jobs
+    - PII detection must scan for common patterns (emails, SSNs, credit cards) and redact
+    - Compressed logs must use standard gzip format for S3 archive storage
+
+- **FR1.2.2:** Review Audit Logging
+  * Description: Track all approval/rejection actions with reviewer identity and timestamp
+  * Impact Weighting: Compliance / Accountability
+  * Priority: Medium
+  * User Stories: US9.3.2
+  * Tasks: [T-1.2.2]
+  * User Story Acceptance Criteria:
+    - Review_logs table with columns: id, conversation_id, action (approve/reject), reviewer_id, reviewer_notes, timestamp
+    - Log entry created for every approval/rejection
+    - Audit trail visible per conversation showing all review events
+    - Export audit trail for specific conversations or date ranges
+    - User activity report showing review activity per user
+    - Compliance report: "All conversations reviewed by at least one user"
+  * Functional Requirements Acceptance Criteria:
+    - Review actions must be stored in reviewHistory array within conversation record
+      Code Reference: `train-wireframe/src/lib/types.ts:48-55` (ReviewAction type)
+    - Each review action must capture: action type, performer, timestamp, optional comment, optional reasons array
+      Code Reference: `train-wireframe/src/lib/types.ts:50-54`
+    - Action types must be constrained enum: 'approved' | 'rejected' | 'revision_requested' | 'generated' | 'moved_to_review'
+      Code Reference: `train-wireframe/src/lib/types.ts:51`
+    - Reviewer identity must link to auth.users table for accountability
+    - Review comments must support markdown formatting up to 2000 characters
+    - Audit trail query must retrieve full history ordered chronologically
+    - Bulk review actions must create individual log entries for each conversation
+      Code Reference: `train-wireframe/src/components/dashboard/FilterBar.tsx:315-321` (Bulk action patterns)
+    - Review activity reports must aggregate by user, date range, action type
+    - Compliance queries must identify conversations without review actions
+    - Review timeline visualization must display action sequence with time elapsed
+    - Status transitions must be validated (e.g., can't approve from 'draft' without 'generated' state)
+      Code Reference: `train-wireframe/src/lib/types.ts:5` (Valid ConversationStatus transitions)
+
+- **FR1.2.3:** Export Audit Logging
+  * Description: Maintain complete history of data exports with user attribution and filter state  
+  * Impact Weighting: Compliance / Data Governance  
+  * Priority: Medium  
+  * User Stories: US9.3.3  
+  * Tasks: [T-1.2.3]  
+  * User Story Acceptance Criteria:
+    - Export_logs table with columns: id, export_id, user_id, conversation_count, filter_state, format, exported_at, metadata
+    - Log entry for every export action
+    - Export history visible showing all exports with details
+    - Filter history by user, date range, or conversation count
+    - Retention policy: 365 days (configurable)
+    - Compliance report: "All exports logged with user attribution"
+  * Functional Requirements Acceptance Criteria:
+    - Export configuration must capture scope ('selected' | 'filtered' | 'all')
+      Code Reference: `train-wireframe/src/lib/types.ts:206`
+    - Export format must support: json, jsonl, csv, markdown
+      Code Reference: `train-wireframe/src/lib/types.ts:207`
+    - Filter state must be serialized as JSON for reproducibility
+      Code Reference: `train-wireframe/src/lib/types.ts:159-168` (FilterConfig type)
+    - Export metadata must include: conversation IDs, quality statistics, date range, tier distribution
+    - Export logs must link to user identity via auth.users table
+    - Conversation count must be validated against actual records exported
+    - Export format configuration flags must be stored: includeMetadata, includeQualityScores, includeTimestamps, includeApprovalHistory, includeParentReferences, includeFullContent
+      Code Reference: `train-wireframe/src/lib/types.ts:208-213`
+    - Export history UI must display paginated list with search/filter
+    - Re-export functionality must recreate exact filter conditions from stored state
+    - Export file naming must include timestamp and description: `training-data-${tier}-${timestamp}.${format}`
+    - Large exports (>1000 conversations) must use background job processing
+      Code Reference: `train-wireframe/src/lib/types.ts:125-144` (BatchJob for async processing)
+
+### 1.3 Database Performance & Optimization
+
+- **FR1.3.1:** Database Performance Monitoring
+  * Description: Implement query performance monitoring and slow query identification
+  * Impact Weighting: Performance / Scalability
+  * Priority: Low
+  * User Stories: US9.1.2
+  * Tasks: [T-1.3.1]
+  * User Story Acceptance Criteria:
+    - Query performance logging showing execution time per query type
+    - Slow query identification (> 500ms)
+    - Index usage statistics showing which indexes are utilized
+    - Table size and row count monitoring
+    - Query plan analysis for optimization
+    - Alert when query performance degrades
+    - Monthly performance report with recommendations
+  * Functional Requirements Acceptance Criteria:
+    - Supabase query logging must be enabled for all database operations
+      Code Reference: `src/lib/supabase.ts` (Supabase client configuration)
+    - Query execution time must be measured using database-level timing
+    - Slow query threshold must be configurable (default 500ms)
+    - Index hit rate must be monitored via pg_stat_user_indexes
+    - Table bloat must be calculated periodically via pg_stat_user_tables
+    - Query plans must be captured using EXPLAIN ANALYZE for slow queries
+    - Performance alerts must trigger when p95 latency exceeds 1000ms
+    - Monthly reports must identify: top 10 slowest queries, unused indexes, missing indexes, table scan frequencies
+    - Query cache hit rate must be monitored via Supabase metrics
+    - Connection pool utilization must be tracked to prevent exhaustion
+
+- **FR1.3.2:** Index Management and Optimization
+  * Description: Strategic indexing for optimal query performance with large datasets
+  * Impact Weighting: Performance / Scalability
+  * Priority: Low  
+  * User Stories: US12.2.2  
+  * Tasks: [T-1.3.2]  
+  * User Story Acceptance Criteria:
+    - Indexes on frequently queried fields: status, quality_score, persona, emotion, tier, created_at
+    - Composite indexes for common filter combinations (e.g., status + quality_score)
+    - Index usage monitoring showing hit rate per index
+    - Unused index identification and cleanup
+    - Automatic index rebuild when fragmentation detected
+    - Query performance alerts when queries exceed 500ms
+  * Functional Requirements Acceptance Criteria:
+    - Btree indexes must be created on: status, tier, created_at, updated_at, quality_score
+      Code Reference: `src/lib/database.ts:9-10` (Order by and filtering patterns)
+    - Composite index must exist on (status, quality_score) for filtered dashboard queries
+      Code Reference: `train-wireframe/src/components/dashboard/FilterBar.tsx:68-70` (Combined filters)
+    - GIN index must be created on category array field for contains operations
+      Code Reference: `train-wireframe/src/lib/types.ts:32` (category: string[])
+    - Full-text search index must be created on title, persona, emotion fields
+      Code Reference: `train-wireframe/src/components/dashboard/DashboardView.tsx:28-31` (Text search)
+    - Index on (tier, status, created_at DESC) must support common sorted filtered views
+    - Partial index on (status = 'pending_review') must optimize review queue queries
+      Code Reference: `train-wireframe/src/components/views/ReviewQueueView.tsx` (Review queue implementation)
+    - JSONB field indexes must use GIN with jsonb_path_ops operator class
+    - Index bloat must be monitored via pg_stat_user_indexes.idx_scan
+    - Unused indexes (idx_scan = 0 for 30 days) must be flagged for review
+    - Vacuum and analyze must run weekly to maintain index efficiency
+    - Query planner statistics must be kept current via ANALYZE after bulk inserts
+
+- **FR1.3.3:** Metadata Schema Evolution
+  * Description: Support backward-compatible schema changes and data migrations
+  * Impact Weighting: Flexibility / Future-Proofing
+  * Priority: Low
+  * User Stories: US9.2.2
+  * Tasks: [T-1.3.3]
+  * User Story Acceptance Criteria:
+    - Add new structured columns via database migrations
+    - Migrate data from JSONB to structured columns when needed
+    - Backward compatibility: old conversations work with new schema
+    - Version tracking for schema changes
+    - Rollback support for failed migrations
+    - Documentation of schema evolution history
+  * Functional Requirements Acceptance Criteria:
+    - Migration scripts must use Supabase migrations directory structure
+      Code Reference: `src/lib/supabase.ts` (Migration integration)
+    - Each migration must include up/down functions for rollback capability
+    - Schema version must be tracked in dedicated schema_migrations table
+    - JSONB field additions must not require table rewrites (ADD COLUMN with default)
+    - Column renames must use database transaction with view compatibility layer
+    - Data type changes must use safe coercion with validation
+    - New constraints must be added as NOT VALID initially, then validated separately
+    - Backward compatibility must be tested against previous application version
+    - Migration documentation must include: reason, affected queries, rollback procedure, estimated duration
+    - Zero-downtime migrations must use blue-green deployment pattern for breaking changes
+    - Column deprecation must follow 3-release cycle: add, migrate, remove
+
+---

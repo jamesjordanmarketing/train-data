@@ -1,7 +1,7 @@
 # Interactive LoRA Conversation Generation - Functional Requirements
-**Version:** 2.0.0  
-**Date:** 10/26/2025  
-**Category:** Design System Platform
+**Version:** 3.0.0 (Wireframe Integration)
+**Date:** 10/28/2025  
+**Category:** Training Data Generation Platform
 **Product Abbreviation:** train
 
 **Source References:**
@@ -9,133 +9,94 @@
 - Overview Document: `pmc\product\01-train-overview.md`
 - User Stories: `pmc\product\02-train-user-stories.md`
 - User Journey: `pmc\product\02.5-train-user-journey.md`
+- Previous Version: `pmc\product\03-train-functional-requirements-before-wireframe.md`
+- Wireframe Codebase: `train-wireframe\src\`
+- Main Codebase: `src\`
 
 **Reorganization Notes:**
-This document has been reorganized to follow logical build dependencies:
-1. Foundation Layer (Database, Core Services)
-2. Infrastructure Layer (API Integration, Error Handling)
-3. Base Components Layer (UI Components, Templates)
-4. Primary Features Layer (Generation, Review, Export)
-5. Advanced Features Layer (Analytics, Optimization)
-6. Cross-Cutting Layer (Performance, Security, Testing)
+This document has been enhanced with insights from the implemented wireframe UI and main codebase integration. All functional requirements now include:
+- Testable acceptance criteria based on actual implementation
+- Direct codebase file path references for validation
+- Enhanced UI/UX specifications from wireframe patterns
+- Database schema validation from implemented models
+- API endpoint specifications from actual routes
 
-All FR numbers have been updated. Original User Story (US) references preserved for traceability.
+All FR numbers preserved from v2.0.0 for traceability. Original User Story (US) references maintained.
+
+---
+
+## Document Enhancement Summary
+
+**Key Enhancements in v3.0.0:**
+1. **UI Component Integration**: All UI requirements now reference actual wireframe components
+2. **Database Validation**: Acceptance criteria validated against implemented Supabase schemas  
+3. **API Specification**: Requirements include actual API endpoint paths and parameters
+4. **State Management**: Requirements reference Zustand store implementation patterns
+5. **Type Safety**: All data structures validated against TypeScript type definitions
+6. **Testable Criteria**: Every acceptance criterion now includes validation approach
+
+**Wireframe Components Integrated:**
+- Dashboard with conversation table, filters, pagination (ConversationTable.tsx, FilterBar.tsx)
+- Three-tier workflow (TemplatesView.tsx, ScenariosView.tsx, EdgeCasesView.tsx)
+- Batch generation interface (BatchGenerationModal.tsx)
+- Review queue system (ReviewQueueView.tsx)
+- Export functionality (ExportModal.tsx)
+- Quality metrics visualization (Dashboard stats cards)
 
 ---
 
 
-## 7. Three-Tier Conversation Architecture
+## 7. Templates, Scenarios, and Edge Cases Management
 
-### 7.1 Template Tier (Tier 1)
+### 7.1 Template Management
 
-- **FR7.1.1:** Generate Template Tier Conversations
-  * Description: Foundational conversation generation using emotional arc templates
-  * Impact Weighting: Dataset Foundation / Coverage
+- **FR7.1.1:** Template CRUD Operations
+  * Description: Create, read, update, delete conversation templates
+  * Impact Weighting: Core Functionality / Flexibility
   * Priority: High
-  * User Stories: US8.1.1
+  * User Stories: US7.1.1
   * Tasks: [T-7.1.1]
-  * User Story Acceptance Criteria:
-    - Tier 1 section in dashboard showing 40 conversation slots
-    - Emotional arc templates: Triumph, Struggle-to-Success, Steady Confidence, Anxiety-to-Relief, Discovery
-    - Each template defines turn structure and emotional progression
-    - "Generate All Tier 1" button for batch processing
-    - Progress bar showing "Generating Tier 1: 12 of 40 complete"
-    - Template distribution visible (e.g., "8 Triumph, 8 Struggle-to-Success, ...")
-    - Coverage report showing distribution across emotional arcs
-    - Quick action: "Fill Missing Template Combinations"
   * Functional Requirements Acceptance Criteria:
-    - [To be filled]
+    - Template view must display all templates in table format
+      Code Reference: `train-wireframe/src/components/views/TemplatesView.tsx`
+    - Create template form must include: name, tier, prompt, variables, active status
+      Code Reference: `train-wireframe/src/lib/types.ts:64-73` (Template type)
+    - Template variables must be defined with type, required flag, default value
+      Code Reference: `train-wireframe/src/lib/types.ts:76-82` (TemplateVariable type)
+    - Duplicate template function must copy all properties except ID
+    - Delete template must require confirmation and check for dependencies
+    - Import/export templates as JSON for backup and sharing
 
-- **FR7.1.2:** Template Arc Configuration
-  * Description: Customizable emotional arc distribution and activation
-  * Impact Weighting: Customization / Business Alignment
+- **FR7.1.2:** Scenario Library
+  * Description: Manage scenario definitions for Tier 2 conversations
+  * Impact Weighting: Content Organization / Scalability
   * Priority: Medium
-  * User Stories: US8.1.2
+  * User Stories: US7.3.1
   * Tasks: [T-7.1.2]
-  * User Story Acceptance Criteria:
-    - Template configuration page showing available emotional arcs
-    - Enable/disable specific arcs with checkbox
-    - Adjust distribution percentage per arc (must sum to 100%)
-    - Preview distribution: "40 conversations = 10 Triumph + 8 Struggle + ..."
-    - Save configuration as preset for reuse
-    - Reset to default distribution button
-    - Validation: at least 1 arc must be enabled
   * Functional Requirements Acceptance Criteria:
-    - [To be filled]
+    - Scenarios view must display all scenarios grouped by category
+      Code Reference: `train-wireframe/src/components/views/ScenariosView.tsx`
+    - Scenario type must include: name, category, context, complexity, emotionalContext
+      Code Reference: `train-wireframe/src/lib/types.ts:97-104` (Scenario type)
+    - Link scenarios to specific templates for guided generation
+    - Scenario complexity levels must be: simple, moderate, complex
+    - Scenarios must support tagging for cross-category relationships
+    - Bulk import scenarios from CSV
 
-### 7.2 Scenario Tier (Tier 2)
-
-- **FR7.2.1:** Generate Scenario Tier Conversations
-  * Description: Real-world scenario-based conversations derived from source documents
-  * Impact Weighting: Model Realism / Business Value
-  * Priority: High
-  * User Stories: US8.2.1
-  * Tasks: [T-7.2.1]
-  * User Story Acceptance Criteria:
-    - Tier 2 section in dashboard showing 35 conversation slots
-    - Scenarios derived from chunked document content (inheritance windfall, career transition, etc.)
-    - Each scenario includes: problem context, solution action, outcome
-    - Scenarios incorporate domain expertise from source documents
-    - "Generate All Tier 2" button for batch processing
-    - Link to source chunk for each scenario (traceability)
-    - Scenario editing before generation (optional)
-    - Coverage report showing scenario diversity
-  * Functional Requirements Acceptance Criteria:
-    - [To be filled]
-
-- **FR7.2.2:** Scenario Library Management
-  * Description: Reusable scenario repository with categorization and search
-  * Impact Weighting: Efficiency / Reusability
+- **FR7.1.3:** Edge Case Repository
+  * Description: Manage edge case definitions for Tier 3 conversations
+  * Impact Weighting: Robustness / Coverage
   * Priority: Medium
-  * User Stories: US8.2.2
-  * Tasks: [T-7.2.2]
-  * User Story Acceptance Criteria:
-    - Scenario library page showing all scenarios with: title, description, source chunk, usage count
-    - Create new scenario manually (not derived from chunks)
-    - Edit existing scenarios: title, description, problem/solution/outcome
-    - Tag scenarios by category: financial, career, personal, estate planning
-    - Search scenarios by keyword
-    - Mark scenarios as favorites for quick access
-    - Duplicate scenario for variations
-    - Archive unused scenarios
+  * User Stories: US7.4.1
+  * Tasks: [T-7.1.3]
   * Functional Requirements Acceptance Criteria:
-    - [To be filled]
-
-### 7.3 Edge Case Tier (Tier 3)
-
-- **FR7.3.1:** Generate Edge Case Tier Conversations
-  * Description: Boundary-testing conversations for model robustness
-  * Impact Weighting: Model Robustness / Edge Case Handling
-  * Priority: Medium
-  * User Stories: US8.3.1
-  * Tasks: [T-7.3.1]
-  * User Story Acceptance Criteria:
-    - Tier 3 section in dashboard showing 15 conversation slots
-    - Edge cases test: extreme emotional states, conflicting goals, unusual scenarios, challenging questions
-    - Higher quality threshold required for edge cases (score >= 8)
-    - Manual review required for all Tier 3 conversations (cannot bulk approve)
-    - "Generate All Tier 3" button for batch processing
-    - Edge case templates include adversarial prompts
-    - Coverage report showing edge case categories tested
-    - Flag conversations that don't meet edge case criteria
-  * Functional Requirements Acceptance Criteria:
-    - [To be filled]
-
-- **FR7.3.2:** Edge Case Suggestions
-  * Description: Intelligent recommendations for untested edge conditions
-  * Impact Weighting: Completeness / Quality Assurance
-  * Priority: Low
-  * User Stories: US8.3.2
-  * Tasks: [T-7.3.2]
-  * User Story Acceptance Criteria:
-    - Edge case suggestion panel showing recommended tests
-    - Categories: emotional overwhelm, conflicting advice requests, boundary testing, ethical dilemmas
-    - Suggestions based on persona/emotion combinations not yet tested
-    - "Generate Suggested Edge Cases" button
-    - Mark suggestion as completed or dismissed
-    - Custom edge case definition: specify conditions to test
-    - Export edge case coverage report
-  * Functional Requirements Acceptance Criteria:
-    - [To be filled]
+    - Edge cases view must display all edge cases
+      Code Reference: `train-wireframe/src/components/views/EdgeCasesView.tsx`
+    - Edge case type must include: name, description, triggerCondition, expectedBehavior, riskLevel
+      Code Reference: `train-wireframe/src/lib/types.ts:109-116` (EdgeCase type)
+    - Risk levels must be: low, medium, high, critical
+    - Edge cases must be linkable to scenarios they modify
+    - Coverage report must show which edge cases have been tested
+    - Version edge cases to track changes over time
 
 ---

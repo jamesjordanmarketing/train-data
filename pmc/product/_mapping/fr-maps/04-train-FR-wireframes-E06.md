@@ -1,7 +1,7 @@
 # Interactive LoRA Conversation Generation - Functional Requirements
-**Version:** 2.0.0  
-**Date:** 10/26/2025  
-**Category:** Design System Platform
+**Version:** 3.0.0 (Wireframe Integration)
+**Date:** 10/28/2025  
+**Category:** Training Data Generation Platform
 **Product Abbreviation:** train
 
 **Source References:**
@@ -9,98 +9,80 @@
 - Overview Document: `pmc\product\01-train-overview.md`
 - User Stories: `pmc\product\02-train-user-stories.md`
 - User Journey: `pmc\product\02.5-train-user-journey.md`
+- Previous Version: `pmc\product\03-train-functional-requirements-before-wireframe.md`
+- Wireframe Codebase: `train-wireframe\src\`
+- Main Codebase: `src\`
 
 **Reorganization Notes:**
-This document has been reorganized to follow logical build dependencies:
-1. Foundation Layer (Database, Core Services)
-2. Infrastructure Layer (API Integration, Error Handling)
-3. Base Components Layer (UI Components, Templates)
-4. Primary Features Layer (Generation, Review, Export)
-5. Advanced Features Layer (Analytics, Optimization)
-6. Cross-Cutting Layer (Performance, Security, Testing)
+This document has been enhanced with insights from the implemented wireframe UI and main codebase integration. All functional requirements now include:
+- Testable acceptance criteria based on actual implementation
+- Direct codebase file path references for validation
+- Enhanced UI/UX specifications from wireframe patterns
+- Database schema validation from implemented models
+- API endpoint specifications from actual routes
 
-All FR numbers have been updated. Original User Story (US) references preserved for traceability.
+All FR numbers preserved from v2.0.0 for traceability. Original User Story (US) references maintained.
+
+---
+
+## Document Enhancement Summary
+
+**Key Enhancements in v3.0.0:**
+1. **UI Component Integration**: All UI requirements now reference actual wireframe components
+2. **Database Validation**: Acceptance criteria validated against implemented Supabase schemas  
+3. **API Specification**: Requirements include actual API endpoint paths and parameters
+4. **State Management**: Requirements reference Zustand store implementation patterns
+5. **Type Safety**: All data structures validated against TypeScript type definitions
+6. **Testable Criteria**: Every acceptance criterion now includes validation approach
+
+**Wireframe Components Integrated:**
+- Dashboard with conversation table, filters, pagination (ConversationTable.tsx, FilterBar.tsx)
+- Three-tier workflow (TemplatesView.tsx, ScenariosView.tsx, EdgeCasesView.tsx)
+- Batch generation interface (BatchGenerationModal.tsx)
+- Review queue system (ReviewQueueView.tsx)
+- Export functionality (ExportModal.tsx)
+- Quality metrics visualization (Dashboard stats cards)
 
 ---
 
 
-## 6. Review & Approval System
+## 6. Review & Quality Control
 
-### 6.1 Conversation Preview
+### 6.1 Review Queue
 
-- **FR6.1.1:** Formatted Conversation Preview
-  * Description: Readable turn-by-turn conversation display with metadata panel
-  * Impact Weighting: Quality Review / User Experience
+- **FR6.1.1:** Review Queue Interface
+  * Description: Dedicated view for reviewing generated conversations that need attention
+  * Impact Weighting: Quality Control / Workflow Efficiency
   * Priority: High
   * User Stories: US4.1.1
   * Tasks: [T-6.1.1]
-  * User Story Acceptance Criteria:
-    - Click conversation row opens side panel or modal
-    - Turn-by-turn display with "USER:" and "ASSISTANT:" labels
-    - Readable typography with appropriate spacing and line height
-    - Syntax highlighting or formatting for better readability
-    - Scroll support for long conversations (>16 turns)
-    - Metadata panel showing: persona, emotion, topic, intent, tone, tier, quality score, generation date
-    - Close button (X) or click outside to dismiss
-    - Keyboard shortcut (ESC) to close
   * Functional Requirements Acceptance Criteria:
-    - [To be filled]
+    - Review queue must filter conversations with status 'needs_review'
+      Code Reference: `train-wireframe/src/components/views/ReviewQueueView.tsx`
+    - Queue must prioritize by quality score (lowest first) and creation date
+    - Review interface must display conversation side-by-side with source chunk
+      Code Reference: `train-wireframe/src/lib/types.ts:45-46` (parent references)
+    - Review actions must include: Approve, Request Changes, Reject with comment
+      Code Reference: `train-wireframe/src/lib/types.ts:25-28` (ReviewAction type)
+    - Comments must support markdown formatting
+    - Keyboard shortcuts must enable rapid review: A (approve), R (reject), N (next)
+    - Batch review must allow selecting multiple and applying same action
+    - Review history must be stored in reviewHistory array
+      Code Reference: `train-wireframe/src/lib/types.ts:43`
 
-- **FR6.1.2:** Preview Navigation
-  * Description: Sequential navigation between conversations without closing preview
-  * Impact Weighting: Productivity / Review Efficiency
-  * Priority: High
+- **FR6.1.2:** Quality Feedback Loop
+  * Description: Capture reviewer feedback to improve generation quality
+  * Impact Weighting: Continuous Improvement / Learning
+  * Priority: Medium
   * User Stories: US4.1.2
   * Tasks: [T-6.1.2]
-  * User Story Acceptance Criteria:
-    - Previous and Next buttons in preview panel footer
-    - Keyboard shortcuts: Arrow Left (previous), Arrow Right (next)
-    - Buttons disabled at first/last conversation
-    - Navigation respects current filters (only navigate within filtered set)
-    - Counter showing position (e.g., "Conversation 3 of 25")
-    - Option to jump to specific conversation by number
-    - Auto-advance option for rapid review workflow
   * Functional Requirements Acceptance Criteria:
-    - [To be filled]
-
-### 6.2 Approval Workflow
-
-- **FR6.2.1:** Approve/Reject with Notes
-  * Description: Individual approval workflow with optional reviewer commentary
-  * Impact Weighting: Quality Control / Business Value
-  * Priority: High
-  * User Stories: US4.2.1
-  * Tasks: [T-6.2.1]
-  * User Story Acceptance Criteria:
-    - Approve and Reject buttons prominent in preview panel footer
-    - Color coding: Green (Approve), Red (Reject)
-    - Optional text area for reviewer notes (500 char limit)
-    - Note examples/prompts: "Why are you rejecting this conversation?"
-    - Approval action immediately updates status to "Approved"
-    - Rejection action updates status to "Rejected" but retains conversation in database
-    - Approved badge (green checkmark) appears in table
-    - Rejected badge (red X) appears in table
-    - Reviewer name and timestamp recorded in audit trail
-    - Toast notification confirming action
-  * Functional Requirements Acceptance Criteria:
-    - [To be filled]
-
-- **FR6.2.2:** Bulk Approve/Reject
-  * Description: Batch approval operations for efficiency in high-volume review
-  * Impact Weighting: Operational Efficiency / Time Savings
-  * Priority: High
-  * User Stories: US4.2.2
-  * Tasks: [T-6.2.2]
-  * User Story Acceptance Criteria:
-    - "Approve Selected" and "Reject Selected" buttons appear when conversations selected
-    - Confirmation dialog shows count and list of conversations to be affected
-    - Optional bulk notes field to apply same note to all
-    - Confirmation required for bulk reject (destructive action)
-    - Progress indicator during bulk action (e.g., "Approving 42 of 100...")
-    - Success message showing count: "87 approved, 3 failed"
-    - Failed actions show specific error messages per conversation
-    - Undo option available for 10 seconds after bulk action
-  * Functional Requirements Acceptance Criteria:
-    - [To be filled]
+    - Feedback categories must include: Content Accuracy, Emotional Intelligence, Turn Quality, Format Issues
+    - Feedback must be linked to specific template or scenario
+    - Analytics must aggregate feedback by template to identify problem areas
+    - Low-performing templates must be flagged for revision
+      Code Reference: `train-wireframe/src/lib/types.ts:71` (Template rating)
+    - Feedback trends must be displayed in dashboard widget
+    - Reviewer inter-rater reliability metrics must be tracked
 
 ---

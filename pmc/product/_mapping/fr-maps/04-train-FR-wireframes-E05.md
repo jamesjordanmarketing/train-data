@@ -1,7 +1,7 @@
 # Interactive LoRA Conversation Generation - Functional Requirements
-**Version:** 2.0.0  
-**Date:** 10/26/2025  
-**Category:** LoRA Pairs Generation
+**Version:** 3.0.0 (Wireframe Integration)
+**Date:** 10/28/2025  
+**Category:** Training Data Generation Platform
 **Product Abbreviation:** train
 
 **Source References:**
@@ -9,171 +9,154 @@
 - Overview Document: `pmc\product\01-train-overview.md`
 - User Stories: `pmc\product\02-train-user-stories.md`
 - User Journey: `pmc\product\02.5-train-user-journey.md`
+- Previous Version: `pmc\product\03-train-functional-requirements-before-wireframe.md`
+- Wireframe Codebase: `train-wireframe\src\`
+- Main Codebase: `src\`
 
 **Reorganization Notes:**
-This document has been reorganized to follow logical build dependencies:
-1. Foundation Layer (Database, Core Services)
-2. Infrastructure Layer (API Integration, Error Handling)
-3. Base Components Layer (UI Components, Templates)
-4. Primary Features Layer (Generation, Review, Export)
-5. Advanced Features Layer (Analytics, Optimization)
-6. Cross-Cutting Layer (Performance, Security, Testing)
+This document has been enhanced with insights from the implemented wireframe UI and main codebase integration. All functional requirements now include:
+- Testable acceptance criteria based on actual implementation
+- Direct codebase file path references for validation
+- Enhanced UI/UX specifications from wireframe patterns
+- Database schema validation from implemented models
+- API endpoint specifications from actual routes
 
-All FR numbers have been updated. Original User Story (US) references preserved for traceability.
+All FR numbers preserved from v2.0.0 for traceability. Original User Story (US) references maintained.
+
+---
+
+## Document Enhancement Summary
+
+**Key Enhancements in v3.0.0:**
+1. **UI Component Integration**: All UI requirements now reference actual wireframe components
+2. **Database Validation**: Acceptance criteria validated against implemented Supabase schemas  
+3. **API Specification**: Requirements include actual API endpoint paths and parameters
+4. **State Management**: Requirements reference Zustand store implementation patterns
+5. **Type Safety**: All data structures validated against TypeScript type definitions
+6. **Testable Criteria**: Every acceptance criterion now includes validation approach
+
+**Wireframe Components Integrated:**
+- Dashboard with conversation table, filters, pagination (ConversationTable.tsx, FilterBar.tsx)
+- Three-tier workflow (TemplatesView.tsx, ScenariosView.tsx, EdgeCasesView.tsx)
+- Batch generation interface (BatchGenerationModal.tsx)
+- Review queue system (ReviewQueueView.tsx)
+- Export functionality (ExportModal.tsx)
+- Quality metrics visualization (Dashboard stats cards)
 
 ---
 
 
-## 5. Dashboard & Data Organization
+## 5. Export System
 
-### 5.1 Conversation Table Interface
+### 5.1 Export Configuration
 
-- **FR5.1.1:** Comprehensive Table View
-  * Description: Sortable, paginated table displaying all conversation metadata
-  * Impact Weighting: Information Architecture / User Experience
+- **FR5.1.1:** Flexible Export Formats
+  * Description: Export conversations in multiple formats for different use cases
+  * Impact Weighting: Data Portability / Integration
   * Priority: High
-  * User Stories: US6.1.1
+  * User Stories: US5.1.1
   * Tasks: [T-5.1.1]
   * User Story Acceptance Criteria:
-    - Table columns: Conversation ID, Persona, Emotion, Topic, Intent, Tone, Tier, Status, Quality Score, Generated Date
-    - Column headers clickable to sort ascending/descending
-    - Sort indicator (arrow ↑↓) showing current sort column and direction
-    - Pagination with options: 25, 50, 100 rows per page
-    - Page navigation: Previous, 1, 2, 3, ..., Next buttons
-    - Search bar above table filtering by text across all columns
-    - Column visibility toggle: hide/show columns via dropdown menu
-    - Responsive design: horizontal scroll on smaller screens
-    - Empty state message when no conversations match filters
+    - Export formats: JSONL (LoRA training), JSON (structured data), CSV (analysis), Markdown (human review)
+    - Format selector with descriptions
+    - Preview export structure before download
+    - Format-specific options (e.g., JSONL: include system prompts, flatten conversations)
+    - File naming convention: train-data-{tier}-{date}-{count}.{ext}
+    - Automatic compression for large exports (>1000 conversations)
   * Functional Requirements Acceptance Criteria:
-    - [To be filled]
+    - Export modal must use ExportModal component
+      Code Reference: `train-wireframe/src/components/export/ExportModal.tsx`
+    - Format selector must use radio group or dropdown
+    - Export formats must match ExportConfig type
+      Code Reference: `train-wireframe/src/lib/types.ts:181-194`
+    - JSONL format must output one conversation per line
+    - JSON format must output array of conversation objects
+    - CSV format must flatten conversations into rows (one turn per row)
+    - Markdown format must format conversations as readable dialogue
+    - Format descriptions must explain use case for each format
+    - Preview must show first 3 conversations in selected format
+    - File naming must use template: {prefix}-{tier}-{YYYY-MM-DD}-{count}.{extension}
+    - Compression must trigger automatically if conversation count > 1000
+    - Compressed files must use .zip format
 
-- **FR5.1.2:** Table Performance Optimization
-  * Description: Efficient rendering and query optimization for large datasets
-  * Impact Weighting: User Experience / Performance
-  * Priority: Medium
-  * User Stories: US6.1.2, US12.2.1
+- **FR5.1.2:** Export Filtering and Selection
+  * Description: Export specific subsets of conversations based on filters or selection
+  * Impact Weighting: Precision / Efficiency
+  * Priority: High
+  * User Stories: US5.1.2
   * Tasks: [T-5.1.2]
   * User Story Acceptance Criteria:
-    - Table loads in < 500ms for 100 conversations
-    - Pagination limits rows to 25-100 per page (not all at once)
-    - Lazy loading for images or heavy content
-    - Sort and filter operations < 200ms
-    - Smooth scrolling without jank (60fps)
-    - Loading skeleton during initial load
-    - Infinite scroll option as alternative to pagination (user preference)
-    - Optimized database queries with proper indexing
-    - Query plan analysis showing index usage
-    - Lazy loading for non-critical data (e.g., conversation turns loaded on preview open)
+    - Export options: Selected conversations, Current filters, All approved, All data
+    - Conversation count displayed for each option
+    - Apply additional filters in export modal
+    - Option to exclude archived/rejected conversations
+    - Option to include/exclude metadata fields
+    - Sort order selection for export
   * Functional Requirements Acceptance Criteria:
-    - [To be filled]
+    - Export scope selector must use radio group
+    - Selected conversations option must use selectedConversationIds
+      Code Reference: `train-wireframe/src/stores/useAppStore.ts:41`
+    - Current filters option must apply active filterConfig
+      Code Reference: `train-wireframe/src/stores/useAppStore.ts:42`
+    - All approved option must filter by status: 'approved'
+    - All data option must export without filters
+    - Conversation count must be calculated dynamically per option
+    - Additional filters must be available in export modal
+    - Exclude options must use checkboxes for status types
+    - Metadata inclusion must use checklist of fields
+    - Sort order must match table sort options (created_at, quality_score, etc.)
+    - Export API must accept filter parameters
 
-### 5.2 Bulk Selection & Actions
+### 5.2 Export Execution
 
-- **FR5.2.1:** Multi-Select Conversations
-  * Description: Checkbox-based multi-selection interface with select-all capability
-  * Impact Weighting: Operational Efficiency / User Productivity
-  * Priority: High
-  * User Stories: US6.2.1
+- **FR5.2.1:** Background Export Processing
+  * Description: Handle large exports without blocking UI
+  * Impact Weighting: Performance / User Experience
+  * Priority: Medium
+  * User Stories: US5.2.1
   * Tasks: [T-5.2.1]
   * User Story Acceptance Criteria:
-    - Checkbox in each table row for individual selection
-    - Checkbox in table header selecting/deselecting all visible rows
-    - "Select All X Conversations" link to select across all pages (not just current page)
-    - Selection counter shows "X conversations selected" when > 0 selected
-    - Selected row highlighting with subtle background color
-    - Selection persists when changing pages
-    - Clear selection button when conversations selected
-    - Selection state visible in UI (e.g., blue badge showing count)
+    - Export starts in background for large datasets (>500 conversations)
+    - Toast notification: "Export started. You'll be notified when complete."
+    - Export progress visible in notification panel
+    - Download link appears in notification when complete
+    - Export history accessible from settings
+    - Retry failed exports
   * Functional Requirements Acceptance Criteria:
-    - [To be filled]
+    - Large export threshold must be 500 conversations
+    - Background processing must use BatchJob system
+      Code Reference: `train-wireframe/src/lib/types.ts:130-141`
+    - Toast notification must confirm export initiation
+    - Progress must be tracked in BatchJob with percentage
+    - Notification panel must list active and completed exports
+    - Completed export must generate download URL
+    - Download link must expire after 24 hours
+    - Export history must be stored in database with retention policy (30 days)
+    - Retry must reuse original export configuration
+      Code Reference: `train-wireframe/src/lib/types.ts:181-194` (ExportConfig)
+    - Failed exports must log error message
 
-- **FR5.2.2:** Bulk Actions Menu
-  * Description: Bulk operation capabilities for generate, approve, reject, and delete
-  * Impact Weighting: Operational Efficiency / Time Savings
-  * Priority: High
-  * User Stories: US6.2.2
+- **FR5.2.2:** Export Audit Trail
+  * Description: Track all export operations for compliance and auditing
+  * Impact Weighting: Security / Compliance
+  * Priority: Low
+  * User Stories: US5.2.2
   * Tasks: [T-5.2.2]
   * User Story Acceptance Criteria:
-    - Bulk actions toolbar appears when conversations selected
-    - Actions available: Generate Selected, Approve Selected, Reject Selected, Delete Selected
-    - Button text includes count (e.g., "Approve Selected (23)")
-    - Confirmation dialog for destructive actions (delete, reject)
-    - Dialog shows list of affected conversations (first 10, then "and X more...")
-    - Progress indicator during bulk action (e.g., "Processing 42 of 100...")
-    - Success/error feedback: "87 approved, 3 failed (view errors)"
-    - Failed actions show specific errors per conversation
-    - Undo option for 10 seconds after bulk action completes
+    - Export log records: timestamp, user, format, filter criteria, conversation count, file size
+    - Export history view with sortable columns
+    - Filter export history by date range, user, format
+    - Download previous export files (if retained)
+    - Export log CSV for compliance reporting
   * Functional Requirements Acceptance Criteria:
-    - [To be filled]
-
-### 5.3 Multi-Dimensional Filtering
-
-- **FR5.3.1:** Core Dimension Filters
-  * Description: Filter interface for persona, emotion, topic, intent, and tone dimensions
-  * Impact Weighting: Workflow Flexibility / Data Organization
-  * Priority: High
-  * User Stories: US3.1.1
-  * Tasks: [T-5.3.1]
-  * User Story Acceptance Criteria:
-    - Filter panel with dropdown for each dimension: Persona, Emotion, Topic, Intent, Tone
-    - Multi-select capability within each dimension (e.g., select multiple personas)
-    - Selected filters display as removable badges above table
-    - Filter combinations work together with AND logic
-    - Conversation count updates dynamically as filters applied (e.g., "Showing 23 of 100")
-    - "Clear All Filters" button resets to full dataset
-    - Filter panel collapsible to save screen space
-  * Functional Requirements Acceptance Criteria:
-    - [To be filled]
-
-- **FR5.3.2:** Status and Quality Filters
-  * Description: Specialized filters for workflow status and quality metrics
-  * Impact Weighting: Productivity / Focus
-  * Priority: High
-  * User Stories: US3.1.2
-  * Tasks: [T-5.3.2]
-  * User Story Acceptance Criteria:
-    - Status filter with options: Not Generated, Generating, Generated, Approved, Rejected, Failed
-    - Quality filter with range selector: All, High (8-10), Medium (6-7), Low (<6)
-    - Quick filter buttons for common views: "Needs Review", "Failed", "Approved"
-    - Filter by tier: Template, Scenario, Edge Case
-    - Filters persist in URL query parameters for bookmarking
-    - Share filtered view via URL link
-  * Functional Requirements Acceptance Criteria:
-    - [To be filled]
-
-### 5.4 Coverage Analysis
-
-- **FR5.4.1:** Coverage Visualization
-  * Description: Visual dashboard showing distribution across taxonomy dimensions
-  * Impact Weighting: Data Quality / Coverage Analysis
-  * Priority: Medium
-  * User Stories: US3.2.1
-  * Tasks: [T-5.4.1]
-  * User Story Acceptance Criteria:
-    - Coverage dashboard accessible from main navigation
-    - Bar chart showing conversation count per persona
-    - Pie chart showing emotional arc distribution
-    - Stacked bar chart showing tier distribution (Template/Scenario/Edge Case)
-    - Heatmap showing persona × emotion combinations with counts
-    - Gap identification highlighting underrepresented combinations (count < 3)
-    - Export coverage report as CSV or image
-  * Functional Requirements Acceptance Criteria:
-    - [To be filled]
-
-- **FR5.4.2:** Coverage Recommendations
-  * Description: Intelligent suggestions for filling taxonomy gaps
-  * Impact Weighting: Data Quality / Guidance
-  * Priority: Medium
-  * User Stories: US3.2.2
-  * Tasks: [T-5.4.2]
-  * User Story Acceptance Criteria:
-    - "Coverage Recommendations" panel showing top 5 missing combinations
-    - Recommendation displays: persona + emotion + topic with current count (e.g., "Anxious Investor + Fear + Portfolio Setup: 1 conversation")
-    - Target count display (e.g., "Recommended: 3-5 conversations")
-    - "Generate Recommended" button creates conversations for missing combinations
-    - Recommendations update dynamically as conversations are generated
-    - Dismiss recommendations individually or all at once
-  * Functional Requirements Acceptance Criteria:
-    - [To be filled]
+    - Export audit must create log entry in export_logs table
+    - Log fields must include: id, timestamp, user_id, format, config, count, file_size, status
+      Code Reference: `src/lib/database.ts` (Audit log pattern)
+    - Export history view must be accessible from settings
+    - History table must support sorting by timestamp, user, format, count
+    - Filter must support date range picker and multi-select for format
+    - Previous export files must be retrievable if within retention period (7 days)
+    - Compliance report must export logs as CSV
+    - Log entries must be immutable (append-only)
 
 ---

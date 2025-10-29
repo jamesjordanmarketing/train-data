@@ -1,7 +1,7 @@
 /**
  * FR Wireframe Prompt Generator (v4)
  *
- * - Uses v4 generator template: product/_prompt_engineering/04-FR-wireframes-prompt_v4.md
+ * - Uses v4 generator template: product/_prompt_engineering/04-FR-with-wireframes-create-tasks_v1.md
  * - For each section E[XX], extracts all FR IDs (e.g., FR1.1.0, FR1.2.0, FR1.3.0)
  * - Generates a generator prompt per FR by replacing all placeholders:
  *   [FR_NUMBER_PLACEHOLDER], [STAGE_NAME_PLACEHOLDER], [MINIMUM_PAGE_COUNT_PLACEHOLDER],
@@ -131,37 +131,47 @@ function fillTemplateForFR(template, params) {
     frLocateLineNumber,
     outputFilePath,
     journeyStageNumber,
+    productAbbreviation,
+    sectionNumber,
   } = params;
 
   let out = template;
 
+  // Replace new variables first
+  out = out.replace(/\[prod-abbr\]/g, productAbbreviation);
+  out = out.replace(/\[XX\]/g, sectionNumber);
+
+  // Replace existing variables
   out = out.replace(/\[FR_NUMBER_PLACEHOLDER\]/g, frNumber);
   out = out.replace(/\[STAGE_NAME_PLACEHOLDER\]/g, stageName);
   out = out.replace(/\[MINIMUM_PAGE_COUNT_PLACEHOLDER\]/g, String(minPageCount));
   out = out.replace(/\[SECTION_ID_PLACEHOLDER\]/g, sectionId);
   out = out.replace(/\[FR_LOCATE_FILE_PATH_PLACEHOLDER\]/g, frLocateFilePath);
   out = out.replace(/\[FR_LOCATE_LINE_PLACEHOLDER\]/g, String(frLocateLineNumber));
-  out = out.replace(/\[OUTPUT_FILE_PATH_PLACEHOLDER\]/g, outputFilePath);
   out = out.replace(/\[JOURNEY_STAGE_NUMBER\]/g, String(journeyStageNumber));
 
   // Safety second pass
+  out = out.replace(/\[prod-abbr\]/g, productAbbreviation);
+  out = out.replace(/\[XX\]/g, sectionNumber);
   out = out.replace(/\[FR_NUMBER_PLACEHOLDER\]/g, frNumber);
   out = out.replace(/\[STAGE_NAME_PLACEHOLDER\]/g, stageName);
   out = out.replace(/\[MINIMUM_PAGE_COUNT_PLACEHOLDER\]/g, String(minPageCount));
   out = out.replace(/\[SECTION_ID_PLACEHOLDER\]/g, sectionId);
   out = out.replace(/\[FR_LOCATE_FILE_PATH_PLACEHOLDER\]/g, frLocateFilePath);
   out = out.replace(/\[FR_LOCATE_LINE_PLACEHOLDER\]/g, String(frLocateLineNumber));
-  out = out.replace(/\[OUTPUT_FILE_PATH_PLACEHOLDER\]/g, outputFilePath);
   out = out.replace(/\[JOURNEY_STAGE_NUMBER\]/g, String(journeyStageNumber));
 
   return out;
 }
 
-function generatePromptsForSection(sectionId, sectionContent, promptTemplate, promptsOutputDir) {
+function generatePromptsForSection(sectionId, sectionContent, promptTemplate, promptsOutputDir, productAbbreviation) {
   const sectionHeader = extractSectionHeader(sectionContent);
   const { number: stageNumber, title: stageTitle } = getSectionNumberAndTitle(sectionHeader);
   const stageName = `Stage ${stageNumber} — ${stageTitle}`;
   const minPageCount = 3;
+
+  // Extract section number from sectionId (e.g., "E01" -> "01")
+  const sectionNumber = sectionId.replace(/^E/, '');
 
   const frList = parseFRList(sectionContent);
   if (frList.length === 0) {
@@ -171,7 +181,7 @@ function generatePromptsForSection(sectionId, sectionContent, promptTemplate, pr
 
   const combinedFilePath = path.join(promptsOutputDir, `04-FR-wireframes-prompt-${sectionId}.md`);
   const frLocateFilePath = `pmc/product/_mapping/fr-maps/prompts/04-FR-wireframes-prompt-${sectionId}.md`;
-  const outputFilePath = `pmc/product/_mapping/fr-maps/04-bmo-FR-wireframes-output-${sectionId}.md`;
+  const outputFilePath = `pmc/product/_mapping/fr-maps/04-${productAbbreviation}-${sectionNumber}-task-list_v2.md`;
 
   let combined = '';
   const separator = '\n\n';
@@ -190,6 +200,8 @@ function generatePromptsForSection(sectionId, sectionContent, promptTemplate, pr
       frLocateLineNumber: frStartLine,
       outputFilePath,
       journeyStageNumber: stageNumber,
+      productAbbreviation,
+      sectionNumber,
     });
 
     // Enhance with journey data
@@ -209,7 +221,7 @@ function generatePromptsForSection(sectionId, sectionContent, promptTemplate, pr
 function generateUIFunctionalRequirementsSegmentsV4(projectName, projectAbbreviation) {
   const functionalRequirementsFileName = `03-${projectAbbreviation}-functional-requirements.md`;
   const functionalRequirementsFilePath = resolveProjectPath(`product/${functionalRequirementsFileName}`);
-  const promptTemplatePath = resolveProjectPath(`product/_prompt_engineering/04-FR-wireframes-prompt_v4.md`);
+  const promptTemplatePath = resolveProjectPath(`product/_prompt_engineering/04-FR-with-wireframes-create-tasks_v1.md`);
 
   const outputDir = resolveProjectPath(`product/_mapping/fr-maps`);
   const promptsOutputDir = path.join(outputDir, 'prompts');
@@ -245,7 +257,7 @@ function generateUIFunctionalRequirementsSegmentsV4(projectName, projectAbbrevia
     console.log(`Wrote section file: ${sectionFilePath}`);
 
     // Generate combined generator prompts for all FRs in this section using v4 template
-    generatePromptsForSection(sectionId, sectionContent, promptTemplate, promptsOutputDir);
+    generatePromptsForSection(sectionId, sectionContent, promptTemplate, promptsOutputDir, projectAbbreviation);
   }
 
   const indexFilePath = path.join(outputDir, `04-FR-wireframes-index.md`);
@@ -261,7 +273,7 @@ function generateUIFunctionalRequirementsSegmentsV4(projectName, projectAbbrevia
       idx += `### ${sectionHeader}\n\n`;
       idx += `- **Requirements File**: [${sectionId} - ${sectionHeader}](./04-${projectAbbreviation}-FR-wireframes-${sectionId}.md)\n`;
       idx += `- **Generator Prompt File**: [Generator Prompts for ${sectionId} (all FRs)](./prompts/04-FR-wireframes-prompt-${sectionId}.md)\n`;
-      idx += `- **Figma Wireframe Outputs**: ./04-bmo-FR-wireframes-output-${sectionId}.md (appended by the generator agent)\n\n`;
+      idx += `- **Figma Wireframe Outputs**: ./04-${projectAbbreviation}-FR-wireframes-output-${sectionId}.md (appended by the generator agent)\n\n`;
     }
     return idx;
   })();

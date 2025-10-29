@@ -5,26 +5,26 @@
 
 ## Instructions
 
-You are a senior technical product manager and software architect tasked with generating a comprehensive feature and function task inventory. Given product requirements, wireframes, and overview documentation, you will create a detailed list of ALL features and functions required to transform the FR1.1 wireframes into a production-ready application with live data integration. 
+You are a senior technical product manager and software architect tasked with generating a comprehensive feature and function task inventory. Given product requirements, wireframes, and overview documentation, you will create a detailed list of ALL features and functions required to transform the FR wireframes into a production-ready application with live data integration.
 
 ## Input Requirements
 
 You will be provided with:
 1. **Product Overview Document** - Contains product vision, goals, architecture, and scope:
-`C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\01-bmo-overview.md`
+`C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\01-[prod-abbr]-overview.md`
 
 2. **Functional Requirements Document** - Contains detailed feature specifications and acceptance criteria for the whole project and context:
-`C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\03-train-functional-requirements-integrate-wireframe_v1.md`
+`C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\03-[prod-abbr]-functional-requirements.md`
 
-3. **Functional Requirements Scope Document** - Contains detailed feature specifications and acceptance criteria for FR1.X.Y that we are now building the task list for. We are ONLY building the task list for FR1.1 which are the requirements and acceptance criteria in this file: pmc\product\_mapping\fr-maps\04-bmo-FR-wireframes-E01.md 
+3. **Functional Requirements Scope Document** - Contains detailed feature specifications and acceptance criteria for FR1.X.Y that we are now building the task list for. We are ONLY building the task list for FR which are the requirements and acceptance criteria in this file: `C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\_mapping\fr-maps\04-[prod-abbr]-FR-wireframes-E[XX].md`
 
 4. **Wireframe/UI Documentation** - Contains visual designs and user interface specifications as displayed in the current implementation codebase `C:\Users\james\Master\BrightHub\BRun\train-data\train-wireframe\src`
 
-5. **Current Implementation** - This codebase: wireframes\FR-1.1C-Brun-upload-page contains existing wireframe's codebase, layout specification, and complete UI details. Please read this entire codebase as it is the latest wireframe `C:\Users\james\Master\BrightHub\BRun\train-data\train-wireframe\src`
+5. **Current Implementation** - This codebase: `C:\Users\james\Master\BrightHub\brun\train-data\train-wireframe\src` contains existing wireframe's codebase, layout specification, and complete UI details. Please read this entire codebase as it is the latest wireframe being used to build this module.
 
 ## Output File
 Output the full task list here: 
-`C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\_mapping\fr-maps\fr-tasks\04-train-01-task-list_v2.md`
+`C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\_mapping\fr-maps\04-[prod-abbr]-FR-wireframes-E[XX]-output.md`
 
 ## Output Format
 
@@ -191,6 +191,7 @@ Generate a comprehensive task list containing:
 - **User-centric ordering** enabling incremental testing and validation
 - **Clear dependencies** showing optimal development sequence
 - **Specific acceptance criteria** for each task and sub-task
-- **Ouput File** the full task list here: `C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\_mapping\fr-maps\fr-tasks\04-train-01-task-list_v2.md`
+- **Ouput File** the full task list here:
+`C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\_mapping\fr-maps\04-[prod-abbr]-FR-wireframes-E[XX]-output.md`
 
-The resulting task list should serve as a complete development roadmap for `C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\03-train-functional-requirements-integrate-wireframe_v1.md`, enabling any development team to build the `C:\Users\james\Master\BrightHub\BRun\train-data\train-wireframe\src` wireframes into a fully functional, production-ready application with live data integration.
+The resulting task list should serve as a complete development roadmap for `C:\Users\james\Master\BrightHub\BRun\train-data\pmc\product\_mapping\fr-maps\04-[prod-abbr]-FR-wireframes-E[XX].md`, enabling any development team to build the `C:\Users\james\Master\BrightHub\BRun\train-data\train-wireframe\src` wireframes into a fully functional, production-ready application with live data integration.

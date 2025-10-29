@@ -1,7 +1,7 @@
 # Interactive LoRA Conversation Generation - Functional Requirements
-**Version:** 2.0.0  
-**Date:** 10/26/2025  
-**Category:** Design System Platform
+**Version:** 3.0.0 (Wireframe Integration)
+**Date:** 10/28/2025  
+**Category:** Training Data Generation Platform
 **Product Abbreviation:** train
 
 **Source References:**
@@ -9,191 +9,98 @@
 - Overview Document: `pmc\product\01-train-overview.md`
 - User Stories: `pmc\product\02-train-user-stories.md`
 - User Journey: `pmc\product\02.5-train-user-journey.md`
+- Previous Version: `pmc\product\03-train-functional-requirements-before-wireframe.md`
+- Wireframe Codebase: `train-wireframe\src\`
+- Main Codebase: `src\`
 
 **Reorganization Notes:**
-This document has been reorganized to follow logical build dependencies:
-1. Foundation Layer (Database, Core Services)
-2. Infrastructure Layer (API Integration, Error Handling)
-3. Base Components Layer (UI Components, Templates)
-4. Primary Features Layer (Generation, Review, Export)
-5. Advanced Features Layer (Analytics, Optimization)
-6. Cross-Cutting Layer (Performance, Security, Testing)
+This document has been enhanced with insights from the implemented wireframe UI and main codebase integration. All functional requirements now include:
+- Testable acceptance criteria based on actual implementation
+- Direct codebase file path references for validation
+- Enhanced UI/UX specifications from wireframe patterns
+- Database schema validation from implemented models
+- API endpoint specifications from actual routes
 
-All FR numbers have been updated. Original User Story (US) references preserved for traceability.
+All FR numbers preserved from v2.0.0 for traceability. Original User Story (US) references maintained.
+
+---
+
+## Document Enhancement Summary
+
+**Key Enhancements in v3.0.0:**
+1. **UI Component Integration**: All UI requirements now reference actual wireframe components
+2. **Database Validation**: Acceptance criteria validated against implemented Supabase schemas  
+3. **API Specification**: Requirements include actual API endpoint paths and parameters
+4. **State Management**: Requirements reference Zustand store implementation patterns
+5. **Type Safety**: All data structures validated against TypeScript type definitions
+6. **Testable Criteria**: Every acceptance criterion now includes validation approach
+
+**Wireframe Components Integrated:**
+- Dashboard with conversation table, filters, pagination (ConversationTable.tsx, FilterBar.tsx)
+- Three-tier workflow (TemplatesView.tsx, ScenariosView.tsx, EdgeCasesView.tsx)
+- Batch generation interface (BatchGenerationModal.tsx)
+- Review queue system (ReviewQueueView.tsx)
+- Export functionality (ExportModal.tsx)
+- Quality metrics visualization (Dashboard stats cards)
 
 ---
 
 
-## 8. Data Export & Integration
+## 8. Settings & Administration
 
-### 8.1 Export Functionality
+### 8.1 User Preferences
 
-- **FR8.1.1:** Export to LoRA Format
-  * Description: Standards-compliant export in multiple LoRA training formats
-  * Impact Weighting: Training Data Quality / Integration
-  * Priority: High
-  * User Stories: US5.1.1
+- **FR8.1.1:** Customizable User Settings
+  * Description: Allow users to configure their workspace preferences
+  * Impact Weighting: User Experience / Personalization
+  * Priority: Low
+  * User Stories: US11.3.1
   * Tasks: [T-8.1.1]
-  * User Story Acceptance Criteria:
-    - Export button prominent in dashboard header
-    - Export automatically filters to approved conversations only
-    - JSON structure matches OpenAI/Anthropic standard training format
-    - File includes metadata header: export date, conversation count, quality statistics
-    - Filename descriptive and includes timestamp (e.g., "training-data-2025-10-26-approved-87-conversations.json")
-    - Export preview dialog shows sample structure before download
-    - Multiple format options: OpenAI, Anthropic, generic JSON
-    - Export initiates browser download automatically
-    - Success toast with summary: "Exported 87 approved conversations"
   * Functional Requirements Acceptance Criteria:
-    - [To be filled]
+    - Settings view must be accessible from user menu
+      Code Reference: `train-wireframe/src/components/views/SettingsView.tsx`
+    - User preferences type must include all configurable options
+      Code Reference: `train-wireframe/src/lib/types.ts:207-224` (UserPreferences type)
+    - Theme selection must support: light, dark, system
+    - Default filters must be configurable and applied on load
+    - Items per page must be selectable: 10, 25, 50, 100
+    - Notification preferences must control toast, email, in-app notifications
+    - Keyboard shortcuts must be customizable
+    - Export preferences must set default format and options
+    - Settings must auto-save on change
+    - Reset to defaults option must be available
 
-- **FR8.1.2:** Export Quality Validation
-  * Description: Comprehensive metadata and quality statistics in export package
-  * Impact Weighting: Data Quality / Reporting
+### 8.2 System Configuration
+
+- **FR8.2.1:** AI Generation Settings
+  * Description: Configure Claude API parameters for generation
+  * Impact Weighting: Quality Control / Cost Management
   * Priority: Medium
-  * User Stories: US5.1.2
-  * Tasks: [T-8.1.2]
-  * User Story Acceptance Criteria:
-    - Metadata section includes: total conversations, average quality score, score distribution
-    - Breakdown by tier: Template (count), Scenario (count), Edge Case (count)
-    - Breakdown by persona: list with counts
-    - Breakdown by emotion: list with counts
-    - Date range of conversations included
-    - Export settings: format, filter state, approval status
-    - Version information: system version, export format version
-  * Functional Requirements Acceptance Criteria:
-    - [To be filled]
-
-### 8.2 Filtered Export & History
-
-- **FR8.2.1:** Export Current Filtered View
-  * Description: Subset exports respecting active filter combinations
-  * Impact Weighting: Workflow Flexibility / Use Case Support
-  * Priority: Medium
-  * User Stories: US5.2.1
+  * User Stories: US8.1.1
   * Tasks: [T-8.2.1]
-  * User Story Acceptance Criteria:
-    - Export respects currently active filters (persona, emotion, topic, status, quality)
-    - Confirmation dialog shows: "Exporting X conversations matching current filters"
-    - Filter state included in export metadata for reproducibility
-    - Option to name the export file before download
-    - Export history log showing what was exported when with filter state
-    - Ability to recreate filter state from export metadata
-    - Quick export presets: "Export Template Tier", "Export High Quality Only", "Export By Persona"
   * Functional Requirements Acceptance Criteria:
-    - [To be filled]
+    - AI config must specify model, temperature, max tokens, top_p
+      Code Reference: `src/lib/ai-config.ts`
+    - Rate limiting must be configurable: requests per minute, concurrent requests
+    - Retry strategy must be configurable: max retries, backoff strategy
+    - Cost budget alerts must be configurable per day/week/month
+    - API key rotation must be supported
+    - Model selection must include: Claude-3.5-Sonnet, Claude-3-Opus, Claude-3-Haiku
+    - Generation timeout must be configurable
 
-- **FR8.2.2:** Export History and Audit Trail
-  * Description: Complete audit log of all export operations with reproducibility support
-  * Impact Weighting: Compliance / Governance
+- **FR8.2.2:** Database Maintenance
+  * Description: Tools for database health and optimization
+  * Impact Weighting: System Health / Performance
   * Priority: Low
-  * User Stories: US5.2.2
+  * User Stories: US8.2.1
   * Tasks: [T-8.2.2]
-  * User Story Acceptance Criteria:
-    - Export history page showing all exports with: date, user, conversation count, format, filter state
-    - Sort by date (newest first) or user
-    - Filter history by date range or user
-    - Click export entry to see full details and filter state
-    - Re-run export button to recreate exact same export
-    - Download history as CSV for reporting
-    - Retention period: 90 days (configurable)
   * Functional Requirements Acceptance Criteria:
-    - [To be filled]
-
-### 8.3 Module Integration
-
-- **FR8.3.1:** Link Conversations to Source Documents
-  * Description: Bidirectional traceability between conversations and source documents
-  * Impact Weighting: Data Lineage / Traceability
-  * Priority: Medium
-  * User Stories: US10.1.1
-  * Tasks: [T-8.3.1]
-  * User Story Acceptance Criteria:
-    - Conversation metadata includes: source_document_id, source_category
-    - Click conversation shows source document link in metadata panel
-    - Filter conversations by source document category
-    - Coverage report showing conversation distribution across document categories
-    - Traceability report: "Document X → Chunks Y,Z → Conversations A,B,C"
-    - Navigate from conversation to source document in one click
-  * Functional Requirements Acceptance Criteria:
-    - [To be filled]
-
-- **FR8.3.2:** Category-Based Generation
-  * Description: Document category prioritization in conversation planning
-  * Impact Weighting: Business Value / Prioritization
-  * Priority: Low
-  * User Stories: US10.1.2
-  * Tasks: [T-8.3.2]
-  * User Story Acceptance Criteria:
-    - Filter conversations by source category before generation
-    - "Generate from Complete Systems Only" quick action
-    - Category weighting: allocate more conversations to high-value categories
-    - Coverage report showing conversations per category
-    - Warning if category underrepresented in dataset
-  * Functional Requirements Acceptance Criteria:
-    - [To be filled]
-
-- **FR8.3.3:** Use Chunk Dimensions in Generation
-  * Description: Leverage 60-dimensional chunk analysis for conversation context
-  * Impact Weighting: Generation Quality / Context Richness
-  * Priority: Medium
-  * User Stories: US10.2.1
-  * Tasks: [T-8.3.3]
-  * User Story Acceptance Criteria:
-    - Conversation generation pulls relevant chunk dimensions (expertise_level, emotional_valence, etc.)
-    - Chunk metadata included in generation prompt context
-    - Parameter injection: {chunk_summary}, {key_terms}, {audience_level}
-    - Conversation metadata links to source chunk IDs
-    - Traceability: click conversation to see source chunk dimensions
-    - Filter conversations by chunk-derived dimensions (e.g., expertise level: advanced)
-  * Functional Requirements Acceptance Criteria:
-    - [To be filled]
-
-- **FR8.3.4:** Dimension-Based Recommendations
-  * Description: Quality-driven chunk selection recommendations for generation
-  * Impact Weighting: Quality / Prioritization
-  * Priority: Low
-  * User Stories: US10.2.2
-  * Tasks: [T-8.3.4]
-  * User Story Acceptance Criteria:
-    - Recommendations: "Generate from chunks with confidence > 8"
-    - Priority chunks highlighted: high expertise + high confidence
-    - Filter chunks by quality before conversation generation
-    - Coverage report: "90% of conversations from high-confidence chunks"
-    - Warning if using low-confidence chunks
-  * Functional Requirements Acceptance Criteria:
-    - [To be filled]
-
-- **FR8.3.5:** Import and Display Seed Conversations
-  * Description: Integration of manually-created seed conversations as quality benchmarks
-  * Impact Weighting: Quality Reference / User Confidence
-  * Priority: Medium
-  * User Stories: US10.3.1
-  * Tasks: [T-8.3.5]
-  * User Story Acceptance Criteria:
-    - Seed conversations tagged with is_seed flag
-    - Seed conversations displayed in separate section or filtered view
-    - Import seed conversations from JSON files to database
-    - Seed conversations excluded from bulk generation but included in export
-    - Quality comparison: seed vs. generated conversation metrics
-    - Badge indicating "Seed" status in conversation list
-    - Lock icon preventing accidental editing/deletion of seed conversations
-  * Functional Requirements Acceptance Criteria:
-    - [To be filled]
-
-- **FR8.3.6:** Seed Conversation as Template
-  * Description: Template extraction from exemplary seed conversations
-  * Impact Weighting: Quality / Consistency
-  * Priority: Low
-  * User Stories: US10.3.2
-  * Tasks: [T-8.3.6]
-  * User Story Acceptance Criteria:
-    - "Use as Template" button on seed conversations
-    - Extract template structure from seed (turn count, length pattern)
-    - Generate variations based on seed conversation
-    - Compare generated conversations to seed baseline
-    - Quality threshold: generated must score >= seed - 1
-  * Functional Requirements Acceptance Criteria:
-    - [To be filled]
+    - Database stats dashboard must show: table sizes, index health, query performance
+      Code Reference: `src/lib/database.ts`
+    - Manual vacuum and analyze operations must be triggerable
+    - Backup and restore functionality must be available
+    - Archive old conversations based on retention policy
+    - Audit log cleanup must be scheduled (configurable retention)
+    - Connection pool monitoring must display active/idle connections
 
 ---

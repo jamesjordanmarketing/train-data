@@ -1,102 +1,173 @@
-# Bright Run LoRA Fine Tuning Training Data Platform - Functional Requirements
-**Version:** 1.0.0  
-**Date:** 09/04/2025  
-**Category:** Design System Platform
-**Product Abbreviation:** bmo
+# Interactive LoRA Conversation Generation - Functional Requirements
+**Version:** 3.0.0 (Wireframe Integration)
+**Date:** 10/28/2025  
+**Category:** Training Data Generation Platform
+**Product Abbreviation:** train
 
 **Source References:**
-- Seed Story: `pmc\product\00-bmo-seed-story.md`
-- Overview Document: `pmc\product\01-bmo-overview.md`
-- User Stories: `pmc\product\02-bmo-user-stories.md`
+- Seed Story: `pmc\product\00-train-seed-story.md`
+- Overview Document: `pmc\product\01-train-overview.md`
+- User Stories: `pmc\product\02-train-user-stories.md`
+- User Journey: `pmc\product\02.5-train-user-journey.md`
+- Previous Version: `pmc\product\03-train-functional-requirements-before-wireframe.md`
+- Wireframe Codebase: `train-wireframe\src\`
+- Main Codebase: `src\`
+
+**Reorganization Notes:**
+This document has been enhanced with insights from the implemented wireframe UI and main codebase integration. All functional requirements now include:
+- Testable acceptance criteria based on actual implementation
+- Direct codebase file path references for validation
+- Enhanced UI/UX specifications from wireframe patterns
+- Database schema validation from implemented models
+- API endpoint specifications from actual routes
+
+All FR numbers preserved from v2.0.0 for traceability. Original User Story (US) references maintained.
+
+---
+
+## Document Enhancement Summary
+
+**Key Enhancements in v3.0.0:**
+1. **UI Component Integration**: All UI requirements now reference actual wireframe components
+2. **Database Validation**: Acceptance criteria validated against implemented Supabase schemas  
+3. **API Specification**: Requirements include actual API endpoint paths and parameters
+4. **State Management**: Requirements reference Zustand store implementation patterns
+5. **Type Safety**: All data structures validated against TypeScript type definitions
+6. **Testable Criteria**: Every acceptance criterion now includes validation approach
+
+**Wireframe Components Integrated:**
+- Dashboard with conversation table, filters, pagination (ConversationTable.tsx, FilterBar.tsx)
+- Three-tier workflow (TemplatesView.tsx, ScenariosView.tsx, EdgeCasesView.tsx)
+- Batch generation interface (BatchGenerationModal.tsx)
+- Review queue system (ReviewQueueView.tsx)
+- Export functionality (ExportModal.tsx)
+- Quality metrics visualization (Dashboard stats cards)
+
+---
 
 
-## 4. Training Data Generation Engine
+## 4. Generation Workflows
 
-- **FR4.1.1:** AI-Powered Question Generation
-  * Description: Implement sophisticated AI-powered question generation system that analyzes content depth and complexity to create contextually appropriate questions across multiple cognitive levels, organized by topic and difficulty, with regeneration capabilities and expert methodology consideration for optimal training data creation.
-  * Impact Weighting: Operational Efficiency
+### 4.1 Batch Generation
+
+- **FR4.1.1:** Generate All Tiers Workflow
+  * Description: Sequential generation of all conversations across all tiers
+  * Impact Weighting: Core Functionality / Efficiency
   * Priority: High
-  * User Stories: US4.1.1
+  * User Stories: US3.1.1
   * Tasks: [T-4.1.1]
   * User Story Acceptance Criteria:
-    - AI analyzes content depth and complexity to generate appropriate questions
-    - Questions reflect different cognitive levels (factual, analytical, synthesis)
-    - Question generation considers content context and expert methodology
-    - Generated questions organized by topic, intent, and difficulty level
-    - Ability to regenerate questions with different parameters
+    - "Generate All" button in header
+    - Modal shows generation plan: Tier 1 (30 conversations), Tier 2 (40), Tier 3 (20)
+    - Estimated cost displayed before confirmation
+    - Estimated time displayed (e.g., "~45 minutes")
+    - Confirmation required to start
+    - Progress modal shows: current tier, conversations completed/total, progress bar, elapsed time
+    - Cancel button to stop generation (completes current conversation)
+    - Completion summary: total generated, successful, failed, total cost
   * Functional Requirements Acceptance Criteria:
-    - Content analysis algorithms evaluate semantic depth, conceptual complexity, and knowledge type to inform question generation strategies
-    - Multi-level question generation creates factual recall, analytical reasoning, synthesis application, and creative problem-solving questions
-    - Context awareness ensures questions align with content scope, expert methodology, and intended learning objectives
-    - Difficulty calibration generates questions ranging from basic comprehension to advanced application with appropriate complexity indicators
-    - Topic organization automatically categorizes questions by subject area, concept type, and methodological approach for systematic coverage
-    - Intent classification identifies question purposes (knowledge assessment, skill demonstration, concept application, critical thinking)
-    - Question variety engine produces diverse question formats including open-ended, scenario-based, comparative, and problem-solving types
-    - Regeneration capabilities allow users to request alternative questions with adjustable parameters for style, difficulty, and focus area
-    - Quality filtering ensures generated questions are grammatically correct, logically coherent, and answerable from provided content
-    - Methodology integration incorporates expert frameworks, processes, and approaches into question formulation and context
-    - Batch generation supports creating multiple questions per content chunk with diversity optimization and redundancy prevention
-    - Question preview system shows sample questions before full generation with user approval and parameter adjustment options
-    - Expert input integration allows users to provide question templates, preferred styles, and domain-specific requirements
-    - Performance optimization generates 20+ questions per content chunk in under 30 seconds with concurrent processing capabilities
+    - Generate All button must be in DashboardView header
+      Code Reference: `train-wireframe/src/components/dashboard/DashboardView.tsx`
+    - Modal must use BatchGenerationModal component
+      Code Reference: `train-wireframe/src/components/generation/BatchGenerationModal.tsx`
+    - Generation plan must calculate from tier definitions
+      Code Reference: `train-wireframe/src/lib/types.ts:85-95` (Template tiers)
+    - Cost estimation must use rate: $0.015 per 1K tokens (input) + $0.075 per 1K tokens (output)
+    - Time estimation must use average: 20 seconds per conversation + API rate limits
+    - Confirmation must require explicit "Start Generation" button click
+    - Progress must be tracked via BatchJob state
+      Code Reference: `train-wireframe/src/lib/types.ts:130-141` (BatchJob type)
+    - Progress bar must show percentage: (completedCount / totalConversations) * 100
+    - Cancel button must set BatchJob status to 'cancelled'
+    - Completion summary must aggregate results from all tiers
+    - Failed generations must be logged with error messages
+    - Success toast must show final statistics
 
-- **FR4.1.2:** Expert Answer Customization System
-  * Description: Implement comprehensive expert answer customization system with rich text editing, side-by-side comparison, methodology tagging, voice preservation guidance, and value-add visualization to enable experts to transform generic answers into distinctive responses reflecting their unique expertise and approach.
-  * Impact Weighting: Operational Efficiency
-  * Priority: High
-  * User Stories: US4.1.2, US4.1.3
-  * Tasks: [T-4.1.2], [T-4.1.3]
-  * User Story Acceptance Criteria:
-    - Rich text editing interface for comprehensive answer refinement
-    - Side-by-side comparison of generic vs. customized answers
-    - Methodology tagging and categorization during answer editing
-    - Voice preservation guidance and consistency scoring
-    - Bulk editing capabilities for similar answer patterns
-    - Clear diff visualization highlighting changes and improvements
-    - Value-add metrics showing enhancement quality and impact
-    - Visual representation of customization impact on training data quality
-    - Quantitative measures of improvement over baseline answers
-    - Export capabilities for value-add documentation
-  * Functional Requirements Acceptance Criteria:
-    - Rich text editor provides full formatting capabilities including bold, italic, lists, links, and structured content with auto-save every 10 seconds
-    - Side-by-side comparison interface displays generic and customized answers with synchronized scrolling and highlighting of differences
-    - Real-time diff visualization uses color coding to show additions, deletions, and modifications with detailed change annotations
-    - Methodology tagging system enables categorization by expert approach, framework type, industry context, and application domain
-    - Voice consistency scoring analyzes writing style, terminology usage, and communication patterns with feedback for alignment improvement
-    - Voice preservation guidance provides real-time suggestions for maintaining expert tone, style, and terminology throughout customization
-    - Bulk editing interface enables pattern-based modifications across multiple similar answers with preview and batch application capabilities
-    - Value-add metrics calculate enhancement scores based on uniqueness, depth, practical applicability, and competitive differentiation
-    - Impact visualization shows quantitative improvements including content depth increase, uniqueness score, and methodology integration level
-    - Quality comparison provides before/after analysis with scoring metrics for clarity, completeness, and expert value addition
-    - Customization templates allow experts to define standard enhancements and apply consistent improvements across answer sets
-    - Version control maintains history of all modifications with ability to revert changes and compare different customization approaches
-    - Export functionality generates value-add reports showing enhancement statistics and customization impact for project documentation
-    - Collaboration features enable multiple experts to contribute to answer refinement with conflict resolution and approval workflows
-
-- **FR4.1.3:** Metadata and Categorization Framework
-  * Description: Implement comprehensive metadata and categorization framework with multi-dimensional tagging system covering topics, intent, style, methodology, and custom categories to enable sophisticated training data organization that reflects expert knowledge structure and supports targeted training objectives.
-  * Impact Weighting: Operational Efficiency
+- **FR4.1.2:** Tier-Specific Batch Generation
+  * Description: Generate all conversations for a single tier
+  * Impact Weighting: Flexibility / Workflow Optimization
   * Priority: Medium
-  * User Stories: US4.1.4
-  * Tasks: [T-4.1.4]
+  * User Stories: US3.1.2
+  * Tasks: [T-4.1.2]
   * User Story Acceptance Criteria:
-    - Comprehensive metadata tagging system with predefined and custom categories
-    - Topic categorization reflecting expert knowledge framework
-    - Intent classification (instructional, analytical, creative, problem-solving)
-    - Style tagging (formal, conversational, technical, persuasive)
-    - Methodology tagging linking to expert frameworks and approaches
+    - Tier selector in generation modal: Template, Scenario, Edge Case
+    - "Generate Tier" button
+    - Progress shows only selected tier statistics
+    - Option to regenerate failed conversations from previous batch
+    - Option to generate only missing conversations (fill gaps)
+    - Tier completion badge in UI: "Tier 1: 30/30 complete ✓"
   * Functional Requirements Acceptance Criteria:
-    - Multi-dimensional tagging system supports topic, intent, style, methodology, difficulty, audience, and custom category assignments
-    - Topic categorization creates hierarchical structures reflecting expert knowledge domains with nested subcategories and cross-references
-    - Intent classification automatically analyzes QA pairs to identify instructional, analytical, creative, problem-solving, and assessment purposes
-    - Style tagging evaluates communication approach including formal, conversational, technical, persuasive, supportive, and authoritative tones
-    - Methodology linking connects training pairs to specific expert frameworks, processes, approaches, and proprietary techniques
-    - Custom category creation enables experts to define domain-specific tags with descriptions, usage guidelines, and application rules
-    - Bulk tagging operations support pattern-based assignment with smart suggestions and batch application across similar content
-    - Tag validation ensures consistency and prevents conflicts with recommendations for consolidation and optimization
-    - Advanced filtering combines multiple metadata dimensions with boolean logic for precise content selection and organization
-    - Tag analytics provide usage statistics, distribution analysis, and gap identification to optimize categorization completeness
-    - Export integration includes all metadata in training data exports with configurable field mapping and format customization
-    - Tag inheritance applies parent category properties to child elements with override capabilities for specific customization
-    - Quality assurance validates tag appropriateness and suggests corrections for misapplied or inconsistent categorization
-    - Integration workflow ensures metadata supports training objectives with coverage analysis and recommendation reporting
+    - Tier selector must use Select component
+      Code Reference: `train-wireframe/src/components/ui/select.tsx`
+    - Generate Tier must filter templates by selectedTier
+      Code Reference: `train-wireframe/src/lib/types.ts:69` (Template tier field)
+    - Progress must track only selected tier conversations
+    - Regenerate failed option must query conversations with status 'failed'
+    - Fill gaps option must calculate missing conversation_ids per tier
+    - Completion badge must show count: conversations with tier X / total tier X templates
+    - Badge must use Badge component with variant based on completion %
+      Code Reference: `train-wireframe/src/components/ui/badge.tsx`
+    - Generation API must accept tier filter parameter
+
+### 4.2 Single Conversation Generation
+
+- **FR4.2.1:** Manual Single Generation
+  * Description: Generate a single conversation with custom parameters
+  * Impact Weighting: Flexibility / Testing
+  * Priority: Medium
+  * User Stories: US3.2.1
+  * Tasks: [T-4.2.1]
+  * User Story Acceptance Criteria:
+    - "Generate Single" button opens form
+    - Form fields: Template (dropdown), Persona (dropdown), Emotion (dropdown), Custom parameters (optional)
+    - Preview resolved prompt template
+    - "Generate" button triggers single API call
+    - Loading state shows "Generating conversation..."
+    - Success displays conversation preview with option to save
+    - Error displays message with retry option
+  * Functional Requirements Acceptance Criteria:
+    - Generate Single button must open SingleGenerationForm modal
+      Code Reference: `train-wireframe/src/components/generation/SingleGenerationForm.tsx`
+    - Template dropdown must list active templates
+      Code Reference: `train-wireframe/src/lib/types.ts:64-73`
+    - Persona dropdown must list available personas
+      Code Reference: `train-wireframe/src/lib/types.ts:257-265` (Persona definitions)
+    - Emotion dropdown must list emotion options
+    - Custom parameters must allow key-value pair entry
+    - Preview must resolve template with selected parameters
+    - Generate button must call conversation generation API endpoint
+    - Loading state must disable form and show spinner
+    - Success must display ConversationPreview component
+    - Error must show error message with retry button
+    - Save option must persist conversation to database
+    - Modal must support cancel/close actions
+
+- **FR4.2.2:** Regenerate Existing Conversation
+  * Description: Regenerate conversation while preserving metadata and context
+  * Impact Weighting: Quality Improvement / Iteration
+  * Priority: Medium
+  * User Stories: US3.2.2
+  * Tasks: [T-4.2.2]
+  * User Story Acceptance Criteria:
+    - Regenerate action in dropdown menu
+    - Modal pre-fills parameters from existing conversation
+    - Option to modify parameters before regenerating
+    - Old conversation archived (status: 'archived')
+    - New conversation linked to original via parentId
+    - Version history displayed in conversation detail view
+    - Toast notification: "Conversation regenerated. Previous version archived."
+  * Functional Requirements Acceptance Criteria:
+    - Regenerate action must be available in conversation dropdown
+      Code Reference: `train-wireframe/src/components/dashboard/ConversationTable.tsx`
+    - Modal must pre-populate form with existing conversation metadata
+      Code Reference: `train-wireframe/src/lib/types.ts:44` (parameters field)
+    - Parameters must be editable before regeneration
+    - Original conversation status must update to 'archived'
+    - New conversation must set parentId to original conversation_id
+      Code Reference: `train-wireframe/src/lib/types.ts:45-46`
+    - Version history query must follow parentId chain
+    - Conversation detail must display version number and link to previous versions
+    - Toast must confirm successful regeneration
+    - API endpoint must support regeneration with archival logic
+
+---

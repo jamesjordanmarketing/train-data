@@ -1,7 +1,7 @@
 # Interactive LoRA Conversation Generation - Functional Requirements
-**Version:** 2.0.0  
-**Date:** 10/26/2025  
-**Category:** Design System Platform
+**Version:** 3.0.0 (Wireframe Integration)
+**Date:** 10/28/2025  
+**Category:** Training Data Generation Platform
 **Product Abbreviation:** train
 
 **Source References:**
@@ -9,55 +9,79 @@
 - Overview Document: `pmc\product\01-train-overview.md`
 - User Stories: `pmc\product\02-train-user-stories.md`
 - User Journey: `pmc\product\02.5-train-user-journey.md`
+- Previous Version: `pmc\product\03-train-functional-requirements-before-wireframe.md`
+- Wireframe Codebase: `train-wireframe\src\`
+- Main Codebase: `src\`
 
 **Reorganization Notes:**
-This document has been reorganized to follow logical build dependencies:
-1. Foundation Layer (Database, Core Services)
-2. Infrastructure Layer (API Integration, Error Handling)
-3. Base Components Layer (UI Components, Templates)
-4. Primary Features Layer (Generation, Review, Export)
-5. Advanced Features Layer (Analytics, Optimization)
-6. Cross-Cutting Layer (Performance, Security, Testing)
+This document has been enhanced with insights from the implemented wireframe UI and main codebase integration. All functional requirements now include:
+- Testable acceptance criteria based on actual implementation
+- Direct codebase file path references for validation
+- Enhanced UI/UX specifications from wireframe patterns
+- Database schema validation from implemented models
+- API endpoint specifications from actual routes
 
-All FR numbers have been updated. Original User Story (US) references preserved for traceability.
+All FR numbers preserved from v2.0.0 for traceability. Original User Story (US) references maintained.
+
+---
+
+## Document Enhancement Summary
+
+**Key Enhancements in v3.0.0:**
+1. **UI Component Integration**: All UI requirements now reference actual wireframe components
+2. **Database Validation**: Acceptance criteria validated against implemented Supabase schemas  
+3. **API Specification**: Requirements include actual API endpoint paths and parameters
+4. **State Management**: Requirements reference Zustand store implementation patterns
+5. **Type Safety**: All data structures validated against TypeScript type definitions
+6. **Testable Criteria**: Every acceptance criterion now includes validation approach
+
+**Wireframe Components Integrated:**
+- Dashboard with conversation table, filters, pagination (ConversationTable.tsx, FilterBar.tsx)
+- Three-tier workflow (TemplatesView.tsx, ScenariosView.tsx, EdgeCasesView.tsx)
+- Batch generation interface (BatchGenerationModal.tsx)
+- Review queue system (ReviewQueueView.tsx)
+- Export functionality (ExportModal.tsx)
+- Quality metrics visualization (Dashboard stats cards)
 
 ---
 
 
-## 10. Performance & Scalability
+## 10. Error Handling & Recovery
 
-### 10.1 Generation Speed
+### 10.1 Error Management
 
-- **FR10.1.1:** Single Conversation Generation Speed
-  * Description: Optimized performance for individual conversation requests
-  * Impact Weighting: User Experience / Time-to-Value
-  * Priority: Medium
-  * User Stories: US12.3.1
+- **FR10.1.1:** Comprehensive Error Handling
+  * Description: Graceful error handling across all system operations
+  * Impact Weighting: Reliability / User Trust
+  * Priority: High
+  * User Stories: US10.1.1
   * Tasks: [T-10.1.1]
-  * User Story Acceptance Criteria:
-    - Average generation time: 15-45 seconds
-    - Fast path for simple conversations (<8 turns): 10-20 seconds
-    - Progress indicator during generation
-    - Timeout after 90 seconds with retry option
-    - Performance monitoring showing average generation time per tier
-    - Alert if generation time exceeds 60 seconds consistently
   * Functional Requirements Acceptance Criteria:
-    - [To be filled]
+    - API errors must be caught and displayed with user-friendly messages
+      Code Reference: `src/app/api/chunks/generate-dimensions/route.ts`
+    - Rate limit errors must trigger automatic retry with backoff
+      Code Reference: `src/lib/ai-config.ts`
+    - Network errors must display with retry option
+    - Database errors must be logged and sanitized before user display
+      Code Reference: `src/lib/database.ts`
+    - Generation failures must be saved with error details for debugging
+    - Toast notifications must distinguish error types: temporary, permanent, action required
+    - Error boundary must catch React errors and display fallback UI
+    - Error logs must be aggregated and searchable
 
-- **FR10.1.2:** Batch Generation Speed
-  * Description: Parallel processing optimization for batch operations
-  * Impact Weighting: User Experience / Time-to-Value
+- **FR10.1.2:** Data Recovery
+  * Description: Mechanisms to recover from partial failures and data corruption
+  * Impact Weighting: Data Integrity / Business Continuity
   * Priority: Medium
-  * User Stories: US12.3.2
+  * User Stories: US10.1.2
   * Tasks: [T-10.1.2]
-  * User Story Acceptance Criteria:
-    - Batch of 100 conversations: 30-60 minutes total time
-    - Parallel processing: 3 conversations simultaneously (where API limits allow)
-    - Progress updates every 2-5 seconds
-    - Time estimates based on actual generation rates (not fixed estimate)
-    - Optimization: group similar conversations to reuse prompt templates
-    - Performance report showing actual vs. estimated time
   * Functional Requirements Acceptance Criteria:
-    - [To be filled]
+    - Failed batch jobs must support resume from last successful conversation
+      Code Reference: `train-wireframe/src/lib/types.ts:130-141` (BatchJob type)
+    - Conversation drafts must be auto-saved during generation
+    - Incomplete conversations must be flagged with recovery options
+    - Database transactions must use rollback on error
+    - Backup exports must be triggered before bulk delete operations
+    - Recovery wizard must guide users through data restoration
 
 ---

@@ -1,74 +1,102 @@
-# Bright Run LoRA Fine Tuning Training Data Platform - Functional Requirements
-**Version:** 1.0.0  
-**Date:** 09/04/2025  
-**Category:** Design System Platform
-**Product Abbreviation:** bmo
+# Interactive LoRA Conversation Generation - Functional Requirements
+**Version:** 3.0.0 (Wireframe Integration)
+**Date:** 10/28/2025  
+**Category:** Training Data Generation Platform
+**Product Abbreviation:** train
 
 **Source References:**
-- Seed Story: `pmc\product\00-bmo-seed-story.md`
-- Overview Document: `pmc\product\01-bmo-overview.md`
-- User Stories: `pmc\product\02-bmo-user-stories.md`
+- Seed Story: `pmc\product\00-train-seed-story.md`
+- Overview Document: `pmc\product\01-train-overview.md`
+- User Stories: `pmc\product\02-train-user-stories.md`
+- User Journey: `pmc\product\02.5-train-user-journey.md`
+- Previous Version: `pmc\product\03-train-functional-requirements-before-wireframe.md`
+- Wireframe Codebase: `train-wireframe\src\`
+- Main Codebase: `src\`
+
+**Reorganization Notes:**
+This document has been enhanced with insights from the implemented wireframe UI and main codebase integration. All functional requirements now include:
+- Testable acceptance criteria based on actual implementation
+- Direct codebase file path references for validation
+- Enhanced UI/UX specifications from wireframe patterns
+- Database schema validation from implemented models
+- API endpoint specifications from actual routes
+
+All FR numbers preserved from v2.0.0 for traceability. Original User Story (US) references maintained.
+
+---
+
+## Document Enhancement Summary
+
+**Key Enhancements in v3.0.0:**
+1. **UI Component Integration**: All UI requirements now reference actual wireframe components
+2. **Database Validation**: Acceptance criteria validated against implemented Supabase schemas  
+3. **API Specification**: Requirements include actual API endpoint paths and parameters
+4. **State Management**: Requirements reference Zustand store implementation patterns
+5. **Type Safety**: All data structures validated against TypeScript type definitions
+6. **Testable Criteria**: Every acceptance criterion now includes validation approach
+
+**Wireframe Components Integrated:**
+- Dashboard with conversation table, filters, pagination (ConversationTable.tsx, FilterBar.tsx)
+- Three-tier workflow (TemplatesView.tsx, ScenariosView.tsx, EdgeCasesView.tsx)
+- Batch generation interface (BatchGenerationModal.tsx)
+- Review queue system (ReviewQueueView.tsx)
+- Export functionality (ExportModal.tsx)
+- Quality metrics visualization (Dashboard stats cards)
+
+---
 
 
-## 7. Export and Training Data Delivery
+## 7. Templates, Scenarios, and Edge Cases Management
 
-- **FR7.1.1:** LoRA-Compatible Export System
-  * Description: Implement comprehensive LoRA-compatible export system with multiple format support, validation, quality assurance, and batch processing capabilities to deliver professionally formatted training data that meets LoRA fine-tuning requirements with complete metadata preservation and duplicate detection.
-  * Impact Weighting: Operational Efficiency
+### 7.1 Template Management
+
+- **FR7.1.1:** Template CRUD Operations
+  * Description: Create, read, update, delete conversation templates
+  * Impact Weighting: Core Functionality / Flexibility
   * Priority: High
-  * User Stories: US7.1.1, US7.1.2
-  * Tasks: [T-7.1.1], [T-7.1.2]
-  * User Story Acceptance Criteria:
-    - Export in standard LoRA training data formats (JSONL, CSV, etc.)
-    - Proper formatting with instruction-response pairs
-    - Metadata preservation in export format
-    - Batch export capabilities for large datasets
-    - Export validation and format compliance checking
-    - Format validation ensuring compliance with LoRA requirements
-    - Content quality validation with scoring metrics
-    - Duplicate detection and removal capabilities
-    - Training data statistics and quality reports
-    - Pre-export validation with error reporting and resolution guidance
+  * User Stories: US7.1.1
+  * Tasks: [T-7.1.1]
   * Functional Requirements Acceptance Criteria:
-    - Multi-format export support includes JSONL, CSV, HuggingFace Datasets, Parquet, and custom JSON schemas with configurable field mapping
-    - LoRA format compliance ensures proper instruction-response pair structure with system prompts, user inputs, and assistant responses correctly formatted
-    - Metadata preservation includes all categorization tags, quality scores, source attribution, and generation parameters in export files
-    - Batch export processing handles large datasets (100K+ pairs) with progress tracking, resume capabilities, and memory-efficient streaming
-    - Export validation performs comprehensive checks for format compliance, data integrity, encoding consistency, and structural correctness
-    - Quality assurance validation ensures exported pairs meet minimum quality thresholds with score-based filtering and manual override options
-    - Duplicate detection algorithms identify and remove redundant content using semantic similarity and exact match detection methods
-    - Content validation verifies question-answer coherence, response completeness, and instruction clarity before export inclusion
-    - Training data statistics generate comprehensive reports including pair counts, quality distributions, topic coverage, and metadata analysis
-    - Pre-export validation provides detailed error reporting with specific issues identified and suggested resolution actions
-    - Export customization enables users to select specific subsets, apply filters, and configure output structure based on training requirements
-    - Format transformation automatically converts internal data structures to target export formats with data type preservation and encoding optimization
-    - Quality reporting generates export summaries including success metrics, filtered content statistics, and validation results
-    - Integration testing validates exported data compatibility with popular LoRA training frameworks and tools
+    - Template view must display all templates in table format
+      Code Reference: `train-wireframe/src/components/views/TemplatesView.tsx`
+    - Create template form must include: name, tier, prompt, variables, active status
+      Code Reference: `train-wireframe/src/lib/types.ts:64-73` (Template type)
+    - Template variables must be defined with type, required flag, default value
+      Code Reference: `train-wireframe/src/lib/types.ts:76-82` (TemplateVariable type)
+    - Duplicate template function must copy all properties except ID
+    - Delete template must require confirmation and check for dependencies
+    - Import/export templates as JSON for backup and sharing
 
-- **FR7.1.2:** Dataset Analytics and Metrics
-  * Description: Implement comprehensive dataset analytics and metrics system that provides detailed analysis of training data characteristics, quality distributions, topic coverage, voice consistency, and ROI calculations to enable users to understand and validate the value and effectiveness of their generated training datasets.
-  * Impact Weighting: Strategic Growth
+- **FR7.1.2:** Scenario Library
+  * Description: Manage scenario definitions for Tier 2 conversations
+  * Impact Weighting: Content Organization / Scalability
   * Priority: Medium
-  * User Stories: US7.1.3
-  * Tasks: [T-7.1.3]
-  * User Story Acceptance Criteria:
-    - Total training pairs generated with expansion factor achieved
-    - Quality score distribution and average ratings
-    - Topic distribution and coverage analysis
-    - Voice consistency metrics across all generated content
-    - ROI metrics showing time invested vs. training pairs created
+  * User Stories: US7.3.1
+  * Tasks: [T-7.1.2]
   * Functional Requirements Acceptance Criteria:
-    - Training pair metrics provide total counts, expansion factor achievements, and generation success rates with historical trend analysis
-    - Quality distribution analysis displays score histograms, percentile rankings, and average quality ratings with benchmark comparisons
-    - Topic coverage analysis shows content distribution across categories with gap identification and balance recommendations
-    - Voice consistency scoring tracks communication pattern preservation across all generated variations with drift detection alerts
-    - ROI calculation dashboard compares time investment versus training pairs generated with value multiplication metrics and efficiency improvements
-    - Diversity measurement analyzes semantic variety across generated content using embedding-based similarity scoring and uniqueness percentages
-    - Content analysis provides statistical breakdowns including average response length, complexity scores, and difficulty distribution
-    - Comparative analytics benchmark current dataset against industry standards and previous projects with improvement recommendations
-    - Export analytics track usage patterns, popular formats, and downstream training effectiveness where available
-    - Quality trend monitoring identifies patterns over time with early warning systems for quality degradation or improvement opportunities
-    - Metadata analysis provides insights into tag usage, categorization effectiveness, and content organization optimization suggestions
-    - Performance metrics track generation efficiency, processing speed, and resource utilization with optimization recommendations
-    - Business impact assessment calculates competitive advantage potential and knowledge asset value based on content uniqueness and quality
-    - Reporting dashboard generates exportable analytics reports with visualizations suitable for stakeholder presentation and project documentation
+    - Scenarios view must display all scenarios grouped by category
+      Code Reference: `train-wireframe/src/components/views/ScenariosView.tsx`
+    - Scenario type must include: name, category, context, complexity, emotionalContext
+      Code Reference: `train-wireframe/src/lib/types.ts:97-104` (Scenario type)
+    - Link scenarios to specific templates for guided generation
+    - Scenario complexity levels must be: simple, moderate, complex
+    - Scenarios must support tagging for cross-category relationships
+    - Bulk import scenarios from CSV
+
+- **FR7.1.3:** Edge Case Repository
+  * Description: Manage edge case definitions for Tier 3 conversations
+  * Impact Weighting: Robustness / Coverage
+  * Priority: Medium
+  * User Stories: US7.4.1
+  * Tasks: [T-7.1.3]
+  * Functional Requirements Acceptance Criteria:
+    - Edge cases view must display all edge cases
+      Code Reference: `train-wireframe/src/components/views/EdgeCasesView.tsx`
+    - Edge case type must include: name, description, triggerCondition, expectedBehavior, riskLevel
+      Code Reference: `train-wireframe/src/lib/types.ts:109-116` (EdgeCase type)
+    - Risk levels must be: low, medium, high, critical
+    - Edge cases must be linkable to scenarios they modify
+    - Coverage report must show which edge cases have been tested
+    - Version edge cases to track changes over time
+
+---
