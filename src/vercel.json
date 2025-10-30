@@ -12,5 +12,15 @@
     "app/api/chunks/generate-dimensions/route.ts": {
       "maxDuration": 300
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/cron/hourly-monitoring",
+      "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron/daily-maintenance",
+      "schedule": "0 2 * * *"
+    }
+  ]
 }
