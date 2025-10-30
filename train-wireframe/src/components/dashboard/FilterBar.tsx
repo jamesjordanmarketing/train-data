@@ -178,23 +178,79 @@ export function FilterBar({ onExport, onBulkAction }: FilterBarProps) {
                   </Select>
                 </div>
                 
-                {/* Quality Score Filter */}
-                <div className="space-y-2">
-                  <Label>Minimum Quality Score: {filters.qualityScoreMin || 0}</Label>
-                  <Slider
-                    value={[filters.qualityScoreMin || 0]}
-                    onValueChange={([value]) => {
-                      if (value === 0) {
-                        const { qualityScoreMin, ...rest } = filters;
-                        setFilters(rest);
-                      } else {
-                        setFilters({ ...filters, qualityScoreMin: value });
-                      }
-                    }}
-                    max={10}
-                    step={0.5}
-                    className="w-full"
-                  />
+                {/* Quality Score Range Filter */}
+                <div className="space-y-3">
+                  <Label className="text-sm font-semibold">Quality Score Range</Label>
+                  
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">Min:</span>
+                      <span className="font-semibold">{filters.qualityScoreMin || 0}</span>
+                    </div>
+                    <Slider
+                      value={[filters.qualityScoreMin || 0]}
+                      onValueChange={([value]) => {
+                        if (value === 0) {
+                          const { qualityScoreMin, ...rest } = filters;
+                          setFilters(rest);
+                        } else {
+                          setFilters({ ...filters, qualityScoreMin: value });
+                        }
+                      }}
+                      max={10}
+                      step={0.5}
+                      className="w-full"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">Max:</span>
+                      <span className="font-semibold">{filters.qualityScoreMax || 10}</span>
+                    </div>
+                    <Slider
+                      value={[filters.qualityScoreMax || 10]}
+                      onValueChange={([value]) => {
+                        if (value === 10) {
+                          const { qualityScoreMax, ...rest } = filters;
+                          setFilters(rest);
+                        } else {
+                          setFilters({ ...filters, qualityScoreMax: value });
+                        }
+                      }}
+                      max={10}
+                      step={0.5}
+                      className="w-full"
+                    />
+                  </div>
+
+                  {/* Quick quality filters */}
+                  <div className="flex flex-wrap gap-1.5 pt-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-7 text-xs"
+                      onClick={() => setFilters({ ...filters, qualityScoreMin: 8 })}
+                    >
+                      High (≥8)
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-7 text-xs"
+                      onClick={() => setFilters({ ...filters, qualityScoreMin: 6, qualityScoreMax: 8 })}
+                    >
+                      Medium (6-8)
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-7 text-xs"
+                      onClick={() => setFilters({ ...filters, qualityScoreMax: 6 })}
+                    >
+                      Low (<6)
+                    </Button>
+                  </div>
                 </div>
               </div>
               
@@ -269,18 +325,19 @@ export function FilterBar({ onExport, onBulkAction }: FilterBarProps) {
             </Badge>
           )}
           
-          {filters.qualityScoreMin !== undefined && filters.qualityScoreMin > 0 && (
+          {(filters.qualityScoreMin !== undefined && filters.qualityScoreMin > 0) || 
+           (filters.qualityScoreMax !== undefined && filters.qualityScoreMax < 10) ? (
             <Badge variant="secondary" className="gap-1">
-              Quality ≥ {filters.qualityScoreMin}
+              Quality: {filters.qualityScoreMin || 0}-{filters.qualityScoreMax || 10}
               <X 
                 className="h-3 w-3 cursor-pointer" 
                 onClick={() => {
-                  const { qualityScoreMin, ...rest } = filters;
+                  const { qualityScoreMin, qualityScoreMax, ...rest } = filters;
                   setFilters(rest);
                 }}
               />
             </Badge>
-          )}
+          ) : null}
           
           {hasActiveFilters && (
             <Button 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
@@ -6,13 +6,161 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
 import { useAppStore } from '../../stores/useAppStore';
-import { Upload, Plus } from 'lucide-react';
+import { Upload, Plus, AlertCircle, CheckCircle, Clock, Activity } from 'lucide-react';
 import { toast } from 'sonner@2.0.3';
+
+/**
+ * Rate limit status from the API
+ */
+interface QueueStatus {
+  queueSize: number;
+  currentUtilization: number;
+  estimatedWaitTime: number;
+  rateLimitStatus: 'healthy' | 'approaching' | 'throttled';
+  isProcessing: boolean;
+  isPaused: boolean;
+  activeRequests: number;
+  maxConcurrent: number;
+  totalProcessed: number;
+  totalFailed: number;
+}
+
+/**
+ * Rate Limit Status Indicator Component
+ */
+function RateLimitIndicator({ status }: { status: QueueStatus | null }) {
+  if (!status) {
+    return (
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 flex items-center gap-3">
+        <Activity className="h-5 w-5 text-gray-400 animate-pulse" />
+        <div className="text-sm text-gray-600">Loading rate limit status...</div>
+      </div>
+    );
+  }
+
+  const { rateLimitStatus, currentUtilization, queueSize, estimatedWaitTime, isPaused, activeRequests, maxConcurrent } = status;
+  
+  // Determine indicator color and icon based on status
+  let bgColor = 'bg-green-50';
+  let borderColor = 'border-green-200';
+  let textColor = 'text-green-700';
+  let icon = <CheckCircle className="h-5 w-5" />;
+  let statusText = 'API Rate: Healthy';
+  
+  if (rateLimitStatus === 'approaching') {
+    bgColor = 'bg-yellow-50';
+    borderColor = 'border-yellow-300';
+    textColor = 'text-yellow-700';
+    icon = <AlertCircle className="h-5 w-5" />;
+    statusText = 'API Rate: Busy';
+  } else if (rateLimitStatus === 'throttled' || isPaused) {
+    bgColor = 'bg-red-50';
+    borderColor = 'border-red-300';
+    textColor = 'text-red-700';
+    icon = <Clock className="h-5 w-5 animate-pulse" />;
+    statusText = 'API Rate: Throttled - Pausing...';
+  }
+
+  return (
+    <div className={`${bgColor} border ${borderColor} rounded-lg p-3`}>
+      <div className="flex items-start gap-3">
+        <div className={textColor}>
+          {icon}
+        </div>
+        <div className="flex-1 space-y-2">
+          <div className="flex items-center justify-between">
+            <div className={`text-sm font-medium ${textColor}`}>
+              {statusText}
+            </div>
+            <div className={`text-sm font-semibold ${textColor}`}>
+              {currentUtilization.toFixed(1)}%
+            </div>
+          </div>
+          
+          {/* Progress bar */}
+          <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+            <div
+              className={`h-full transition-all duration-300 ${
+                rateLimitStatus === 'healthy' ? 'bg-green-500' :
+                rateLimitStatus === 'approaching' ? 'bg-yellow-500' :
+                'bg-red-500'
+              }`}
+              style={{ width: `${Math.min(100, currentUtilization)}%` }}
+            />
+          </div>
+          
+          {/* Additional details */}
+          <div className="flex items-center justify-between text-xs text-gray-600">
+            <div className="flex gap-4">
+              <span>Queue: {queueSize}</span>
+              <span>Active: {activeRequests}/{maxConcurrent}</span>
+            </div>
+            {estimatedWaitTime > 0 && (
+              <span>Wait: ~{Math.ceil(estimatedWaitTime / 1000)}s</span>
+            )}
+          </div>
+          
+          {/* Pause countdown if throttled */}
+          {isPaused && estimatedWaitTime > 0 && (
+            <div className="text-xs text-red-600 font-medium">
+              ⏸ Pausing for {Math.ceil(estimatedWaitTime / 1000)} seconds...
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function BatchGenerationModal() {
   const { showBatchModal, closeBatchModal } = useAppStore();
   const [batchName, setBatchName] = useState('');
   const [topics, setTopics] = useState('');
+  const [queueStatus, setQueueStatus] = useState<QueueStatus | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [lastRateLimitStatus, setLastRateLimitStatus] = useState<'healthy' | 'approaching' | 'throttled'>('healthy');
+  
+  /**
+   * Fetches current queue status from API
+   */
+  const fetchQueueStatus = useCallback(async () => {
+    try {
+      const response = await fetch('/api/ai/queue-status');
+      if (response.ok) {
+        const data: QueueStatus = await response.json();
+        setQueueStatus(data);
+        
+        // Show notifications on status changes
+        if (data.rateLimitStatus !== lastRateLimitStatus) {
+          if (data.rateLimitStatus === 'approaching' && lastRateLimitStatus === 'healthy') {
+            toast.warning('Generation slowing down - approaching API rate limit');
+          } else if (data.rateLimitStatus === 'throttled' && lastRateLimitStatus !== 'throttled') {
+            toast.error('Pausing generation for 30 seconds to respect API limits...');
+          } else if (data.rateLimitStatus === 'healthy' && lastRateLimitStatus === 'throttled') {
+            toast.success('Generation resumed');
+          }
+          setLastRateLimitStatus(data.rateLimitStatus);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch queue status:', error);
+    }
+  }, [lastRateLimitStatus]);
+  
+  /**
+   * Poll queue status every 3 seconds when modal is open or generating
+   */
+  useEffect(() => {
+    if (showBatchModal || isGenerating) {
+      // Fetch immediately on open
+      fetchQueueStatus();
+      
+      // Then poll every 3 seconds
+      const interval = setInterval(fetchQueueStatus, 3000);
+      
+      return () => clearInterval(interval);
+    }
+  }, [showBatchModal, isGenerating, fetchQueueStatus]);
   
   const handleStartBatch = () => {
     if (!batchName.trim()) {
@@ -26,8 +174,20 @@ export function BatchGenerationModal() {
       return;
     }
     
+    // Check rate limit status before starting
+    if (queueStatus && queueStatus.rateLimitStatus === 'throttled') {
+      toast.warning('API rate limit reached. Generation will start when capacity is available.');
+    }
+    
+    setIsGenerating(true);
     toast.success(`Batch "${batchName}" started with ${topicList.length} conversations`);
-    closeBatchModal();
+    
+    // TODO: In real implementation, this would call the batch generation API
+    // For now, we'll just simulate it
+    setTimeout(() => {
+      setIsGenerating(false);
+      closeBatchModal();
+    }, 2000);
   };
   
   return (
@@ -107,24 +267,48 @@ export function BatchGenerationModal() {
             </TabsContent>
           </Tabs>
           
+          {/* Rate Limit Status Indicator */}
+          <RateLimitIndicator status={queueStatus} />
+          
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-2">
             <div className="text-sm">
               <strong>Batch Configuration:</strong>
             </div>
             <div className="text-xs text-gray-600 space-y-1">
               <div>• Priority: Normal</div>
-              <div>• Concurrent processing: 3 conversations at a time</div>
+              <div>• Concurrent processing: {queueStatus?.maxConcurrent || 3} conversations at a time</div>
               <div>• Error handling: Continue on error</div>
+              {queueStatus && queueStatus.totalProcessed > 0 && (
+                <div>• Completed: {queueStatus.totalProcessed} (Failed: {queueStatus.totalFailed})</div>
+              )}
             </div>
           </div>
           
           <div className="flex gap-2 pt-4 border-t">
-            <Button variant="outline" onClick={closeBatchModal} className="flex-1">
+            <Button 
+              variant="outline" 
+              onClick={closeBatchModal} 
+              className="flex-1"
+              disabled={isGenerating}
+            >
               Cancel
             </Button>
-            <Button onClick={handleStartBatch} className="flex-1">
-              <Plus className="h-4 w-4 mr-2" />
-              Start Batch Generation
+            <Button 
+              onClick={handleStartBatch} 
+              className="flex-1"
+              disabled={isGenerating}
+            >
+              {isGenerating ? (
+                <>
+                  <Activity className="h-4 w-4 mr-2 animate-spin" />
+                  Starting...
+                </>
+              ) : (
+                <>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Start Batch Generation
+                </>
+              )}
             </Button>
           </div>
         </div>

@@ -25,6 +25,7 @@ import {
   calculateCost,
   estimateTokens,
 } from './types/generation';
+import { qualityScorer, generateRecommendations, evaluateAndFlag } from './quality';
 
 export class ConversationGenerator {
   private rateLimiter: RateLimiter;
@@ -101,9 +102,18 @@ export class ConversationGenerator {
       const conversation = this.parseResponse(response, params);
       console.log(`✅ Response parsed (${conversation.totalTurns} turns)`);
       
-      // 5. Calculate quality score
-      const qualityScore = this.calculateQualityScore(conversation);
-      console.log(`✅ Quality score: ${qualityScore}/10`);
+      // 5. Calculate comprehensive quality score
+      const qualityScoreResult = qualityScorer.calculateScore({
+        turns: conversation.turns,
+        totalTurns: conversation.totalTurns,
+        totalTokens: conversation.totalTokens,
+        tier: params.tier,
+      });
+      
+      // Generate recommendations
+      qualityScoreResult.recommendations = generateRecommendations(qualityScoreResult);
+      
+      console.log(`✅ Quality score: ${qualityScoreResult.overall}/10 ${qualityScoreResult.autoFlagged ? '(Flagged)' : ''}`);
       
       // 6. Calculate cost
       const cost = calculateCost(
@@ -113,7 +123,7 @@ export class ConversationGenerator {
       );
       
       // 7. Save conversation and turns
-      const status = qualityScore >= 6 ? 'generated' : 'needs_revision';
+      const status = qualityScoreResult.overall >= 6 ? 'generated' : 'needs_revision';
       const saved = await this.conversationService.create({
         title: conversation.title,
         persona: params.persona,
@@ -121,7 +131,19 @@ export class ConversationGenerator {
         topic: params.topic,
         tier: params.tier,
         status,
-        qualityScore,
+        qualityScore: qualityScoreResult.overall,
+        qualityMetrics: {
+          overall: qualityScoreResult.overall,
+          relevance: qualityScoreResult.breakdown.turnCount.score,
+          accuracy: qualityScoreResult.breakdown.length.score,
+          naturalness: qualityScoreResult.breakdown.structure.score,
+          methodology: qualityScoreResult.breakdown.confidence.score,
+          coherence: qualityScoreResult.breakdown.confidence.score,
+          confidence: qualityScoreResult.breakdown.confidence.level,
+          uniqueness: 7.5, // Default value
+          trainingValue: qualityScoreResult.overall >= 8 ? 'high' : qualityScoreResult.overall >= 6 ? 'medium' : 'low',
+        },
+        confidenceLevel: qualityScoreResult.breakdown.confidence.level,
         turnCount: conversation.totalTurns,
         totalTokens: conversation.totalTokens,
         actualCostUsd: cost,
@@ -147,10 +169,21 @@ export class ConversationGenerator {
       );
       console.log(`✅ Conversation saved (ID: ${saved.id})`);
       
-      // 9. Log generation details
-      await this.logGeneration(params, response, saved, cost);
+      // 9. Auto-flag if quality is below threshold
+      if (qualityScoreResult.autoFlagged) {
+        try {
+          await evaluateAndFlag(saved.id, qualityScoreResult);
+          console.log(`🚩 Auto-flagged conversation due to low quality score`);
+        } catch (error) {
+          console.error('Failed to auto-flag conversation:', error);
+          // Continue even if flagging fails
+        }
+      }
       
-      // 10. Increment template usage
+      // 10. Log generation details
+      await this.logGeneration(params, response, saved, cost, qualityScoreResult);
+      
+      // 11. Increment template usage
       await this.templateService.incrementUsage(params.templateId);
       
       const totalDuration = Date.now() - startTime;
@@ -160,7 +193,9 @@ export class ConversationGenerator {
         ...conversation,
         id: saved.id,
         conversationId: saved.conversationId,
-        qualityScore,
+        qualityScore: qualityScoreResult.overall,
+        qualityBreakdown: qualityScoreResult.breakdown,
+        recommendations: qualityScoreResult.recommendations,
         status,
         actualCostUsd: cost,
         generationDurationMs: response.duration,
@@ -481,7 +516,8 @@ export class ConversationGenerator {
     params: GenerationParams,
     response: ClaudeResponse,
     conversation: any,
-    cost: number
+    cost: number,
+    qualityScore?: any
   ): Promise<void> {
     try {
       await this.generationLogService.create({

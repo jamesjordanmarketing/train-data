@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -14,9 +14,10 @@ import {
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Slider } from '../ui/slider';
 import { useAppStore } from '../../stores/useAppStore';
-import { TierType, Conversation, ConversationTurn } from '../../lib/types';
+import { TierType, Conversation, ConversationTurn, Template, TemplateVariable } from '../../lib/types';
 import { toast } from 'sonner@2.0.3';
-import { CheckCircle, Loader2, AlertCircle } from 'lucide-react';
+import { CheckCircle, Loader2, AlertCircle, Eye, Sparkles } from 'lucide-react';
+import { generatePreview, generateSampleParameters, getRequiredParameters } from '../../lib/ai';
 
 export function SingleGenerationForm() {
   const { 
@@ -28,6 +29,7 @@ export function SingleGenerationForm() {
   } = useAppStore();
   
   const [tier, setTier] = useState<TierType>('template');
+  const [selectedTemplateId, setSelectedTemplateId] = useState('');
   const [topic, setTopic] = useState('');
   const [audience, setAudience] = useState('intermediate');
   const [complexity, setComplexity] = useState([5]);
@@ -37,6 +39,12 @@ export function SingleGenerationForm() {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [temperature, setTemperature] = useState([0.7]);
   
+  // Template parameter injection state
+  const [templateParameters, setTemplateParameters] = useState<Record<string, any>>({});
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewText, setPreviewText] = useState('');
+  const [previewErrors, setPreviewErrors] = useState<string[]>([]);
+  
   const [generating, setGenerating] = useState(false);
   const [generationComplete, setGenerationComplete] = useState(false);
   const [generationError, setGenerationError] = useState(false);
@@ -45,6 +53,7 @@ export function SingleGenerationForm() {
   
   const resetForm = () => {
     setTier('template');
+    setSelectedTemplateId('');
     setTopic('');
     setAudience('intermediate');
     setComplexity([5]);
@@ -58,6 +67,53 @@ export function SingleGenerationForm() {
     setGenerationError(false);
     setProgress(0);
     setGeneratedConversation(null);
+    setTemplateParameters({});
+    setShowPreview(false);
+    setPreviewText('');
+    setPreviewErrors([]);
+  };
+  
+  // Get selected template
+  const selectedTemplate = templates.find(t => t.id === selectedTemplateId);
+  
+  // Update preview when template or parameters change
+  useEffect(() => {
+    if (selectedTemplate && showPreview) {
+      const preview = generatePreview(selectedTemplate, templateParameters);
+      setPreviewText(preview.preview);
+      setPreviewErrors(preview.errors);
+    }
+  }, [selectedTemplate, templateParameters, showPreview]);
+  
+  // Handle template selection change
+  const handleTemplateChange = (templateId: string) => {
+    setSelectedTemplateId(templateId);
+    const template = templates.find(t => t.id === templateId);
+    if (template) {
+      // Initialize parameters with defaults or empty values
+      const initialParams: Record<string, any> = {};
+      template.variables.forEach(variable => {
+        initialParams[variable.name] = variable.defaultValue || '';
+      });
+      setTemplateParameters(initialParams);
+    }
+  };
+  
+  // Handle parameter value change
+  const handleParameterChange = (paramName: string, value: any) => {
+    setTemplateParameters(prev => ({
+      ...prev,
+      [paramName]: value,
+    }));
+  };
+  
+  // Auto-fill with sample values
+  const handleAutoFillSamples = () => {
+    if (selectedTemplate) {
+      const samples = generateSampleParameters(selectedTemplate.variables);
+      setTemplateParameters(samples);
+      toast.success('Sample values filled');
+    }
   };
   
   const handleClose = () => {
@@ -362,6 +418,135 @@ export function SingleGenerationForm() {
               </div>
             </RadioGroup>
           </div>
+          
+          {/* Template Selection (for template tier) */}
+          {tier === 'template' && templates.length > 0 && (
+            <div className="space-y-2">
+              <Label>Select Template (Optional)</Label>
+              <Select value={selectedTemplateId} onValueChange={handleTemplateChange}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Choose a template or start from scratch" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">None (Start from scratch)</SelectItem>
+                  {templates.map(t => (
+                    <SelectItem key={t.id} value={t.id}>
+                      {t.name} - {t.category} ({t.usageCount} uses)
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {selectedTemplate && (
+                <p className="text-xs text-gray-500 mt-1">
+                  {selectedTemplate.description}
+                </p>
+              )}
+            </div>
+          )}
+          
+          {/* Template Parameters (if template selected) */}
+          {selectedTemplate && selectedTemplate.variables.length > 0 && (
+            <div className="space-y-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="flex items-center justify-between">
+                <Label className="text-base font-semibold">Template Parameters</Label>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleAutoFillSamples}
+                  className="text-xs"
+                >
+                  <Sparkles className="h-3 w-3 mr-1" />
+                  Auto-fill Samples
+                </Button>
+              </div>
+              
+              {selectedTemplate.variables.map((variable) => {
+                const isRequired = !variable.defaultValue || variable.defaultValue === '';
+                
+                return (
+                  <div key={variable.name} className="space-y-2">
+                    <Label htmlFor={`param-${variable.name}`}>
+                      {variable.name} {isRequired && <span className="text-red-500">*</span>}
+                    </Label>
+                    
+                    {variable.type === 'text' && (
+                      <Input
+                        id={`param-${variable.name}`}
+                        value={templateParameters[variable.name] || ''}
+                        onChange={(e) => handleParameterChange(variable.name, e.target.value)}
+                        placeholder={variable.helpText || `Enter ${variable.name}`}
+                      />
+                    )}
+                    
+                    {variable.type === 'number' && (
+                      <Input
+                        id={`param-${variable.name}`}
+                        type="number"
+                        value={templateParameters[variable.name] || ''}
+                        onChange={(e) => handleParameterChange(variable.name, parseFloat(e.target.value))}
+                        placeholder={variable.helpText || `Enter ${variable.name}`}
+                      />
+                    )}
+                    
+                    {variable.type === 'dropdown' && variable.options && (
+                      <Select
+                        value={templateParameters[variable.name] || ''}
+                        onValueChange={(value) => handleParameterChange(variable.name, value)}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder={`Select ${variable.name}`} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {variable.options.map(option => (
+                            <SelectItem key={option} value={option}>
+                              {option}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                    
+                    {variable.helpText && (
+                      <p className="text-xs text-gray-500">{variable.helpText}</p>
+                    )}
+                  </div>
+                );
+              })}
+              
+              {/* Preview Button and Panel */}
+              <div className="pt-2 border-t">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowPreview(!showPreview)}
+                  className="w-full"
+                >
+                  <Eye className="h-4 w-4 mr-2" />
+                  {showPreview ? 'Hide' : 'Show'} Template Preview
+                </Button>
+                
+                {showPreview && (
+                  <div className="mt-3 p-3 bg-white border rounded-lg">
+                    <Label className="text-sm font-semibold mb-2 block">Resolved Template:</Label>
+                    <div className="text-sm text-gray-700 whitespace-pre-wrap">
+                      {previewText || 'Enter parameter values to see preview...'}
+                    </div>
+                    
+                    {previewErrors.length > 0 && (
+                      <div className="mt-3 p-2 bg-red-50 border border-red-200 rounded">
+                        <p className="text-xs font-semibold text-red-700 mb-1">Validation Errors:</p>
+                        <ul className="text-xs text-red-600 list-disc list-inside">
+                          {previewErrors.map((error, idx) => (
+                            <li key={idx}>{error}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
           
           {/* Parent Selection (if scenario or edge case) */}
           {(tier === 'scenario' || tier === 'edge_case') && (

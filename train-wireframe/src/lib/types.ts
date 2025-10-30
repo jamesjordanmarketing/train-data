@@ -71,6 +71,12 @@ export type Template = {
   rating: number;
   lastModified: string;
   createdBy: string;
+  // Additional database fields
+  tier?: TierType;
+  isActive?: boolean;
+  version?: number;
+  applicablePersonas?: string[];
+  applicableEmotions?: string[];
 };
 
 export type TemplateVariable = {
@@ -220,4 +226,96 @@ export type UserPreferences = {
   rowsPerPage: number;
   enableAnimations: boolean;
   keyboardShortcutsEnabled: boolean;
+  retryConfig?: {
+    strategy: 'exponential' | 'linear' | 'fixed';
+    maxAttempts: number;
+    baseDelayMs: number;
+    maxDelayMs: number;
+    continueOnError: boolean;
+  };
+};
+
+// Template Testing Types
+
+export type TemplateTestResult = {
+  templateId: string;
+  testParameters: Record<string, any>;
+  resolvedTemplate: string;
+  apiResponse: {
+    id: string;
+    content: string;
+    model: string;
+    usage: {
+      inputTokens: number;
+      outputTokens: number;
+    };
+  } | null;
+  qualityScore: number;
+  qualityBreakdown: QualityMetrics;
+  passedTest: boolean;
+  baselineComparison?: {
+    avgQualityScore: number;
+    deviation: number;
+  };
+  executionTimeMs: number;
+  errors: string[];
+  warnings: string[];
+  timestamp: string;
+};
+
+export type TemplateTestRequest = {
+  templateId: string;
+  parameters: Record<string, any>;
+  compareToBaseline?: boolean;
+};
+
+// Template Analytics Types
+
+export type TemplateAnalytics = {
+  templateId: string;
+  templateName: string;
+  tier: TierType;
+  usageCount: number;
+  avgQualityScore: number;
+  approvalRate: number;
+  avgExecutionTime: number;
+  successRate: number;
+  trend: 'improving' | 'stable' | 'declining';
+  lastUsed: string;
+  topParameters?: Array<{
+    name: string;
+    frequency: number;
+  }>;
+};
+
+export type TemplatePerformanceMetrics = {
+  totalTests: number;
+  successfulTests: number;
+  failedTests: number;
+  avgQualityScore: number;
+  qualityTrend: Array<{
+    date: string;
+    avgScore: number;
+    count: number;
+  }>;
+  parameterUsage: Record<string, number>;
+};
+
+export type AnalyticsSummary = {
+  totalTemplates: number;
+  activeTemplates: number;
+  totalUsage: number;
+  avgQualityScore: number;
+  topPerformers: TemplateAnalytics[];
+  bottomPerformers: TemplateAnalytics[];
+  usageByTier: {
+    template: number;
+    scenario: number;
+    edge_case: number;
+  };
+  qualityByTier: {
+    template: number;
+    scenario: number;
+    edge_case: number;
+  };
 };

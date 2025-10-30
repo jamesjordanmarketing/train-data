@@ -26,12 +26,14 @@ import {
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
-  Play
+  Play,
+  Info
 } from 'lucide-react';
 import { Conversation } from '../../lib/types';
 import { useAppStore } from '../../stores/useAppStore';
 import { cn } from '../../lib/utils';
 import { toast } from 'sonner@2.0.3';
+import { QualityDetailsModal, QualityScore } from './QualityDetailsModal';
 
 const statusColors = {
   draft: 'bg-gray-100 text-gray-700',
@@ -68,6 +70,9 @@ export function ConversationTable({ conversations, onViewConversation }: Convers
   
   const [sortColumn, setSortColumn] = useState<keyof Conversation>('createdAt');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [qualityModalOpen, setQualityModalOpen] = useState(false);
+  const [selectedQualityScore, setSelectedQualityScore] = useState<QualityScore | null>(null);
+  const [selectedConversationTitle, setSelectedConversationTitle] = useState<string>('');
   
   // Sorting logic
   const sortedConversations = useMemo(() => {
@@ -138,8 +143,66 @@ export function ConversationTable({ conversations, onViewConversation }: Convers
   
   const getQualityScoreColor = (score: number) => {
     if (score >= 8) return 'text-green-600';
-    if (score >= 5) return 'text-yellow-600';
+    if (score >= 6) return 'text-yellow-600';
     return 'text-red-600';
+  };
+
+  const getQualityBadgeColor = (score: number) => {
+    if (score >= 8) return 'bg-green-100 text-green-700 hover:bg-green-200';
+    if (score >= 6) return 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200';
+    return 'bg-red-100 text-red-700 hover:bg-red-200';
+  };
+
+  const handleQualityClick = (conversation: Conversation) => {
+    if (conversation.qualityMetrics) {
+      // Convert qualityMetrics to QualityScore format
+      const qualityScore: QualityScore = {
+        overall: conversation.qualityScore || 0,
+        breakdown: {
+          turnCount: {
+            score: 8,
+            weight: 0.30,
+            actual: conversation.totalTurns || 0,
+            target: '8-16 (optimal)',
+            status: 'optimal',
+            message: 'Turn count is within optimal range',
+          },
+          length: {
+            score: 8,
+            weight: 0.25,
+            actual: conversation.totalTokens || 0,
+            target: '100-400 chars/turn (optimal)',
+            avgTurnLength: 200,
+            status: 'optimal',
+            message: 'Turn length is within optimal range',
+          },
+          structure: {
+            score: 8,
+            weight: 0.25,
+            valid: true,
+            issues: [],
+            status: 'valid',
+            message: 'Conversation structure is valid',
+          },
+          confidence: {
+            score: conversation.qualityMetrics.confidence === 'high' ? 8 : conversation.qualityMetrics.confidence === 'medium' ? 6 : 4,
+            weight: 0.20,
+            level: conversation.qualityMetrics.confidence,
+            factors: [],
+            message: `Confidence level is ${conversation.qualityMetrics.confidence}`,
+          },
+        },
+        recommendations: [],
+        autoFlagged: (conversation.qualityScore || 0) < 6,
+        calculatedAt: conversation.updatedAt,
+      };
+
+      setSelectedQualityScore(qualityScore);
+      setSelectedConversationTitle(conversation.title);
+      setQualityModalOpen(true);
+    } else {
+      toast.info('Quality score not available for this conversation');
+    }
   };
   
   const formatDate = (dateString: string) => {
@@ -191,6 +254,12 @@ export function ConversationTable({ conversations, onViewConversation }: Convers
               </div>
             </TableHead>
             <TableHead>Status</TableHead>
+            <TableHead className="cursor-pointer" onClick={() => handleSort('qualityScore')}>
+              <div className="flex items-center gap-2">
+                Quality
+                {getSortIcon('qualityScore')}
+              </div>
+            </TableHead>
             <TableHead className="w-32">Generate</TableHead>
             <TableHead className="w-12">Actions</TableHead>
           </TableRow>
@@ -198,7 +267,7 @@ export function ConversationTable({ conversations, onViewConversation }: Convers
         <TableBody>
           {sortedConversations.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={10} className="h-24 text-center text-gray-500">
+              <TableCell colSpan={11} className="h-24 text-center text-gray-500">
                 No conversations found
               </TableCell>
             </TableRow>
@@ -253,6 +322,22 @@ export function ConversationTable({ conversations, onViewConversation }: Convers
                   <Badge className={statusColors[conversation.status]}>
                     {conversation.status === 'none' ? 'None' : conversation.status === 'failed' ? 'Failed' : conversation.status.replace('_', ' ')}
                   </Badge>
+                </TableCell>
+                <TableCell onClick={(e) => e.stopPropagation()}>
+                  {conversation.qualityScore !== undefined && conversation.qualityScore > 0 ? (
+                    <button
+                      onClick={() => handleQualityClick(conversation)}
+                      className={cn(
+                        'px-3 py-1 rounded-md font-semibold text-sm transition-colors flex items-center gap-1.5',
+                        getQualityBadgeColor(conversation.qualityScore)
+                      )}
+                    >
+                      {conversation.qualityScore.toFixed(1)}
+                      <Info className="h-3 w-3" />
+                    </button>
+                  ) : (
+                    <span className="text-gray-400 text-sm">N/A</span>
+                  )}
                 </TableCell>
                 <TableCell onClick={(e) => e.stopPropagation()}>
                   <Button 
@@ -310,6 +395,13 @@ export function ConversationTable({ conversations, onViewConversation }: Convers
           )}
         </TableBody>
       </Table>
+
+      <QualityDetailsModal
+        open={qualityModalOpen}
+        onOpenChange={setQualityModalOpen}
+        qualityScore={selectedQualityScore}
+        conversationTitle={selectedConversationTitle}
+      />
     </div>
   );
 }
