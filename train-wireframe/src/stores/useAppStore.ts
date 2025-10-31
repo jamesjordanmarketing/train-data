@@ -11,6 +11,24 @@ import {
   TierType
 } from '../lib/types';
 
+interface BatchGenerationConfig {
+  tier: TierType | 'all';
+  conversationCount: number;
+  errorHandling: 'continue' | 'stop';
+  concurrency: number;
+  sharedParameters: Record<string, string>;
+}
+
+interface BatchGenerationState {
+  currentStep: 1 | 2 | 3 | 4;
+  config: BatchGenerationConfig;
+  jobId: string | null;
+  estimatedCost: number;
+  estimatedTime: number;
+  actualCost: number;
+  actualTime: number;
+}
+
 interface AppState {
   // UI State
   sidebarCollapsed: boolean;
@@ -43,6 +61,9 @@ interface AppState {
     onConfirm: () => void;
     onCancel?: () => void;
   } | null;
+  
+  // Batch Generation State
+  batchGeneration: BatchGenerationState;
   
   // Loading State
   isLoading: boolean;
@@ -97,6 +118,14 @@ interface AppState {
   showConfirm: (config: AppState['confirmDialogConfig']) => void;
   hideConfirm: () => void;
   
+  // Batch Generation Actions
+  setBatchStep: (step: 1 | 2 | 3 | 4) => void;
+  setBatchConfig: (config: Partial<BatchGenerationConfig>) => void;
+  setBatchJobId: (jobId: string | null) => void;
+  setBatchEstimates: (cost: number, time: number) => void;
+  setBatchActuals: (cost: number, time: number) => void;
+  resetBatchGeneration: () => void;
+  
   // Loading Actions
   setLoading: (loading: boolean, message?: string) => void;
   
@@ -136,6 +165,23 @@ export const useAppStore = create<AppState>((set) => ({
   showExportModal: false,
   showConfirmDialog: false,
   confirmDialogConfig: null,
+  
+  // Initial Batch Generation State
+  batchGeneration: {
+    currentStep: 1,
+    config: {
+      tier: 'all',
+      conversationCount: 0,
+      errorHandling: 'continue',
+      concurrency: 3,
+      sharedParameters: {},
+    },
+    jobId: null,
+    estimatedCost: 0,
+    estimatedTime: 0,
+    actualCost: 0,
+    actualTime: 0,
+  },
   
   // Initial Loading State
   isLoading: false,
@@ -240,5 +286,48 @@ export const useAppStore = create<AppState>((set) => ({
   updatePreferences: (preferences) =>
     set((state) => ({
       preferences: { ...state.preferences, ...preferences },
+    })),
+  
+  // Batch Generation Actions
+  setBatchStep: (step) =>
+    set((state) => ({
+      batchGeneration: { ...state.batchGeneration, currentStep: step },
+    })),
+  setBatchConfig: (config) =>
+    set((state) => ({
+      batchGeneration: {
+        ...state.batchGeneration,
+        config: { ...state.batchGeneration.config, ...config },
+      },
+    })),
+  setBatchJobId: (jobId) =>
+    set((state) => ({
+      batchGeneration: { ...state.batchGeneration, jobId },
+    })),
+  setBatchEstimates: (cost, time) =>
+    set((state) => ({
+      batchGeneration: { ...state.batchGeneration, estimatedCost: cost, estimatedTime: time },
+    })),
+  setBatchActuals: (cost, time) =>
+    set((state) => ({
+      batchGeneration: { ...state.batchGeneration, actualCost: cost, actualTime: time },
+    })),
+  resetBatchGeneration: () =>
+    set((state) => ({
+      batchGeneration: {
+        currentStep: 1,
+        config: {
+          tier: 'all',
+          conversationCount: 0,
+          errorHandling: 'continue',
+          concurrency: 3,
+          sharedParameters: {},
+        },
+        jobId: null,
+        estimatedCost: 0,
+        estimatedTime: 0,
+        actualCost: 0,
+        actualTime: 0,
+      },
     })),
 }));

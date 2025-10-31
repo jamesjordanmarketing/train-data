@@ -1,0 +1,236 @@
+{
+  "client": "Thunder Client",
+  "collectionName": "Export API",
+  "dateExported": "2025-10-31",
+  "version": "1.1",
+  "folders": [],
+  "requests": [
+    {
+      "name": "Create Export - All (JSONL)",
+      "method": "POST",
+      "url": "http://localhost:3000/api/export/conversations",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-user-id",
+          "value": "00000000-0000-0000-0000-000000000000"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"config\": {\n    \"scope\": \"all\",\n    \"format\": \"jsonl\",\n    \"includeMetadata\": true,\n    \"includeQualityScores\": true,\n    \"includeTimestamps\": true,\n    \"includeApprovalHistory\": false,\n    \"includeParentReferences\": false,\n    \"includeFullContent\": true\n  }\n}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "status-code",
+          "value": "201"
+        },
+        {
+          "type": "json-query",
+          "value": "json.export_id"
+        },
+        {
+          "type": "json-query",
+          "value": "json.status"
+        }
+      ]
+    },
+    {
+      "name": "Create Export - CSV Format",
+      "method": "POST",
+      "url": "http://localhost:3000/api/export/conversations",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-user-id",
+          "value": "00000000-0000-0000-0000-000000000000"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"config\": {\n    \"scope\": \"all\",\n    \"format\": \"csv\",\n    \"includeMetadata\": true,\n    \"includeQualityScores\": true,\n    \"includeTimestamps\": true,\n    \"includeApprovalHistory\": false,\n    \"includeParentReferences\": false,\n    \"includeFullContent\": true\n  }\n}",
+        "form": []
+      },
+      "tests": []
+    },
+    {
+      "name": "Create Export - Markdown Format",
+      "method": "POST",
+      "url": "http://localhost:3000/api/export/conversations",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-user-id",
+          "value": "00000000-0000-0000-0000-000000000000"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"config\": {\n    \"scope\": \"all\",\n    \"format\": \"markdown\",\n    \"includeMetadata\": true,\n    \"includeQualityScores\": true,\n    \"includeTimestamps\": true,\n    \"includeApprovalHistory\": false,\n    \"includeParentReferences\": false,\n    \"includeFullContent\": true\n  }\n}",
+        "form": []
+      },
+      "tests": []
+    },
+    {
+      "name": "Create Export - Filtered (Templates Only)",
+      "method": "POST",
+      "url": "http://localhost:3000/api/export/conversations",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-user-id",
+          "value": "00000000-0000-0000-0000-000000000000"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"config\": {\n    \"scope\": \"filtered\",\n    \"format\": \"jsonl\",\n    \"includeMetadata\": true,\n    \"includeQualityScores\": true,\n    \"includeTimestamps\": true,\n    \"includeApprovalHistory\": false,\n    \"includeParentReferences\": false,\n    \"includeFullContent\": true\n  },\n  \"filters\": {\n    \"tier\": [\"template\"],\n    \"status\": [\"approved\"],\n    \"qualityScoreMin\": 7.0\n  }\n}",
+        "form": []
+      },
+      "tests": []
+    },
+    {
+      "name": "Create Export - Selected Conversations",
+      "method": "POST",
+      "url": "http://localhost:3000/api/export/conversations",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "x-user-id",
+          "value": "00000000-0000-0000-0000-000000000000"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"config\": {\n    \"scope\": \"selected\",\n    \"format\": \"json\",\n    \"includeMetadata\": true,\n    \"includeQualityScores\": true,\n    \"includeTimestamps\": true,\n    \"includeApprovalHistory\": false,\n    \"includeParentReferences\": false,\n    \"includeFullContent\": true\n  },\n  \"conversationIds\": [\n    \"REPLACE_WITH_ACTUAL_UUID\"\n  ]\n}",
+        "form": []
+      },
+      "tests": []
+    },
+    {
+      "name": "Get Export Status",
+      "method": "GET",
+      "url": "http://localhost:3000/api/export/status/REPLACE_WITH_EXPORT_ID",
+      "headers": [
+        {
+          "name": "x-user-id",
+          "value": "00000000-0000-0000-0000-000000000000"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "status-code",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "name": "Download Export",
+      "method": "GET",
+      "url": "http://localhost:3000/api/export/download/REPLACE_WITH_EXPORT_ID",
+      "headers": [
+        {
+          "name": "x-user-id",
+          "value": "00000000-0000-0000-0000-000000000000"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "status-code",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "name": "Get Export History",
+      "method": "GET",
+      "url": "http://localhost:3000/api/export/history",
+      "headers": [
+        {
+          "name": "x-user-id",
+          "value": "00000000-0000-0000-0000-000000000000"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "status-code",
+          "value": "200"
+        },
+        {
+          "type": "json-query",
+          "value": "json.exports"
+        },
+        {
+          "type": "json-query",
+          "value": "json.pagination"
+        }
+      ]
+    },
+    {
+      "name": "Get Export History - Filtered by Format",
+      "method": "GET",
+      "url": "http://localhost:3000/api/export/history?format=jsonl&status=completed",
+      "headers": [
+        {
+          "name": "x-user-id",
+          "value": "00000000-0000-0000-0000-000000000000"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "",
+        "form": []
+      },
+      "tests": []
+    },
+    {
+      "name": "Get Export History - Paginated",
+      "method": "GET",
+      "url": "http://localhost:3000/api/export/history?page=1&limit=10",
+      "headers": [
+        {
+          "name": "x-user-id",
+          "value": "00000000-0000-0000-0000-000000000000"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "",
+        "form": []
+      },
+      "tests": []
+    }
+  ]
+}
+

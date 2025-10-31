@@ -15,6 +15,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from '../ui/dropdown-menu';
 import { 
   MoreVertical, 
@@ -27,13 +28,15 @@ import {
   ArrowUp,
   ArrowDown,
   Play,
-  Info
+  Info,
+  RefreshCw
 } from 'lucide-react';
 import { Conversation } from '../../lib/types';
 import { useAppStore } from '../../stores/useAppStore';
 import { cn } from '../../lib/utils';
 import { toast } from 'sonner@2.0.3';
 import { QualityDetailsModal, QualityScore } from './QualityDetailsModal';
+import { SingleGenerationForm } from '../generation/SingleGenerationForm';
 
 const statusColors = {
   draft: 'bg-gray-100 text-gray-700',
@@ -73,6 +76,7 @@ export function ConversationTable({ conversations, onViewConversation }: Convers
   const [qualityModalOpen, setQualityModalOpen] = useState(false);
   const [selectedQualityScore, setSelectedQualityScore] = useState<QualityScore | null>(null);
   const [selectedConversationTitle, setSelectedConversationTitle] = useState<string>('');
+  const [regenerateConversationId, setRegenerateConversationId] = useState<string | null>(null);
   
   // Sorting logic
   const sortedConversations = useMemo(() => {
@@ -139,6 +143,14 @@ export function ConversationTable({ conversations, onViewConversation }: Convers
   const handleMoveToReview = (id: string) => {
     updateConversation(id, { status: 'pending_review' });
     toast.success('Moved to review queue');
+  };
+
+  const handleRegenerateClick = (id: string) => {
+    setRegenerateConversationId(id);
+  };
+
+  const handleRegenerateClose = () => {
+    setRegenerateConversationId(null);
   };
   
   const getQualityScoreColor = (score: number) => {
@@ -370,6 +382,10 @@ export function ConversationTable({ conversations, onViewConversation }: Convers
                         <Copy className="h-4 w-4 mr-2" />
                         Duplicate
                       </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleRegenerateClick(conversation.id)}>
+                        <RefreshCw className="h-4 w-4 mr-2" />
+                        Regenerate
+                      </DropdownMenuItem>
                       {conversation.status !== 'pending_review' && (
                         <DropdownMenuItem onClick={() => handleMoveToReview(conversation.id)}>
                           <Eye className="h-4 w-4 mr-2" />
@@ -380,6 +396,7 @@ export function ConversationTable({ conversations, onViewConversation }: Convers
                         <Download className="h-4 w-4 mr-2" />
                         Export
                       </DropdownMenuItem>
+                      <DropdownMenuSeparator />
                       <DropdownMenuItem 
                         onClick={() => handleDelete(conversation.id, conversation.title)}
                         className="text-red-600"
@@ -402,6 +419,13 @@ export function ConversationTable({ conversations, onViewConversation }: Convers
         qualityScore={selectedQualityScore}
         conversationTitle={selectedConversationTitle}
       />
+
+      {regenerateConversationId && (
+        <SingleGenerationForm
+          conversationId={regenerateConversationId}
+          onClose={handleRegenerateClose}
+        />
+      )}
     </div>
   );
 }

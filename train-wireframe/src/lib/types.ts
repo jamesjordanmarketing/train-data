@@ -219,6 +219,23 @@ export type ExportConfig = {
   includeFullContent: boolean;
 };
 
+export interface ExportLog {
+  id: string;
+  export_id: string;
+  user_id: string;
+  timestamp: string;
+  format: 'json' | 'jsonl' | 'csv' | 'markdown';
+  config: ExportConfig;
+  conversation_count: number;
+  file_size: number | null;
+  status: 'queued' | 'processing' | 'completed' | 'failed' | 'expired';
+  file_url: string | null;
+  expires_at: string | null;
+  error_message: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export type UserPreferences = {
   theme: 'light' | 'dark' | 'system';
   sidebarCollapsed: boolean;

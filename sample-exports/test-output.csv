@@ -1,0 +1,17 @@
+﻿"Conversation ID","Title","Status","Tier","Turn Number","Role","Content","Quality Score","Persona","Emotion","Topic","Created At","Updated At","Token Count","Parent ID","Parent Type"
+"conv-001","Getting Started with LoRA Training","approved","template","1","user","Can you explain what LoRA training is?","8.5","Technical Expert","helpful","machine learning","2025-10-29T10:30:00Z","2025-10-29T14:20:00Z","10","template-001","template"
+"conv-001","Getting Started with LoRA Training","approved","template","2","assistant","LoRA (Low-Rank Adaptation) is a parameter-efficient fine-tuning technique. It allows you to adapt large language models by training only a small number of additional parameters, making the process faster and more memory-efficient.","8.5","Technical Expert","helpful","machine learning","2025-10-29T10:30:00Z","2025-10-29T14:20:00Z","50","template-001","template"
+"conv-001","Getting Started with LoRA Training","approved","template","3","user","What are the main benefits?","8.5","Technical Expert","helpful","machine learning","2025-10-29T10:30:00Z","2025-10-29T14:20:00Z","8","template-001","template"
+"conv-002","Edge Case: Handling ""Quotes"", Commas, and
+Newlines","pending_review","edge_case","1","user","Test content with ""quotes"", commas, and newlines:
+- Item 1
+- Item 2
+- Item 3","7.2","Tester","analytical","data validation","2025-10-30T08:15:00Z","2025-10-30T09:45:00Z","25","scenario-042","scenario"
+"conv-002","Edge Case: Handling ""Quotes"", Commas, and
+Newlines","pending_review","edge_case","2","assistant","I can handle special characters like:
+1. ""Double quotes""
+2. Commas, in text
+3. Multiple
+Newlines
+
+No problem!","7.2","Tester","analytical","data validation","2025-10-30T08:15:00Z","2025-10-30T09:45:00Z","35","scenario-042","scenario"

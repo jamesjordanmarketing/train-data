@@ -2,69 +2,47 @@
  * API Route: Batch Conversation Generation
  * 
  * POST /api/conversations/generate-batch
- * Generates multiple conversations in batch with controlled concurrency
+ * Creates a batch generation job and starts processing in background
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { ConversationGenerator } from '@/lib/conversation-generator';
-import { GenerationParams } from '@/lib/types/generation';
-import { createServerSupabaseClient } from '@/lib/supabase-server';
+import { getBatchGenerationService } from '@/lib/services';
+import type { BatchGenerationRequest } from '@/lib/services';
 
 // Validation schema
-const BatchGenerationSchema = z.object({
-  requests: z.array(
-    z.object({
-      templateId: z.string().uuid(),
-      persona: z.string().min(1),
-      emotion: z.string().min(1),
-      topic: z.string().min(1),
-      tier: z.enum(['template', 'scenario', 'edge_case']),
-      parameters: z.record(z.any()).optional().default({}),
-      temperature: z.number().min(0).max(1).optional(),
-      maxTokens: z.number().min(100).max(8192).optional(),
-      documentId: z.string().uuid().optional(),
-      chunkId: z.string().uuid().optional(),
-    })
-  ).min(1).max(100, 'Batch size cannot exceed 100'),
-  options: z.object({
-    concurrency: z.number().min(1).max(10).optional().default(3),
-    stopOnError: z.boolean().optional().default(false),
-  }).optional().default({}),
+const BatchGenerateRequestSchema = z.object({
+  name: z.string().min(1, 'Batch name is required'),
+  tier: z.enum(['template', 'scenario', 'edge_case']).optional(),
+  conversationIds: z.array(z.string().uuid()).optional(),
+  templateId: z.string().uuid().optional(),
+  parameterSets: z.array(z.object({
+    templateId: z.string().uuid(),
+    parameters: z.record(z.any()),
+    tier: z.enum(['template', 'scenario', 'edge_case']),
+  })).optional(),
+  sharedParameters: z.record(z.any()).optional(),
+  concurrentProcessing: z.number().min(1).max(10).optional().default(3),
+  errorHandling: z.enum(['stop', 'continue']).optional().default('continue'),
+  userId: z.string().optional(),
+  priority: z.enum(['low', 'normal', 'high']).optional().default('normal'),
 });
 
 export async function POST(request: NextRequest) {
   try {
-    // Parse request body
+    // Parse and validate request
     const body = await request.json();
+    const validated = BatchGenerateRequestSchema.parse(body);
     
-    // Validate input
-    let validated;
-    try {
-      validated = BatchGenerationSchema.parse(body);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return NextResponse.json(
-          {
-            error: 'Validation failed',
-            details: error.errors,
-          },
-          { status: 400 }
-        );
-      }
-      throw error;
-    }
-    
-    // Get user from session
-    const supabase = createServerSupabaseClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    const userId = user?.id || null;
+    // Get user ID (from body or use default for testing)
+    const userId = validated.userId || '00000000-0000-0000-0000-000000000000';
     
     // Check for API key
     if (!process.env.ANTHROPIC_API_KEY) {
       console.error('❌ ANTHROPIC_API_KEY not configured');
       return NextResponse.json(
         {
+          success: false,
           error: 'AI service not configured',
           details: 'Missing ANTHROPIC_API_KEY environment variable',
         },
@@ -72,79 +50,72 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    // Generate batch job ID
-    const runId = `batch_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    // Validate that we have either conversationIds, parameterSets, or templateId
+    if (!validated.conversationIds && !validated.parameterSets && !validated.templateId) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Invalid request',
+          message: 'Must provide conversationIds, parameterSets, or templateId with tier',
+        },
+        { status: 400 }
+      );
+    }
     
-    // Initialize generator
-    const generator = new ConversationGenerator({
-      rateLimitConfig: {
-        windowMs: 60000, // 1 minute
-        maxRequests: 50,
-        enableQueue: true,
-        pauseThreshold: 0.9,
-      },
-    });
+    // Prepare batch generation request
+    const batchRequest: BatchGenerationRequest = {
+      name: validated.name,
+      conversationIds: validated.conversationIds,
+      parameterSets: validated.parameterSets,
+      templateId: validated.templateId,
+      tier: validated.tier,
+      sharedParameters: validated.sharedParameters,
+      concurrentProcessing: validated.concurrentProcessing,
+      errorHandling: validated.errorHandling,
+      userId,
+      priority: validated.priority,
+    };
     
-    // Prepare requests with user ID
-    const requests: GenerationParams[] = validated.requests.map((req) => ({
-      ...req,
-      createdBy: userId,
-    }));
+    // Get batch generation service
+    const batchService = getBatchGenerationService();
     
-    console.log(`🚀 Starting batch generation: ${requests.length} conversations`);
+    // Start batch generation (returns immediately with job ID)
+    const result = await batchService.startBatchGeneration(batchRequest);
     
-    // Generate batch
-    const result = await generator.generateBatch(requests, {
-      ...validated.options,
-      runId,
-      onProgress: (progress) => {
-        // Log progress (could be sent via websocket for real-time updates)
-        console.log(
-          `📊 Progress: ${progress.completed}/${progress.total} (${progress.percentage.toFixed(1)}%) - ` +
-          `✅ ${progress.successful} success, ❌ ${progress.failed} failed, ` +
-          `⏱️  ${progress.estimatedTimeRemaining ? Math.ceil(progress.estimatedTimeRemaining / 1000) + 's remaining' : 'calculating...'}`
-        );
-      },
-    });
+    console.log(`🚀 Started batch generation job: ${result.jobId}`);
     
-    console.log(`✅ Batch complete: ${result.successful}/${result.total} successful, $${result.totalCost.toFixed(2)}`);
-    
-    // Return summary response
+    // Return 202 Accepted with job info
     return NextResponse.json(
       {
         success: true,
-        data: {
-          runId: result.runId,
-          summary: {
-            total: result.total,
-            successful: result.successful,
-            failed: result.failed,
-            totalCost: result.totalCost,
-            totalDuration: result.totalDuration,
-            avgCostPerConversation: result.successful > 0 ? result.totalCost / result.successful : 0,
-            avgDurationPerConversation: result.successful > 0 ? result.totalDuration / result.successful : 0,
-          },
-          results: result.results.map((r) => ({
-            success: r.success,
-            conversationId: r.success ? r.data?.conversationId : undefined,
-            qualityScore: r.success ? r.data?.qualityScore : undefined,
-            error: !r.success ? r.error?.message : undefined,
-            params: {
-              persona: r.params.persona,
-              emotion: r.params.emotion,
-              topic: r.params.topic,
-            },
-          })),
-        },
+        jobId: result.jobId,
+        status: result.status,
+        estimatedCost: result.estimatedCost,
+        estimatedTime: result.estimatedTime,
+        message: 'Batch generation started. Use /api/conversations/batch/{jobId}/status to track progress.',
       },
-      { status: 201 }
+      { status: 202 }
     );
     
   } catch (error) {
     console.error('Batch generation error:', error);
     
+    // Handle Zod validation errors
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'Invalid request', 
+          details: error.errors 
+        },
+        { status: 400 }
+      );
+    }
+    
+    // Generic error handler
     return NextResponse.json(
       {
+        success: false,
         error: 'Batch generation failed',
         message: error instanceof Error ? error.message : 'Unknown error occurred',
       },
@@ -161,13 +132,14 @@ export async function GET(request: NextRequest) {
   return NextResponse.json({
     success: true,
     info: {
-      maxBatchSize: 100,
+      endpoint: 'POST /api/conversations/generate-batch',
+      description: 'Start a batch generation job',
       defaultConcurrency: 3,
       maxConcurrency: 10,
-      rateLimit: {
-        windowMs: 60000,
-        maxRequests: 50,
-      },
+      requiredFields: ['name', 'one of: conversationIds, parameterSets, or (templateId + tier)'],
+      optionalFields: ['sharedParameters', 'concurrentProcessing', 'errorHandling', 'userId', 'priority'],
+      errorHandling: ['stop', 'continue'],
+      priority: ['low', 'normal', 'high'],
     },
   });
 }

@@ -1,9 +1,3 @@
-/**
- * Filter Bar Component
- * 
- * Multi-dimensional filter controls with URL persistence
- */
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -11,6 +5,7 @@ import { Search, Filter, X, Download } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useDebounce } from '@/hooks/use-debounce';
 import {
   Select,
   SelectContent,
@@ -25,180 +20,155 @@ import {
 } from '@/components/ui/popover';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
-import { FilterConfig, ConversationStats } from '@/lib/types/conversations';
-import { toast } from 'sonner';
+import { useConversationStore } from '@/stores/conversation-store';
+import { TierType, ConversationStatus } from '@/lib/types/conversations';
 
-interface FilterBarProps {
-  filters: Partial<FilterConfig>;
-  stats: ConversationStats;
-  onChange: (filters: Partial<FilterConfig>) => void;
-  onExport?: () => void;
-}
-
-export function FilterBar({ filters, stats, onChange, onExport }: FilterBarProps) {
-  const [localFilters, setLocalFilters] = useState<Partial<FilterConfig>>(filters);
+export function FilterBar() {
+  const { 
+    filterConfig, 
+    setFilterConfig, 
+    resetFilters,
+    selectedConversationIds,
+    openExportModal
+  } = useConversationStore();
+  
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
-  const [searchValue, setSearchValue] = useState(filters.searchQuery || '');
-  const [activeQuickFilter, setActiveQuickFilter] = useState<string | null>(null);
-
-  // Sync local filters with props
+  
+  // Local search input state with debouncing
+  const [searchInput, setSearchInput] = useState(filterConfig.searchQuery || '');
+  const debouncedSearch = useDebounce(searchInput, 300);
+  
+  // Update filter config when debounced search changes
   useEffect(() => {
-    setLocalFilters(filters);
-    setSearchValue(filters.searchQuery || '');
-  }, [filters]);
-
-  // Quick filters configuration
+    setFilterConfig({ searchQuery: debouncedSearch });
+  }, [debouncedSearch, setFilterConfig]);
+  
+  // Quick filter buttons
   const quickFilters = [
-    {
-      label: 'All',
-      count: stats.total,
-      filter: {},
-      id: 'all',
-    },
-    {
-      label: 'Needs Review',
-      count: stats.pendingReview,
-      filter: { statuses: ['pending_review'] },
-      id: 'pending_review',
-    },
-    {
-      label: 'Approved',
-      count: stats.approved,
-      filter: { statuses: ['approved'] },
-      id: 'approved',
-    },
-    {
-      label: 'High Quality',
-      count: stats.highQuality,
-      filter: { qualityRange: { min: 8, max: 10 } },
-      id: 'high_quality',
-    },
+    { label: 'All', value: 'all' },
+    { label: 'Templates', value: 'template', tierType: 'template' as TierType },
+    { label: 'Scenarios', value: 'scenario', tierType: 'scenario' as TierType },
+    { label: 'Edge Cases', value: 'edge_case', tierType: 'edge_case' as TierType },
+    { label: 'Needs Review', value: 'pending_review', status: 'pending_review' as ConversationStatus },
+    { label: 'Approved', value: 'approved', status: 'approved' as ConversationStatus },
+    { label: 'High Quality (≥8)', value: 'high_quality' },
   ];
-
-  const handleQuickFilter = (filter: Partial<FilterConfig>, id: string) => {
-    setActiveQuickFilter(id);
-    setLocalFilters(filter);
-    onChange(filter);
+  
+  const [activeQuickFilter, setActiveQuickFilter] = useState('all');
+  
+  const handleQuickFilter = (filterValue: string, tierType?: TierType, status?: ConversationStatus) => {
+    setActiveQuickFilter(filterValue);
+    
+    if (filterValue === 'all') {
+      resetFilters();
+    } else if (tierType) {
+      setFilterConfig({ tierTypes: [tierType], statuses: [], qualityRange: undefined });
+    } else if (status) {
+      setFilterConfig({ statuses: [status], tierTypes: [], qualityRange: undefined });
+    } else if (filterValue === 'high_quality') {
+      setFilterConfig({ qualityRange: { min: 8, max: 10 }, tierTypes: [], statuses: [] });
+    }
   };
-
-  const handleFilterChange = <K extends keyof FilterConfig>(
-    key: K,
-    value: FilterConfig[K]
-  ) => {
-    const newFilters = { ...localFilters, [key]: value };
-    setLocalFilters(newFilters);
-    setActiveQuickFilter(null);
-  };
-
-  const handleApplyFilters = () => {
-    onChange(localFilters);
-    setShowAdvancedFilters(false);
-    toast.success('Filters applied');
-  };
-
-  const handleClearFilters = () => {
-    const cleared = {};
-    setLocalFilters(cleared);
-    setSearchValue('');
-    setActiveQuickFilter('all');
-    onChange(cleared);
-    toast.info('Filters cleared');
-  };
-
-  const handleSearchChange = (value: string) => {
-    setSearchValue(value);
-    const newFilters = {
-      ...localFilters,
-      searchQuery: value || undefined,
-    };
-    setLocalFilters(newFilters);
-
-    // Debounce search
-    const timeoutId = setTimeout(() => {
-      onChange(newFilters);
-    }, 500);
-
-    return () => clearTimeout(timeoutId);
-  };
-
-  const getActiveFilterCount = () => {
-    let count = 0;
-    if (localFilters.statuses && localFilters.statuses.length > 0) count++;
-    if (localFilters.tierTypes && localFilters.tierTypes.length > 0) count++;
-    if (localFilters.personas && localFilters.personas.length > 0) count++;
-    if (localFilters.emotions && localFilters.emotions.length > 0) count++;
-    if (localFilters.categories && localFilters.categories.length > 0) count++;
-    if (localFilters.qualityRange) count++;
-    if (localFilters.dateRange) count++;
-    if (localFilters.searchQuery) count++;
-    return count;
-  };
-
-  const hasActiveFilters = getActiveFilterCount() > 0;
-
+  
+  const hasActiveFilters = 
+    (filterConfig.tierTypes && filterConfig.tierTypes.length > 0) ||
+    (filterConfig.statuses && filterConfig.statuses.length > 0) ||
+    filterConfig.qualityRange ||
+    (filterConfig.searchQuery && filterConfig.searchQuery.length > 0);
+  
+  const activeFilterCount = 
+    (filterConfig.tierTypes?.length || 0) +
+    (filterConfig.statuses?.length || 0) +
+    (filterConfig.qualityRange ? 1 : 0);
+  
   return (
     <div className="space-y-4">
-      {/* Search Bar and Action Buttons */}
+      {/* Search Bar and Main Actions */}
       <div className="flex gap-2">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search by title, persona, or content..."
-            value={searchValue}
-            onChange={(e) => handleSearchChange(e.target.value)}
+            placeholder="Search conversations..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
             className="pl-10"
           />
-          {searchValue && (
+          {searchInput && (
             <Button
               variant="ghost"
               size="sm"
               className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0"
               onClick={() => {
-                setSearchValue('');
-                handleSearchChange('');
+                setSearchInput('');
+                setFilterConfig({ searchQuery: '' });
               }}
             >
               <X className="h-4 w-4" />
             </Button>
           )}
         </div>
-
-        {/* Advanced Filters Popover */}
+        
         <Popover open={showAdvancedFilters} onOpenChange={setShowAdvancedFilters}>
           <PopoverTrigger asChild>
             <Button variant="outline" className="gap-2">
               <Filter className="h-4 w-4" />
               Filters
-              {getActiveFilterCount() > 0 && (
+              {activeFilterCount > 0 && (
                 <Badge variant="secondary" className="ml-1">
-                  {getActiveFilterCount()}
+                  {activeFilterCount}
                 </Badge>
               )}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-96" align="end">
+          <PopoverContent className="w-80" align="end">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h4 className="font-semibold">Advanced Filters</h4>
+                <h4 className="font-medium">Advanced Filters</h4>
                 {hasActiveFilters && (
-                  <Button variant="ghost" size="sm" onClick={handleClearFilters}>
+                  <Button variant="ghost" size="sm" onClick={resetFilters}>
                     Clear All
                   </Button>
                 )}
               </div>
-
+              
               <div className="space-y-3">
+                {/* Tier Filter */}
+                <div className="space-y-2">
+                  <Label>Tier</Label>
+                  <Select 
+                    value={filterConfig.tierTypes?.[0] || 'all'}
+                    onValueChange={(value) => {
+                      if (value === 'all') {
+                        setFilterConfig({ tierTypes: [] });
+                      } else {
+                        setFilterConfig({ tierTypes: [value as TierType] });
+                      }
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select tier" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Tiers</SelectItem>
+                      <SelectItem value="template">Templates</SelectItem>
+                      <SelectItem value="scenario">Scenarios</SelectItem>
+                      <SelectItem value="edge_case">Edge Cases</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
                 {/* Status Filter */}
                 <div className="space-y-2">
                   <Label>Status</Label>
                   <Select
-                    value={localFilters.statuses?.[0] || 'all'}
-                    onValueChange={(value) =>
-                      handleFilterChange(
-                        'statuses',
-                        value === 'all' ? undefined : [value]
-                      )
-                    }
+                    value={filterConfig.statuses?.[0] || 'all'}
+                    onValueChange={(value) => {
+                      if (value === 'all') {
+                        setFilterConfig({ statuses: [] });
+                      } else {
+                        setFilterConfig({ statuses: [value as ConversationStatus] });
+                      }
+                    }}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select status" />
@@ -214,169 +184,193 @@ export function FilterBar({ filters, stats, onChange, onExport }: FilterBarProps
                     </SelectContent>
                   </Select>
                 </div>
-
-                {/* Tier Filter */}
-                <div className="space-y-2">
-                  <Label>Tier</Label>
-                  <Select
-                    value={localFilters.tierTypes?.[0] || 'all'}
-                    onValueChange={(value) =>
-                      handleFilterChange(
-                        'tierTypes',
-                        value === 'all' ? undefined : [value]
-                      )
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select tier" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Tiers</SelectItem>
-                      <SelectItem value="template">Template</SelectItem>
-                      <SelectItem value="scenario">Scenario</SelectItem>
-                      <SelectItem value="edge_case">Edge Case</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Quality Score Range */}
-                <div className="space-y-2">
-                  <Label>
-                    Quality Score: {localFilters.qualityRange?.min || 0} -{' '}
-                    {localFilters.qualityRange?.max || 10}
-                  </Label>
-                  <div className="pt-2">
+                
+                {/* Quality Score Range Filter */}
+                <div className="space-y-3">
+                  <Label className="text-sm font-semibold">Quality Score Range</Label>
+                  
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Min:</span>
+                      <span className="font-semibold">{filterConfig.qualityRange?.min || 0}</span>
+                    </div>
                     <Slider
-                      value={[
-                        localFilters.qualityRange?.min || 0,
-                        localFilters.qualityRange?.max || 10,
-                      ]}
-                      min={0}
+                      value={[filterConfig.qualityRange?.min || 0]}
+                      onValueChange={([value]) => {
+                        const currentMax = filterConfig.qualityRange?.max || 10;
+                        if (value === 0 && currentMax === 10) {
+                          setFilterConfig({ qualityRange: undefined });
+                        } else {
+                          setFilterConfig({ 
+                            qualityRange: { min: value, max: currentMax } 
+                          });
+                        }
+                      }}
                       max={10}
                       step={0.5}
-                      onValueChange={([min, max]) =>
-                        handleFilterChange('qualityRange', { min, max })
-                      }
+                      className="w-full"
                     />
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Max:</span>
+                      <span className="font-semibold">{filterConfig.qualityRange?.max || 10}</span>
+                    </div>
+                    <Slider
+                      value={[filterConfig.qualityRange?.max || 10]}
+                      onValueChange={([value]) => {
+                        const currentMin = filterConfig.qualityRange?.min || 0;
+                        if (value === 10 && currentMin === 0) {
+                          setFilterConfig({ qualityRange: undefined });
+                        } else {
+                          setFilterConfig({ 
+                            qualityRange: { min: currentMin, max: value } 
+                          });
+                        }
+                      }}
+                      max={10}
+                      step={0.5}
+                      className="w-full"
+                    />
+                  </div>
+
+                  {/* Quick quality filters */}
+                  <div className="flex flex-wrap gap-1.5 pt-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-7 text-xs"
+                      onClick={() => setFilterConfig({ qualityRange: { min: 8, max: 10 } })}
+                    >
+                      High (≥8)
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-7 text-xs"
+                      onClick={() => setFilterConfig({ qualityRange: { min: 6, max: 8 } })}
+                    >
+                      Medium (6-8)
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-7 text-xs"
+                      onClick={() => setFilterConfig({ qualityRange: { min: 0, max: 6 } })}
+                    >
+                      Low (&lt;6)
+                    </Button>
                   </div>
                 </div>
               </div>
-
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  className="flex-1"
-                  onClick={() => setShowAdvancedFilters(false)}
-                >
-                  Cancel
-                </Button>
-                <Button className="flex-1" onClick={handleApplyFilters}>
-                  Apply Filters
-                </Button>
-              </div>
+              
+              <Button 
+                className="w-full" 
+                onClick={() => setShowAdvancedFilters(false)}
+              >
+                Apply Filters
+              </Button>
             </div>
           </PopoverContent>
         </Popover>
-
-        {/* Export Button */}
-        {onExport && (
-          <Button variant="outline" onClick={onExport} className="gap-2">
-            <Download className="h-4 w-4" />
-            Export
-          </Button>
-        )}
+        
+        <Button variant="outline" onClick={openExportModal} className="gap-2">
+          <Download className="h-4 w-4" />
+          Export
+        </Button>
       </div>
-
+      
       {/* Quick Filters */}
       <div className="flex flex-wrap gap-2">
-        {quickFilters.map((qf) => (
+        {quickFilters.map((filter) => (
           <Button
-            key={qf.id}
-            variant={activeQuickFilter === qf.id ? 'default' : 'outline'}
+            key={filter.value}
+            variant={activeQuickFilter === filter.value ? "default" : "outline"}
             size="sm"
-            onClick={() => handleQuickFilter(qf.filter, qf.id)}
+            onClick={() => handleQuickFilter(filter.value, filter.tierType, filter.status)}
           >
-            {qf.label}
-            <Badge variant="secondary" className="ml-2">
-              {qf.count}
-            </Badge>
+            {filter.label}
           </Button>
         ))}
       </div>
-
+      
       {/* Active Filters Display */}
       {hasActiveFilters && (
         <div className="flex flex-wrap gap-2 items-center">
           <span className="text-sm text-muted-foreground">Active filters:</span>
-
-          {localFilters.searchQuery && (
+          
+          {filterConfig.searchQuery && (
             <Badge variant="secondary" className="gap-1">
-              Search: "{localFilters.searchQuery}"
-              <X
-                className="h-3 w-3 cursor-pointer hover:text-destructive"
-                onClick={() => {
-                  setSearchValue('');
-                  handleSearchChange('');
-                }}
+              Search: &quot;{filterConfig.searchQuery}&quot;
+              <X 
+                className="h-3 w-3 cursor-pointer" 
+                onClick={() => setFilterConfig({ searchQuery: '' })}
               />
             </Badge>
           )}
-
-          {localFilters.statuses && localFilters.statuses.length > 0 && (
+          
+          {filterConfig.tierTypes && filterConfig.tierTypes.length > 0 && (
             <Badge variant="secondary" className="gap-1">
-              Status: {localFilters.statuses.join(', ')}
-              <X
-                className="h-3 w-3 cursor-pointer hover:text-destructive"
-                onClick={() => {
-                  const { statuses, ...rest } = localFilters;
-                  setLocalFilters(rest);
-                  onChange(rest);
-                }}
+              Tier: {filterConfig.tierTypes[0]}
+              <X 
+                className="h-3 w-3 cursor-pointer" 
+                onClick={() => setFilterConfig({ tierTypes: [] })}
               />
             </Badge>
           )}
-
-          {localFilters.tierTypes && localFilters.tierTypes.length > 0 && (
+          
+          {filterConfig.statuses && filterConfig.statuses.length > 0 && (
             <Badge variant="secondary" className="gap-1">
-              Tier: {localFilters.tierTypes.join(', ')}
-              <X
-                className="h-3 w-3 cursor-pointer hover:text-destructive"
-                onClick={() => {
-                  const { tierTypes, ...rest } = localFilters;
-                  setLocalFilters(rest);
-                  onChange(rest);
-                }}
+              Status: {filterConfig.statuses[0]}
+              <X 
+                className="h-3 w-3 cursor-pointer" 
+                onClick={() => setFilterConfig({ statuses: [] })}
               />
             </Badge>
           )}
-
-          {localFilters.qualityRange && (
+          
+          {filterConfig.qualityRange && (
             <Badge variant="secondary" className="gap-1">
-              Quality: {localFilters.qualityRange.min} - {localFilters.qualityRange.max}
-              <X
-                className="h-3 w-3 cursor-pointer hover:text-destructive"
-                onClick={() => {
-                  const { qualityRange, ...rest } = localFilters;
-                  setLocalFilters(rest);
-                  onChange(rest);
-                }}
+              Quality: {filterConfig.qualityRange.min}-{filterConfig.qualityRange.max}
+              <X 
+                className="h-3 w-3 cursor-pointer" 
+                onClick={() => setFilterConfig({ qualityRange: undefined })}
               />
             </Badge>
           )}
-
+          
           {hasActiveFilters && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleClearFilters}
-              className="h-7 text-xs"
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={resetFilters}
+              className="text-xs"
             >
-              Clear all filters
+              Clear all
             </Button>
           )}
+        </div>
+      )}
+      
+      {/* Bulk Actions Bar */}
+      {selectedConversationIds.length > 0 && (
+        <div className="bg-primary/10 border border-primary/20 rounded-lg p-3 flex items-center gap-4">
+          <span className="text-sm font-medium">
+            {selectedConversationIds.length} conversation{selectedConversationIds.length !== 1 ? 's' : ''} selected
+          </span>
+          
+          <div className="flex gap-2 ml-auto">
+            <Button variant="outline" size="sm" className="gap-2">
+              <Download className="h-4 w-4" />
+              Export Selected
+            </Button>
+            <Button variant="destructive" size="sm">
+              Delete Selected
+            </Button>
+          </div>
         </div>
       )}
     </div>
   );
 }
-

@@ -16,7 +16,20 @@ git init
 git status
 ```
 
-#### Step 2: Stage and Commit Your Files
+#### Step 2: Check and Switch Default Branch to Main (Recommended)
+```bash
+# Check current branch name
+git branch
+
+# If you're on 'master', rename it to 'main' (GitHub's current standard)
+git branch -m master main
+
+# If you're already on 'main' or another branch, you can skip this step
+# Verify the branch change
+git branch
+```
+
+#### Step 3: Stage and Commit Your Files
 ```bash
 # Add all files to staging
 git add .
@@ -28,7 +41,7 @@ git add filename.txt
 git commit -m "Initial commit"
 ```
 
-#### Step 3: Create New Repository on GitHub
+#### Step 4: Create New Repository on GitHub
 1. Go to [GitHub.com](https://github.com)
 2. Click the "+" icon in top right corner
 3. Select "New repository"
@@ -36,8 +49,9 @@ git commit -m "Initial commit"
 5. Choose public or private
 6. **DO NOT** initialize with README, .gitignore, or license (since you already have local files)
 7. Click "Create repository"
+8. **Important**: GitHub now defaults to 'main' branch, which matches our local setup
 
-#### Step 4: Connect Local Repository to GitHub
+#### Step 5: Connect Local Repository to GitHub
 ```bash
 # Add the remote origin (replace with your actual GitHub URL)
 git remote add origin https://github.com/jamesjordanmarketing/train-data.git
@@ -46,13 +60,26 @@ git remote add origin https://github.com/jamesjordanmarketing/train-data.git
 git remote -v
 ```
 
-#### Step 5: Push to GitHub
+#### Step 6: Push to GitHub
 ```bash
-# Push your code to GitHub (first time)
+# Push your code to GitHub (first time) - using 'main' branch
 git push -u origin main
 
-# Or if your default branch is master
-git push -u origin master
+# This sets 'main' as the default upstream branch for future pushes
+```
+
+#### Step 7: Set Main as Default Branch (If Needed)
+If you accidentally pushed to 'master' first or need to change the default:
+```bash
+# If you have both master and main branches, delete master after confirming main is correct
+git push origin --delete master
+
+# Or if you need to switch from master to main on GitHub:
+# 1. Go to your repository on GitHub
+# 2. Click Settings tab
+# 3. Click Branches in left sidebar
+# 4. Change default branch from master to main
+# 5. Delete the master branch if no longer needed
 ```
 
 #### Step 6: Verify Upload
@@ -69,8 +96,25 @@ git push
 
 #### Troubleshooting:
 - **Authentication Error**: You may need to use a Personal Access Token instead of password
-- **Branch Name Issues**: Check if your default branch is `main` or `master` with `git branch`
+- **Branch Name Issues**: 
+  - Check your current branch: `git branch`
+  - If on 'master' and want to switch to 'main': `git branch -m master main`
+  - If you already pushed to 'master' and want to switch to 'main':
+    ```bash
+    git branch -m master main
+    git push -u origin main
+    git push origin --delete master
+    ```
 - **Remote Already Exists**: Use `git remote set-url origin https://github.com/yourusername/your-repo-name.git`
+- **Default Branch Mismatch**: 
+  - GitHub creates 'main' by default, but older Git installations may create 'master'
+  - Always rename to 'main' before first push for consistency
+  - Use `git config --global init.defaultBranch main` to set 'main' as default for future repositories
+- **Push Rejected**: If you get "failed to push some refs", try:
+  ```bash
+  git pull origin main --rebase
+  git push origin main
+  ```
 
 
 ## Push to existing repository

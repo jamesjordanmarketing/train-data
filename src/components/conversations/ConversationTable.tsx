@@ -1,12 +1,6 @@
-/**
- * Conversation Table Component
- * 
- * Displays conversations in a sortable table with selection and inline actions
- */
-
 'use client';
 
-import { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import {
   Table,
   TableBody,
@@ -22,450 +16,354 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Skeleton } from '@/components/ui/skeleton';
-import {
-  MoreVertical,
-  Eye,
-  ThumbsUp,
-  ThumbsDown,
+import { 
+  MoreVertical, 
+  Eye, 
+  Edit, 
+  Copy, 
+  Download, 
   Trash2,
-  Download,
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
+  Check,
+  X
 } from 'lucide-react';
 import { Conversation } from '@/lib/types/conversations';
-import { ConversationPreviewModal } from './ConversationPreviewModal';
-import { 
-  getTierVariant, 
-  getStatusVariant, 
-  formatDate,
-  getQualityColor 
-} from '@/lib/utils/query-params';
+import { useUpdateConversation, useDeleteConversation } from '@/hooks/use-conversations';
+import { useConversationStore } from '@/stores/conversation-store';
+import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { TableSkeleton } from '@/components/ui/skeletons';
+import { useTableKeyboardNavigation } from './useTableKeyboardNavigation';
+
+const statusColors = {
+  draft: 'bg-gray-100 text-gray-700',
+  generated: 'bg-blue-100 text-blue-700',
+  pending_review: 'bg-yellow-100 text-yellow-700',
+  approved: 'bg-green-100 text-green-700',
+  rejected: 'bg-red-100 text-red-700',
+  needs_revision: 'bg-orange-100 text-orange-700',
+  none: 'bg-gray-100 text-gray-700',
+  failed: 'bg-red-100 text-red-700',
+};
+
+const tierColors = {
+  template: 'bg-purple-100 text-purple-700',
+  scenario: 'bg-blue-100 text-blue-700',
+  edge_case: 'bg-orange-100 text-orange-700',
+};
 
 interface ConversationTableProps {
   conversations: Conversation[];
-  selectedIds: string[];
-  onSelectionChange: (ids: string[]) => void;
-  onRefresh: () => void;
-  isLoading?: boolean;
+  isLoading: boolean;
 }
 
-type SortKey = keyof Conversation;
-type SortDirection = 'asc' | 'desc';
-
-interface SortConfig {
-  key: SortKey;
-  direction: SortDirection;
-}
-
-export function ConversationTable({
-  conversations,
-  selectedIds,
-  onSelectionChange,
-  onRefresh,
-  isLoading = false,
-}: ConversationTableProps) {
-  const [sortConfig, setSortConfig] = useState<SortConfig>({
-    key: 'createdAt',
-    direction: 'desc',
-  });
-  const [previewConversationId, setPreviewConversationId] = useState<string | null>(null);
-
-  // Handle selection
+export const ConversationTable = React.memo(function ConversationTable({ conversations, isLoading }: ConversationTableProps) {
+  const { 
+    selectedConversationIds, 
+    toggleConversationSelection,
+    selectAllConversations,
+    clearSelection,
+    showConfirm,
+    openConversationDetail
+  } = useConversationStore();
+  
+  const [sortColumn, setSortColumn] = useState<keyof Conversation>('createdAt');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  
+  const updateMutation = useUpdateConversation();
+  const deleteMutation = useDeleteConversation();
+  
+  // Memoized sorting logic for performance
+  const sortedConversations = useMemo(() => {
+    return [...conversations].sort((a, b) => {
+      const aVal = a[sortColumn];
+      const bVal = b[sortColumn];
+      
+      if (aVal == null && bVal == null) return 0;
+      if (aVal == null) return sortDirection === 'asc' ? -1 : 1;
+      if (bVal == null) return sortDirection === 'asc' ? 1 : -1;
+      
+      if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
+      if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }, [conversations, sortColumn, sortDirection]);
+  
+  // Add keyboard navigation
+  const { focusedRowIndex } = useTableKeyboardNavigation(sortedConversations);
+  
+  const handleSort = (column: keyof Conversation) => {
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortColumn(column);
+      setSortDirection('asc');
+    }
+  };
+  
+  const getSortIcon = (column: keyof Conversation) => {
+    if (sortColumn !== column) return <ArrowUpDown className="h-4 w-4" />;
+    return sortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />;
+  };
+  
+  const allSelected = conversations.length > 0 && conversations.every(c => selectedConversationIds.includes(c.id));
+  const someSelected = selectedConversationIds.length > 0 && !allSelected;
+  
   const handleSelectAll = () => {
-    if (selectedIds.length === conversations.length) {
-      onSelectionChange([]);
+    if (allSelected) {
+      clearSelection();
     } else {
-      onSelectionChange(conversations.map((c) => c.id));
+      selectAllConversations(conversations.map(c => c.id));
     }
   };
-
-  const handleSelectOne = (id: string) => {
-    if (selectedIds.includes(id)) {
-      onSelectionChange(selectedIds.filter((sid) => sid !== id));
-    } else {
-      onSelectionChange([...selectedIds, id]);
+  
+  // Memoized action handlers for performance
+  const handleApprove = useCallback(async (id: string) => {
+    const toastId = toast.loading('Approving conversation...');
+    try {
+      await updateMutation.mutateAsync({ 
+        id, 
+        updates: { status: 'approved' } 
+      });
+      toast.success('Conversation approved', { id: toastId });
+    } catch (error: any) {
+      toast.error('Failed to approve conversation', {
+        id: toastId,
+        description: error?.message || 'An error occurred',
+        action: {
+          label: 'Retry',
+          onClick: () => handleApprove(id)
+        }
+      });
     }
-  };
-
-  // Handle sorting
-  const handleSort = (key: SortKey) => {
-    setSortConfig((current) => ({
-      key,
-      direction: current.key === key && current.direction === 'asc' ? 'desc' : 'asc',
-    }));
-  };
-
-  const getSortIcon = (key: SortKey) => {
-    if (sortConfig.key !== key) {
-      return <ArrowUpDown className="h-4 w-4 ml-1 opacity-40" />;
+  }, [updateMutation]);
+  
+  const handleReject = useCallback(async (id: string) => {
+    const toastId = toast.loading('Rejecting conversation...');
+    try {
+      await updateMutation.mutateAsync({ 
+        id, 
+        updates: { status: 'rejected' } 
+      });
+      toast.success('Conversation rejected', { id: toastId });
+    } catch (error: any) {
+      toast.error('Failed to reject conversation', {
+        id: toastId,
+        description: error?.message || 'An error occurred'
+      });
     }
-    return sortConfig.direction === 'asc' ? (
-      <ArrowUp className="h-4 w-4 ml-1" />
-    ) : (
-      <ArrowDown className="h-4 w-4 ml-1" />
+  }, [updateMutation]);
+  
+  const handleDelete = useCallback((id: string, title?: string) => {
+    showConfirm(
+      'Delete Conversation',
+      `Are you sure you want to delete ${title ? `"${title}"` : 'this conversation'}? This action cannot be undone.`,
+      async () => {
+        const toastId = toast.loading('Deleting conversation...');
+        try {
+          await deleteMutation.mutateAsync(id);
+          toast.success('Conversation deleted successfully', { id: toastId });
+        } catch (error: any) {
+          toast.error('Failed to delete conversation', {
+            id: toastId,
+            description: error?.message || 'An error occurred'
+          });
+        }
+      }
     );
-  };
-
-  // Sort conversations
-  const sortedConversations = [...conversations].sort((a, b) => {
-    const aValue = a[sortConfig.key];
-    const bValue = b[sortConfig.key];
-
-    if (aValue === undefined || aValue === null) return 1;
-    if (bValue === undefined || bValue === null) return -1;
-
-    if (typeof aValue === 'string' && typeof bValue === 'string') {
-      return sortConfig.direction === 'asc'
-        ? aValue.localeCompare(bValue)
-        : bValue.localeCompare(aValue);
-    }
-
-    if (typeof aValue === 'number' && typeof bValue === 'number') {
-      return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
-    }
-
-    return 0;
-  });
-
-  // Inline actions
-  const handleApprove = async (id: string) => {
+  }, [showConfirm, deleteMutation]);
+  
+  const handleDuplicate = useCallback((conversation: Conversation) => {
+    // In a real app, this would call an API
+    toast.info('Duplicate functionality coming soon');
+  }, []);
+  
+  const handleMoveToReview = useCallback(async (id: string) => {
+    const toastId = toast.loading('Moving to review queue...');
     try {
-      const response = await fetch(`/api/conversations/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'approved' }),
+      await updateMutation.mutateAsync({ 
+        id, 
+        updates: { status: 'pending_review' } 
       });
-
-      if (!response.ok) throw new Error('Failed to approve');
-
-      toast.success('Conversation approved');
-      onRefresh();
-    } catch (error) {
-      console.error('Error approving conversation:', error);
-      toast.error('Failed to approve conversation');
-    }
-  };
-
-  const handleReject = async (id: string) => {
-    try {
-      const response = await fetch(`/api/conversations/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'rejected' }),
+      toast.success('Moved to review queue', { id: toastId });
+    } catch (error: any) {
+      toast.error('Failed to move conversation', {
+        id: toastId,
+        description: error?.message || 'An error occurred'
       });
-
-      if (!response.ok) throw new Error('Failed to reject');
-
-      toast.success('Conversation rejected');
-      onRefresh();
-    } catch (error) {
-      console.error('Error rejecting conversation:', error);
-      toast.error('Failed to reject conversation');
     }
+  }, [updateMutation]);
+  
+  const getQualityScoreColor = (score: number) => {
+    if (score >= 8) return 'text-green-600 font-semibold';
+    if (score >= 6) return 'text-yellow-600 font-semibold';
+    return 'text-red-600 font-semibold';
   };
-
-  const handleDelete = async (id: string) => {
-    if (!confirm('Delete this conversation? This cannot be undone.')) {
-      return;
-    }
-
-    try {
-      const response = await fetch(`/api/conversations/${id}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) throw new Error('Failed to delete');
-
-      toast.success('Conversation deleted');
-      onRefresh();
-    } catch (error) {
-      console.error('Error deleting conversation:', error);
-      toast.error('Failed to delete conversation');
-    }
+  
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
   };
-
-  const handleExportSingle = async (id: string) => {
-    try {
-      const response = await fetch(`/api/conversations/${id}?includeTurns=true`);
-      if (!response.ok) throw new Error('Failed to export');
-
-      const conversation = await response.json();
-      const blob = new Blob([JSON.stringify(conversation, null, 2)], {
-        type: 'application/json',
-      });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `conversation-${id}.json`;
-      a.click();
-      window.URL.revokeObjectURL(url);
-
-      toast.success('Conversation exported');
-    } catch (error) {
-      console.error('Error exporting conversation:', error);
-      toast.error('Failed to export conversation');
-    }
-  };
-
+  
   // Loading skeleton
   if (isLoading) {
-    return (
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-12">
-                <Skeleton className="h-4 w-4" />
-              </TableHead>
-              <TableHead>Title</TableHead>
-              <TableHead>Persona</TableHead>
-              <TableHead>Tier</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Quality</TableHead>
-              <TableHead>Turns</TableHead>
-              <TableHead>Created</TableHead>
-              <TableHead className="w-12"></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <TableRow key={i}>
-                <TableCell><Skeleton className="h-4 w-4" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-32" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                <TableCell><Skeleton className="h-5 w-16" /></TableCell>
-                <TableCell><Skeleton className="h-5 w-20" /></TableCell>
-                <TableCell><Skeleton className="h-5 w-12" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-8" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                <TableCell><Skeleton className="h-8 w-8" /></TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    );
+    return <TableSkeleton rows={10} />;
   }
-
-  // Empty state
-  if (conversations.length === 0) {
-    return (
-      <div className="rounded-md border">
-        <div className="flex flex-col items-center justify-center py-12 text-center">
-          <p className="text-lg text-muted-foreground mb-2">No conversations found</p>
-          <p className="text-sm text-muted-foreground mb-4">
-            Try adjusting your filters or create new conversations
-          </p>
-          <Button>Generate Conversations</Button>
-        </div>
-      </div>
-    );
-  }
-
+  
   return (
-    <>
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
+    <div className="rounded-md border">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-12">
+              <Checkbox 
+                checked={someSelected ? 'indeterminate' : allSelected}
+                onCheckedChange={handleSelectAll}
+              />
+            </TableHead>
+            <TableHead className="cursor-pointer" onClick={() => handleSort('conversationId')}>
+              <div className="flex items-center gap-2">
+                ID
+                {getSortIcon('conversationId')}
+              </div>
+            </TableHead>
+            <TableHead className="cursor-pointer" onClick={() => handleSort('tier')}>
+              <div className="flex items-center gap-2">
+                Tier
+                {getSortIcon('tier')}
+              </div>
+            </TableHead>
+            <TableHead className="cursor-pointer" onClick={() => handleSort('status')}>
+              <div className="flex items-center gap-2">
+                Status
+                {getSortIcon('status')}
+              </div>
+            </TableHead>
+            <TableHead className="cursor-pointer" onClick={() => handleSort('qualityScore')}>
+              <div className="flex items-center gap-2">
+                Quality
+                {getSortIcon('qualityScore')}
+              </div>
+            </TableHead>
+            <TableHead>Turns</TableHead>
+            <TableHead className="cursor-pointer" onClick={() => handleSort('createdAt')}>
+              <div className="flex items-center gap-2">
+                Created
+                {getSortIcon('createdAt')}
+              </div>
+            </TableHead>
+            <TableHead className="w-12"></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {sortedConversations.length === 0 ? (
             <TableRow>
-              <TableHead className="w-12">
-                <Checkbox
-                  checked={
-                    conversations.length > 0 && selectedIds.length === conversations.length
-                  }
-                  onCheckedChange={handleSelectAll}
-                  aria-label="Select all"
-                />
-              </TableHead>
-              <TableHead>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleSort('title')}
-                  className="h-8 p-0 hover:bg-transparent"
-                >
-                  Title
-                  {getSortIcon('title')}
-                </Button>
-              </TableHead>
-              <TableHead>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleSort('persona')}
-                  className="h-8 p-0 hover:bg-transparent"
-                >
-                  Persona
-                  {getSortIcon('persona')}
-                </Button>
-              </TableHead>
-              <TableHead>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleSort('tier')}
-                  className="h-8 p-0 hover:bg-transparent"
-                >
-                  Tier
-                  {getSortIcon('tier')}
-                </Button>
-              </TableHead>
-              <TableHead>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleSort('status')}
-                  className="h-8 p-0 hover:bg-transparent"
-                >
-                  Status
-                  {getSortIcon('status')}
-                </Button>
-              </TableHead>
-              <TableHead>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleSort('qualityScore')}
-                  className="h-8 p-0 hover:bg-transparent"
-                >
-                  Quality
-                  {getSortIcon('qualityScore')}
-                </Button>
-              </TableHead>
-              <TableHead>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleSort('turnCount')}
-                  className="h-8 p-0 hover:bg-transparent"
-                >
-                  Turns
-                  {getSortIcon('turnCount')}
-                </Button>
-              </TableHead>
-              <TableHead>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleSort('createdAt')}
-                  className="h-8 p-0 hover:bg-transparent"
-                >
-                  Created
-                  {getSortIcon('createdAt')}
-                </Button>
-              </TableHead>
-              <TableHead className="w-12"></TableHead>
+              <TableCell colSpan={8} className="h-24 text-center text-muted-foreground">
+                No conversations found
+              </TableCell>
             </TableRow>
-          </TableHeader>
-          <TableBody>
-            {sortedConversations.map((conversation) => (
-              <TableRow key={conversation.id}>
-                <TableCell>
+          ) : (
+            sortedConversations.map((conversation, index) => (
+              <TableRow 
+                key={conversation.id}
+                data-row-index={index}
+                tabIndex={0}
+                className={cn(
+                  "cursor-pointer hover:bg-muted/50 outline-none",
+                  selectedConversationIds.includes(conversation.id) && "bg-muted",
+                  focusedRowIndex === index && "ring-2 ring-primary ring-inset"
+                )}
+                onClick={() => openConversationDetail(conversation.id)}
+              >
+                <TableCell onClick={(e) => e.stopPropagation()}>
                   <Checkbox
-                    checked={selectedIds.includes(conversation.id)}
-                    onCheckedChange={() => handleSelectOne(conversation.id)}
-                    aria-label={`Select ${conversation.title || 'conversation'}`}
+                    checked={selectedConversationIds.includes(conversation.id)}
+                    onCheckedChange={() => toggleConversationSelection(conversation.id)}
                   />
                 </TableCell>
-                <TableCell className="font-medium max-w-xs truncate">
-                  {conversation.title || 'Untitled'}
-                </TableCell>
-                <TableCell className="max-w-xs truncate">
-                  {conversation.persona}
+                <TableCell className="font-mono text-sm">
+                  {conversation.conversationId}
                 </TableCell>
                 <TableCell>
-                  <Badge variant={getTierVariant(conversation.tier)}>
-                    {conversation.tier}
+                  <Badge className={tierColors[conversation.tier]}>
+                    {conversation.tier === 'edge_case' ? 'Edge Case' : conversation.tier.charAt(0).toUpperCase() + conversation.tier.slice(1)}
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  <Badge variant={getStatusVariant(conversation.status)}>
-                    {conversation.status}
+                  <Badge className={statusColors[conversation.status]}>
+                    {conversation.status.replace('_', ' ')}
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  {conversation.qualityScore ? (
-                    <Badge
-                      variant="outline"
-                      className={`text-${getQualityColor(conversation.qualityScore)}-600 border-${getQualityColor(conversation.qualityScore)}-600`}
-                    >
+                  {conversation.qualityScore !== undefined && conversation.qualityScore > 0 ? (
+                    <span className={getQualityScoreColor(conversation.qualityScore)}>
                       {conversation.qualityScore.toFixed(1)}
-                    </Badge>
+                    </span>
                   ) : (
-                    <span className="text-muted-foreground">-</span>
+                    <span className="text-muted-foreground text-sm">N/A</span>
                   )}
                 </TableCell>
                 <TableCell>{conversation.turnCount}</TableCell>
-                <TableCell className="text-muted-foreground text-sm">
+                <TableCell className="text-sm text-muted-foreground">
                   {formatDate(conversation.createdAt)}
                 </TableCell>
-                <TableCell>
+                <TableCell onClick={(e) => e.stopPropagation()}>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                      <Button variant="ghost" size="sm">
                         <MoreVertical className="h-4 w-4" />
-                        <span className="sr-only">Open menu</span>
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem
-                        onClick={() => setPreviewConversationId(conversation.id)}
-                      >
-                        <Eye className="mr-2 h-4 w-4" />
-                        Preview
+                      <DropdownMenuItem onClick={() => openConversationDetail(conversation.id)}>
+                        <Eye className="h-4 w-4 mr-2" />
+                        View Details
                       </DropdownMenuItem>
-                      <DropdownMenuSeparator />
                       <DropdownMenuItem onClick={() => handleApprove(conversation.id)}>
-                        <ThumbsUp className="mr-2 h-4 w-4" />
+                        <Check className="h-4 w-4 mr-2" />
                         Approve
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => handleReject(conversation.id)}>
-                        <ThumbsDown className="mr-2 h-4 w-4" />
+                        <X className="h-4 w-4 mr-2" />
                         Reject
                       </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={() => handleExportSingle(conversation.id)}>
-                        <Download className="mr-2 h-4 w-4" />
+                      <DropdownMenuItem onClick={() => toast.info('Edit functionality coming soon')}>
+                        <Edit className="h-4 w-4 mr-2" />
+                        Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleDuplicate(conversation)}>
+                        <Copy className="h-4 w-4 mr-2" />
+                        Duplicate
+                      </DropdownMenuItem>
+                      {conversation.status !== 'pending_review' && (
+                        <DropdownMenuItem onClick={() => handleMoveToReview(conversation.id)}>
+                          <Eye className="h-4 w-4 mr-2" />
+                          Move to Review
+                        </DropdownMenuItem>
+                      )}
+                      <DropdownMenuItem onClick={() => toast.info('Export functionality coming soon')}>
+                        <Download className="h-4 w-4 mr-2" />
                         Export
                       </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => handleDelete(conversation.id)}
-                        className="text-destructive focus:text-destructive"
+                      <DropdownMenuItem 
+                        onClick={() => handleDelete(conversation.id, conversation.title)}
+                        className="text-destructive"
                       >
-                        <Trash2 className="mr-2 h-4 w-4" />
+                        <Trash2 className="h-4 w-4 mr-2" />
                         Delete
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-
-      {/* Preview Modal */}
-      {previewConversationId && (
-        <ConversationPreviewModal
-          conversationId={previewConversationId}
-          onClose={() => setPreviewConversationId(null)}
-          onApprove={() => {
-            handleApprove(previewConversationId);
-            setPreviewConversationId(null);
-          }}
-          onReject={() => {
-            handleReject(previewConversationId);
-            setPreviewConversationId(null);
-          }}
-        />
-      )}
-    </>
+            ))
+          )}
+        </TableBody>
+      </Table>
+    </div>
   );
-}
-
+});

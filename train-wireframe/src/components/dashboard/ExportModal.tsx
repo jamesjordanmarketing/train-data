@@ -1,12 +1,16 @@
-import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/dialog';
+import { useState, useMemo } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '../ui/dialog';
 import { Button } from '../ui/button';
-import { Label } from '../ui/label';
-import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
-import { Checkbox } from '../ui/checkbox';
+import { Separator } from '../ui/separator';
+import { Alert, AlertDescription } from '../ui/alert';
 import { useAppStore } from '../../stores/useAppStore';
-import { Download } from 'lucide-react';
-import { toast } from 'sonner@2.0.3';
+import { Download, AlertCircle, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
+import { ExportScopeSelector, ExportScope } from '../export/ExportScopeSelector';
+import { ExportFormatSelector, ExportFormat } from '../export/ExportFormatSelector';
+import { ExportOptionsPanel, ExportOptions } from '../export/ExportOptionsPanel';
+import { ExportPreview } from '../export/ExportPreview';
+import { Conversation, ConversationStatus } from '../../lib/types';
 
 export function ExportModal() {
   const { 
@@ -17,162 +21,294 @@ export function ExportModal() {
     filters
   } = useAppStore();
   
-  const [scope, setScope] = useState<'selected' | 'filtered' | 'all'>('all');
-  const [format, setFormat] = useState<'json' | 'jsonl' | 'csv' | 'markdown'>('jsonl');
-  const [includeMetadata, setIncludeMetadata] = useState(true);
-  const [includeQuality, setIncludeQuality] = useState(true);
-  const [includeHistory, setIncludeHistory] = useState(false);
+  // Export configuration state
+  const [scope, setScope] = useState<ExportScope>('all');
+  const [format, setFormat] = useState<ExportFormat>('jsonl');
+  const [options, setOptions] = useState<ExportOptions>({
+    includeMetadata: true,
+    includeQualityScores: true,
+    includeTimestamps: true,
+    includeApprovalHistory: false,
+    includeParentReferences: false,
+    includeFullContent: true,
+  });
   
-  const getExportCount = () => {
-    if (scope === 'selected') return selectedConversationIds.length;
-    if (scope === 'filtered') {
-      // Would filter based on active filters - simplified for demo
-      return conversations.length;
+  // Loading state
+  const [isExporting, setIsExporting] = useState(false);
+  
+  // Calculate filtered conversations based on current filters
+  const filteredConversations = useMemo(() => {
+    if (!filters || Object.keys(filters).length === 0) {
+      return conversations;
     }
-    return conversations.length;
+    
+    return conversations.filter((conv) => {
+      // Tier filter
+      if (filters.tier && filters.tier.length > 0) {
+        if (!filters.tier.includes(conv.tier)) return false;
+      }
+      
+      // Status filter
+      if (filters.status && filters.status.length > 0) {
+        if (!filters.status.includes(conv.status)) return false;
+      }
+      
+      // Quality score filter
+      if (filters.qualityScoreMin !== undefined) {
+        if (conv.qualityScore < filters.qualityScoreMin) return false;
+      }
+      if (filters.qualityScoreMax !== undefined) {
+        if (conv.qualityScore > filters.qualityScoreMax) return false;
+      }
+      
+      // Date filter
+      if (filters.dateFrom) {
+        if (new Date(conv.createdAt) < new Date(filters.dateFrom)) return false;
+      }
+      if (filters.dateTo) {
+        if (new Date(conv.createdAt) > new Date(filters.dateTo)) return false;
+      }
+      
+      // Category filter
+      if (filters.categories && filters.categories.length > 0) {
+        if (!conv.category.some((cat) => filters.categories!.includes(cat))) return false;
+      }
+      
+      return true;
+    });
+  }, [conversations, filters]);
+  
+  // Calculate approved conversations
+  const approvedConversations = useMemo(() => {
+    return conversations.filter((conv) => conv.status === 'approved');
+  }, [conversations]);
+  
+  // Calculate counts for scope selector
+  const counts = useMemo(() => ({
+    selected: selectedConversationIds.length,
+    filtered: filteredConversations.length,
+    approved: approvedConversations.length,
+    all: conversations.length,
+  }), [selectedConversationIds.length, filteredConversations.length, approvedConversations.length, conversations.length]);
+  
+  // Get conversations to export based on scope
+  const conversationsToExport = useMemo(() => {
+    switch (scope) {
+      case 'selected':
+        return conversations.filter((conv) => selectedConversationIds.includes(conv.id));
+      case 'filtered':
+        return filteredConversations;
+      case 'approved':
+        return approvedConversations;
+      case 'all':
+      default:
+        return conversations;
+    }
+  }, [scope, conversations, selectedConversationIds, filteredConversations, approvedConversations]);
+  
+  // Handle export submission
+  const handleExport = async () => {
+    if (conversationsToExport.length === 0) {
+      toast.error('No conversations to export');
+      return;
+    }
+    
+    setIsExporting(true);
+    
+    try {
+      // Prepare export request
+      const exportRequest: any = {
+        config: {
+          scope: scope === 'selected' ? 'selected' : scope === 'filtered' ? 'filtered' : 'all',
+          format,
+          includeMetadata: options.includeMetadata,
+          includeQualityScores: options.includeQualityScores,
+          includeTimestamps: options.includeTimestamps,
+          includeApprovalHistory: options.includeApprovalHistory,
+          includeParentReferences: options.includeParentReferences,
+          includeFullContent: options.includeFullContent,
+        },
+      };
+      
+      // Add conversation IDs for selected scope
+      if (scope === 'selected') {
+        exportRequest.conversationIds = selectedConversationIds;
+      }
+      
+      // Add filters for filtered scope
+      if (scope === 'filtered' && filters && Object.keys(filters).length > 0) {
+        exportRequest.filters = filters;
+      }
+      
+      // Call export API
+      const response = await fetch('/api/export/conversations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(exportRequest),
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Export failed');
+      }
+      
+      const result = await response.json();
+      
+      // Handle response
+      if (result.status === 'completed') {
+        // Synchronous export - download immediately
+        toast.success(
+          `Successfully exported ${result.conversation_count} conversations`,
+          {
+            description: `Format: ${format.toUpperCase()} • Size: ${formatFileSize(result.file_size)}`,
+            duration: 5000,
+          }
+        );
+        
+        // Trigger download
+        if (result.file_url) {
+          window.open(result.file_url, '_blank');
+        }
+        
+        closeExportModal();
+      } else if (result.status === 'queued') {
+        // Background export - show notification
+        toast.info(
+          'Export queued for background processing',
+          {
+            description: `Processing ${result.conversation_count} conversations. You'll be notified when ready.`,
+            duration: 5000,
+          }
+        );
+        
+        closeExportModal();
+      }
+    } catch (error) {
+      console.error('Export error:', error);
+      toast.error(
+        'Failed to export conversations',
+        {
+          description: error instanceof Error ? error.message : 'Please try again',
+        }
+      );
+    } finally {
+      setIsExporting(false);
+    }
   };
   
-  const handleExport = () => {
-    const count = getExportCount();
-    
-    // Simulate export
-    setTimeout(() => {
-      toast.success(`Exported ${count} conversations as ${format.toUpperCase()}`);
-      closeExportModal();
-    }, 500);
+  const formatFileSize = (bytes?: number): string => {
+    if (!bytes) return 'N/A';
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
   
   return (
     <Dialog open={showExportModal} onOpenChange={closeExportModal}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Export Conversations</DialogTitle>
           <DialogDescription>
-            Configure your export settings and download your data
+            Configure export settings and download your training data
           </DialogDescription>
         </DialogHeader>
         
-        <div className="space-y-6">
-          {/* Export Scope */}
-          <div className="space-y-3">
-            <Label>Export Scope</Label>
-            <RadioGroup value={scope} onValueChange={(val) => setScope(val as any)}>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="selected" id="selected" disabled={selectedConversationIds.length === 0} />
-                <Label htmlFor="selected" className={selectedConversationIds.length === 0 ? 'text-gray-400' : ''}>
-                  Selected conversations only ({selectedConversationIds.length} selected)
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="filtered" id="filtered" />
-                <Label htmlFor="filtered">
-                  All conversations matching current filters ({conversations.length})
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="all" id="all" />
-                <Label htmlFor="all">
-                  Entire dataset ({conversations.length} total)
-                </Label>
-              </div>
-            </RadioGroup>
-          </div>
+        <div className="space-y-6 py-4">
+          {/* Export Scope Selector */}
+          <ExportScopeSelector
+            value={scope}
+            onChange={setScope}
+            counts={counts}
+          />
           
-          {/* Format Selection */}
-          <div className="space-y-3">
-            <Label>Export Format</Label>
-            <RadioGroup value={format} onValueChange={(val) => setFormat(val as any)}>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="json" id="json" />
-                <Label htmlFor="json">
-                  <div>
-                    <div>JSON</div>
-                    <div className="text-xs text-gray-500">Structured data for programmatic access</div>
-                  </div>
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="jsonl" id="jsonl" />
-                <Label htmlFor="jsonl">
-                  <div>
-                    <div>JSONL</div>
-                    <div className="text-xs text-gray-500">Line-delimited JSON, ideal for training pipelines</div>
-                  </div>
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="csv" id="csv" />
-                <Label htmlFor="csv">
-                  <div>
-                    <div>CSV</div>
-                    <div className="text-xs text-gray-500">Spreadsheet-compatible, metadata only</div>
-                  </div>
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="markdown" id="markdown" />
-                <Label htmlFor="markdown">
-                  <div>
-                    <div>Markdown</div>
-                    <div className="text-xs text-gray-500">Human-readable formatted text</div>
-                  </div>
-                </Label>
-              </div>
-            </RadioGroup>
-          </div>
+          <Separator />
           
-          {/* Export Options */}
-          <div className="space-y-3">
-            <Label>Export Options</Label>
-            <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <Checkbox 
-                  id="metadata" 
-                  checked={includeMetadata}
-                  onCheckedChange={(checked) => setIncludeMetadata(checked as boolean)}
-                />
-                <Label htmlFor="metadata">Include metadata (tags, status, dates)</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox 
-                  id="quality" 
-                  checked={includeQuality}
-                  onCheckedChange={(checked) => setIncludeQuality(checked as boolean)}
-                />
-                <Label htmlFor="quality">Include quality scores and metrics</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox 
-                  id="history" 
-                  checked={includeHistory}
-                  onCheckedChange={(checked) => setIncludeHistory(checked as boolean)}
-                />
-                <Label htmlFor="history">Include approval history and comments</Label>
+          {/* Export Format Selector */}
+          <ExportFormatSelector
+            value={format}
+            onChange={setFormat}
+          />
+          
+          <Separator />
+          
+          {/* Export Options Panel */}
+          <ExportOptionsPanel
+            config={options}
+            onChange={setOptions}
+          />
+          
+          <Separator />
+          
+          {/* Export Preview */}
+          <ExportPreview
+            conversations={conversationsToExport}
+            format={format}
+            options={options}
+          />
+          
+          {/* Warning if no conversations */}
+          {conversationsToExport.length === 0 && (
+            <Alert>
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                No conversations match your selection. Please adjust your filters or selection.
+              </AlertDescription>
+            </Alert>
+          )}
+          
+          {/* Export Summary */}
+          <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
+            <div className="text-sm space-y-1.5">
+              <div className="font-semibold text-primary mb-2">Export Summary</div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <span className="text-muted-foreground">Conversations:</span>{' '}
+                  <span className="font-medium">{conversationsToExport.length.toLocaleString()}</span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Format:</span>{' '}
+                  <span className="font-medium">{format.toUpperCase()}</span>
+                </div>
+                <div className="col-span-2">
+                  <span className="text-muted-foreground">Filename:</span>{' '}
+                  <span className="font-medium text-xs">
+                    conversations-export-{new Date().toISOString().split('T')[0]}.{format}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-          
-          {/* Summary */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <div className="text-sm space-y-1">
-              <div><strong>Export Summary:</strong></div>
-              <div>• {getExportCount()} conversations</div>
-              <div>• Format: {format.toUpperCase()}</div>
-              <div>• File name: conversations-export-{new Date().toISOString().split('T')[0]}.{format}</div>
-            </div>
-          </div>
-          
-          {/* Actions */}
-          <div className="flex gap-2 pt-4 border-t">
-            <Button variant="outline" onClick={closeExportModal} className="flex-1">
-              Cancel
-            </Button>
-            <Button onClick={handleExport} className="flex-1 gap-2">
-              <Download className="h-4 w-4" />
-              Download Export
-            </Button>
           </div>
         </div>
+        
+        {/* Actions */}
+        <DialogFooter className="gap-2">
+          <Button 
+            variant="outline" 
+            onClick={closeExportModal}
+            disabled={isExporting}
+          >
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleExport}
+            disabled={isExporting || conversationsToExport.length === 0}
+            className="gap-2"
+          >
+            {isExporting ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Exporting...
+              </>
+            ) : (
+              <>
+                <Download className="h-4 w-4" />
+                Export {conversationsToExport.length} Conversations
+              </>
+            )}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

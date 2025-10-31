@@ -1,0 +1,123 @@
+{
+  "version": "1.0",
+  "export_date": "2025-10-31T00:00:00.000Z",
+  "conversation_count": 2,
+  "conversations": [
+    {
+      "conversation_id": "test-001",
+      "title": "Market Volatility Discussion",
+      "status": "approved",
+      "tier": "template",
+      "turns": [
+        {
+          "role": "user",
+          "content": "I'm worried about the recent market crash. Should I sell everything?",
+          "token_count": 15
+        },
+        {
+          "role": "assistant",
+          "content": "I understand your concern about market volatility. Let me help you understand what's happening and explore your options.",
+          "token_count": 25
+        },
+        {
+          "role": "user",
+          "content": "What should I do with my retirement investments?",
+          "token_count": 10
+        },
+        {
+          "role": "assistant",
+          "content": "For retirement investments, the key is maintaining a long-term perspective. Here are some strategies to consider: diversification, dollar-cost averaging, and regular portfolio rebalancing.",
+          "token_count": 35
+        }
+      ],
+      "metadata": {
+        "persona": "Anxious Investor",
+        "emotion": "Fear",
+        "topic": "Market Volatility",
+        "category": [
+          "Finance",
+          "Investment"
+        ],
+        "total_turns": 4,
+        "token_count": 500,
+        "quality_score": 8.5,
+        "created_at": "2025-10-29T10:00:00Z",
+        "updated_at": "2025-10-29T11:00:00Z",
+        "review_history": [
+          {
+            "action": "approved",
+            "userId": "reviewer-1",
+            "timestamp": "2025-10-29T11:00:00Z",
+            "notes": "Quality content"
+          }
+        ],
+        "parent_id": "template-001",
+        "parent_type": "template",
+        "parameters": {
+          "complexity": "medium"
+        }
+      }
+    },
+    {
+      "conversation_id": "test-002",
+      "title": "Investment Strategy Planning",
+      "status": "approved",
+      "tier": "generated",
+      "turns": [
+        {
+          "role": "user",
+          "content": "I want to plan my investment strategy for the next 10 years.",
+          "token_count": 15
+        },
+        {
+          "role": "assistant",
+          "content": "That's an excellent approach. Long-term planning is crucial for financial success. Let's break down the key components.",
+          "token_count": 25
+        },
+        {
+          "role": "user",
+          "content": "What asset allocation do you recommend?",
+          "token_count": 8
+        },
+        {
+          "role": "assistant",
+          "content": "Asset allocation depends on your risk tolerance, time horizon, and financial goals. For a 10-year plan, a balanced approach might include 60% stocks, 30% bonds, and 10% alternative investments.",
+          "token_count": 40
+        },
+        {
+          "role": "user",
+          "content": "How often should I rebalance my portfolio?",
+          "token_count": 9
+        },
+        {
+          "role": "assistant",
+          "content": "Generally, rebalancing annually or when allocations drift by more than 5% from targets is a good practice. This helps maintain your desired risk level.",
+          "token_count": 30
+        }
+      ],
+      "metadata": {
+        "persona": "Conservative Investor",
+        "emotion": "Cautious",
+        "topic": "Long-term Planning",
+        "category": [
+          "Finance",
+          "Planning"
+        ],
+        "total_turns": 6,
+        "token_count": 750,
+        "quality_score": 9.2,
+        "created_at": "2025-10-30T14:00:00Z",
+        "updated_at": "2025-10-30T15:00:00Z"
+      }
+    }
+  ],
+  "summary": {
+    "total_turns": 10,
+    "average_quality_score": 8.85,
+    "tier_distribution": {
+      "template": 1,
+      "generated": 1
+    }
+  }
+}
+
