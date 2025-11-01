@@ -1,0 +1,196 @@
+{
+  "timestamp": "2025-11-01T22:26:09.357Z",
+  "results": [
+    {
+      "table": "conversations",
+      "exists": true,
+      "category": 2,
+      "categoryDescription": "Table exists but needs verification of fields/triggers",
+      "keyColumns": [
+        "conversation_id",
+        "persona",
+        "emotion",
+        "tier",
+        "status",
+        "quality_score"
+      ],
+      "actualColumns": "Unable to determine (table may be empty or have RLS policies)",
+      "missingKeyColumns": "Unknown - manual verification needed",
+      "recommendation": "Manually verify conversations structure in Supabase SQL Editor:\n    SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'conversations';"
+    },
+    {
+      "table": "conversation_turns",
+      "exists": true,
+      "category": 2,
+      "categoryDescription": "Table exists but needs verification of fields/triggers",
+      "keyColumns": [
+        "conversation_id",
+        "turn_number",
+        "role",
+        "content"
+      ],
+      "actualColumns": "Unable to determine (table may be empty or have RLS policies)",
+      "missingKeyColumns": "Unknown - manual verification needed",
+      "recommendation": "Manually verify conversation_turns structure in Supabase SQL Editor:\n    SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'conversation_turns';"
+    },
+    {
+      "table": "generation_logs",
+      "exists": true,
+      "category": 2,
+      "categoryDescription": "Table exists but needs verification of fields/triggers",
+      "keyColumns": [
+        "conversation_id",
+        "template_id",
+        "model_used",
+        "input_tokens",
+        "output_tokens"
+      ],
+      "actualColumns": "Unable to determine (table may be empty or have RLS policies)",
+      "missingKeyColumns": "Unknown - manual verification needed",
+      "recommendation": "Manually verify generation_logs structure in Supabase SQL Editor:\n    SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'generation_logs';"
+    },
+    {
+      "table": "prompt_templates",
+      "exists": true,
+      "category": 2,
+      "categoryDescription": "Table exists but needs verification of fields/triggers",
+      "keyColumns": [
+        "template_name",
+        "tier",
+        "template_text"
+      ],
+      "actualColumns": "Unable to determine (table may be empty or have RLS policies)",
+      "missingKeyColumns": "Unknown - manual verification needed",
+      "recommendation": "Manually verify prompt_templates structure in Supabase SQL Editor:\n    SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'prompt_templates';"
+    },
+    {
+      "table": "scenarios",
+      "exists": true,
+      "category": 2,
+      "categoryDescription": "Table exists but needs verification of fields/triggers",
+      "keyColumns": [
+        "name",
+        "parent_template_id",
+        "context"
+      ],
+      "actualColumns": "Unable to determine (table may be empty or have RLS policies)",
+      "missingKeyColumns": "Unknown - manual verification needed",
+      "recommendation": "Manually verify scenarios structure in Supabase SQL Editor:\n    SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'scenarios';"
+    },
+    {
+      "table": "edge_cases",
+      "exists": true,
+      "category": 2,
+      "categoryDescription": "Table exists but needs verification of fields/triggers",
+      "keyColumns": [
+        "name",
+        "trigger_condition",
+        "risk_level"
+      ],
+      "actualColumns": "Unable to determine (table may be empty or have RLS policies)",
+      "missingKeyColumns": "Unknown - manual verification needed",
+      "recommendation": "Manually verify edge_cases structure in Supabase SQL Editor:\n    SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'edge_cases';"
+    },
+    {
+      "table": "export_logs",
+      "exists": true,
+      "category": 2,
+      "categoryDescription": "Table exists but needs verification of fields/triggers",
+      "keyColumns": [
+        "export_id",
+        "scope",
+        "format",
+        "conversation_ids"
+      ],
+      "actualColumns": "Unable to determine (table may be empty or have RLS policies)",
+      "missingKeyColumns": "Unknown - manual verification needed",
+      "recommendation": "Manually verify export_logs structure in Supabase SQL Editor:\n    SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'export_logs';"
+    },
+    {
+      "table": "batch_jobs",
+      "exists": true,
+      "category": 2,
+      "categoryDescription": "Table exists but needs verification of fields/triggers",
+      "keyColumns": [
+        "job_type",
+        "status",
+        "total_items"
+      ],
+      "actualColumns": "Unable to determine (table may be empty or have RLS policies)",
+      "missingKeyColumns": "Unknown - manual verification needed",
+      "recommendation": "Manually verify batch_jobs structure in Supabase SQL Editor:\n    SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'batch_jobs';"
+    },
+    {
+      "table": "query_performance_logs",
+      "exists": true,
+      "category": 2,
+      "categoryDescription": "Table exists but needs verification of fields/triggers",
+      "keyColumns": [
+        "query_text",
+        "duration_ms",
+        "is_slow"
+      ],
+      "actualColumns": "Unable to determine (table may be empty or have RLS policies)",
+      "missingKeyColumns": "Unknown - manual verification needed",
+      "recommendation": "Manually verify query_performance_logs structure in Supabase SQL Editor:\n    SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'query_performance_logs';"
+    },
+    {
+      "table": "index_usage_snapshots",
+      "exists": true,
+      "category": 2,
+      "categoryDescription": "Table exists but needs verification of fields/triggers",
+      "keyColumns": [
+        "tablename",
+        "indexname",
+        "idx_scan"
+      ],
+      "actualColumns": "Unable to determine (table may be empty or have RLS policies)",
+      "missingKeyColumns": "Unknown - manual verification needed",
+      "recommendation": "Manually verify index_usage_snapshots structure in Supabase SQL Editor:\n    SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'index_usage_snapshots';"
+    },
+    {
+      "table": "table_bloat_snapshots",
+      "exists": true,
+      "category": 2,
+      "categoryDescription": "Table exists but needs verification of fields/triggers",
+      "keyColumns": [
+        "tablename",
+        "bloat_ratio"
+      ],
+      "actualColumns": "Unable to determine (table may be empty or have RLS policies)",
+      "missingKeyColumns": "Unknown - manual verification needed",
+      "recommendation": "Manually verify table_bloat_snapshots structure in Supabase SQL Editor:\n    SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'table_bloat_snapshots';"
+    },
+    {
+      "table": "performance_alerts",
+      "exists": true,
+      "category": 2,
+      "categoryDescription": "Table exists but needs verification of fields/triggers",
+      "keyColumns": [
+        "alert_type",
+        "severity"
+      ],
+      "actualColumns": "Unable to determine (table may be empty or have RLS policies)",
+      "missingKeyColumns": "Unknown - manual verification needed",
+      "recommendation": "Manually verify performance_alerts structure in Supabase SQL Editor:\n    SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'performance_alerts';"
+    },
+    {
+      "table": "schema_migrations",
+      "exists": true,
+      "category": 2,
+      "categoryDescription": "Table exists but needs verification of fields/triggers",
+      "keyColumns": [
+        "version",
+        "description"
+      ],
+      "actualColumns": "Unable to determine (table may be empty or have RLS policies)",
+      "missingKeyColumns": "Unknown - manual verification needed",
+      "recommendation": "Manually verify schema_migrations structure in Supabase SQL Editor:\n    SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'schema_migrations';"
+    }
+  ],
+  "summary": {
+    "total": 13,
+    "existing": 13,
+    "missing": 0
+  }
+}

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { ConversationTable } from './ConversationTable';
 import { FilterBar } from './FilterBar';
 import { FeedbackWidget } from './FeedbackWidget';
@@ -8,17 +8,49 @@ import { ArrowUpRight, ArrowDownRight, FileText, GitBranch, AlertTriangle, Check
 import { Skeleton } from '../ui/skeleton';
 import { Button } from '../ui/button';
 import { Pagination } from './Pagination';
+import type { ConversationFilters } from '../../stores/useAppStore';
 
 export function DashboardView() {
   const { 
     conversations, 
-    filters, 
+    filters,
+    setFilters,
     searchQuery,
-    openGenerationModal 
+    openGenerationModal,
+    preferences,
+    preferencesLoaded,
   } = useAppStore();
   
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(25);
+  const [filtersApplied, setFiltersApplied] = useState(false);
+  
+  // Use preference for rows per page
+  const rowsPerPage = preferences.rowsPerPage;
+  
+  // Apply default filters on load (once)
+  useEffect(() => {
+    if (!preferencesLoaded || filtersApplied) return;
+    
+    if (preferences.defaultFilters.autoApply) {
+      const defaultFilters: ConversationFilters = {};
+      
+      if (preferences.defaultFilters.tier) {
+        defaultFilters.tier = preferences.defaultFilters.tier;
+      }
+      
+      if (preferences.defaultFilters.status) {
+        defaultFilters.status = preferences.defaultFilters.status;
+      }
+      
+      if (preferences.defaultFilters.qualityRange) {
+        defaultFilters.qualityScoreMin = preferences.defaultFilters.qualityRange[0];
+        defaultFilters.qualityScoreMax = preferences.defaultFilters.qualityRange[1];
+      }
+      
+      setFilters(defaultFilters);
+      setFiltersApplied(true);
+    }
+  }, [preferencesLoaded, preferences.defaultFilters, filtersApplied, setFilters]);
   
   // Filter conversations based on active filters and search
   const filteredConversations = useMemo(() => {
@@ -179,20 +211,7 @@ export function DashboardView() {
         </p>
         
         <div className="flex items-center gap-2">
-          <label className="text-sm text-gray-600">Rows per page:</label>
-          <select 
-            value={rowsPerPage} 
-            onChange={(e) => {
-              setRowsPerPage(Number(e.target.value));
-              setCurrentPage(1);
-            }}
-            className="border rounded px-2 py-1 text-sm"
-          >
-            <option value={10}>10</option>
-            <option value={25}>25</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
+          <span className="text-sm text-gray-600">Rows per page: {rowsPerPage}</span>
         </div>
       </div>
       

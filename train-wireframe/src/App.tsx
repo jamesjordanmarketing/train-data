@@ -8,11 +8,13 @@ import { ReviewQueueView } from './components/views/ReviewQueueView';
 import { QualityFeedbackView } from './components/views/QualityFeedbackView';
 import { SettingsView } from './components/views/SettingsView';
 import { AIConfigView } from './components/views/AIConfigView';
+import { DatabaseHealthView } from './components/views/DatabaseHealthView';
 import { SingleGenerationForm } from './components/generation/SingleGenerationForm';
 import { BatchGenerationModal } from './components/generation/BatchGenerationModal';
 import { ExportModal } from './components/dashboard/ExportModal';
 import { useAppStore } from './stores/useAppStore';
 import { generateInitialMockData } from './lib/mockData';
+import { initializeTheme } from './lib/theme';
 
 export default function App() {
   const { 
@@ -24,6 +26,8 @@ export default function App() {
     loadPreferences,
     subscribeToPreferences,
     unsubscribeFromPreferences,
+    preferences,
+    preferencesLoaded,
   } = useAppStore();
   
   // Load mock data on mount
@@ -49,6 +53,15 @@ export default function App() {
     };
   }, [loadPreferences, subscribeToPreferences, unsubscribeFromPreferences]);
   
+  // Apply theme when preferences loaded or changed
+  useEffect(() => {
+    if (!preferencesLoaded) return;
+    
+    const cleanup = initializeTheme(preferences.theme);
+    
+    return cleanup;
+  }, [preferences.theme, preferencesLoaded]);
+  
   // Render current view
   const renderView = () => {
     switch (currentView) {
@@ -68,6 +81,8 @@ export default function App() {
         return <SettingsView />;
       case 'ai-config':
         return <AIConfigView />;
+      case 'database':
+        return <DatabaseHealthView />;
       default:
         return <DashboardView />;
     }

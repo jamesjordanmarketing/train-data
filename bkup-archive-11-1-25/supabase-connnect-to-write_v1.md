@@ -22,14 +22,6 @@ The application requires a `.env.local` file with Supabase configuration, but th
 
 **If you do create `.env.local`, place it in the project root** (`c:\Users\james\Master\BrightHub\BRun\train-data\.env.local`):
 
-```env
-# Only add these if you need server-side database operations
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxaHRieGxnenlzZmJla2V4d2t1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NzEwNjI1MSwiZXhwIjoyMDcyNjgyMjUxfQ.9I-n7ZMLo1CUnrUMFQIAJMkLbVsjxPhzCMQOMPOEvDg
-
-# Only add if you want to override hardcoded values
-NEXT_PUBLIC_SUPABASE_URL=https://hqhtbxlgzysfbekexwku.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxaHRieGxnenlzZmJla2V4d2t1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcxMDYyNTEsImV4cCI6MjA3MjY4MjI1MX0.tQlucHRNZ9NEyYwSTqda3FukUhPQHIULf1GHLCDyKPQ
-
 # Optional feature flags
 NEXT_PUBLIC_USE_NORMALIZED_TAGS=true
 
