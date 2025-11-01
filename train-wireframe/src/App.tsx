@@ -5,6 +5,7 @@ import { TemplatesView } from './components/views/TemplatesView';
 import { ScenariosView } from './components/views/ScenariosView';
 import { EdgeCasesView } from './components/views/EdgeCasesView';
 import { ReviewQueueView } from './components/views/ReviewQueueView';
+import { QualityFeedbackView } from './components/views/QualityFeedbackView';
 import { SettingsView } from './components/views/SettingsView';
 import { SingleGenerationForm } from './components/generation/SingleGenerationForm';
 import { BatchGenerationModal } from './components/generation/BatchGenerationModal';
@@ -19,6 +20,9 @@ export default function App() {
     setTemplates,
     setScenarios,
     setEdgeCases,
+    loadPreferences,
+    subscribeToPreferences,
+    unsubscribeFromPreferences,
   } = useAppStore();
   
   // Load mock data on mount
@@ -29,6 +33,20 @@ export default function App() {
     setScenarios(mockData.scenarios);
     setEdgeCases(mockData.edgeCases);
   }, [setConversations, setTemplates, setScenarios, setEdgeCases]);
+  
+  // Load user preferences on mount and subscribe to real-time updates
+  useEffect(() => {
+    // Load preferences from database
+    loadPreferences();
+    
+    // Subscribe to real-time preference changes (useful for multi-tab sync)
+    subscribeToPreferences();
+    
+    // Cleanup: unsubscribe on unmount
+    return () => {
+      unsubscribeFromPreferences();
+    };
+  }, [loadPreferences, subscribeToPreferences, unsubscribeFromPreferences]);
   
   // Render current view
   const renderView = () => {
@@ -43,6 +61,8 @@ export default function App() {
         return <EdgeCasesView />;
       case 'review':
         return <ReviewQueueView />;
+      case 'feedback':
+        return <QualityFeedbackView />;
       case 'settings':
         return <SettingsView />;
       default:

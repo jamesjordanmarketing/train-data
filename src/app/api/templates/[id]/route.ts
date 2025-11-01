@@ -1,18 +1,20 @@
 /**
- * Template API Routes - Single Template Operations
- * 
- * GET /api/templates/[id] - Get template by ID
+ * Template Detail API Route
+ * GET /api/templates/[id] - Get single template
  * PATCH /api/templates/[id] - Update template
  * DELETE /api/templates/[id] - Delete template
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerSupabaseClient } from '../../../../lib/supabase-server';
-import { TemplateService, UpdateTemplateRequest } from '../../../../lib/template-service';
+import { createClient } from '@/lib/supabase/server';
+import { TemplateService } from '@/lib/services/template-service';
+import { updateTemplateSchema } from '@/lib/validation/templates';
+import { isValidUUID } from '@/lib/utils/validation';
+import { ZodError } from 'zod';
 
 /**
  * GET /api/templates/[id]
- * Fetch a single template by ID
+ * Get a single template by ID
  */
 export async function GET(
   request: NextRequest,
@@ -20,20 +22,28 @@ export async function GET(
 ) {
   try {
     const { id } = params;
-
-    if (!id) {
+    
+    // Validate UUID format
+    if (!isValidUUID(id)) {
       return NextResponse.json(
-        { error: 'Template ID is required' },
+        { error: 'Invalid template ID format' },
         { status: 400 }
       );
     }
 
-    // Create Supabase client and template service
-    const supabase = createServerSupabaseClient();
-    const templateService = new TemplateService(supabase);
+    const supabase = await createClient();
+    
+    // Check authentication
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return NextResponse.json(
+        { error: 'Unauthorized', details: 'Authentication required' },
+        { status: 401 }
+      );
+    }
 
-    // Fetch template
-    const template = await templateService.getTemplateById(id);
+    const templateService = new TemplateService(supabase);
+    const template = await templateService.getById(id);
 
     if (!template) {
       return NextResponse.json(
@@ -42,11 +52,11 @@ export async function GET(
       );
     }
 
-    return NextResponse.json({ template });
-  } catch (error) {
-    console.error('Error fetching template:', error);
+    return NextResponse.json({ data: template }, { status: 200 });
+  } catch (error: any) {
+    console.error(`GET /api/templates/${params.id} error:`, error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to fetch template' },
+      { error: 'Failed to fetch template', details: error.message },
       { status: 500 }
     );
   }
@@ -54,9 +64,7 @@ export async function GET(
 
 /**
  * PATCH /api/templates/[id]
- * Update an existing template
- * 
- * Request body: UpdateTemplateRequest (partial)
+ * Update a template
  */
 export async function PATCH(
   request: NextRequest,
@@ -64,52 +72,34 @@ export async function PATCH(
 ) {
   try {
     const { id } = params;
-
-    if (!id) {
+    
+    // Validate UUID format
+    if (!isValidUUID(id)) {
       return NextResponse.json(
-        { error: 'Template ID is required' },
+        { error: 'Invalid template ID format' },
         { status: 400 }
       );
     }
 
-    const body: UpdateTemplateRequest = await request.json();
-
-    // Validate tier if provided
-    if (body.tier) {
-      const validTiers = ['template', 'scenario', 'edge_case'];
-      if (!validTiers.includes(body.tier)) {
-        return NextResponse.json(
-          { error: `Invalid tier. Must be one of: ${validTiers.join(', ')}` },
-          { status: 400 }
-        );
-      }
-    }
-
-    // Validate variables if provided
-    if (body.variables !== undefined && !Array.isArray(body.variables)) {
+    const supabase = await createClient();
+    
+    // Check authentication
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
       return NextResponse.json(
-        { error: 'Variables must be an array' },
-        { status: 400 }
+        { error: 'Unauthorized', details: 'Authentication required' },
+        { status: 401 }
       );
     }
 
-    // Validate quality threshold if provided
-    if (body.qualityThreshold !== undefined) {
-      const threshold = Number(body.qualityThreshold);
-      if (isNaN(threshold) || threshold < 0 || threshold > 1) {
-        return NextResponse.json(
-          { error: 'Quality threshold must be a number between 0 and 1' },
-          { status: 400 }
-        );
-      }
-    }
-
-    // Create Supabase client and template service
-    const supabase = createServerSupabaseClient();
     const templateService = new TemplateService(supabase);
 
+    // Parse and validate request body
+    const body = await request.json();
+    const validatedData = updateTemplateSchema.parse(body);
+
     // Check if template exists
-    const existingTemplate = await templateService.getTemplateById(id);
+    const existingTemplate = await templateService.getById(id);
     if (!existingTemplate) {
       return NextResponse.json(
         { error: 'Template not found' },
@@ -117,35 +107,31 @@ export async function PATCH(
       );
     }
 
-    // Build update object
-    const updates: any = {};
-    if (body.name !== undefined) updates.name = body.name;
-    if (body.description !== undefined) updates.description = body.description;
-    if (body.structure !== undefined) updates.structure = body.structure;
-    if (body.tier !== undefined) {
-      updates.tier = body.tier;
-      updates.category = body.tier; // Keep category in sync
-    }
-    if (body.variables !== undefined) updates.variables = body.variables;
-    if (body.qualityThreshold !== undefined) updates.qualityThreshold = body.qualityThreshold;
-    if (body.isActive !== undefined) updates.isActive = body.isActive;
-    if (body.styleNotes !== undefined) {
-      updates.styleNotes = body.styleNotes;
-      updates.tone = body.styleNotes; // Keep tone in sync
-    }
-    if (body.exampleConversation !== undefined) updates.exampleConversation = body.exampleConversation;
-    if (body.requiredElements !== undefined) updates.requiredElements = body.requiredElements;
-    if (body.applicablePersonas !== undefined) updates.applicablePersonas = body.applicablePersonas;
-    if (body.applicableEmotions !== undefined) updates.applicableEmotions = body.applicableEmotions;
-
     // Update template
-    const template = await templateService.updateTemplate(id, updates);
+    const template = await templateService.update(id, validatedData);
 
-    return NextResponse.json({ template });
-  } catch (error) {
-    console.error('Error updating template:', error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to update template' },
+      { data: template, message: 'Template updated successfully' },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    // Handle Zod validation errors
+    if (error instanceof ZodError) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          details: error.errors.map((e) => ({
+            field: e.path.join('.'),
+            message: e.message,
+          })),
+        },
+        { status: 400 }
+      );
+    }
+
+    console.error(`PATCH /api/templates/${params.id} error:`, error);
+    return NextResponse.json(
+      { error: 'Failed to update template', details: error.message },
       { status: 500 }
     );
   }
@@ -153,7 +139,7 @@ export async function PATCH(
 
 /**
  * DELETE /api/templates/[id]
- * Delete a template (with dependency checking)
+ * Delete a template
  */
 export async function DELETE(
   request: NextRequest,
@@ -161,20 +147,30 @@ export async function DELETE(
 ) {
   try {
     const { id } = params;
-
-    if (!id) {
+    
+    // Validate UUID format
+    if (!isValidUUID(id)) {
       return NextResponse.json(
-        { error: 'Template ID is required' },
+        { error: 'Invalid template ID format' },
         { status: 400 }
       );
     }
 
-    // Create Supabase client and template service
-    const supabase = createServerSupabaseClient();
+    const supabase = await createClient();
+    
+    // Check authentication
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return NextResponse.json(
+        { error: 'Unauthorized', details: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
     const templateService = new TemplateService(supabase);
 
     // Check if template exists
-    const existingTemplate = await templateService.getTemplateById(id);
+    const existingTemplate = await templateService.getById(id);
     if (!existingTemplate) {
       return NextResponse.json(
         { error: 'Template not found' },
@@ -182,31 +178,24 @@ export async function DELETE(
       );
     }
 
-    // Attempt to delete template
-    await templateService.deleteTemplate(id);
+    // Delete template
+    const result = await templateService.delete(id);
 
-    return NextResponse.json({ 
-      success: true,
-      message: 'Template deleted successfully'
-    });
-  } catch (error) {
-    console.error('Error deleting template:', error);
-    
-    // Check if error is about dependencies
-    const errorMessage = error instanceof Error ? error.message : 'Failed to delete template';
-    if (errorMessage.includes('conversation') && errorMessage.includes('depend')) {
+    if (!result.success) {
       return NextResponse.json(
-        { 
-          error: errorMessage,
-          canArchive: true,
-          suggestion: 'Archive this template instead of deleting it'
-        },
-        { status: 409 } // Conflict
+        { error: result.message },
+        { status: 400 }
       );
     }
 
     return NextResponse.json(
-      { error: errorMessage },
+      { message: result.message },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    console.error(`DELETE /api/templates/${params.id} error:`, error);
+    return NextResponse.json(
+      { error: 'Failed to delete template', details: error.message },
       { status: 500 }
     );
   }

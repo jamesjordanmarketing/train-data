@@ -192,3 +192,69 @@ if (typeof window === 'undefined') {
 if (!AI_CONFIG.apiKey && process.env.NODE_ENV !== 'development') {
   console.warn('⚠️  ANTHROPIC_API_KEY not configured');
 }
+
+/**
+ * Get AI configuration for a specific user with hierarchical fallback
+ * 
+ * This integrates with the new AI configuration system, providing:
+ * - User-specific configurations from database
+ * - Organization-level configurations
+ * - Environment variable fallbacks
+ * - Default configurations
+ * 
+ * @param userId - Optional user ID. If not provided, returns environment-based config
+ * @returns Complete AI configuration object
+ */
+export async function getAIConfigForUser(userId?: string) {
+  // Import the new types and service dynamically to avoid circular dependencies
+  const { aiConfigService } = await import('./services/ai-config-service');
+  const { DEFAULT_AI_CONFIGURATION } = await import('./types/ai-config');
+  
+  if (!userId) {
+    // Return environment-based configuration for unauthenticated requests
+    return {
+      ...DEFAULT_AI_CONFIGURATION,
+      model: {
+        ...DEFAULT_AI_CONFIGURATION.model,
+        model: AI_CONFIG.model,
+        temperature: AI_CONFIG.temperature,
+        maxTokens: AI_CONFIG.maxTokens,
+      },
+      apiKeys: {
+        primaryKey: AI_CONFIG.apiKey,
+        keyVersion: 1,
+        rotationSchedule: 'manual' as const,
+      },
+    };
+  }
+  
+  // Get user-specific configuration with full fallback chain
+  return await aiConfigService.getEffectiveConfiguration(userId);
+}
+
+/**
+ * Convert legacy model tier to new AI configuration format
+ * 
+ * Helper function to bridge between old tier-based config and new config system
+ * 
+ * @param tier - Model tier ('opus', 'sonnet', 'haiku')
+ * @returns Partial AI configuration for the specified tier
+ */
+export function legacyTierToAIConfig(tier: 'opus' | 'sonnet' | 'haiku' = 'sonnet') {
+  const modelConfig = getModelConfig(tier);
+  
+  return {
+    model: {
+      model: modelConfig.name,
+      temperature: 0.7,
+      maxTokens: modelConfig.maxTokens,
+      topP: 0.9,
+      streaming: false,
+    },
+    rateLimiting: {
+      requestsPerMinute: modelConfig.rateLimit,
+      concurrentRequests: AI_CONFIG.maxConcurrentRequests,
+      burstAllowance: 10,
+    },
+  };
+}

@@ -13,6 +13,7 @@ import { TemplateTable } from '../templates/TemplateTable';
 import { TemplateEditorModal } from '../templates/TemplateEditorModal';
 import { TemplateTestModal } from '../templates/TemplateTestModal';
 import { TemplateAnalyticsDashboard } from '../templates/TemplateAnalyticsDashboard';
+import { TemplateDetailModal } from '../templates/TemplateDetailModal';
 import {
   Select,
   SelectContent,
@@ -29,7 +30,9 @@ export function TemplatesView() {
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [isTestModalOpen, setIsTestModalOpen] = useState(false);
   const [isAnalyticsDashboardOpen, setIsAnalyticsDashboardOpen] = useState(false);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [templateToTest, setTemplateToTest] = useState<Template | null>(null);
+  const [templateToView, setTemplateToView] = useState<Template | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
@@ -187,6 +190,25 @@ export function TemplatesView() {
     setIsTestModalOpen(true);
   };
 
+  const handleViewTemplate = (template: Template) => {
+    setTemplateToView(template);
+    setIsDetailModalOpen(true);
+  };
+
+  const handleDuplicateTemplate = (template: Template) => {
+    // Open editor with duplicated template (without ID)
+    const duplicatedTemplate = {
+      ...template,
+      id: undefined,
+      name: `${template.name} (Copy)`,
+      usageCount: 0,
+      rating: 0,
+    };
+    setSelectedTemplate(duplicatedTemplate as any);
+    setIsEditorOpen(true);
+    setIsDetailModalOpen(false);
+  };
+
   const handleOpenAnalytics = () => {
     setIsAnalyticsDashboardOpen(true);
   };
@@ -287,6 +309,7 @@ export function TemplatesView() {
           onDelete={handleDeleteTemplate}
           onArchive={handleArchiveTemplate}
           onTest={handleTestTemplate}
+          onView={handleViewTemplate}
         />
       )}
 
@@ -307,6 +330,22 @@ export function TemplatesView() {
           }}
         />
       )}
+
+      <TemplateDetailModal
+        template={templateToView}
+        open={isDetailModalOpen}
+        onClose={() => {
+          setIsDetailModalOpen(false);
+          setTemplateToView(null);
+        }}
+        onEdit={(template) => {
+          setSelectedTemplate(template);
+          setIsEditorOpen(true);
+          setIsDetailModalOpen(false);
+        }}
+        onDuplicate={handleDuplicateTemplate}
+        onDelete={handleDeleteTemplate}
+      />
 
       {isAnalyticsDashboardOpen && (
         <div className="fixed inset-0 bg-white z-50 overflow-auto">

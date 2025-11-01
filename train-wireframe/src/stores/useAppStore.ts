@@ -6,10 +6,12 @@ import {
   EdgeCase, 
   BatchJob, 
   FilterConfig, 
-  UserPreferences,
   ConversationStatus,
   TierType
 } from '../lib/types';
+import { UserPreferences, DEFAULT_USER_PREFERENCES } from '../lib/types/user-preferences';
+import { userPreferencesService } from '../lib/services/user-preferences-service';
+import { supabase } from '../utils/supabase/client';
 
 interface BatchGenerationConfig {
   tier: TierType | 'all';
@@ -32,7 +34,7 @@ interface BatchGenerationState {
 interface AppState {
   // UI State
   sidebarCollapsed: boolean;
-  currentView: 'dashboard' | 'templates' | 'scenarios' | 'edge_cases' | 'review' | 'settings';
+  currentView: 'dashboard' | 'templates' | 'scenarios' | 'edge_cases' | 'review' | 'feedback' | 'settings';
   currentTier: TierType | 'all';
   
   // Data State
@@ -71,6 +73,8 @@ interface AppState {
   
   // User Preferences
   preferences: UserPreferences;
+  preferencesLoaded: boolean;
+  preferencesUnsubscribe: (() => void) | null;
   
   // Actions
   setSidebarCollapsed: (collapsed: boolean) => void;
@@ -135,7 +139,11 @@ interface AppState {
   removeBatchJob: (id: string) => void;
   
   // Preferences
+  loadPreferences: () => Promise<void>;
   updatePreferences: (preferences: Partial<UserPreferences>) => void;
+  resetPreferences: () => Promise<void>;
+  subscribeToPreferences: () => void;
+  unsubscribeFromPreferences: () => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -188,14 +196,9 @@ export const useAppStore = create<AppState>((set) => ({
   loadingMessage: '',
   
   // Initial Preferences
-  preferences: {
-    theme: 'light',
-    sidebarCollapsed: false,
-    tableDensity: 'comfortable',
-    rowsPerPage: 25,
-    enableAnimations: true,
-    keyboardShortcutsEnabled: true,
-  },
+  preferences: DEFAULT_USER_PREFERENCES,
+  preferencesLoaded: false,
+  preferencesUnsubscribe: null,
   
   // UI Actions
   setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
@@ -282,11 +285,87 @@ export const useAppStore = create<AppState>((set) => ({
       activeBatchJobs: state.activeBatchJobs.filter((j) => j.id !== id),
     })),
   
-  // Preferences
-  updatePreferences: (preferences) =>
-    set((state) => ({
-      preferences: { ...state.preferences, ...preferences },
-    })),
+  // Preferences Actions
+  loadPreferences: async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        console.warn('No authenticated user, using default preferences');
+        set({ preferences: DEFAULT_USER_PREFERENCES, preferencesLoaded: true });
+        return;
+      }
+      
+      const preferences = await userPreferencesService.getPreferences(user.id);
+      set({ preferences, preferencesLoaded: true });
+    } catch (error) {
+      console.error('Error loading preferences:', error);
+      set({ preferences: DEFAULT_USER_PREFERENCES, preferencesLoaded: true });
+    }
+  },
+  
+  updatePreferences: (updates: Partial<UserPreferences>) => {
+    const currentPreferences = useAppStore.getState().preferences;
+    
+    // Optimistic update - update UI immediately
+    const updatedPreferences = { ...currentPreferences, ...updates };
+    set({ preferences: updatedPreferences });
+    
+    // Debounced database update
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        // Use debounced update to prevent rapid-fire database writes
+        userPreferencesService.updatePreferencesDebounced(user.id, updates, 300);
+      }
+    }).catch((error) => {
+      console.error('Failed to save preferences:', error);
+      // Revert on error
+      set({ preferences: currentPreferences });
+    });
+  },
+  
+  resetPreferences: async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        console.warn('No authenticated user');
+        return;
+      }
+      
+      const result = await userPreferencesService.resetToDefaults(user.id);
+      
+      if (result.success) {
+        set({ preferences: DEFAULT_USER_PREFERENCES });
+      } else {
+        console.error('Failed to reset preferences:', result.errors);
+      }
+    } catch (error) {
+      console.error('Error resetting preferences:', error);
+    }
+  },
+  
+  subscribeToPreferences: () => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        const unsubscribe = userPreferencesService.subscribeToPreferences(
+          user.id,
+          (preferences) => {
+            set({ preferences });
+          }
+        );
+        set({ preferencesUnsubscribe: unsubscribe });
+      }
+    });
+  },
+  
+  unsubscribeFromPreferences: () => {
+    const { preferencesUnsubscribe } = useAppStore.getState();
+    if (preferencesUnsubscribe) {
+      preferencesUnsubscribe();
+      set({ preferencesUnsubscribe: null });
+    }
+  },
   
   // Batch Generation Actions
   setBatchStep: (step) =>

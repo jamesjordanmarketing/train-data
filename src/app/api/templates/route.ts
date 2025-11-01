@@ -1,76 +1,104 @@
 /**
- * Template API Routes - List and Create
- * 
- * GET /api/templates - List all templates with filtering and sorting
- * POST /api/templates - Create a new template
+ * Templates API Route
+ * GET /api/templates - List all templates
+ * POST /api/templates - Create new template
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerSupabaseClient } from '../../../lib/supabase-server';
-import { TemplateService, CreateTemplateRequest } from '../../../lib/template-service';
+import { createClient } from '@/lib/supabase/server';
+import { TemplateService } from '@/lib/services/template-service';
+import { createTemplateSchema } from '@/lib/validation/templates';
+import { parseNumericParam, parseIntParam, validateSortOrder, sanitizeSearchQuery } from '@/lib/utils/validation';
+import { ZodError } from 'zod';
 
 /**
  * GET /api/templates
- * Fetch all templates with optional filtering and sorting
- * 
- * Query parameters:
- * - tier: Filter by tier (template|scenario|edge_case)
- * - isActive: Filter by active status (true|false)
- * - sortBy: Sort column (name|usageCount|rating|lastModified)
- * - sortOrder: Sort direction (asc|desc)
+ * List all templates with optional filtering, sorting, and pagination
  */
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const supabase = await createClient();
     
-    // Parse query parameters
-    const tier = searchParams.get('tier') || undefined;
-    const isActiveParam = searchParams.get('isActive');
-    const isActive = isActiveParam === 'true' ? true : isActiveParam === 'false' ? false : undefined;
-    const sortBy = searchParams.get('sortBy') || 'name';
-    const sortOrder = searchParams.get('sortOrder') || 'asc';
-
-    // Validate sortBy
-    const validSortColumns = ['name', 'usageCount', 'rating', 'lastModified'];
-    if (!validSortColumns.includes(sortBy)) {
+    // Check authentication
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
       return NextResponse.json(
-        { error: `Invalid sortBy parameter. Must be one of: ${validSortColumns.join(', ')}` },
-        { status: 400 }
+        { error: 'Unauthorized', details: 'Authentication required' },
+        { status: 401 }
       );
     }
 
-    // Validate sortOrder
-    if (sortOrder !== 'asc' && sortOrder !== 'desc') {
-      return NextResponse.json(
-        { error: 'Invalid sortOrder parameter. Must be "asc" or "desc"' },
-        { status: 400 }
-      );
-    }
-
-    // Create Supabase client and template service
-    const supabase = createServerSupabaseClient();
     const templateService = new TemplateService(supabase);
 
-    // Fetch templates
-    const templates = await templateService.getAllTemplates({
-      tier,
-      isActive,
-      sortBy: sortBy as any,
-      sortOrder: sortOrder as any,
+    // Parse query parameters
+    const { searchParams } = new URL(request.url);
+    const category = searchParams.get('category') || undefined;
+    const minRating = parseNumericParam(searchParams.get('minRating'));
+    const search = searchParams.get('q');
+    const sortBy = searchParams.get('sortBy') || 'createdAt';
+    const order = validateSortOrder(searchParams.get('order'));
+    const page = parseIntParam(searchParams.get('page'), 1);
+    const limit = parseIntParam(searchParams.get('limit'), 25);
+
+    // Build filters
+    const filters: any = {};
+    
+    if (category) {
+      filters.category = category;
+    }
+    
+    if (minRating !== undefined) {
+      filters.minRating = minRating;
+    }
+    
+    if (search) {
+      filters.search = sanitizeSearchQuery(search);
+    }
+
+    // Get templates
+    const templates = await templateService.getAll(filters);
+
+    // Apply sorting (if service doesn't handle it)
+    const sortedTemplates = templates.sort((a: any, b: any) => {
+      let aVal = a[sortBy as keyof typeof a];
+      let bVal = b[sortBy as keyof typeof b];
+      
+      // Handle null/undefined values
+      if (aVal === null || aVal === undefined) return order === 'asc' ? 1 : -1;
+      if (bVal === null || bVal === undefined) return order === 'asc' ? -1 : 1;
+      
+      // String comparison
+      if (typeof aVal === 'string' && typeof bVal === 'string') {
+        return order === 'asc' 
+          ? aVal.localeCompare(bVal) 
+          : bVal.localeCompare(aVal);
+      }
+      
+      // Numeric comparison
+      return order === 'asc' ? (aVal > bVal ? 1 : -1) : (bVal > aVal ? 1 : -1);
     });
 
-    return NextResponse.json({
-      templates,
-      total: templates.length,
-    });
-  } catch (error) {
-    console.error('Error fetching templates:', error);
+    // Apply pagination
+    const startIndex = ((page || 1) - 1) * (limit || 25);
+    const endIndex = startIndex + (limit || 25);
+    const paginatedTemplates = sortedTemplates.slice(startIndex, endIndex);
+
     return NextResponse.json(
-      { 
-        error: error instanceof Error ? error.message : 'Failed to fetch templates',
-        templates: [],
-        total: 0
+      {
+        data: paginatedTemplates,
+        pagination: {
+          page: page || 1,
+          limit: limit || 25,
+          total: templates.length,
+          totalPages: Math.ceil(templates.length / (limit || 25)),
+        },
       },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    console.error('GET /api/templates error:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch templates', details: error.message },
       { status: 500 }
     );
   }
@@ -79,83 +107,51 @@ export async function GET(request: NextRequest) {
 /**
  * POST /api/templates
  * Create a new template
- * 
- * Request body: CreateTemplateRequest
  */
 export async function POST(request: NextRequest) {
   try {
-    const body: CreateTemplateRequest = await request.json();
-
-    // Validate required fields
-    if (!body.name || !body.structure) {
+    const supabase = await createClient();
+    
+    // Check authentication
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
       return NextResponse.json(
-        { error: 'Missing required fields: name and structure are required' },
-        { status: 400 }
+        { error: 'Unauthorized', details: 'Authentication required' },
+        { status: 401 }
       );
     }
 
-    // Validate tier
-    const validTiers = ['template', 'scenario', 'edge_case'];
-    if (!body.tier || !validTiers.includes(body.tier)) {
-      return NextResponse.json(
-        { error: `Invalid tier. Must be one of: ${validTiers.join(', ')}` },
-        { status: 400 }
-      );
-    }
-
-    // Validate variables array
-    if (!Array.isArray(body.variables)) {
-      return NextResponse.json(
-        { error: 'Variables must be an array' },
-        { status: 400 }
-      );
-    }
-
-    // Validate quality threshold
-    if (body.qualityThreshold !== undefined) {
-      const threshold = Number(body.qualityThreshold);
-      if (isNaN(threshold) || threshold < 0 || threshold > 1) {
-        return NextResponse.json(
-          { error: 'Quality threshold must be a number between 0 and 1' },
-          { status: 400 }
-        );
-      }
-    }
-
-    // Create Supabase client and template service
-    const supabase = createServerSupabaseClient();
     const templateService = new TemplateService(supabase);
 
+    // Parse and validate request body
+    const body = await request.json();
+    const validatedData = createTemplateSchema.parse(body);
+
     // Create template
-    const template = await templateService.createTemplate({
-      name: body.name,
-      description: body.description || '',
-      category: body.tier, // Using tier as category
-      structure: body.structure,
-      variables: body.variables || [],
-      tone: body.styleNotes || '',
-      complexityBaseline: 5, // Default value
-      styleNotes: body.styleNotes,
-      exampleConversation: body.exampleConversation,
-      qualityThreshold: body.qualityThreshold || 0.7,
-      requiredElements: body.requiredElements || [],
-      rating: 0,
-      createdBy: '', // TODO: Get from auth context
-      // Additional fields
-      tier: body.tier,
-      isActive: body.isActive !== undefined ? body.isActive : true,
-      applicablePersonas: body.applicablePersonas || [],
-      applicableEmotions: body.applicableEmotions || [],
-    } as any);
+    const template = await templateService.create(validatedData);
 
     return NextResponse.json(
-      { template },
+      { data: template, message: 'Template created successfully' },
       { status: 201 }
     );
-  } catch (error) {
-    console.error('Error creating template:', error);
+  } catch (error: any) {
+    // Handle Zod validation errors
+    if (error instanceof ZodError) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          details: error.errors.map((e) => ({
+            field: e.path.join('.'),
+            message: e.message,
+          })),
+        },
+        { status: 400 }
+      );
+    }
+
+    console.error('POST /api/templates error:', error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to create template' },
+      { error: 'Failed to create template', details: error.message },
       { status: 500 }
     );
   }

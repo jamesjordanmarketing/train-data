@@ -23,6 +23,13 @@ export {
   type BatchEstimateParams
 } from './batch-estimator';
 
+// User Preferences Service
+export {
+  UserPreferencesService,
+  userPreferencesService,
+  type ServiceResult
+} from './user-preferences-service';
+
 // Re-export types from main types file for convenience
 export type {
   TierType,
@@ -30,6 +37,13 @@ export type {
   BatchItem,
   Conversation,
   ConversationStatus,
-  ConversationTurn
+  ConversationTurn,
+  UserPreferences,
+  NotificationPreferences,
+  DefaultFilterPreferences,
+  ExportPreferences,
+  KeyboardShortcuts,
+  QualityThresholds,
+  UserPreferencesRecord
 } from '../types';
 

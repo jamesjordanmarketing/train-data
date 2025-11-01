@@ -236,21 +236,19 @@ export interface ExportLog {
   updated_at: string;
 }
 
-export type UserPreferences = {
-  theme: 'light' | 'dark' | 'system';
-  sidebarCollapsed: boolean;
-  tableDensity: 'compact' | 'comfortable' | 'spacious';
-  rowsPerPage: number;
-  enableAnimations: boolean;
-  keyboardShortcutsEnabled: boolean;
-  retryConfig?: {
-    strategy: 'exponential' | 'linear' | 'fixed';
-    maxAttempts: number;
-    baseDelayMs: number;
-    maxDelayMs: number;
-    continueOnError: boolean;
-  };
-};
+// User Preferences - Re-exported from dedicated module
+// See: src/lib/types/user-preferences.ts for full type definitions
+export type { 
+  UserPreferences, 
+  NotificationPreferences,
+  DefaultFilterPreferences,
+  ExportPreferences,
+  KeyboardShortcuts,
+  QualityThresholds,
+  RetryConfig,
+  UserPreferencesRecord
+} from './types/user-preferences';
+export { DEFAULT_USER_PREFERENCES, validateUserPreferences } from './types/user-preferences';
 
 // Template Testing Types
 
@@ -335,4 +333,49 @@ export type AnalyticsSummary = {
     scenario: number;
     edge_case: number;
   };
+};
+
+// Feedback Types
+
+export type FeedbackCategory = 
+  | 'content_accuracy' 
+  | 'emotional_intelligence' 
+  | 'turn_quality' 
+  | 'format_issues';
+
+export type PerformanceLevel = 'high' | 'medium' | 'low';
+
+export type TemplatePerformance = {
+  template_id: string;
+  template_name: string;
+  tier: TierType;
+  usage_count: number;
+  avg_quality: number;
+  approval_rate: number;
+  rejection_rate: number;
+  revision_rate: number;
+  performance: PerformanceLevel;
+  trend: 'improving' | 'stable' | 'declining';
+  feedback_categories: {
+    [key in FeedbackCategory]: number;
+  };
+  last_used: string;
+};
+
+export type FeedbackSummary = {
+  total_reviews: number;
+  overall_approval_rate: number;
+  avg_quality_score: number;
+  templates_flagged: number;
+  quality_trend: 'up' | 'down' | 'stable';
+  time_window: string;
+};
+
+export type FeedbackRecommendation = {
+  template_id: string;
+  template_name: string;
+  issue: string;
+  recommendation: string;
+  priority: 'high' | 'medium' | 'low';
+  evidence: string[];
 };

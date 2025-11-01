@@ -10,4 +10,5 @@ export * from './templates';
 export * from './generation-logs';
 export * from './services';
 export * from './generation';
+export * from './ai-config';
 

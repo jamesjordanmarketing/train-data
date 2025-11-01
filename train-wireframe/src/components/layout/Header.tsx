@@ -1,4 +1,4 @@
-import { Bell, User, Plus, Layers, LayoutDashboard, FileText, GitBranch, AlertTriangle, CheckCircle, Settings } from 'lucide-react';
+import { Bell, User, Plus, Layers, LayoutDashboard, FileText, GitBranch, AlertTriangle, CheckCircle, Settings, BarChart3 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { 
   DropdownMenu,
@@ -37,6 +37,11 @@ const navigationItems = [
     id: 'review', 
     label: 'Review Queue', 
     icon: CheckCircle,
+  },
+  { 
+    id: 'feedback', 
+    label: 'Quality Feedback', 
+    icon: BarChart3,
   },
 ];
 

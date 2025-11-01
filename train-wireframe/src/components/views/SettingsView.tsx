@@ -57,9 +57,14 @@ export function SettingsView() {
               </div>
               <Switch
                 id="shortcuts"
-                checked={preferences.keyboardShortcutsEnabled}
+                checked={preferences.keyboardShortcuts.enabled}
                 onCheckedChange={(checked) => 
-                  updatePreferences({ keyboardShortcutsEnabled: checked })
+                  updatePreferences({ 
+                    keyboardShortcuts: { 
+                      ...preferences.keyboardShortcuts, 
+                      enabled: checked 
+                    } 
+                  })
                 }
               />
             </div>
