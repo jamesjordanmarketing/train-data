@@ -34,7 +34,7 @@ interface BatchGenerationState {
 interface AppState {
   // UI State
   sidebarCollapsed: boolean;
-  currentView: 'dashboard' | 'templates' | 'scenarios' | 'edge_cases' | 'review' | 'feedback' | 'settings';
+  currentView: 'dashboard' | 'templates' | 'scenarios' | 'edge_cases' | 'review' | 'feedback' | 'settings' | 'ai-config';
   currentTier: TierType | 'all';
   
   // Data State

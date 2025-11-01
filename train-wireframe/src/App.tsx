@@ -7,6 +7,7 @@ import { EdgeCasesView } from './components/views/EdgeCasesView';
 import { ReviewQueueView } from './components/views/ReviewQueueView';
 import { QualityFeedbackView } from './components/views/QualityFeedbackView';
 import { SettingsView } from './components/views/SettingsView';
+import { AIConfigView } from './components/views/AIConfigView';
 import { SingleGenerationForm } from './components/generation/SingleGenerationForm';
 import { BatchGenerationModal } from './components/generation/BatchGenerationModal';
 import { ExportModal } from './components/dashboard/ExportModal';
@@ -65,6 +66,8 @@ export default function App() {
         return <QualityFeedbackView />;
       case 'settings':
         return <SettingsView />;
+      case 'ai-config':
+        return <AIConfigView />;
       default:
         return <DashboardView />;
     }

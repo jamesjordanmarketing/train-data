@@ -1,4 +1,4 @@
-import { Bell, User, Plus, Layers, LayoutDashboard, FileText, GitBranch, AlertTriangle, CheckCircle, Settings, BarChart3 } from 'lucide-react';
+import { Bell, User, Plus, Layers, LayoutDashboard, FileText, GitBranch, AlertTriangle, CheckCircle, Settings, BarChart3, Cpu } from 'lucide-react';
 import { Button } from '../ui/button';
 import { 
   DropdownMenu,
@@ -123,6 +123,10 @@ export function Header() {
             <DropdownMenuItem onClick={() => setCurrentView('settings')}>
               <Settings className="h-4 w-4 mr-2" />
               Settings
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setCurrentView('ai-config')}>
+              <Cpu className="h-4 w-4 mr-2" />
+              AI Configuration
             </DropdownMenuItem>
             <DropdownMenuItem>Keyboard Shortcuts</DropdownMenuItem>
             <DropdownMenuSeparator />
