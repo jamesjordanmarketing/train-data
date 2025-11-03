@@ -4,7 +4,12 @@
       "Read(//c/Users/james/Master/BrightHub/brun/mock-data/chunks-alpha-data/**)",
       "Bash(npm run build)",
       "Bash(npm run:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(node src/scripts/cursor-db-helper.js:*)",
+      "Bash(for table in conversations conversation_turns batch_jobs batch_items generation_logs export_logs templates scenarios edge_cases prompt_templates template_analytics user_preferences ai_configurations)",
+      "Bash(do echo \"Checking $table:\")",
+      "Bash(done)",
+      "Bash(node:*)"
     ],
     "deny": [],
     "ask": []
