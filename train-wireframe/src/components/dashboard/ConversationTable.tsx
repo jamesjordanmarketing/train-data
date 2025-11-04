@@ -17,6 +17,13 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from '../ui/dropdown-menu';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '../ui/dialog';
 import { 
   MoreVertical, 
   Eye, 
@@ -29,7 +36,8 @@ import {
   ArrowDown,
   Play,
   Info,
-  RefreshCw
+  RefreshCw,
+  Link as LinkIcon
 } from 'lucide-react';
 import { Conversation } from '../../lib/types';
 import { useAppStore } from '../../stores/useAppStore';
@@ -37,6 +45,7 @@ import { cn } from '../../lib/utils';
 import { toast } from 'sonner@2.0.3';
 import { QualityDetailsModal, QualityScore } from './QualityDetailsModal';
 import { SingleGenerationForm } from '../generation/SingleGenerationForm';
+import { ChunkSelector } from '../chunks/ChunkSelector';
 
 const statusColors = {
   draft: 'bg-gray-100 text-gray-700',
@@ -77,6 +86,8 @@ export function ConversationTable({ conversations, onViewConversation }: Convers
   const [selectedQualityScore, setSelectedQualityScore] = useState<QualityScore | null>(null);
   const [selectedConversationTitle, setSelectedConversationTitle] = useState<string>('');
   const [regenerateConversationId, setRegenerateConversationId] = useState<string | null>(null);
+  const [chunkSelectorOpen, setChunkSelectorOpen] = useState(false);
+  const [linkingConversationId, setLinkingConversationId] = useState<string | null>(null);
   
   // Sorting logic
   const sortedConversations = useMemo(() => {
@@ -151,6 +162,55 @@ export function ConversationTable({ conversations, onViewConversation }: Convers
 
   const handleRegenerateClose = () => {
     setRegenerateConversationId(null);
+  };
+
+  const handleLinkChunkClick = (conversationId: string) => {
+    setLinkingConversationId(conversationId);
+    setChunkSelectorOpen(true);
+  };
+
+  const handleChunkSelect = async (chunkId: string) => {
+    if (!linkingConversationId) return;
+
+    try {
+      const response = await fetch(`/api/conversations/${linkingConversationId}/link-chunk`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chunkId }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to link chunk');
+      }
+
+      toast.success('Chunk linked successfully');
+      setChunkSelectorOpen(false);
+      setLinkingConversationId(null);
+      
+      // Optionally refresh the conversation data here
+    } catch (error) {
+      console.error('Error linking chunk:', error);
+      toast.error('Failed to link chunk');
+    }
+  };
+
+  const handleUnlinkChunk = async (conversationId: string) => {
+    try {
+      const response = await fetch(`/api/conversations/${conversationId}/unlink-chunk`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to unlink chunk');
+      }
+
+      toast.success('Chunk unlinked successfully');
+      
+      // Optionally refresh the conversation data here
+    } catch (error) {
+      console.error('Error unlinking chunk:', error);
+      toast.error('Failed to unlink chunk');
+    }
   };
   
   const getQualityScoreColor = (score: number) => {
@@ -397,6 +457,18 @@ export function ConversationTable({ conversations, onViewConversation }: Convers
                         Export
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
+                      {conversation.parentChunkId ? (
+                        <DropdownMenuItem onClick={() => handleUnlinkChunk(conversation.id)}>
+                          <LinkIcon className="h-4 w-4 mr-2" />
+                          Unlink from Chunk
+                        </DropdownMenuItem>
+                      ) : (
+                        <DropdownMenuItem onClick={() => handleLinkChunkClick(conversation.id)}>
+                          <LinkIcon className="h-4 w-4 mr-2" />
+                          Link to Chunk
+                        </DropdownMenuItem>
+                      )}
+                      <DropdownMenuSeparator />
                       <DropdownMenuItem 
                         onClick={() => handleDelete(conversation.id, conversation.title)}
                         className="text-red-600"
@@ -426,6 +498,20 @@ export function ConversationTable({ conversations, onViewConversation }: Convers
           onClose={handleRegenerateClose}
         />
       )}
+
+      <Dialog open={chunkSelectorOpen} onOpenChange={setChunkSelectorOpen}>
+        <DialogContent className="max-w-4xl max-h-[80vh]">
+          <DialogHeader>
+            <DialogTitle>Link Conversation to Chunk</DialogTitle>
+            <DialogDescription>
+              Select a chunk to link to this conversation. The chunk will be used as the source context.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="h-[60vh]">
+            <ChunkSelector onSelect={handleChunkSelect} />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

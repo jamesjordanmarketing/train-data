@@ -26,6 +26,10 @@ import {
   estimateTokens,
 } from './types/generation';
 import { qualityScorer, generateRecommendations, evaluateAndFlag } from './quality';
+import { chunksService, dimensionParser } from './generation/chunks-integration';
+import { promptContextBuilder } from './generation/prompt-context-builder';
+import { dimensionParameterMapper } from './generation/dimension-parameter-mapper';
+import type { DimensionSource } from './generation/types';
 
 export class ConversationGenerator {
   private rateLimiter: RateLimiter;
@@ -70,8 +74,63 @@ export class ConversationGenerator {
       await this.rateLimiter.acquire();
       console.log(`✅ Rate limit slot acquired`);
       
-      // 2. Resolve template with parameters
-      const prompt = await this.templateService.resolveTemplate(
+      // 2. Check for chunk association and inject context
+      let chunkContext: any = null;
+      let dimensionSource: DimensionSource | null = null;
+      let enrichedPrompt: string | null = null;
+      
+      if (params.chunkId) {
+        console.log(`🔗 Chunk association detected: ${params.chunkId}`);
+        
+        // Fetch chunk and dimensions
+        const chunkData = await chunksService.getChunkWithDimensions(params.chunkId);
+        
+        if (chunkData) {
+          const { chunk, dimensions } = chunkData;
+          chunkContext = chunk;
+          dimensionSource = dimensions;
+          
+          console.log(`✅ Chunk loaded: ${chunk.chunkType} (${chunk.tokenCount} tokens)`);
+          
+          if (dimensions) {
+            console.log(`✅ Dimensions loaded: ${dimensionParser.getSummary(dimensions)}`);
+            
+            // Auto-populate parameters from dimensions if not explicitly set
+            if (!params.parameters?.explicitParams) {
+              const suggestions = dimensionParameterMapper.mapDimensionsToParameters(dimensions);
+              
+              // Override params with dimension-driven suggestions
+              params.persona = params.persona || suggestions.persona || params.persona;
+              params.emotion = params.emotion || suggestions.emotion || params.emotion;
+              params.parameters = {
+                ...params.parameters,
+                targetTurns: suggestions.targetTurns,
+                categories: [...(params.parameters?.categories || []), ...suggestions.categories],
+                dimensionConfidence: dimensions.confidence,
+                complexity: suggestions.complexity,
+              };
+              
+              // Adjust temperature based on dimensions
+              if (!params.temperature) {
+                params.temperature = dimensionParameterMapper.suggestTemperature(dimensions);
+              }
+              
+              // Adjust max tokens based on complexity
+              if (!params.maxTokens) {
+                params.maxTokens = dimensionParameterMapper.suggestMaxTokens(dimensions, suggestions.targetTurns);
+              }
+              
+              console.log(`✅ Parameters auto-populated from dimensions:`);
+              console.log(dimensionParameterMapper.explainMapping(dimensions, suggestions));
+            }
+          }
+        } else {
+          console.warn(`⚠️  Chunk ${params.chunkId} not found or has no dimensions`);
+        }
+      }
+      
+      // 3. Resolve template with parameters
+      let basePrompt = await this.templateService.resolveTemplate(
         params.templateId,
         {
           persona: params.persona,
@@ -80,9 +139,16 @@ export class ConversationGenerator {
           ...params.parameters,
         }
       );
-      console.log(`✅ Template resolved (${prompt.length} chars)`);
+      console.log(`✅ Template resolved (${basePrompt.length} chars)`);
       
-      // 3. Call Claude API with retry logic
+      // 4. Inject chunk context into prompt if available
+      let prompt = basePrompt;
+      if (chunkContext && dimensionSource) {
+        prompt = promptContextBuilder.buildPrompt(basePrompt, chunkContext, dimensionSource);
+        console.log(`✅ Chunk context injected (${prompt.length} chars total)`);
+      }
+      
+      // 5. Call Claude API with retry logic
       const retryConfig = {
         maxAttempts: 3,
         baseDelay: 1000,
@@ -98,31 +164,34 @@ export class ConversationGenerator {
       );
       console.log(`✅ Claude API call successful (${response.duration}ms)`);
       
-      // 4. Parse and validate response
+      // 6. Parse and validate response
       const conversation = this.parseResponse(response, params);
       console.log(`✅ Response parsed (${conversation.totalTurns} turns)`);
       
-      // 5. Calculate comprehensive quality score
-      const qualityScoreResult = qualityScorer.calculateScore({
-        turns: conversation.turns,
-        totalTurns: conversation.totalTurns,
-        totalTokens: conversation.totalTokens,
-        tier: params.tier,
-      });
+      // 7. Calculate comprehensive quality score (with dimension confidence)
+      const qualityScoreResult = qualityScorer.calculateScore(
+        {
+          turns: conversation.turns,
+          totalTurns: conversation.totalTurns,
+          totalTokens: conversation.totalTokens,
+          tier: params.tier,
+        },
+        dimensionSource // Pass dimension source for confidence weighting
+      );
       
       // Generate recommendations
       qualityScoreResult.recommendations = generateRecommendations(qualityScoreResult);
       
       console.log(`✅ Quality score: ${qualityScoreResult.overall}/10 ${qualityScoreResult.autoFlagged ? '(Flagged)' : ''}`);
       
-      // 6. Calculate cost
+      // 8. Calculate cost
       const cost = calculateCost(
         response.inputTokens,
         response.outputTokens,
         response.model
       );
       
-      // 7. Save conversation and turns
+      // 9. Save conversation and turns (with chunk context)
       const status = qualityScoreResult.overall >= 6 ? 'generated' : 'needs_revision';
       const saved = await this.conversationService.create({
         title: conversation.title,
@@ -148,7 +217,13 @@ export class ConversationGenerator {
         totalTokens: conversation.totalTokens,
         actualCostUsd: cost,
         generationDurationMs: response.duration,
-        parameters: params.parameters,
+        parameters: {
+          ...params.parameters,
+          // Store chunk and dimension metadata
+          chunkId: params.chunkId,
+          dimensionConfidence: dimensionSource?.confidence,
+          dimensionRunId: dimensionSource?.runId,
+        },
         documentId: params.documentId,
         chunkId: params.chunkId,
         createdBy: params.createdBy,
@@ -156,7 +231,7 @@ export class ConversationGenerator {
         parentType: 'template',
       });
       
-      // 8. Save conversation turns
+      // 10. Save conversation turns
       await this.conversationService.bulkCreateTurns(
         saved.id,
         conversation.turns.map((turn) => ({
@@ -169,7 +244,7 @@ export class ConversationGenerator {
       );
       console.log(`✅ Conversation saved (ID: ${saved.id})`);
       
-      // 9. Auto-flag if quality is below threshold
+      // 11. Auto-flag if quality is below threshold
       if (qualityScoreResult.autoFlagged) {
         try {
           await evaluateAndFlag(saved.id, qualityScoreResult);
@@ -180,10 +255,10 @@ export class ConversationGenerator {
         }
       }
       
-      // 10. Log generation details
-      await this.logGeneration(params, response, saved, cost, qualityScoreResult);
+      // 12. Log generation details (including chunk and dimension usage)
+      await this.logGeneration(params, response, saved, cost, qualityScoreResult, dimensionSource, chunkContext);
       
-      // 11. Increment template usage
+      // 13. Increment template usage
       await this.templateService.incrementUsage(params.templateId);
       
       const totalDuration = Date.now() - startTime;
@@ -511,13 +586,18 @@ export class ConversationGenerator {
    * @param response - Claude API response
    * @param conversation - Saved conversation
    * @param cost - Generation cost
+   * @param qualityScore - Quality score result
+   * @param dimensionSource - Dimension data (if chunk-based)
+   * @param chunkContext - Chunk reference (if chunk-based)
    */
   private async logGeneration(
     params: GenerationParams,
     response: ClaudeResponse,
     conversation: any,
     cost: number,
-    qualityScore?: any
+    qualityScore?: any,
+    dimensionSource?: DimensionSource | null,
+    chunkContext?: any
   ): Promise<void> {
     try {
       await this.generationLogService.create({
@@ -527,12 +607,23 @@ export class ConversationGenerator {
         requestPayload: {
           prompt: '[REDACTED]',
           parameters: params.parameters,
+          chunkId: params.chunkId,
+          hasChunkContext: !!chunkContext,
+          hasDimensions: !!dimensionSource,
         },
         responsePayload: {
           content: '[REDACTED]',
           stopReason: response.stopReason,
         },
-        parameters: params.parameters,
+        parameters: {
+          ...params.parameters,
+          // Log chunk and dimension usage for audit trail
+          chunkId: params.chunkId,
+          chunkType: chunkContext?.chunkType,
+          dimensionConfidence: dimensionSource?.confidence,
+          dimensionRunId: dimensionSource?.runId,
+          dimensionDriven: !!dimensionSource,
+        },
         temperature: params.temperature,
         maxTokens: params.maxTokens,
         inputTokens: response.inputTokens,

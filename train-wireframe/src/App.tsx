@@ -15,6 +15,16 @@ import { ExportModal } from './components/dashboard/ExportModal';
 import { useAppStore } from './stores/useAppStore';
 import { generateInitialMockData } from './lib/mockData';
 import { initializeTheme } from './lib/theme';
+import { 
+  ErrorBoundary,
+  DashboardErrorBoundary,
+  TemplatesErrorBoundary,
+  ReviewQueueErrorBoundary,
+  SettingsErrorBoundary,
+  GenerationErrorBoundary,
+  ExportErrorBoundary,
+  ModalErrorBoundary,
+} from './components/errors';
 
 export default function App() {
   const { 
@@ -62,40 +72,96 @@ export default function App() {
     return cleanup;
   }, [preferences.theme, preferencesLoaded]);
   
-  // Render current view
+  // Render current view with feature-specific error boundaries
   const renderView = () => {
     switch (currentView) {
       case 'dashboard':
-        return <DashboardView />;
+        return (
+          <DashboardErrorBoundary>
+            <DashboardView />
+          </DashboardErrorBoundary>
+        );
       case 'templates':
-        return <TemplatesView />;
+        return (
+          <TemplatesErrorBoundary>
+            <TemplatesView />
+          </TemplatesErrorBoundary>
+        );
       case 'scenarios':
-        return <ScenariosView />;
+        return (
+          <ErrorBoundary>
+            <ScenariosView />
+          </ErrorBoundary>
+        );
       case 'edge_cases':
-        return <EdgeCasesView />;
+        return (
+          <ErrorBoundary>
+            <EdgeCasesView />
+          </ErrorBoundary>
+        );
       case 'review':
-        return <ReviewQueueView />;
+        return (
+          <ReviewQueueErrorBoundary>
+            <ReviewQueueView />
+          </ReviewQueueErrorBoundary>
+        );
       case 'feedback':
-        return <QualityFeedbackView />;
+        return (
+          <ErrorBoundary>
+            <QualityFeedbackView />
+          </ErrorBoundary>
+        );
       case 'settings':
-        return <SettingsView />;
+        return (
+          <SettingsErrorBoundary>
+            <SettingsView />
+          </SettingsErrorBoundary>
+        );
       case 'ai-config':
-        return <AIConfigView />;
+        return (
+          <SettingsErrorBoundary>
+            <AIConfigView />
+          </SettingsErrorBoundary>
+        );
       case 'database':
-        return <DatabaseHealthView />;
+        return (
+          <ErrorBoundary>
+            <DatabaseHealthView />
+          </ErrorBoundary>
+        );
       default:
-        return <DashboardView />;
+        return (
+          <DashboardErrorBoundary>
+            <DashboardView />
+          </DashboardErrorBoundary>
+        );
     }
   };
   
   return (
-    <DashboardLayout>
-      {renderView()}
-      
-      {/* Modals */}
-      <SingleGenerationForm />
-      <BatchGenerationModal />
-      <ExportModal />
-    </DashboardLayout>
+    <ErrorBoundary>
+      <DashboardLayout>
+        {renderView()}
+        
+        {/* Modals wrapped in error boundaries */}
+        <ModalErrorBoundary>
+          <GenerationErrorBoundary>
+            <SingleGenerationForm />
+          </GenerationErrorBoundary>
+        </ModalErrorBoundary>
+        
+        <ModalErrorBoundary>
+          <GenerationErrorBoundary>
+            <BatchGenerationModal />
+          </GenerationErrorBoundary>
+        </ModalErrorBoundary>
+        
+        <ModalErrorBoundary>
+          <ExportErrorBoundary>
+            <ExportModal />
+          </ExportErrorBoundary>
+        </ModalErrorBoundary>
+      </DashboardLayout>
+    </ErrorBoundary>
   );
 }

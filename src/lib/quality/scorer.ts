@@ -4,8 +4,9 @@
  * Evaluates conversation quality based on multiple criteria:
  * - Turn count (30% weight)
  * - Length/token usage (25% weight)
- * - Structure validity (25% weight)
- * - Confidence/coherence (20% weight)
+ * - Structure validity (30% weight)
+ * - Confidence/coherence (15% weight)
+ * - Dimension confidence (optional, adds context when available)
  */
 
 import {
@@ -19,6 +20,7 @@ import {
   TierConfig,
   ConfidenceFactor,
 } from './types';
+import type { DimensionSource } from '../generation/types';
 
 // Tier-specific thresholds
 const TIER_CONFIG: TierConfig = {
@@ -61,18 +63,28 @@ const TIER_CONFIG: TierConfig = {
 const WEIGHTS = {
   turnCount: 0.30,
   length: 0.25,
-  structure: 0.25,
-  confidence: 0.20,
+  structure: 0.30,
+  confidence: 0.15,
 };
+
+// Dimension confidence weighting
+const DIMENSION_WEIGHT = 0.15; // Weight when dimension confidence is available
 
 export class QualityScorer {
   /**
    * Calculate comprehensive quality score for a conversation
+   * @param conversation - Conversation data to score
+   * @param dimensionSource - Optional dimension data from chunk analysis
    */
-  calculateScore(conversation: ConversationData): QualityScore {
+  calculateScore(
+    conversation: ConversationData,
+    dimensionSource?: DimensionSource | null
+  ): QualityScore {
     const breakdown = this.calculateBreakdown(conversation);
-    const overall = this.calculateOverallScore(breakdown);
-    const autoFlagged = overall < 6.0;
+    const overall = this.calculateOverallScore(breakdown, dimensionSource);
+    
+    // Auto-flag if score is low OR dimension confidence is very low
+    const autoFlagged = overall < 6.0 || (dimensionSource ? dimensionSource.confidence < 0.5 : false);
 
     return {
       overall: Math.round(overall * 10) / 10, // Round to 1 decimal
@@ -80,6 +92,7 @@ export class QualityScorer {
       recommendations: [], // Will be populated by recommendations.ts
       autoFlagged,
       calculatedAt: new Date().toISOString(),
+      dimensionConfidence: dimensionSource?.confidence,
     };
   }
 
@@ -97,14 +110,42 @@ export class QualityScorer {
 
   /**
    * Calculate weighted overall score
+   * @param breakdown - Quality breakdown scores
+   * @param dimensionSource - Optional dimension confidence data
    */
-  private calculateOverallScore(breakdown: QualityBreakdown): number {
-    return (
+  private calculateOverallScore(
+    breakdown: QualityBreakdown,
+    dimensionSource?: DimensionSource | null
+  ): number {
+    // Base score from conversation analysis
+    let baseScore = (
       breakdown.turnCount.score * WEIGHTS.turnCount +
       breakdown.length.score * WEIGHTS.length +
       breakdown.structure.score * WEIGHTS.structure +
       breakdown.confidence.score * WEIGHTS.confidence
     );
+
+    // Apply dimension confidence factor if available
+    if (dimensionSource) {
+      const dimConfidence = dimensionSource.confidence;
+      
+      // Convert 0-1 confidence to 0-10 score
+      const dimensionScore = dimConfidence * 10;
+      
+      // Adjust base score based on dimension confidence
+      // High confidence (>0.8): boost score slightly
+      // Low confidence (<0.5): reduce score
+      if (dimConfidence >= 0.8) {
+        baseScore += (dimConfidence - 0.8) * 5; // Max +1 point
+      } else if (dimConfidence < 0.5) {
+        baseScore += -2 * (0.5 - dimConfidence) * 2; // Max -2 points
+      }
+      
+      // Alternative: Blend dimension confidence as weighted component
+      // baseScore = baseScore * (1 - DIMENSION_WEIGHT) + dimensionScore * DIMENSION_WEIGHT;
+    }
+
+    return Math.max(0, Math.min(10, baseScore)); // Clamp between 0-10
   }
 
   /**

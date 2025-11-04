@@ -10,6 +10,7 @@ export interface QualityScore {
   recommendations: string[];
   autoFlagged: boolean;
   calculatedAt: string;
+  dimensionConfidence?: number; // 0-1, optional dimension confidence from chunk
 }
 
 export interface QualityBreakdown {

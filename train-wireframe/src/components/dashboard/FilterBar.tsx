@@ -1,4 +1,4 @@
-import { Search, Filter, X, Download, Plus, Tag, Play } from 'lucide-react';
+import { Search, Filter, X, Download, Plus, Tag, Play, LinkOff } from 'lucide-react';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -18,7 +18,7 @@ import { Label } from '../ui/label';
 import { Slider } from '../ui/slider';
 import { useAppStore } from '../../stores/useAppStore';
 import { TierType, ConversationStatus } from '../../lib/types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'sonner@2.0.3';
 
 const quickFilters = [
@@ -29,6 +29,7 @@ const quickFilters = [
   { label: 'Needs Review', value: 'pending_review' },
   { label: 'Approved', value: 'approved' },
   { label: 'High Quality (>8)', value: 'high_quality' },
+  { label: 'Orphaned', value: 'orphaned', showCount: true },
 ];
 
 interface FilterBarProps {
@@ -49,6 +50,7 @@ export function FilterBar({ onExport, onBulkAction }: FilterBarProps) {
   
   const [activeQuickFilter, setActiveQuickFilter] = useState('all');
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  const [orphanedCount, setOrphanedCount] = useState<number>(0);
   
   const handleQuickFilter = (filterValue: string) => {
     setActiveQuickFilter(filterValue);
@@ -69,6 +71,42 @@ export function FilterBar({ onExport, onBulkAction }: FilterBarProps) {
       case 'high_quality':
         setFilters({ qualityScoreMin: 8 });
         break;
+      case 'orphaned':
+        fetchOrphanedConversations();
+        break;
+    }
+  };
+
+  // Fetch orphaned conversations count on mount
+  useEffect(() => {
+    fetchOrphanedCount();
+  }, []);
+
+  const fetchOrphanedCount = async () => {
+    try {
+      const response = await fetch('/api/conversations/orphaned');
+      if (response.ok) {
+        const orphaned = await response.json();
+        setOrphanedCount(orphaned.length);
+      }
+    } catch (error) {
+      console.error('Error fetching orphaned count:', error);
+    }
+  };
+
+  const fetchOrphanedConversations = async () => {
+    try {
+      const response = await fetch('/api/conversations/orphaned');
+      if (response.ok) {
+        const orphaned = await response.json();
+        // This would need to be integrated with the app store to update the conversations list
+        // For now, we can show a toast with the count
+        toast.info(`Found ${orphaned.length} orphaned conversations`);
+        console.log('Orphaned conversations:', orphaned);
+      }
+    } catch (error) {
+      console.error('Error fetching orphaned conversations:', error);
+      toast.error('Failed to fetch orphaned conversations');
     }
   };
   
@@ -278,8 +316,18 @@ export function FilterBar({ onExport, onBulkAction }: FilterBarProps) {
             variant={activeQuickFilter === filter.value ? "default" : "outline"}
             size="sm"
             onClick={() => handleQuickFilter(filter.value)}
+            className="gap-2"
           >
+            {filter.value === 'orphaned' && <LinkOff className="h-3 w-3" />}
             {filter.label}
+            {filter.showCount && orphanedCount > 0 && (
+              <Badge 
+                variant={activeQuickFilter === filter.value ? "secondary" : "outline"} 
+                className="ml-1 h-5 px-1.5"
+              >
+                {orphanedCount}
+              </Badge>
+            )}
           </Button>
         ))}
       </div>

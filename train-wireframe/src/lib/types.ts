@@ -21,6 +21,7 @@ export type QualityMetrics = {
   confidence: 'high' | 'medium' | 'low';
   uniqueness: number;
   trainingValue: 'high' | 'medium' | 'low';
+  dimensionConfidence?: number; // 0-1 scale, confidence from chunk dimension analysis
 };
 
 export type Conversation = {
@@ -41,6 +42,9 @@ export type Conversation = {
   totalTokens: number;
   parentId?: string; // ID of parent template/scenario
   parentType?: 'template' | 'scenario';
+  parentChunkId?: string; // ID of source chunk from chunks-alpha module
+  chunkContext?: string; // Cached chunk content for generation performance
+  dimensionSource?: DimensionSource; // Dimension metadata from semantic analysis
   parameters: Record<string, any>;
   reviewHistory: ReviewAction[];
 };
@@ -53,6 +57,38 @@ export type ReviewAction = {
   comment?: string;
   reasons?: string[];
 };
+
+/**
+ * Chunk reference metadata from chunks-alpha module
+ * Provides traceability to source document chunks
+ */
+export interface ChunkReference {
+  id: string;
+  title: string;
+  content: string;
+  documentId: string;
+  documentTitle?: string;
+  sectionHeading?: string;
+  pageStart?: number;
+  pageEnd?: number;
+}
+
+/**
+ * Dimension metadata from chunks-alpha semantic analysis
+ * Used for parameter selection and quality scoring
+ */
+export interface DimensionSource {
+  chunkId: string;
+  dimensions: Record<string, number>; // dimension_name: value (0-1)
+  confidence: number; // overall confidence score (0-1)
+  extractedAt: string; // ISO 8601 timestamp
+  semanticDimensions?: {
+    persona?: string[];
+    emotion?: string[];
+    complexity?: number;
+    domain?: string[];
+  };
+}
 
 export type Template = {
   id: string;

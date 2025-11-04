@@ -742,6 +742,102 @@ export const initializeDatabase = async () => {
   }
 };
 
+/**
+ * Conversation-to-Chunk Association Service
+ * Manages relationships between conversations and source chunks from chunks-alpha module
+ */
+export const conversationChunkService = {
+  /**
+   * Get all conversations linked to a specific chunk
+   * @param chunkId - The chunk ID to query
+   * @returns Array of conversations associated with the chunk
+   */
+  async getConversationsByChunk(chunkId: string) {
+    const { data, error } = await supabase
+      .from('conversations')
+      .select('*')
+      .eq('parent_chunk_id', chunkId)
+      .order('created_at', { ascending: false });
+    
+    if (error) throw error;
+    return data || [];
+  },
+
+  /**
+   * Get orphaned conversations (no chunk link)
+   * Excludes draft and archived conversations
+   * @returns Array of conversations without chunk associations
+   */
+  async getOrphanedConversations() {
+    const { data, error } = await supabase
+      .from('conversations')
+      .select('*')
+      .is('parent_chunk_id', null)
+      .not('status', 'in', '(draft,archived)')
+      .order('created_at', { ascending: false });
+    
+    if (error) throw error;
+    return data || [];
+  },
+
+  /**
+   * Link a conversation to a source chunk
+   * Updates conversation with chunk association, cached context, and dimension metadata
+   * @param conversationId - The conversation ID to update
+   * @param chunkId - The chunk ID to link to
+   * @param chunkContext - Optional cached chunk content for performance
+   * @param dimensionSource - Optional dimension metadata from semantic analysis
+   */
+  async linkConversationToChunk(
+    conversationId: string,
+    chunkId: string,
+    chunkContext?: string,
+    dimensionSource?: {
+      chunkId: string;
+      dimensions: Record<string, number>;
+      confidence: number;
+      extractedAt: string;
+      semanticDimensions?: {
+        persona?: string[];
+        emotion?: string[];
+        complexity?: number;
+        domain?: string[];
+      };
+    }
+  ): Promise<void> {
+    const { error } = await supabase
+      .from('conversations')
+      .update({
+        parent_chunk_id: chunkId,
+        chunk_context: chunkContext || null,
+        dimension_source: dimensionSource || null,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', conversationId);
+    
+    if (error) throw error;
+  },
+
+  /**
+   * Remove chunk association from a conversation
+   * Clears chunk ID, cached context, and dimension metadata
+   * @param conversationId - The conversation ID to update
+   */
+  async unlinkConversationFromChunk(conversationId: string): Promise<void> {
+    const { error } = await supabase
+      .from('conversations')
+      .update({
+        parent_chunk_id: null,
+        chunk_context: null,
+        dimension_source: null,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', conversationId);
+    
+    if (error) throw error;
+  }
+};
+
 // Chunk-related services
 export { 
   chunkService, 
