@@ -25,6 +25,7 @@ import {
   ExportErrorBoundary,
   ModalErrorBoundary,
 } from './components/errors';
+import { RecoveryWizard } from './components/recovery';
 
 export default function App() {
   const { 
@@ -161,6 +162,9 @@ export default function App() {
             <ExportModal />
           </ExportErrorBoundary>
         </ModalErrorBoundary>
+        
+        {/* Recovery wizard - automatically detects and recovers lost data */}
+        <RecoveryWizard autoOpen={true} />
       </DashboardLayout>
     </ErrorBoundary>
   );
