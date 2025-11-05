@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { getBackup } from '@/lib/backup/storage';
-import { errorLogger } from '@/../train-wireframe/src/lib/errors/error-logger';
+import { errorLogger } from '@/lib/errors/error-logger';
 import { readFile } from 'fs/promises';
 import { existsSync } from 'fs';
 

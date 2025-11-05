@@ -5,7 +5,7 @@
  * Ensures all required parameters are present and values meet validation rules.
  */
 
-import { TemplateVariable } from '../../lib/types';
+import { TemplateVariable } from '@/lib/types';
 import { validateAndCoerceType, isSafeTemplateValue } from './security-utils';
 
 /**

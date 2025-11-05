@@ -3,7 +3,7 @@ import { JSONLTransformer } from './jsonl-transformer';
 import { JSONTransformer } from './json-transformer';
 import { CSVTransformer } from './csv-transformer';
 import { MarkdownTransformer } from './markdown-transformer';
-import { ExportConfig } from '../../../train-wireframe/src/lib/types';
+import { ExportConfig } from '../../../@/lib/types';
 
 /**
  * Factory function to get appropriate transformer for format

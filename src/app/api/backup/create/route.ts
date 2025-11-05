@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { createBackup } from '@/lib/backup/storage';
-import { errorLogger } from '@/../train-wireframe/src/lib/errors/error-logger';
-import { AppError, ErrorCode } from '@/../train-wireframe/src/lib/errors';
+import { errorLogger } from '@/lib/errors/error-logger';
+import { AppError, ErrorCode } from '@/lib/errors';
 
 // Initialize Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;

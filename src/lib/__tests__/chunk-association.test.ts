@@ -6,7 +6,7 @@
  */
 
 import { conversationChunkService } from '../database';
-import type { DimensionSource, ChunkReference, Conversation } from '../../../train-wireframe/src/lib/types';
+import type { DimensionSource, ChunkReference, Conversation } from '../../../@/lib/types';
 
 describe('Chunk Association - Type Definitions', () => {
   test('DimensionSource type is properly defined', () => {

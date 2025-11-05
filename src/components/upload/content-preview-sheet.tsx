@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '../../lib/supabase';
-import { formatFileSize, formatTimeAgo } from '../../lib/types/upload';
+import { formatFileSize, formatTimeAgo } from '@/lib/types/upload';
 
 interface ContentPreviewSheetProps {
   /** Document ID to preview */

@@ -6,7 +6,7 @@
  */
 
 import { supabase } from '../supabase';
-import type { BatchJob, BatchItem, TierType } from '../../../train-wireframe/src/lib/types';
+import type { BatchJob, BatchItem, TierType } from '../../../@/lib/types';
 
 type BatchJobStatus = 'queued' | 'processing' | 'paused' | 'completed' | 'failed' | 'cancelled';
 

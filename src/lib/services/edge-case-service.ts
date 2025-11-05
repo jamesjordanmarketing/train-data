@@ -8,7 +8,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
-import type { EdgeCase } from '../../../train-wireframe/src/lib/types';
+import type { EdgeCase } from '../../../@/lib/types';
 
 // ============================================================================
 // Type Definitions

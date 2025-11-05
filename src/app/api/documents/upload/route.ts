@@ -4,7 +4,7 @@ import {
   detectFileType, 
   validateFile, 
   sanitizeFilename 
-} from '../../../../lib/types/upload';
+} from '@/lib/types/upload';
 
 // Configure route for Node.js runtime (required for file processing)
 export const runtime = 'nodejs';

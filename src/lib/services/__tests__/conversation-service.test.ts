@@ -7,7 +7,7 @@
 
 import { conversationService } from '../conversation-service';
 import { supabase } from '../../supabase';
-import type { Conversation, ConversationTurn } from '../../../../train-wireframe/src/lib/types';
+import type { Conversation, ConversationTurn } from '../../../../@/lib/types';
 
 // Mock Supabase
 jest.mock('../../supabase');

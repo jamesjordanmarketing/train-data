@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui
 import { ArrowLeft, Upload as UploadIcon, ListFilter } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '../../../lib/supabase';
-import { UploadDocumentResponse } from '../../../lib/types/upload';
+import { UploadDocumentResponse } from '@/lib/types/upload';
 
 /**
  * Upload Page Component (Updated)

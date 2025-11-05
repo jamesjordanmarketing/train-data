@@ -15,7 +15,7 @@
  * @module quality-validator
  */
 
-import type { ConversationTurn, QualityMetrics } from '../../../train-wireframe/src/lib/types';
+import type { ConversationTurn, QualityMetrics } from '../../../@/lib/types';
 
 /**
  * Conversation structure for validation

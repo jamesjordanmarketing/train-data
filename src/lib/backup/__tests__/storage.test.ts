@@ -15,7 +15,7 @@ import { existsSync } from 'fs';
 vi.mock('@supabase/supabase-js');
 vi.mock('fs/promises');
 vi.mock('fs');
-vi.mock('../../../train-wireframe/src/lib/errors/error-logger');
+vi.mock('../../../@/lib/errors/error-logger');
 
 describe('Backup Storage', () => {
   const mockUserId = 'user-123';

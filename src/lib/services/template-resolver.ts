@@ -22,7 +22,7 @@ import {
   generatePreview,
   ResolvedTemplate as InjectionResult,
 } from '../ai/parameter-injection';
-import type { Template, TemplateVariable } from '../../../train-wireframe/src/lib/types';
+import type { Template, TemplateVariable } from '../../../@/lib/types';
 
 /**
  * Result of template resolution

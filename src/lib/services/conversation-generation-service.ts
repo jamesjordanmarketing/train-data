@@ -27,7 +27,7 @@ import type {
   ConversationTurn,
   ConversationStatus,
   TierType,
-} from '../../../train-wireframe/src/lib/types';
+} from '../../../@/lib/types';
 
 /**
  * Parameters for conversation generation

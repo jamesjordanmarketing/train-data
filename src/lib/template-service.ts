@@ -6,7 +6,7 @@
  */
 
 import { SupabaseClient } from '@supabase/supabase-js';
-import type { Template, TemplateVariable } from '../train-wireframe/src/lib/types';
+import type { Template, TemplateVariable } from '@/lib/types';
 
 /**
  * Service class for template CRUD operations

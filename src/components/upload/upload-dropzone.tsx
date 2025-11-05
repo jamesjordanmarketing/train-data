@@ -6,7 +6,7 @@ import { Button } from '../ui/button';
 import { Card, CardContent } from '../ui/card';
 import { Progress } from '../ui/progress';
 import { Badge } from '../ui/badge';
-import { validateFile, formatFileSize, SupportedFileType } from '../../lib/types/upload';
+import { validateFile, formatFileSize, SupportedFileType } from '@/lib/types/upload';
 import { toast } from 'sonner';
 
 interface UploadDropzoneProps {

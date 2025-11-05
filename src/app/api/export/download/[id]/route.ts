@@ -11,7 +11,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase-server';
 import { ExportService, ExportNotFoundError } from '@/lib/export-service';
 import { getTransformer } from '@/lib/export-transformers';
-import { Conversation, ConversationTurn } from '../../../../../../train-wireframe/src/lib/types';
+import { Conversation, ConversationTurn } from '../../../../../../@/lib/types';
 
 /**
  * GET /api/export/download/[id]

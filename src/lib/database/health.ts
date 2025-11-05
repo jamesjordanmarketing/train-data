@@ -12,7 +12,7 @@
  */
 
 import { DatabaseHealthService } from '../services/database-health-service';
-import { errorLogger } from '../../../train-wireframe/src/lib/errors/error-logger';
+import { errorLogger } from '../../../@/lib/errors/error-logger';
 
 /**
  * Health status levels

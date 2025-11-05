@@ -12,11 +12,11 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerSupabaseClient } from '../../../../lib/supabase-server';
-import { TemplateService } from '../../../../lib/template-service';
-import { injectParameters, generateSampleParameters } from '../../../../lib/ai/parameter-injection';
+import { createServerSupabaseClient } from '@/lib/supabase-server';
+import { TemplateService } from '@/lib/template-service';
+import { injectParameters, generateSampleParameters } from '@/lib/ai/parameter-injection';
 import Anthropic from '@anthropic-ai/sdk';
-import { AI_CONFIG } from '../../../../lib/ai-config';
+import { AI_CONFIG } from '@/lib/ai-config';
 
 /**
  * Calculate quality metrics from Claude API response

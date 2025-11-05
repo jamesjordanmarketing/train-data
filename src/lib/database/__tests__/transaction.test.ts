@@ -11,7 +11,7 @@
 
 import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals';
 import { withTransaction, withTransactionRetry, TransactionContext, TRANSACTION_SQL_FUNCTIONS } from '../transaction';
-import { DatabaseError, ErrorCode } from '../../../../train-wireframe/src/lib/errors';
+import { DatabaseError, ErrorCode } from '../../../../@/lib/errors';
 
 // Mock Supabase client
 const mockRpc = jest.fn();
@@ -24,7 +24,7 @@ jest.mock('../../supabase', () => ({
   supabase: mockSupabase,
 }));
 
-jest.mock('../../../../train-wireframe/src/lib/errors/error-logger', () => ({
+jest.mock('../../../../@/lib/errors/error-logger', () => ({
   errorLogger: {
     debug: jest.fn(),
     info: jest.fn(),
@@ -33,7 +33,7 @@ jest.mock('../../../../train-wireframe/src/lib/errors/error-logger', () => ({
   },
 }));
 
-jest.mock('../../../../train-wireframe/src/lib/api/retry', () => ({
+jest.mock('../../../../@/lib/api/retry', () => ({
   withRetry: jest.fn((fn) => fn()),
 }));
 
@@ -262,7 +262,7 @@ describe('withTransactionRetry', () => {
     });
 
     // Mock withRetry to actually retry
-    const { withRetry } = require('../../../../train-wireframe/src/lib/api/retry');
+    const { withRetry } = require('../../../../@/lib/api/retry');
     withRetry.mockImplementation(async (fn: any) => {
       let lastError;
       for (let i = 0; i < 3; i++) {
@@ -286,7 +286,7 @@ describe('withTransactionRetry', () => {
 
     await withTransactionRetry(testFunction, { retryDeadlocks: false });
 
-    const { withRetry } = require('../../../../train-wireframe/src/lib/api/retry');
+    const { withRetry } = require('../../../../@/lib/api/retry');
     expect(withRetry).not.toHaveBeenCalled();
   });
 });

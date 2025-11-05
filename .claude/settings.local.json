@@ -9,7 +9,18 @@
       "Bash(for table in conversations conversation_turns batch_jobs batch_items generation_logs export_logs templates scenarios edge_cases prompt_templates template_analytics user_preferences ai_configurations)",
       "Bash(do echo \"Checking $table:\")",
       "Bash(done)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(find:*)",
+      "Bash(for file in \"C:/Users/james/Master/BrightHub/brun/train-data/src/lib/services\"/*.ts)",
+      "Bash(do sed -i \"s|train-wireframe/src/lib/errors|@/lib/errors|g; s|train-wireframe/src/lib/types|@/lib/types|g; s|train-wireframe/src/lib/api|@/lib/api|g\" \"$file\")",
+      "Bash(for file in \"C:/Users/james/Master/BrightHub/brun/train-data/src/lib/export-transformers\"/*.ts)",
+      "Bash(for file in \"C:/Users/james/Master/BrightHub/brun/train-data/src/lib\"/*.ts)",
+      "Bash(do:*)",
+      "Bash(for file in \"C:/Users/james/Master/BrightHub/brun/train-data/src/lib/database\"/*.ts)",
+      "Bash(for file in \"C:/Users/james/Master/BrightHub/brun/train-data/src/lib/backup\"/*.ts)",
+      "Bash(while read file)",
+      "Bash(npm install:*)",
+      "Bash(for file in app/(dashboard)/upload/page.tsx components/upload/upload-dropzone.tsx components/upload/content-preview-sheet.tsx components/upload/upload-queue.tsx lib/ai/__tests__/parameter-injection.test.ts lib/ai/parameter-validation.ts app/api/documents/process/route.ts app/api/documents/upload/route.ts)"
     ],
     "deny": [],
     "ask": []

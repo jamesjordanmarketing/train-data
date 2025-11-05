@@ -4,7 +4,7 @@
  * Tests for template parameter resolution, validation, and injection.
  */
 
-import { Template, TemplateVariable } from '../../../lib/types';
+import { Template, TemplateVariable } from '@/lib/types';
 import {
   injectParameters,
   extractPlaceholders,

@@ -27,7 +27,7 @@ jest.mock('../../services/database-health-service', () => ({
 }));
 
 // Mock errorLogger
-jest.mock('../../../../train-wireframe/src/lib/errors/error-logger', () => ({
+jest.mock('../../../../@/lib/errors/error-logger', () => ({
   errorLogger: {
     debug: jest.fn(),
     info: jest.fn(),

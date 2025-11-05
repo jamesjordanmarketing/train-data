@@ -10,7 +10,7 @@
  * SECURITY: All values are escaped and validated before injection.
  */
 
-import { Template, TemplateVariable } from '../../lib/types';
+import { Template, TemplateVariable } from '@/lib/types';
 import { escapeHtml, isSafeTemplateString, logSecurityEvent } from './security-utils';
 import {
   validateAllParameters,

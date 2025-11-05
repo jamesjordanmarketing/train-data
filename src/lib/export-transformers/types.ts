@@ -1,4 +1,4 @@
-import { Conversation, ConversationTurn, ExportConfig } from '../../../train-wireframe/src/lib/types';
+import { Conversation, ConversationTurn, ExportConfig } from '../../../@/lib/types';
 
 /**
  * Base interface for all export transformers

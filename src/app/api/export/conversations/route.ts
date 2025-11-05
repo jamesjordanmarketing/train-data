@@ -18,7 +18,7 @@ import { createServerSupabaseClient } from '@/lib/supabase-server';
 import { ExportService, CreateExportLogInput } from '@/lib/export-service';
 import { getTransformer } from '@/lib/export-transformers';
 import { ExportRequestSchema } from '@/lib/validations/export-schemas';
-import { Conversation, ConversationTurn, FilterConfig } from '../../../../../train-wireframe/src/lib/types';
+import { Conversation, ConversationTurn, FilterConfig } from '../../../../../@/lib/types';
 
 const SYNC_THRESHOLD = 500; // Process synchronously if < 500 conversations
 const EXPORT_EXPIRY_HOURS = 24; // Files expire after 24 hours

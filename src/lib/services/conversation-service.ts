@@ -16,7 +16,7 @@ import type {
   ReviewAction,
   FilterConfig,
   TierType
-} from '../../../train-wireframe/src/lib/types';
+} from '../../../@/lib/types';
 
 /**
  * Conversation Service

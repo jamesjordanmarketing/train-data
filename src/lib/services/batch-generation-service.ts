@@ -18,7 +18,7 @@ import { randomUUID } from 'crypto';
 import { getConversationGenerationService, type GenerationParams } from './conversation-generation-service';
 import { batchJobService } from './batch-job-service';
 import { conversationService } from './conversation-service';
-import type { TierType } from '../../../train-wireframe/src/lib/types';
+import type { TierType } from '../../../@/lib/types';
 
 /**
  * Batch generation request parameters

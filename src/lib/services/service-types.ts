@@ -11,7 +11,7 @@ import type {
   Scenario,
   EdgeCase,
   TemplateVariable,
-} from '../../../train-wireframe/src/lib/types';
+} from '../../../@/lib/types';
 
 // ============================================================================
 // Template Service Types

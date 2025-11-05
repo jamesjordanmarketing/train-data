@@ -8,7 +8,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
-import type { Scenario } from '../../../train-wireframe/src/lib/types';
+import type { Scenario } from '../../../@/lib/types';
 
 // ============================================================================
 // Type Definitions

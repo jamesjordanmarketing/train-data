@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '../../../../lib/supabase';
 import { documentProcessor } from '../../../../lib/file-processing/document-processor';
-import { ProcessDocumentRequest, ProcessDocumentResponse } from '../../../../lib/types/upload';
+import { ProcessDocumentRequest, ProcessDocumentResponse } from '@/lib/types/upload';
 
 export const runtime = 'nodejs';
 export const maxDuration = 300; // 5 minutes max (for large files)

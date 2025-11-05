@@ -7,7 +7,7 @@ import {
   Conversation,
   ConversationTurn,
   ExportConfig,
-} from '../../../train-wireframe/src/lib/types';
+} from '../../../@/lib/types';
 
 /**
  * JSONLTransformer

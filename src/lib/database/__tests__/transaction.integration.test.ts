@@ -14,7 +14,7 @@
 
 import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import { withTransaction, withTransactionRetry, TransactionContext } from '../transaction';
-import { DatabaseError, ErrorCode } from '../../../../train-wireframe/src/lib/errors';
+import { DatabaseError, ErrorCode } from '../../../../@/lib/errors';
 import { supabase } from '../../supabase';
 
 describe('Transaction Integration Tests', () => {

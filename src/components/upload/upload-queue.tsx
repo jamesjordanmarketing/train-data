@@ -31,7 +31,7 @@ import {
 } from '../ui/dropdown-menu';
 import { DocumentStatusBadge } from './document-status-badge';
 import { Progress } from '../ui/progress';
-import { formatFileSize, formatTimeAgo } from '../../lib/types/upload';
+import { formatFileSize, formatTimeAgo } from '@/lib/types/upload';
 import { supabase } from '../../lib/supabase';
 import { toast } from 'sonner';
 import { useDocumentStatus } from '../../hooks/use-document-status';

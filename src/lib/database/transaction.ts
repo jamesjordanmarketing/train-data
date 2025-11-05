@@ -13,9 +13,9 @@
 
 import { SupabaseClient } from '@supabase/supabase-js';
 import { supabase } from '../supabase';
-import { DatabaseError, ErrorCode } from '../../../train-wireframe/src/lib/errors';
-import { errorLogger } from '../../../train-wireframe/src/lib/errors/error-logger';
-import { withRetry } from '../../../train-wireframe/src/lib/api/retry';
+import { DatabaseError, ErrorCode } from '../../../@/lib/errors';
+import { errorLogger } from '../../../@/lib/errors/error-logger';
+import { withRetry } from '../../../@/lib/api/retry';
 
 // Transaction configuration interface
 export interface TransactionConfig {
