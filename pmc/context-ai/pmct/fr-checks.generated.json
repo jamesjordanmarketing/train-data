@@ -1,0 +1,2246 @@
+{
+  "checks": [
+    {
+      "fr_id": "FR1.1.1 — Conversations Table Structure",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/lib/database.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/lib/database.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/lib/database.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR1.1.2 — Flexible Metadata Storage",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/DashboardView.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/lib/database.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/lib/database.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/lib/database.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/lib/database.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR1.2.1 — Generation Audit Logging",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/lib/api-response-log-service.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "route",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/app/api/chunks/generate-dimensions/route.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "route",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/app/api/chunks/generate-dimensions/route.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR1.2.2 — Review Audit Logging",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/FilterBar.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR1.2.3 — Export Audit Logging",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR1.3.1 — Database Performance Monitoring",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/lib/supabase.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR1.3.2 — Index Management and Optimization",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/lib/database.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/FilterBar.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/FilterBar.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/DashboardView.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/DashboardView.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/views/ReviewQueueView.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR1.3.3 — Metadata Schema Evolution",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/lib/supabase.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR2.1.1 — Automatic Rate Limiting",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/lib/ai-config.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/generation/BatchGenerationModal.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/lib/ai-config.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/lib/ai-config.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR2.1.2 — Retry Strategy Configuration",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/views/SettingsView.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/views/SettingsView.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/generation/BatchGenerationModal.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR2.2.1 — Template Storage and Version Control",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/views/TemplatesView.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/views/TemplatesView.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR2.2.2 — Automatic Parameter Injection",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/generation/SingleGenerationForm.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR2.2.3 — Template Validation and Testing",
+      "artifacts": [
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/views/TemplatesView.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "route",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/app/api/chunks/generate-dimensions/route.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR2.2.4 — Template Usage Analytics",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/ConversationTable.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/views/TemplatesView.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR2.3.1 — Automated Quality Scoring",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/ConversationTable.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/ConversationTable.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/ConversationTable.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/FilterBar.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/FilterBar.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR2.3.2 — Quality Criteria Details",
+      "artifacts": [
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/ConversationTable.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/ui/progress.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR3.1.1 — Desktop-Optimized Layout",
+      "artifacts": [
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/layout/DashboardLayout.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/ConversationTable.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/layout/Header.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR3.1.2 — Keyboard Navigation",
+      "artifacts": [
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/ConversationTable.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR3.2.1 — Loading Indicators",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/ui/skeleton.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/ui/sonner.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR3.2.2 — Empty States and No Results",
+      "artifacts": [
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/DashboardView.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/DashboardView.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/DashboardView.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/ConversationTable.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR3.3.1 — Multi-Column Sortable Table",
+      "artifacts": [
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/ConversationTable.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/ConversationTable.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/ConversationTable.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/ConversationTable.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/ui/table.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR3.3.2 — Advanced Filtering System",
+      "artifacts": [
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/FilterBar.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/FilterBar.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/FilterBar.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/ui/dropdown-menu.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/ui/dropdown-menu.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/ui/slider.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/FilterBar.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/ui/badge.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR3.3.3 — Bulk Actions",
+      "artifacts": [
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/ui/checkbox.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/ConversationTable.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/ConversationTable.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/ui/sonner.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR3.3.4 — Inline Actions",
+      "artifacts": [
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/ui/dropdown-menu.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/ConversationTable.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/ConversationTable.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR4.1.1 — Generate All Tiers Workflow",
+      "artifacts": [
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/DashboardView.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/generation/BatchGenerationModal.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/generation/BatchGenerationModal.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR4.1.2 — Tier-Specific Batch Generation",
+      "artifacts": [
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/ui/select.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/ui/badge.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR4.2.1 — Manual Single Generation",
+      "artifacts": [
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/generation/SingleGenerationForm.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR4.2.2 — Regenerate Existing Conversation",
+      "artifacts": [
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/ConversationTable.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR5.1.1 — Flexible Export Formats",
+      "artifacts": [
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/export/ExportModal.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR5.1.2 — Export Filtering and Selection",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR5.2.1 — Background Export Processing",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR5.2.2 — Export Audit Trail",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/lib/database.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR6.1.1 — Review Queue Interface",
+      "artifacts": [
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/views/ReviewQueueView.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR6.1.2 — Quality Feedback Loop",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR7.1.1 — Template CRUD Operations",
+      "artifacts": [
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/views/TemplatesView.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR7.1.2 — Scenario Library",
+      "artifacts": [
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/views/ScenariosView.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR7.1.3 — Edge Case Repository",
+      "artifacts": [
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/views/EdgeCasesView.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR8.1.1 — Customizable User Settings",
+      "artifacts": [
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/views/SettingsView.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR8.2.1 — AI Generation Settings",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/lib/ai-config.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR8.2.2 — Database Maintenance",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/lib/database.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR9.1.1 — Conversation to Chunk Association",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/01-bmo-overview-chunk-alpha_v2.md"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/01-bmo-overview-chunk-alpha_v2.md"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/01-bmo-overview-chunk-alpha_v2.md"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR9.1.2 — Dimension-Driven Generation",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/lib/dimension-generation/generator.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR10.1.1 — Comprehensive Error Handling",
+      "artifacts": [
+        {
+          "type": "route",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/app/api/chunks/generate-dimensions/route.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/lib/ai-config.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/lib/ai-config.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/lib/database.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR10.1.2 — Data Recovery",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/lib/types.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR11.1.1 — Response Time Targets",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/stores/useAppStore.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/src/lib/database.ts"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    },
+    {
+      "fr_id": "FR11.1.2 — Scalability Optimizations",
+      "artifacts": [
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data/train-wireframe/src/components/dashboard/DashboardView.tsx"
+          ],
+          "symbol_patterns": [],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Auto-generated from 03-bmo-functional-requirements.md"
+    }
+  ]
+}

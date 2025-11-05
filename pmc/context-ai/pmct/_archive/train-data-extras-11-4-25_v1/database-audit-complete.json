@@ -1,0 +1,550 @@
+{
+  "timestamp": "2025-11-03T01:46:07.171Z",
+  "existing_tables": [
+    {
+      "table": "conversations",
+      "exists": true,
+      "row_count": 0,
+      "column_count": 0,
+      "columns": [],
+      "sample_data": null
+    },
+    {
+      "table": "chunks",
+      "exists": true,
+      "row_count": 177,
+      "column_count": 16,
+      "columns": [
+        "id",
+        "chunk_id",
+        "document_id",
+        "chunk_type",
+        "section_heading",
+        "page_start",
+        "page_end",
+        "char_start",
+        "char_end",
+        "token_count",
+        "overlap_tokens",
+        "chunk_handle",
+        "chunk_text",
+        "created_at",
+        "updated_at",
+        "created_by"
+      ],
+      "sample_data": {
+        "id": "a71eb2f2-9178-4c66-be89-22789794335f",
+        "chunk_id": "0fbf44f1-9348-4725-84c0-1cf796578645#C010",
+        "document_id": "0fbf44f1-9348-4725-84c0-1cf796578645",
+        "chunk_type": "Chapter_Sequential",
+        "section_heading": "The Sales Model",
+        "page_start": 10,
+        "page_end": 11,
+        "char_start": 23069,
+        "char_end": 25144,
+        "token_count": 528,
+        "overlap_tokens": 0,
+        "chunk_handle": "the-sales-model",
+        "chunk_text": "stickiness. Achieving negative dollar churn through aggressive upsell \nand cross-sell might even be possible. By this stage, marketing should \nhave matured enough to measure leads by channel and by cohort.\nExit  Criteria:  Organizations  can  exit  this  phase  when  they  have  \ntwo or three quarters of  accurate revenue prediction by marketing \nand churn has settled at an acceptable level.\nTimeframe: 6 – 9 months.\n\n14  THE SAAS MARKETING HANDBOOK / TIM MATTHEWS\nDRIVING  GROWTH  –  With  a  tuned  and  predictable  demand-\ngeneration machine, the marketing team can be a growth driver. ARR \nshould be well understood and churn should be stabilized. Investing \nmore  in  marketing  to  make  existing  customers  more  valuable  –  by  \nupselling additional features or modules – might be a final tweak.\nThese  timeframes  are  general;  they’re  based  on  discussions  with  \nseveral  SaaS  CEOs  and  CMOs.  Heads  of  marketing  should  gain  \nconsensus regarding which growth stage the company is in, as well \nas those activities on which marketing is focused. Maturation takes \ntime.  Executive  teams  may  grow  restless  and  want  to  move  on,  \nbut  until  you  have  invested  time  in  the  market  and  have  data  that  \nsupports your experiments, forecasts and predictions, you just won’t \nknow if  you were right. Marketing may need to stand tall, insisting \non discipline from other teams that either want to skip stages or are \nexpecting  magic  to  happen.  If  you  join  a  company  years  after  its  \nfounding, either as the first CMO or a replacement, you may even \nneed to walk the company back a stage or two if  they got ahead of  \nthemselves.\n\n15  THE SAAS MARKETING HANDBOOK / TIM MATTHEWS\nOnline  customer  acquisition  is  a  hot  topic  in  SaaS  circles.  Some  \ncompanies can execute “no-touch” models at scale, such as Google \nAdWords.  “Low-touch”  models—getting  prospective  customers  \nto  use  your  software  before  talking  to  a  sales  person—are  more  \ncommon. Here, customers can try out a product on their own terms \n",
+        "created_at": "2025-10-10T19:58:45.89568+00:00",
+        "updated_at": "2025-10-10T19:58:45.89568+00:00",
+        "created_by": null
+      }
+    },
+    {
+      "table": "scenarios",
+      "exists": true,
+      "row_count": 0,
+      "column_count": 0,
+      "columns": [],
+      "sample_data": null
+    },
+    {
+      "table": "templates",
+      "exists": true,
+      "row_count": 5,
+      "column_count": 27,
+      "columns": [
+        "id",
+        "template_name",
+        "description",
+        "category",
+        "tier",
+        "template_text",
+        "structure",
+        "variables",
+        "tone",
+        "complexity_baseline",
+        "style_notes",
+        "example_conversation",
+        "quality_threshold",
+        "required_elements",
+        "applicable_personas",
+        "applicable_emotions",
+        "applicable_topics",
+        "usage_count",
+        "rating",
+        "success_rate",
+        "version",
+        "is_active",
+        "created_at",
+        "updated_at",
+        "created_by",
+        "last_modified_by",
+        "last_modified"
+      ],
+      "sample_data": {
+        "id": "322f3ad4-7aad-41e6-b3d9-610a231122cf",
+        "template_name": "Financial Planning Triumph",
+        "description": "Conversation showing successful financial planning journey",
+        "category": "Financial Planning",
+        "tier": "template",
+        "template_text": "Generate a conversation between a financial advisor and {{persona}} about {{topic}}, with emotional arc showing {{emotion}}.",
+        "structure": "Introduction → Problem Identification → Strategy Development → Implementation → Success",
+        "variables": [],
+        "tone": "Professional yet empathetic",
+        "complexity_baseline": 7,
+        "style_notes": null,
+        "example_conversation": null,
+        "quality_threshold": null,
+        "required_elements": null,
+        "applicable_personas": null,
+        "applicable_emotions": null,
+        "applicable_topics": null,
+        "usage_count": 0,
+        "rating": 0,
+        "success_rate": 0,
+        "version": 1,
+        "is_active": true,
+        "created_at": "2025-10-29T22:17:56.235+00:00",
+        "updated_at": "2025-10-29T22:17:56.235+00:00",
+        "created_by": null,
+        "last_modified_by": null,
+        "last_modified": "2025-11-01T21:03:55.700842+00:00"
+      }
+    },
+    {
+      "table": "documents",
+      "exists": true,
+      "row_count": 12,
+      "column_count": 21,
+      "columns": [
+        "id",
+        "title",
+        "content",
+        "summary",
+        "created_at",
+        "updated_at",
+        "author_id",
+        "status",
+        "file_path",
+        "file_size",
+        "metadata",
+        "chunk_extraction_status",
+        "total_chunks_extracted",
+        "doc_version",
+        "source_type",
+        "source_url",
+        "doc_date",
+        "processing_progress",
+        "processing_error",
+        "processing_started_at",
+        "processing_completed_at"
+      ],
+      "sample_data": {
+        "id": "550e8400-e29b-41d4-a716-446655440024",
+        "title": "Sales Enablement: Competitive Battle Cards",
+        "content": "# Competitive Battle Cards - Sales enablement documentation with competitive intelligence",
+        "summary": "Comprehensive competitive analysis and battle cards for sales teams",
+        "created_at": "2025-10-03T05:43:54.700472+00:00",
+        "updated_at": "2025-10-08T17:50:29.009559+00:00",
+        "author_id": null,
+        "status": "completed",
+        "file_path": null,
+        "file_size": null,
+        "metadata": {},
+        "chunk_extraction_status": "completed",
+        "total_chunks_extracted": 1,
+        "doc_version": null,
+        "source_type": null,
+        "source_url": null,
+        "doc_date": null,
+        "processing_progress": 0,
+        "processing_error": null,
+        "processing_started_at": null,
+        "processing_completed_at": null
+      }
+    },
+    {
+      "table": "categories",
+      "exists": true,
+      "row_count": 10,
+      "column_count": 9,
+      "columns": [
+        "id",
+        "name",
+        "description",
+        "examples",
+        "is_high_value",
+        "impact_description",
+        "sort_order",
+        "created_at",
+        "updated_at"
+      ],
+      "sample_data": {
+        "id": "550e8400-e29b-41d4-a716-446655440001",
+        "name": "Complete Systems & Methodologies",
+        "description": "End-to-end business systems, frameworks, or methodologies that provide comprehensive solutions",
+        "examples": [
+          "Customer onboarding systems",
+          "Sales frameworks",
+          "Implementation methodologies"
+        ],
+        "is_high_value": true,
+        "impact_description": "High training value - provides complete business context and methodology",
+        "sort_order": 1,
+        "created_at": "2025-09-21T02:06:04.822352+00:00",
+        "updated_at": "2025-09-21T02:06:04.822352+00:00"
+      }
+    },
+    {
+      "table": "tags",
+      "exists": true,
+      "row_count": 43,
+      "column_count": 9,
+      "columns": [
+        "id",
+        "dimension_id",
+        "name",
+        "description",
+        "icon",
+        "risk_level",
+        "sort_order",
+        "created_at",
+        "updated_at"
+      ],
+      "sample_data": {
+        "id": "550e8400-e29b-41d4-a716-446655440007",
+        "dimension_id": "550e8400-e29b-41d4-a716-446655440003",
+        "name": "Brand/Company",
+        "description": "Created by your organization or brand",
+        "icon": null,
+        "risk_level": null,
+        "sort_order": 1,
+        "created_at": "2025-09-21T02:06:04.822352+00:00",
+        "updated_at": "2025-09-21T02:06:04.822352+00:00"
+      }
+    },
+    {
+      "table": "workflow_sessions",
+      "exists": true,
+      "row_count": 165,
+      "column_count": 13,
+      "columns": [
+        "id",
+        "document_id",
+        "user_id",
+        "step",
+        "belonging_rating",
+        "selected_category_id",
+        "selected_tags",
+        "custom_tags",
+        "is_draft",
+        "completed_steps",
+        "created_at",
+        "updated_at",
+        "completed_at"
+      ],
+      "sample_data": {
+        "id": "061f0058-cac5-4c14-8e51-bfba53b76642",
+        "document_id": "550e8400-e29b-41d4-a716-446655440012",
+        "user_id": "f15f4a68-3268-452d-b4b0-e863f807db58",
+        "step": "A",
+        "belonging_rating": 1,
+        "selected_category_id": null,
+        "selected_tags": {},
+        "custom_tags": [],
+        "is_draft": true,
+        "completed_steps": [
+          "A"
+        ],
+        "created_at": "2025-09-21T22:28:26.57612+00:00",
+        "updated_at": "2025-09-21T22:28:26.491+00:00",
+        "completed_at": null
+      }
+    },
+    {
+      "table": "document_categories",
+      "exists": true,
+      "row_count": 10,
+      "column_count": 9,
+      "columns": [
+        "id",
+        "document_id",
+        "category_id",
+        "workflow_session_id",
+        "belonging_rating",
+        "assigned_by",
+        "assigned_at",
+        "is_primary",
+        "confidence_score"
+      ],
+      "sample_data": {
+        "id": "13b07a96-b6bb-42f5-85c1-5c9ed67ba626",
+        "document_id": "550e8400-e29b-41d4-a716-446655440024",
+        "category_id": "550e8400-e29b-41d4-a716-446655440001",
+        "workflow_session_id": "5b962021-4368-4c49-80c9-230af2cebe1b",
+        "belonging_rating": 2,
+        "assigned_by": "f15f4a68-3268-452d-b4b0-e863f807db58",
+        "assigned_at": "2025-10-03T19:31:15.97837+00:00",
+        "is_primary": true,
+        "confidence_score": null
+      }
+    },
+    {
+      "table": "document_tags",
+      "exists": true,
+      "row_count": 34,
+      "column_count": 10,
+      "columns": [
+        "id",
+        "document_id",
+        "tag_id",
+        "dimension_id",
+        "workflow_session_id",
+        "assigned_by",
+        "assigned_at",
+        "is_custom_tag",
+        "custom_tag_data",
+        "confidence_score"
+      ],
+      "sample_data": {
+        "id": "132ae91e-acf2-426a-816f-de5d14fa4f39",
+        "document_id": "550e8400-e29b-41d4-a716-446655440024",
+        "tag_id": "550e8400-e29b-41d4-a716-446655440009",
+        "dimension_id": "550e8400-e29b-41d4-a716-446655440005",
+        "workflow_session_id": "5b962021-4368-4c49-80c9-230af2cebe1b",
+        "assigned_by": "f15f4a68-3268-452d-b4b0-e863f807db58",
+        "assigned_at": "2025-10-03T19:31:16.092069+00:00",
+        "is_custom_tag": false,
+        "custom_tag_data": null,
+        "confidence_score": null
+      }
+    },
+    {
+      "table": "custom_tags",
+      "exists": true,
+      "row_count": 0,
+      "column_count": 0,
+      "columns": [],
+      "sample_data": null
+    },
+    {
+      "table": "tag_dimensions",
+      "exists": true,
+      "row_count": 7,
+      "column_count": 8,
+      "columns": [
+        "id",
+        "name",
+        "description",
+        "multi_select",
+        "required",
+        "sort_order",
+        "created_at",
+        "updated_at"
+      ],
+      "sample_data": {
+        "id": "550e8400-e29b-41d4-a716-446655440003",
+        "name": "Authorship",
+        "description": "Who created or contributed to this content",
+        "multi_select": false,
+        "required": true,
+        "sort_order": 1,
+        "created_at": "2025-09-21T02:06:04.822352+00:00",
+        "updated_at": "2025-09-21T02:06:04.822352+00:00"
+      }
+    },
+    {
+      "table": "conversation_turns",
+      "exists": true,
+      "row_count": 0,
+      "column_count": 0,
+      "columns": [],
+      "sample_data": null
+    },
+    {
+      "table": "batch_jobs",
+      "exists": true,
+      "row_count": 0,
+      "column_count": 0,
+      "columns": [],
+      "sample_data": null
+    },
+    {
+      "table": "batch_items",
+      "exists": false,
+      "error": "Could not find the table 'public.batch_items' in the schema cache"
+    },
+    {
+      "table": "generation_logs",
+      "exists": true,
+      "row_count": 0,
+      "column_count": 0,
+      "columns": [],
+      "sample_data": null
+    },
+    {
+      "table": "export_logs",
+      "exists": true,
+      "row_count": 0,
+      "column_count": 0,
+      "columns": [],
+      "sample_data": null
+    },
+    {
+      "table": "prompt_templates",
+      "exists": true,
+      "row_count": 6,
+      "column_count": 12,
+      "columns": [
+        "id",
+        "template_name",
+        "template_type",
+        "prompt_text",
+        "response_schema",
+        "applicable_chunk_types",
+        "version",
+        "is_active",
+        "created_at",
+        "updated_at",
+        "created_by",
+        "notes"
+      ],
+      "sample_data": {
+        "id": "203fc1aa-540b-475d-99db-2461f8aa2b43",
+        "template_name": "content_analysis_v1",
+        "template_type": "content_analysis",
+        "prompt_text": "Analyze the following content chunk and extract key metadata.\r\n\r\nCHUNK TYPE: {chunk_type}\r\nDOCUMENT TITLE: {doc_title}\r\nDOCUMENT CATEGORY: {primary_category}\r\nCHUNK TEXT:\r\n---\r\n{chunk_text}\r\n---\r\n\r\nExtract and return the following dimensions in JSON format:\r\n- chunk_summary_1s: One sentence summary (<= 240 characters)\r\n- key_terms: Array of 3-5 salient terms\r\n- audience: Intended reader/user persona\r\n- intent: Primary intent (educate|instruct|persuade|inform|narrate|summarize|compare|evaluate)\r\n- tone_voice_tags: Array of style/voice descriptors\r\n- brand_persona_tags: Array of brand identity traits\r\n- domain_tags: Array of topic/domain taxonomy labels\r\n\r\nReturn ONLY valid JSON with these exact keys.",
+        "response_schema": {
+          "type": "object",
+          "required": [
+            "chunk_summary_1s",
+            "key_terms",
+            "audience",
+            "intent"
+          ],
+          "properties": {
+            "intent": {
+              "enum": [
+                "educate",
+                "instruct",
+                "persuade",
+                "inform",
+                "narrate",
+                "summarize",
+                "compare",
+                "evaluate"
+              ],
+              "type": "string"
+            },
+            "audience": {
+              "type": "string"
+            },
+            "key_terms": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "domain_tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "tone_voice_tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "chunk_summary_1s": {
+              "type": "string",
+              "maxLength": 240
+            },
+            "brand_persona_tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "applicable_chunk_types": [
+          "Chapter_Sequential",
+          "Instructional_Unit",
+          "CER",
+          "Example_Scenario"
+        ],
+        "version": 1,
+        "is_active": true,
+        "created_at": "2025-10-06T04:40:24.238204+00:00",
+        "updated_at": "2025-10-06T04:40:24.238204+00:00",
+        "created_by": null,
+        "notes": "Basic content analysis applicable to all chunk types"
+      }
+    },
+    {
+      "table": "template_analytics",
+      "exists": true,
+      "row_count": 0,
+      "column_count": 0,
+      "columns": [],
+      "sample_data": null
+    },
+    {
+      "table": "edge_cases",
+      "exists": true,
+      "row_count": 0,
+      "column_count": 0,
+      "columns": [],
+      "sample_data": null
+    },
+    {
+      "table": "user_preferences",
+      "exists": false,
+      "error": "Could not find the table 'public.user_preferences' in the schema cache"
+    },
+    {
+      "table": "ai_configurations",
+      "exists": false,
+      "error": "Could not find the table 'public.ai_configurations' in the schema cache"
+    },
+    {
+      "table": "ai_configuration_audit",
+      "exists": false,
+      "error": "Could not find the table 'public.ai_configuration_audit' in the schema cache"
+    },
+    {
+      "table": "maintenance_operations",
+      "exists": true,
+      "row_count": 0,
+      "column_count": 0,
+      "columns": [],
+      "sample_data": null
+    },
+    {
+      "table": "configuration_audit_log",
+      "exists": false,
+      "error": "Could not find the table 'public.configuration_audit_log' in the schema cache"
+    }
+  ],
+  "missing_tables": [],
+  "summary": {
+    "total_tables_exist": 25,
+    "total_tables_missing": 0,
+    "total_tables_checked": 25,
+    "database_completeness_pct": 100
+  }
+}

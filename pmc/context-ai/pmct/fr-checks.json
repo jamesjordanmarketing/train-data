@@ -1,0 +1,235 @@
+{
+  "checks": [
+    {
+      "fr_id": "FR-TRAIN-USER-CONTEXT-001",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\lib\\**\\*.ts*",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\lib\\auth-context.tsx",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\lib\\auth-service.ts",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\stores\\**\\*.ts*",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\providers\\**\\*.ts*",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\app\\**\\*.ts*"
+          ],
+          "symbol_patterns": ["userId", "ownerId", "user_id", "owner_id"],
+          "required": true
+        },
+        {
+          "type": "migration",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\supabase\\migrations\\**\\*.sql"
+          ],
+          "symbol_patterns": ["user_id", "owner_id"],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Gap only if Train Data reads/writes ignore persistent user context."
+    },
+
+    {
+      "fr_id": "FR-CHUNKS-UPLOAD-002",
+      "artifacts": [
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\components\\upload\\*.ts*",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\components\\upload\\**\\*.ts*",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\components\\chunks\\**\\*.ts*",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\app\\chunks\\**\\*.ts*",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\components\\ui\\**\\*.ts*",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\app\\(dashboard)\\upload\\**\\*.ts*"
+          ],
+          "symbol_patterns": ["Upload", "Dropzone"],
+          "required": true
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\lib\\chunk-service.ts",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\lib\\file-processing\\**\\*.ts*",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\lib\\chunk-extraction\\**\\*.ts*"
+          ],
+          "symbol_patterns": ["extractChunks", "saveChunks"],
+          "required": true
+        },
+        {
+          "type": "route",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\app\\api\\chunks\\route.ts"
+          ],
+          "symbol_patterns": ["POST"],
+          "required": false
+        },
+        {
+          "type": "migration",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\supabase\\migrations\\**\\*.sql"
+          ],
+          "symbol_patterns": ["CREATE TABLE chunks"],
+          "required": false
+        }
+      ],
+      "threshold": 2,
+      "notes": "Service + UI implies implementation even if no dedicated API route."
+    },
+
+    {
+      "fr_id": "FR-EXPORT-CSV-003",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\lib\\export-service.ts",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\lib\\export-transformers\\**\\*.ts"
+          ],
+          "symbol_patterns": ["toCSV", "exportChunks"],
+          "required": true
+        },
+        {
+          "type": "route",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\app\\api\\export\\route.ts",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\app\\api\\export\\download\\route.ts"
+          ],
+          "symbol_patterns": ["GET", "POST"],
+          "required": false
+        },
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\components\\workflow\\*.ts*",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\components\\import-export\\**\\*.ts*",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\components\\conversations\\**\\*.ts*",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\components\\templates\\**\\*.ts*",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\components\\ui\\**\\*.ts*",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\components\\workflow\\**\\*.ts*"
+          ],
+          "symbol_patterns": ["ExportButton", "ImportButton"],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Service implementation is core; UI trigger and routes strengthen confidence."
+    },
+
+    {
+      "fr_id": "FR-DIMENSION-GENERATION-005",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\lib\\dimension-service.ts",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\lib\\dimension-generation\\**\\*"
+          ],
+          "symbol_patterns": ["generateDimensions", "regenerateDimensions"],
+          "required": true
+        },
+        {
+          "type": "route",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\app\\api\\chunks\\generate-dimensions\\route.ts",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\app\\api\\chunks\\regenerate\\route.ts"
+          ],
+          "symbol_patterns": ["POST"],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Service-backed generation is primary; associated routes strengthen confidence."
+    },
+
+    {
+      "fr_id": "FR-EDGE-CASE-HANDLING-007",
+      "artifacts": [
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\lib\\edge-case-service.ts"
+          ],
+          "symbol_patterns": ["handleEdgeCases", "detectOutliers"],
+          "required": true
+        },
+        {
+          "type": "route",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\app\\api\\export\\edge-cases\\route.ts"
+          ],
+          "symbol_patterns": ["POST", "GET"],
+          "required": false
+        },
+        {
+          "type": "pipeline",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\lib\\quality\\**\\*",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\lib\\monitoring\\**\\*.ts*"
+          ],
+          "symbol_patterns": ["edgeCase", "outlier", "exception"],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Service presence is core; route and quality pipeline evidence strengthen confidence."
+    },
+
+    {
+      "fr_id": "FR-QUALITY-REVIEW-008",
+      "artifacts": [
+        {
+          "type": "pipeline",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\lib\\quality\\**\\*",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\lib\\validation\\**\\*.ts*",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\lib\\monitoring\\**\\*.ts*"
+          ],
+          "symbol_patterns": ["score", "validate", "review"],
+          "required": true
+        },
+        {
+          "type": "service",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\lib\\chunk-service.ts",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\lib\\export-service.ts"
+          ],
+          "symbol_patterns": ["applyQualityChecks", "qualityGate"],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "Quality pipeline evidence is sufficient; integration in services improves confidence."
+    },
+
+    {
+      "fr_id": "FR-IMPORT-EXPORT-UI-TRIGGER-009",
+      "artifacts": [
+        {
+          "type": "component",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\components\\import-export\\**\\*.ts*",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\components\\conversations\\**\\*.ts*",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\components\\templates\\**\\*.ts*",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\components\\ui\\**\\*.ts*",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\components\\workflow\\**\\*.ts*"
+          ],
+          "symbol_patterns": ["ExportButton", "ImportButton"],
+          "required": true
+        },
+        {
+          "type": "route",
+          "path_patterns": [
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\app\\api\\export\\conversations\\route.ts",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\app\\api\\export\\download\\route.ts",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\app\\api\\export\\history\\route.ts",
+            "C:\\Users\\james\\Master\\BrightHub\\brun\\train-data\\src\\app\\api\\export\\templates\\route.ts"
+          ],
+          "symbol_patterns": ["GET", "POST"],
+          "required": false
+        }
+      ],
+      "threshold": 1,
+      "notes": "UI triggers should connect to export flows; routes provide operational evidence."
+    }
+  ]
+}
