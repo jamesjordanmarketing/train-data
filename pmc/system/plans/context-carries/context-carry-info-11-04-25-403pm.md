@@ -76,7 +76,85 @@ We test via deployment to Vercel rather than local `npm run dev` unless a specif
 #### 🎯 IMMEDIATE NEXT ACTION - Diagnose & Fix 404 Home Page
 
 **Current Problem:**
-Visiting https://train-data-three.vercel.app/ returns a 404 page despite successful compilation.
+Deploying https://train-data-three.vercel.app/ returns this long error:
+
+`17:13:21.163 Running build in Washington, D.C., USA (East) – iad1
+17:13:21.164 Build machine configuration: 2 cores, 8 GB
+17:13:21.283 Cloning github.com/jamesjordanmarketing/train-data (Branch: main, Commit: a4a804c)
+17:13:21.284 Previous build caches not available.
+17:13:23.005 Cloning completed: 1.722s
+17:13:23.844 Running "vercel build"
+17:13:24.276 Vercel CLI 48.8.2
+17:13:25.115 Running "install" command: `cd src && npm install`...
+17:14:19.211 npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+17:14:20.840 npm warn deprecated abab@2.0.6: Use your platform's native atob() and btoa() methods instead
+17:14:20.984 npm warn deprecated domexception@4.0.0: Use your platform's native DOMException instead
+17:14:21.529 npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+17:14:21.838 npm warn deprecated superagent@8.1.2: Please upgrade to superagent v10.2.2+, see release notes at https://github.com/forwardemail/superagent/releases/tag/v10.2.2 - maintenance is supported by Forward Email @ https://forwardemail.net
+17:14:21.941 npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+17:14:22.685 npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+17:14:22.983 npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+17:14:23.474 npm warn deprecated @supabase/auth-helpers-shared@0.7.0: This package is now deprecated - please use the @supabase/ssr package instead.
+17:14:23.498 npm warn deprecated supertest@6.3.4: Please upgrade to supertest v7.1.3+, see release notes at https://github.com/forwardemail/supertest/releases/tag/v7.1.3 - maintenance is supported by Forward Email @ https://forwardemail.net
+17:14:24.238 npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+17:14:24.346 npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+17:14:24.348 npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+17:14:24.348 npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+17:14:24.361 npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+17:14:24.421 npm warn deprecated @supabase/auth-helpers-nextjs@0.10.0: This package is now deprecated - please use the @supabase/ssr package instead.
+17:14:27.220 npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+17:14:33.971 
+17:14:33.972 added 957 packages, and audited 959 packages in 1m
+17:14:33.972 
+17:14:33.973 209 packages are looking for funding
+17:14:33.973   run `npm fund` for details
+17:14:33.973 
+17:14:33.973 found 0 vulnerabilities
+17:14:35.599 
+17:14:35.599 > cat-module@0.1.0 build
+17:14:35.600 > next build
+17:14:35.600 
+17:14:36.703 Attention: Next.js now collects completely anonymous telemetry regarding usage.
+17:14:36.703 This information is used to shape Next.js' roadmap and prioritize features.
+17:14:36.703 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+17:14:36.704 https://nextjs.org/telemetry
+17:14:36.704 
+17:14:36.849   ▲ Next.js 14.2.33
+17:14:36.850 
+17:14:37.092    Creating an optimized production build ...
+17:14:53.193 Failed to compile.
+17:14:53.194 
+17:14:53.194 ../train-wireframe/src/lib/errors/error-logger.ts
+17:14:53.194 Error: 
+17:14:53.194   [31mx[0m Expected ':', got ','
+17:14:53.195      ,-[[36;1;4m/vercel/path0/train-wireframe/src/lib/errors/error-logger.ts[0m:108:1]
+17:14:53.195  [2m108[0m |         isRecoverable: entry.error.isRecoverable,
+17:14:53.195  [2m109[0m |         context: entry.error.context,
+17:14:53.195  [2m110[0m |         stack: entry.error.stack,
+17:14:53.195  [2m111[0m |       } as AppError,
+17:14:53.195      : [31;1m                   ^[0m
+17:14:53.195  [2m112[0m |     };
+17:14:53.195  [2m113[0m | 
+17:14:53.195  [2m114[0m |     // Check queue size limit
+17:14:53.195      `----
+17:14:53.195 
+17:14:53.195 Caused by:
+17:14:53.195     Syntax Error
+17:14:53.195 
+17:14:53.195 Import trace for requested module:
+17:14:53.195 ../train-wireframe/src/lib/errors/error-logger.ts
+17:14:53.196 ./app/api/backup/create/route.ts
+17:14:53.196 
+17:14:53.197 
+17:14:53.197 > Build failed because of webpack errors
+17:14:53.237 npm error Lifecycle script `build` failed with error:
+17:14:53.237 npm error code 1
+17:14:53.237 npm error path /vercel/path0/src
+17:14:53.237 npm error workspace cat-module@0.1.0
+17:14:53.237 npm error location /vercel/path0/src
+17:14:53.237 npm error command failed
+17:14:53.238 npm error command sh -c next build
+17:14:53.246 Error: Command "cd src && npm run build" exited with 1`
 
 **Diagnosis Steps:**
 
@@ -99,11 +177,6 @@ Visiting https://train-data-three.vercel.app/ returns a 404 page despite success
    - Try accessing known API routes (e.g., `/api/conversations`)
    - Try accessing other pages (e.g., `/templates`, `/conversations`)
    - Determine if only home route is broken or all routes
-
-**Expected Root Cause (Most Likely):**
-- Missing or misconfigured `src/app/page.tsx`
-- Layout component not properly wrapping pages
-- Next.js app router configuration issue
 
 **Fix Strategy:**
 1. Identify the root cause via the diagnosis steps
