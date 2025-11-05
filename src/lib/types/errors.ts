@@ -30,6 +30,7 @@ export enum ErrorCode {
   
   // Database Errors (500)
   DATABASE_ERROR = 'DATABASE_ERROR',
+  ERR_DB_QUERY = 'ERR_DB_QUERY',
   TRANSACTION_FAILED = 'TRANSACTION_FAILED',
   
   // External Service Errors (502/503)
@@ -127,12 +128,24 @@ export class UnauthorizedError extends AppError {
 }
 
 export class DatabaseError extends AppError {
-  constructor(message: string, originalError?: Error) {
+  constructor(
+    message: string, 
+    code: ErrorCode = ErrorCode.DATABASE_ERROR,
+    options?: {
+      cause?: Error;
+      context?: any;
+      statusCode?: number;
+    }
+  ) {
+    const details = {
+      ...options?.context,
+      ...(options?.cause ? { cause: options.cause.message } : {})
+    };
     super(
-      ErrorCode.DATABASE_ERROR,
+      code,
       message,
-      500,
-      originalError ? { originalError: originalError.message } : undefined
+      options?.statusCode || 500,
+      Object.keys(details).length > 0 ? details : undefined
     );
     this.name = 'DatabaseError';
   }

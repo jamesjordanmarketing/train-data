@@ -11,7 +11,7 @@
  * @module database/errors
  */
 
-import { DatabaseError, ErrorCode } from '../../../train-wireframe/src/lib/errors';
+import { DatabaseError, ErrorCode } from '../types/errors';
 
 /**
  * Postgres error codes enum

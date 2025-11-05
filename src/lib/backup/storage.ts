@@ -1,9 +1,16 @@
 import { createClient } from '@supabase/supabase-js';
-import { DatabaseError, ErrorCode } from '../../train-wireframe/src/lib/errors';
-import { errorLogger } from '../../train-wireframe/src/lib/errors/error-logger';
+import { DatabaseError, ErrorCode } from '../types/errors';
 import { writeFile, mkdir, unlink } from 'fs/promises';
 import { existsSync } from 'fs';
 import path from 'path';
+
+// Simple logger for backup operations
+const logger = {
+  info: (message: string, context?: any) => console.log('[INFO]', message, context || ''),
+  debug: (message: string, context?: any) => console.debug('[DEBUG]', message, context || ''),
+  warn: (message: string, error?: any, context?: any) => console.warn('[WARN]', message, error || '', context || ''),
+  error: (message: string, error?: any, context?: any) => console.error('[ERROR]', message, error || '', context || ''),
+};
 
 // Initialize Supabase client for server-side operations
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -54,7 +61,7 @@ export async function createBackup(
 ): Promise<Backup> {
   const backupId = `backup-${Date.now()}-${Math.random().toString(36).substring(7)}`;
   
-  errorLogger.info('Creating backup', {
+  logger.info('Creating backup', {
     backupId,
     conversationCount: conversationIds.length,
     reason,
@@ -105,7 +112,7 @@ export async function createBackup(
     // Write backup file
     await writeFile(filePath, JSON.stringify(backupData, null, 2), 'utf-8');
 
-    errorLogger.info('Backup file created', {
+    logger.info('Backup file created', {
       backupId,
       filePath,
       fileSize: JSON.stringify(backupData).length,
@@ -142,7 +149,7 @@ export async function createBackup(
       );
     }
 
-    errorLogger.info('Backup created successfully', {
+    logger.info('Backup created successfully', {
       backupId,
       conversationCount: conversationIds.length,
       expiresAt: expiresAt.toISOString(),
@@ -159,7 +166,7 @@ export async function createBackup(
       createdAt: new Date(backupRecord.created_at),
     };
   } catch (error) {
-    errorLogger.error('Backup creation failed', error, {
+    logger.error('Backup creation failed', error, {
       backupId,
       conversationCount: conversationIds.length,
     });
@@ -207,7 +214,7 @@ export async function getBackup(backupId: string): Promise<Backup | null> {
       createdAt: new Date(data.created_at),
     };
   } catch (error) {
-    errorLogger.error('Failed to get backup', error, { backupId });
+    logger.error('Failed to get backup', error, { backupId });
     throw error;
   }
 }
@@ -219,7 +226,7 @@ export async function getBackup(backupId: string): Promise<Backup | null> {
  * @returns Number of deleted backups
  */
 export async function cleanupExpiredBackups(): Promise<number> {
-  errorLogger.info('Running backup cleanup');
+  logger.info('Running backup cleanup');
 
   try {
     const { data: expiredBackups, error: fetchError } = await supabase
@@ -239,7 +246,7 @@ export async function cleanupExpiredBackups(): Promise<number> {
     }
 
     if (!expiredBackups || expiredBackups.length === 0) {
-      errorLogger.info('No expired backups to clean up');
+      logger.info('No expired backups to clean up');
       return 0;
     }
 
@@ -248,13 +255,13 @@ export async function cleanupExpiredBackups(): Promise<number> {
       try {
         if (existsSync(backup.file_path)) {
           await unlink(backup.file_path);
-          errorLogger.debug('Deleted backup file', {
+          logger.debug('Deleted backup file', {
             backupId: backup.backup_id,
             filePath: backup.file_path,
           });
         }
       } catch (error) {
-        errorLogger.warn('Failed to delete backup file', error, {
+        logger.warn('Failed to delete backup file', error, {
           backupId: backup.backup_id,
           filePath: backup.file_path,
         });
@@ -278,13 +285,13 @@ export async function cleanupExpiredBackups(): Promise<number> {
       );
     }
 
-    errorLogger.info('Backup cleanup completed', {
+    logger.info('Backup cleanup completed', {
       deletedCount: expiredBackups.length,
     });
 
     return expiredBackups.length;
   } catch (error) {
-    errorLogger.error('Backup cleanup failed', error);
+    logger.error('Backup cleanup failed', error);
     throw error;
   }
 }
@@ -329,7 +336,7 @@ export async function getUserBackups(userId: string): Promise<Backup[]> {
       createdAt: new Date(row.created_at),
     }));
   } catch (error) {
-    errorLogger.error('Failed to get user backups', error, { userId });
+    logger.error('Failed to get user backups', error, { userId });
     throw error;
   }
 }

@@ -117,7 +117,6 @@ export type {
 } from './template-resolver';
 
 export type {
-  ValidationResult,
   ConversationForValidation,
 } from './quality-validator';
 
