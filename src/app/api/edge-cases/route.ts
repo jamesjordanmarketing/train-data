@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
     const validatedData = createEdgeCaseSchema.parse(body);
 
     // Create edge case
-    const edgeCase = await edgeCaseService.create(validatedData as any);
+    const edgeCase = await edgeCaseService.create(validatedData);
 
     return NextResponse.json(
       { data: edgeCase, message: 'Edge case created successfully' },

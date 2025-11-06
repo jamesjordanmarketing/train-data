@@ -108,7 +108,7 @@ export async function PATCH(
     }
 
     // Update edge case
-    const edgeCase = await edgeCaseService.update(id, validatedData as any);
+    const edgeCase = await edgeCaseService.update(id, validatedData);
 
     return NextResponse.json(
       { data: edgeCase, message: 'Edge case updated successfully' },

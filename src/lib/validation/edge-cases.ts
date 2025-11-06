@@ -8,7 +8,7 @@ import { z } from 'zod';
 /**
  * Test Status Enum
  */
-export const testStatusSchema = z.enum(['pending', 'tested', 'passed', 'failed'], {
+export const testStatusSchema = z.enum(['not_tested', 'tested', 'passed', 'failed'], {
   errorMap: () => ({ message: 'Invalid test status' }),
 });
 
@@ -28,7 +28,7 @@ export const createEdgeCaseSchema = z.object({
   description: z.string().optional(),
   triggerCondition: z.string().min(1, 'Trigger condition is required'),
   expectedBehavior: z.string().min(1, 'Expected behavior is required'),
-  testStatus: testStatusSchema.default('pending'),
+  testStatus: testStatusSchema.default('not_tested'),
   severity: severitySchema.default('medium'),
   actualResult: z.string().optional(),
   notes: z.string().optional(),
