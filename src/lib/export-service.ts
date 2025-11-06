@@ -67,6 +67,8 @@ export interface ExportLog {
   created_at: string;
   /** Record last update timestamp (auto-updated) */
   updated_at: string;
+  /** Number of times the export has been downloaded */
+  downloaded_count?: number;
 }
 
 /**
