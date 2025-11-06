@@ -222,6 +222,7 @@ export async function POST(request: NextRequest) {
       errors,
       warnings,
       timestamp: new Date().toISOString(),
+      baselineComparison: undefined as any,
     };
 
     // Fetch baseline comparison if requested

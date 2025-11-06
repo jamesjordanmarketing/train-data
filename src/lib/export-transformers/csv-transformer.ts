@@ -3,7 +3,7 @@ import {
   Conversation,
   ConversationTurn,
   ExportConfig,
-} from '../../../@/lib/types';
+} from '@/lib/types';
 import { stringify } from 'csv-stringify/sync';
 
 /**

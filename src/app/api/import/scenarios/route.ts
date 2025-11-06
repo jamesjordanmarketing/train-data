@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase/server';
 import { ScenarioService } from '@/lib/services/scenario-service';
 import { z } from 'zod';
 import { createScenarioSchema } from '@/lib/validation/scenarios';
@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
     if (error.name === 'ZodError') {
       return NextResponse.json({
         error: 'Validation failed',
-        details: error.errors,
+        details: error.issues,
       }, { status: 400 });
     }
     

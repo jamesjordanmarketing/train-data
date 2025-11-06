@@ -234,7 +234,7 @@ export function ConversationPreviewModal({
                   <div key={index} className="text-xs bg-muted p-2 rounded">
                     <div className="font-medium">{review.action}</div>
                     <div className="text-muted-foreground">
-                      by {review.performer} at {formatDate(review.timestamp)}
+                      by {review.performedBy} at {formatDate(review.timestamp)}
                     </div>
                     {review.comment && (
                       <div className="mt-1">{review.comment}</div>

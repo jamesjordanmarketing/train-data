@@ -79,7 +79,7 @@ export type {
   Scenario,
   EdgeCase,
   TemplateVariable,
-} from '../../../@/lib/types';
+} from '@/lib/types';
 
 // Template Management Service Types
 export type {

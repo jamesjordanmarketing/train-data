@@ -8,7 +8,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
-import type { Scenario } from '../../../@/lib/types';
+import type { Scenario } from '@/lib/types';
 
 // ============================================================================
 // Type Definitions
@@ -44,7 +44,7 @@ export interface DeleteResult {
 // ============================================================================
 
 export class ScenarioService {
-  constructor(private supabase: ReturnType<typeof createClient>) {}
+  constructor(private supabase: any) {}
 
   /**
    * Get all scenarios with optional filtering
@@ -147,6 +147,41 @@ export class ScenarioService {
           )
         `)
         .eq('id', id)
+        .single();
+
+      if (error) {
+        if (error.code === 'PGRST116') {
+          // Not found - return null instead of throwing
+          return null;
+        }
+        console.error('Failed to fetch scenario:', error);
+        throw new Error(`Failed to fetch scenario: ${error.message}`);
+      }
+
+      return this.mapToScenario(data);
+    } catch (error) {
+      if (error instanceof Error) throw error;
+      throw new Error('Unexpected error fetching scenario');
+    }
+  }
+
+  /**
+   * Get scenario by name
+   * 
+   * @param name - Scenario name to search for
+   * @returns Scenario if found, null otherwise
+   */
+  async getByName(name: string): Promise<Scenario | null> {
+    try {
+      const { data, error } = await this.supabase
+        .from('scenarios')
+        .select(`
+          *,
+          templates:parent_template_id (
+            name
+          )
+        `)
+        .eq('name', name)
         .single();
 
       if (error) {

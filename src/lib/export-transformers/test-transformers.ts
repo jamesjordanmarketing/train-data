@@ -10,7 +10,7 @@ import {
   Conversation,
   ConversationTurn,
   ExportConfig,
-} from '../../../@/lib/types';
+} from '@/lib/types';
 
 // Sample test data
 const testConversations: Conversation[] = [

@@ -80,10 +80,10 @@ export async function GET(
       const expiryDate = new Date(exportLog.expires_at);
       const now = new Date();
       
-      if (now > expiryDate && exportLog.status !== 'expired') {
+      if (now > expiryDate) {
         // Mark as expired
         await exportService.updateExportLog(exportId, { status: 'expired' });
-        exportLog.status = 'expired';
+        (exportLog as any).status = 'expired';
       }
     }
     

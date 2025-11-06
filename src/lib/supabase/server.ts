@@ -13,5 +13,5 @@ import { createServerSupabaseClientWithAuth } from '../supabase-server';
 export default createServerSupabaseClientWithAuth;
 
 // Named export as createClient for API route compatibility
-export { createServerSupabaseClientWithAuth as createClient };
+export { createServerSupabaseClient as createClient } from '../supabase-server';
 

@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 const previewSchema = z.object({
   template: z.string(),
-  variables: z.record(z.any()),
+  variables: z.record(z.string(), z.any()),
 });
 
 export async function POST(request: NextRequest) {

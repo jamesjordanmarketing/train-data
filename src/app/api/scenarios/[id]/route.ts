@@ -120,7 +120,7 @@ export async function PATCH(
       return NextResponse.json(
         {
           error: 'Validation failed',
-          details: error.errors.map((e) => ({
+          details: error.issues.map((e) => ({
             field: e.path.join('.'),
             message: e.message,
           })),

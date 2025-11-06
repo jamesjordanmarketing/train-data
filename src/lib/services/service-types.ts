@@ -11,7 +11,7 @@ import type {
   Scenario,
   EdgeCase,
   TemplateVariable,
-} from '../../../@/lib/types';
+} from '@/lib/types';
 
 // ============================================================================
 // Template Service Types

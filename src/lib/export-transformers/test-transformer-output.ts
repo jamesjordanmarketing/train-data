@@ -4,7 +4,7 @@
  */
 
 import { getTransformer } from './index';
-import { Conversation, ConversationTurn, ExportConfig } from '../../../@/lib/types';
+import { Conversation, ConversationTurn, ExportConfig } from '@/lib/types';
 import * as fs from 'fs';
 import * as path from 'path';
 

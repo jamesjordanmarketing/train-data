@@ -198,6 +198,18 @@ export type BatchItem = {
   error?: string;
 };
 
+// Re-export input types from conversations
+export type { 
+  CreateConversationInput,
+  UpdateConversationInput,
+  CreateTurnInput,
+  FilterConfig as ConversationFilterConfig,
+  PaginationConfig,
+  PaginatedConversations,
+  ConversationStats,
+  QualityDistribution
+} from './conversations';
+
 export type FilterConfig = {
   tier?: TierType[];
   status?: ConversationStatus[];

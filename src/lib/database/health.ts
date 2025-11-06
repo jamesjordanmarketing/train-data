@@ -11,8 +11,8 @@
  * @module database/health
  */
 
-import { DatabaseHealthService } from '../services/database-health-service';
-import { errorLogger } from '../../../@/lib/errors/error-logger';
+import { databaseHealthService } from '../services/database-health-service';
+import { errorLogger } from '@/lib/errors/error-logger';
 
 /**
  * Health status levels
@@ -125,7 +125,7 @@ const DEFAULT_HEALTH_THRESHOLDS: HealthThresholds = {
 export async function performHealthCheck(
   thresholds: HealthThresholds = DEFAULT_HEALTH_THRESHOLDS
 ): Promise<DatabaseHealthCheck> {
-  const healthService = new DatabaseHealthService();
+  const healthService = databaseHealthService;
   
   try {
     // Get health metrics from existing service

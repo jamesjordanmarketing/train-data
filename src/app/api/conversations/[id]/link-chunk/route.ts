@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { conversationService } from '@/lib/database';
+import { conversationChunkService } from '@/lib/database';
 import { chunksService } from '@/lib/generation/chunks-integration';
 
 export async function POST(
@@ -24,7 +24,7 @@ export async function POST(
     const dimensions = await chunksService.getDimensionsForChunk(chunkId);
 
     // Link conversation to chunk
-    await conversationService.linkConversationToChunk(
+    await conversationChunkService.linkConversationToChunk(
       params.id,
       chunkId,
       chunk.content?.slice(0, 5000),

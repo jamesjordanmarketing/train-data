@@ -14,7 +14,7 @@ import type {
   TimeWindow,
 } from '../types/review.types';
 import { calculatePerformance, timeWindowToInterval } from '../types/review.types';
-import type { Template } from '../../../@/lib/types';
+import type { Template } from '@/lib/types';
 
 // ============================================================================
 // Template Feedback Aggregation

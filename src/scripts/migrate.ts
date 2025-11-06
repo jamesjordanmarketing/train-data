@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 
 import { migrationManager } from '@/lib/services/migration-manager';
-import { createClient } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase/server';
 import { readFileSync, readdirSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 

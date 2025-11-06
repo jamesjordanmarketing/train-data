@@ -22,7 +22,7 @@ import {
   generatePreview,
   ResolvedTemplate as InjectionResult,
 } from '../ai/parameter-injection';
-import type { Template, TemplateVariable } from '../../../@/lib/types';
+import type { Template, TemplateVariable } from '@/lib/types';
 
 /**
  * Result of template resolution

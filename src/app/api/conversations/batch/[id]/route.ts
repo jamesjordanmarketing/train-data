@@ -11,10 +11,7 @@ import { getBatchGenerationService } from '@/lib/services';
 
 // Validation schema
 const BatchControlSchema = z.object({
-  action: z.enum(['pause', 'resume', 'cancel'], {
-    required_error: 'Action is required',
-    invalid_type_error: 'Action must be one of: pause, resume, cancel',
-  }),
+  action: z.enum(['pause', 'resume', 'cancel']),
 });
 
 /**
@@ -83,7 +80,7 @@ export async function PATCH(
         { 
           success: false, 
           error: 'Invalid request', 
-          details: error.errors 
+          details: error.issues 
         },
         { status: 400 }
       );

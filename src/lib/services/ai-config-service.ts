@@ -204,7 +204,7 @@ class AIConfigService {
   /**
    * API key rotation
    */
-  async rotateAPIKey(userId: string, newPrimaryKey: string): Promise<{ success: boolean }> {
+  async rotateAPIKey(userId: string, newPrimaryKey: string): Promise<{ success: boolean; errors?: string[] }> {
     // Get current configuration
     const currentConfig = await this.getEffectiveConfiguration(userId);
     

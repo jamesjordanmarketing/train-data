@@ -13,7 +13,7 @@ import type { GenerationParams } from '@/lib/services';
 // Validation schema
 const GenerateRequestSchema = z.object({
   templateId: z.string().uuid('Template ID must be a valid UUID'),
-  parameters: z.record(z.any()),
+  parameters: z.record(z.string(), z.any()),
   tier: z.enum(['template', 'scenario', 'edge_case']),
   userId: z.string().optional(),
   temperature: z.number().min(0).max(1).optional(),
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
         {
           success: false,
           error: 'Generation failed',
-          message: result.error?.message || 'Unknown error',
+          message: result.error || 'Unknown error',
           details: result.error,
         },
         { status: 500 }
@@ -78,12 +78,12 @@ export async function POST(request: NextRequest) {
       {
         success: true,
         conversation: result.conversation,
-        cost: result.conversation.actualCostUsd,
+        cost: (result.conversation as any).actualCostUsd,
         qualityMetrics: {
           qualityScore: result.conversation.qualityScore,
           turnCount: result.conversation.totalTurns,
           tokenCount: result.conversation.totalTokens,
-          durationMs: result.conversation.generationDurationMs,
+          durationMs: (result.conversation as any).generationDurationMs,
         },
       },
       { status: 201 }
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
         { 
           success: false, 
           error: 'Invalid request', 
-          details: error.errors 
+          details: error.issues 
         },
         { status: 400 }
       );

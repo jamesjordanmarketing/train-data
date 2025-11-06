@@ -10,7 +10,7 @@ import { AppError } from '@/lib/types/errors';
 import { z } from 'zod';
 
 const ResolveTemplateSchema = z.object({
-  parameters: z.record(z.any()),
+  parameters: z.record(z.string(), z.any()),
 });
 
 /**

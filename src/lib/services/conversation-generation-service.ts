@@ -27,7 +27,7 @@ import type {
   ConversationTurn,
   ConversationStatus,
   TierType,
-} from '../../../@/lib/types';
+} from '@/lib/types';
 
 /**
  * Parameters for conversation generation

@@ -11,7 +11,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase-server';
 import { ExportService, ExportNotFoundError } from '@/lib/export-service';
 import { getTransformer } from '@/lib/export-transformers';
-import { Conversation, ConversationTurn } from '../../../../../../@/lib/types';
+import { Conversation, ConversationTurn } from '@/lib/types';
 
 /**
  * GET /api/export/download/[id]
@@ -136,15 +136,19 @@ export async function GET(
     const filename = `training-data-${tierLabel}-${timestamp}-${exportLog.conversation_count}.${extension}`;
     
     // Increment download count (fire-and-forget)
-    supabase
-      .from('export_logs')
-      .update({ 
-        downloaded_count: (exportLog as any).downloaded_count ? (exportLog as any).downloaded_count + 1 : 1,
-        last_downloaded_at: new Date().toISOString()
-      })
-      .eq('export_id', exportId)
-      .then(() => {})
-      .catch(err => console.error('Failed to update download count:', err));
+    void (async () => {
+      try {
+        await supabase
+          .from('export_logs')
+          .update({ 
+            downloaded_count: (exportLog as any).downloaded_count ? (exportLog as any).downloaded_count + 1 : 1,
+            last_downloaded_at: new Date().toISOString()
+          })
+          .eq('export_id', exportId);
+      } catch (err) {
+        console.error('Failed to update download count:', err);
+      }
+    })();
     
     // Return file with appropriate headers
     return new NextResponse(fileContent, {

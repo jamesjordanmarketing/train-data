@@ -7,6 +7,10 @@
 
 import { supabase } from './supabase';
 import {
+  ConversationStatus,
+  TierType,
+} from './types';
+import type { 
   Conversation,
   ConversationTurn,
   CreateConversationInput,
@@ -17,10 +21,8 @@ import {
   PaginatedConversations,
   ConversationStats,
   QualityDistribution,
-  ConversationStatus,
-  TierType,
   ReviewAction,
-} from './types';
+} from './types/conversations';
 import {
   ConversationNotFoundError,
   DatabaseError,
@@ -91,14 +93,14 @@ export class ConversationService {
 
       if (error) {
         console.error('Error creating conversation:', error);
-        throw new DatabaseError(`Failed to create conversation: ${error.message}`, error);
+        throw new DatabaseError(`Failed to create conversation: ${error.message}`, error as any);
       }
 
       return this.mapDbToConversation(conversation);
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       console.error('Unexpected error creating conversation:', error);
-      throw new DatabaseError('Unexpected error creating conversation', error as Error);
+      throw new DatabaseError('Unexpected error creating conversation', error as any);
     }
   }
 
@@ -128,7 +130,7 @@ export class ConversationService {
       if (error) {
         if (error.code === 'PGRST116') return null; // Not found
         console.error('Error fetching conversation:', error);
-        throw new DatabaseError(`Failed to fetch conversation: ${error.message}`, error);
+        throw new DatabaseError(`Failed to fetch conversation: ${error.message}`, error as any);
       }
 
       const mapped = this.mapDbToConversation(conversation);
@@ -142,7 +144,7 @@ export class ConversationService {
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       console.error('Unexpected error fetching conversation:', error);
-      throw new DatabaseError('Unexpected error fetching conversation', error as Error);
+      throw new DatabaseError('Unexpected error fetching conversation', error as any);
     }
   }
 
@@ -230,7 +232,7 @@ export class ConversationService {
 
       if (error) {
         console.error('Error listing conversations:', error);
-        throw new DatabaseError(`Failed to list conversations: ${error.message}`, error);
+        throw new DatabaseError(`Failed to list conversations: ${error.message}`, error as any);
       }
 
       const mappedConversations = (conversations || []).map(this.mapDbToConversation);
@@ -248,7 +250,7 @@ export class ConversationService {
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       console.error('Unexpected error listing conversations:', error);
-      throw new DatabaseError('Unexpected error listing conversations', error as Error);
+      throw new DatabaseError('Unexpected error listing conversations', error as any);
     }
   }
 
@@ -313,14 +315,14 @@ export class ConversationService {
 
       if (error) {
         console.error('Error updating conversation:', error);
-        throw new DatabaseError(`Failed to update conversation: ${error.message}`, error);
+        throw new DatabaseError(`Failed to update conversation: ${error.message}`, error as any);
       }
 
       return this.mapDbToConversation(conversation);
     } catch (error) {
       if (error instanceof ConversationNotFoundError || error instanceof DatabaseError) throw error;
       console.error('Unexpected error updating conversation:', error);
-      throw new DatabaseError('Unexpected error updating conversation', error as Error);
+      throw new DatabaseError('Unexpected error updating conversation', error as any);
     }
   }
 
@@ -350,12 +352,12 @@ export class ConversationService {
 
       if (error) {
         console.error('Error deleting conversation:', error);
-        throw new DatabaseError(`Failed to delete conversation: ${error.message}`, error);
+        throw new DatabaseError(`Failed to delete conversation: ${error.message}`, error as any);
       }
     } catch (error) {
       if (error instanceof ConversationNotFoundError || error instanceof DatabaseError) throw error;
       console.error('Unexpected error deleting conversation:', error);
-      throw new DatabaseError('Unexpected error deleting conversation', error as Error);
+      throw new DatabaseError('Unexpected error deleting conversation', error as any);
     }
   }
 
@@ -408,14 +410,14 @@ export class ConversationService {
 
       if (error) {
         console.error('Error bulk creating conversations:', error);
-        throw new DatabaseError(`Failed to bulk create conversations: ${error.message}`, error);
+        throw new DatabaseError(`Failed to bulk create conversations: ${error.message}`, error as any);
       }
 
       return (createdConversations || []).map(this.mapDbToConversation);
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       console.error('Unexpected error bulk creating conversations:', error);
-      throw new DatabaseError('Unexpected error bulk creating conversations', error as Error);
+      throw new DatabaseError('Unexpected error bulk creating conversations', error as any);
     }
   }
 
@@ -449,22 +451,21 @@ export class ConversationService {
       if (updates.reviewerNotes !== undefined) updateData.reviewer_notes = updates.reviewerNotes;
       if (updates.category !== undefined) updateData.category = updates.category;
 
-      const { error, count } = await supabase
+      const { error } = await supabase
         .from('conversations')
         .update(updateData)
-        .in('id', ids)
-        .select('id', { count: 'exact', head: true });
+        .in('id', ids);
 
       if (error) {
         console.error('Error bulk updating conversations:', error);
-        throw new DatabaseError(`Failed to bulk update conversations: ${error.message}`, error);
+        throw new DatabaseError(`Failed to bulk update conversations: ${error.message}`, error as any);
       }
 
-      return count || 0;
+      return ids.length;
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       console.error('Unexpected error bulk updating conversations:', error);
-      throw new DatabaseError('Unexpected error bulk updating conversations', error as Error);
+      throw new DatabaseError('Unexpected error bulk updating conversations', error as any);
     }
   }
 
@@ -484,22 +485,21 @@ export class ConversationService {
     try {
       if (ids.length === 0) return 0;
 
-      const { error, count } = await supabase
+      const { error } = await supabase
         .from('conversations')
         .delete()
-        .in('id', ids)
-        .select('id', { count: 'exact', head: true });
+        .in('id', ids);
 
       if (error) {
         console.error('Error bulk deleting conversations:', error);
-        throw new DatabaseError(`Failed to bulk delete conversations: ${error.message}`, error);
+        throw new DatabaseError(`Failed to bulk delete conversations: ${error.message}`, error as any);
       }
 
-      return count || 0;
+      return ids.length;
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       console.error('Unexpected error bulk deleting conversations:', error);
-      throw new DatabaseError('Unexpected error bulk deleting conversations', error as Error);
+      throw new DatabaseError('Unexpected error bulk deleting conversations', error as any);
     }
   }
 
@@ -559,7 +559,7 @@ export class ConversationService {
     } catch (error) {
       if (error instanceof ConversationNotFoundError || error instanceof DatabaseError) throw error;
       console.error('Unexpected error updating status:', error);
-      throw new DatabaseError('Unexpected error updating status', error as Error);
+      throw new DatabaseError('Unexpected error updating status', error as any);
     }
   }
 
@@ -586,7 +586,7 @@ export class ConversationService {
       return await this.bulkUpdate(ids, updates);
     } catch (error) {
       console.error('Error bulk approving conversations:', error);
-      throw new DatabaseError('Failed to bulk approve conversations', error as Error);
+      throw new DatabaseError('Failed to bulk approve conversations', error as any);
     }
   }
 
@@ -617,7 +617,7 @@ export class ConversationService {
       return await this.bulkUpdate(ids, updates);
     } catch (error) {
       console.error('Error bulk rejecting conversations:', error);
-      throw new DatabaseError('Failed to bulk reject conversations', error as Error);
+      throw new DatabaseError('Failed to bulk reject conversations', error as any);
     }
   }
 
@@ -697,7 +697,7 @@ export class ConversationService {
         .select('tier, status, quality_score, total_tokens, actual_cost_usd, turn_count');
 
       if (error) {
-        throw new DatabaseError(`Failed to get conversation stats: ${error.message}`, error);
+        throw new DatabaseError(`Failed to get conversation stats: ${error.message}`, error as any);
       }
 
       const stats: ConversationStats = {
@@ -765,7 +765,7 @@ export class ConversationService {
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       console.error('Unexpected error getting stats:', error);
-      throw new DatabaseError('Unexpected error getting stats', error as Error);
+      throw new DatabaseError('Unexpected error getting stats', error as any);
     }
   }
 
@@ -792,7 +792,7 @@ export class ConversationService {
         .not('quality_score', 'is', null);
 
       if (error) {
-        throw new DatabaseError(`Failed to get quality distribution: ${error.message}`, error);
+        throw new DatabaseError(`Failed to get quality distribution: ${error.message}`, error as any);
       }
 
       const distribution: QualityDistribution = {
@@ -814,7 +814,7 @@ export class ConversationService {
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       console.error('Unexpected error getting quality distribution:', error);
-      throw new DatabaseError('Unexpected error getting quality distribution', error as Error);
+      throw new DatabaseError('Unexpected error getting quality distribution', error as any);
     }
   }
 
@@ -833,14 +833,14 @@ export class ConversationService {
         .order('turn_number', { ascending: true });
 
       if (error) {
-        throw new DatabaseError(`Failed to get conversation turns: ${error.message}`, error);
+        throw new DatabaseError(`Failed to get conversation turns: ${error.message}`, error as any);
       }
 
       return (turns || []).map(this.mapDbToTurn);
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       console.error('Unexpected error getting turns:', error);
-      throw new DatabaseError('Unexpected error getting turns', error as Error);
+      throw new DatabaseError('Unexpected error getting turns', error as any);
     }
   }
 
@@ -869,7 +869,7 @@ export class ConversationService {
         .single();
 
       if (error) {
-        throw new DatabaseError(`Failed to create turn: ${error.message}`, error);
+        throw new DatabaseError(`Failed to create turn: ${error.message}`, error as any);
       }
 
       // Update conversation turn count and token count
@@ -885,7 +885,7 @@ export class ConversationService {
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       console.error('Unexpected error creating turn:', error);
-      throw new DatabaseError('Unexpected error creating turn', error as Error);
+      throw new DatabaseError('Unexpected error creating turn', error as any);
     }
   }
 
@@ -913,7 +913,7 @@ export class ConversationService {
         .select();
 
       if (error) {
-        throw new DatabaseError(`Failed to bulk create turns: ${error.message}`, error);
+        throw new DatabaseError(`Failed to bulk create turns: ${error.message}`, error as any);
       }
 
       // Update conversation stats
@@ -929,7 +929,7 @@ export class ConversationService {
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       console.error('Unexpected error bulk creating turns:', error);
-      throw new DatabaseError('Unexpected error bulk creating turns', error as Error);
+      throw new DatabaseError('Unexpected error bulk creating turns', error as any);
     }
   }
 

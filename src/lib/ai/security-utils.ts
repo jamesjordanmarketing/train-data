@@ -188,7 +188,7 @@ export function isSafeTemplateString(template: string): boolean {
   
   // Extract all placeholder expressions
   const placeholderRegex = /\{\{([^}]+)\}\}/g;
-  const matches = template.matchAll(placeholderRegex);
+  const matches = Array.from(template.matchAll(placeholderRegex));
   
   for (const match of matches) {
     const expression = match[1].trim();

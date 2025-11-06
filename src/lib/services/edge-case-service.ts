@@ -8,7 +8,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
-import type { EdgeCase } from '../../../@/lib/types';
+import type { EdgeCase } from '@/lib/types';
 
 // ============================================================================
 // Type Definitions
@@ -53,7 +53,7 @@ export interface EdgeCaseFilters {
 // ============================================================================
 
 export class EdgeCaseService {
-  constructor(private supabase: ReturnType<typeof createClient>) {}
+  constructor(private supabase: any) {}
 
   /**
    * Get all edge cases with optional filtering
@@ -171,6 +171,41 @@ export class EdgeCaseService {
           )
         `)
         .eq('id', id)
+        .single();
+
+      if (error) {
+        if (error.code === 'PGRST116') {
+          // Not found - return null instead of throwing
+          return null;
+        }
+        console.error('Failed to fetch edge case:', error);
+        throw new Error(`Failed to fetch edge case: ${error.message}`);
+      }
+
+      return this.mapToEdgeCase(data);
+    } catch (error) {
+      if (error instanceof Error) throw error;
+      throw new Error('Unexpected error fetching edge case');
+    }
+  }
+
+  /**
+   * Get edge case by name
+   * 
+   * @param name - Edge case name to search for
+   * @returns Edge case if found, null otherwise
+   */
+  async getByName(name: string): Promise<EdgeCase | null> {
+    try {
+      const { data, error } = await this.supabase
+        .from('edge_cases')
+        .select(`
+          *,
+          scenarios:parent_scenario_id (
+            name
+          )
+        `)
+        .eq('name', name)
         .single();
 
       if (error) {

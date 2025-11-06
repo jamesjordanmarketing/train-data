@@ -326,7 +326,7 @@ export const CreateConversationSchema = z.object({
   confidenceLevel: ConfidenceLevelSchema.optional(),
   parentId: z.string().uuid().optional(),
   parentType: z.enum(['template', 'scenario', 'conversation']).optional(),
-  parameters: z.record(z.any()).optional(),
+  parameters: z.record(z.string(), z.any()).optional(),
   createdBy: z.string().uuid(),
 });
 
@@ -350,7 +350,7 @@ export const UpdateConversationSchema = z.object({
   approvedBy: z.string().uuid().optional(),
   approvedAt: z.string().datetime().optional(),
   reviewerNotes: z.string().optional(),
-  parameters: z.record(z.any()).optional(),
+  parameters: z.record(z.string(), z.any()).optional(),
   reviewHistory: z.array(z.any()).optional(),
   errorMessage: z.string().optional(),
   retryCount: z.number().int().min(0).optional(),

@@ -52,9 +52,9 @@ export function ConversationMetadataPanel({ conversation }: ConversationMetadata
   };
 
   const handleViewChunk = () => {
-    if (conversation.parentChunkId) {
+    if (conversation.chunkId) {
       // Navigate to chunk detail view - adjust URL as needed
-      window.open(`/chunks/${conversation.parentChunkId}`, '_blank');
+      window.open(`/chunks/${conversation.chunkId}`, '_blank');
     }
   };
   
@@ -150,7 +150,7 @@ export function ConversationMetadataPanel({ conversation }: ConversationMetadata
       </Card>
 
       {/* Source Chunk Card */}
-      {conversation.parentChunkId && (
+      {conversation.chunkId && (
         <Card>
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
@@ -161,54 +161,54 @@ export function ConversationMetadataPanel({ conversation }: ConversationMetadata
           <CardContent className="space-y-3">
             <div>
               <span className="text-xs font-medium text-muted-foreground">Chunk ID</span>
-              <p className="mt-1 text-sm font-mono">{conversation.parentChunkId}</p>
+              <p className="mt-1 text-sm font-mono">{conversation.chunkId}</p>
             </div>
             
-            {conversation.chunkContext && (
+            {(conversation as any).chunkContext && (
               <div>
                 <span className="text-xs font-medium text-muted-foreground">Context Preview</span>
                 <p className="mt-1 text-sm text-muted-foreground line-clamp-3">
-                  {conversation.chunkContext.slice(0, 200)}...
+                  {(conversation as any).chunkContext.slice(0, 200)}...
                 </p>
               </div>
             )}
             
-            {conversation.dimensionSource && (
+            {(conversation as any).dimensionSource && (
               <div>
                 <span className="text-xs font-medium text-muted-foreground">Dimension Confidence</span>
                 <div className="mt-1">
                   <Badge variant="outline">
-                    {(conversation.dimensionSource.confidence * 100).toFixed(0)}%
+                    {((conversation as any).dimensionSource.confidence * 100).toFixed(0)}%
                   </Badge>
                 </div>
               </div>
             )}
             
-            {conversation.dimensionSource?.semanticDimensions && (
+            {(conversation as any).dimensionSource?.semanticDimensions && (
               <div>
                 <span className="text-xs font-medium text-muted-foreground">Semantic Dimensions</span>
                 <div className="mt-2 space-y-1">
-                  {conversation.dimensionSource.semanticDimensions.persona && (
+                  {(conversation as any).dimensionSource.semanticDimensions.persona && (
                     <div>
                       <span className="text-xs text-muted-foreground">Personas: </span>
                       <span className="text-xs">
-                        {conversation.dimensionSource.semanticDimensions.persona.join(', ')}
+                        {(conversation as any).dimensionSource.semanticDimensions.persona.join(', ')}
                       </span>
                     </div>
                   )}
-                  {conversation.dimensionSource.semanticDimensions.emotion && (
+                  {(conversation as any).dimensionSource.semanticDimensions.emotion && (
                     <div>
                       <span className="text-xs text-muted-foreground">Emotions: </span>
                       <span className="text-xs">
-                        {conversation.dimensionSource.semanticDimensions.emotion.join(', ')}
+                        {(conversation as any).dimensionSource.semanticDimensions.emotion.join(', ')}
                       </span>
                     </div>
                   )}
-                  {conversation.dimensionSource.semanticDimensions.complexity !== undefined && (
+                  {(conversation as any).dimensionSource.semanticDimensions.complexity !== undefined && (
                     <div>
                       <span className="text-xs text-muted-foreground">Complexity: </span>
                       <span className="text-xs">
-                        {(conversation.dimensionSource.semanticDimensions.complexity * 10).toFixed(1)}/10
+                        {((conversation as any).dimensionSource.semanticDimensions.complexity * 10).toFixed(1)}/10
                       </span>
                     </div>
                   )}

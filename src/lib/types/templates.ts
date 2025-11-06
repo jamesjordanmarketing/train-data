@@ -322,7 +322,7 @@ export const CreateScenarioSchema = z.object({
   emotionalArc: z.string().optional(),
   complexity: z.enum(['simple', 'moderate', 'complex']).optional(),
   emotionalContext: z.string().optional(),
-  parameterValues: z.record(z.any()).optional(),
+  parameterValues: z.record(z.string(), z.any()).optional(),
   tags: z.array(z.string()).optional(),
   status: z.enum(['draft', 'active', 'archived']).optional(),
   createdBy: z.string().uuid(),

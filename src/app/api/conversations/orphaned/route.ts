@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { conversationService } from '@/lib/database';
+import { conversationChunkService } from '@/lib/database';
 
 export async function GET(request: NextRequest) {
   try {
-    const orphaned = await conversationService.getOrphanedConversations();
+    const orphaned = await conversationChunkService.getOrphanedConversations();
     return NextResponse.json(orphaned);
   } catch (error) {
     console.error('Get orphaned conversations error:', error);

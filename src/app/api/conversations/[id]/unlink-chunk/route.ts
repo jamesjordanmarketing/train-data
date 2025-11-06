@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { conversationService } from '@/lib/database';
+import { conversationChunkService } from '@/lib/database';
 
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    await conversationService.unlinkConversationFromChunk(params.id);
+    await conversationChunkService.unlinkConversationFromChunk(params.id);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Unlink chunk error:', error);

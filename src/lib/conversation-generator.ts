@@ -9,7 +9,7 @@ import { RateLimiter } from './rate-limiter';
 import { RetryManager } from './retry-manager';
 import { ConversationService } from './conversation-service';
 import { GenerationLogService } from './generation-log-service';
-import { TemplateService } from './template-service';
+import { templateService } from './template-service';
 import {
   GeneratorConfig,
   GenerationParams,
@@ -36,7 +36,7 @@ export class ConversationGenerator {
   private retryManager: RetryManager;
   private conversationService: ConversationService;
   private generationLogService: GenerationLogService;
-  private templateService: TemplateService;
+  private templateService: typeof templateService;
   private apiKey: string;
   private apiUrl: string;
   private defaultModel: string;
@@ -46,7 +46,7 @@ export class ConversationGenerator {
     this.retryManager = new RetryManager();
     this.conversationService = new ConversationService();
     this.generationLogService = new GenerationLogService();
-    this.templateService = new TemplateService();
+    this.templateService = templateService;
     
     // API configuration
     this.apiKey = config.apiKey || process.env.ANTHROPIC_API_KEY || '';
@@ -229,7 +229,7 @@ export class ConversationGenerator {
         createdBy: params.createdBy,
         parentId: params.templateId,
         parentType: 'template',
-      });
+      } as any);
       
       // 10. Save conversation turns
       await this.conversationService.bulkCreateTurns(
@@ -259,7 +259,7 @@ export class ConversationGenerator {
       await this.logGeneration(params, response, saved, cost, qualityScoreResult, dimensionSource, chunkContext);
       
       // 13. Increment template usage
-      await this.templateService.incrementUsage(params.templateId);
+      await this.templateService.incrementUsageCount(params.templateId);
       
       const totalDuration = Date.now() - startTime;
       console.log(`🎉 Generation complete in ${totalDuration}ms (cost: $${cost.toFixed(4)})`);
@@ -267,7 +267,7 @@ export class ConversationGenerator {
       return {
         ...conversation,
         id: saved.id,
-        conversationId: saved.conversationId,
+        conversationId: (saved as any).conversationId || saved.id,
         qualityScore: qualityScoreResult.overall,
         qualityBreakdown: qualityScoreResult.breakdown,
         recommendations: qualityScoreResult.recommendations,
@@ -275,7 +275,7 @@ export class ConversationGenerator {
         actualCostUsd: cost,
         generationDurationMs: response.duration,
         createdAt: saved.createdAt,
-      };
+      } as any;
       
     } catch (error) {
       console.error('❌ Generation failed:', error);

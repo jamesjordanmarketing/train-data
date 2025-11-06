@@ -18,10 +18,10 @@ const BatchGenerateRequestSchema = z.object({
   templateId: z.string().uuid().optional(),
   parameterSets: z.array(z.object({
     templateId: z.string().uuid(),
-    parameters: z.record(z.any()),
+    parameters: z.record(z.string(), z.any()),
     tier: z.enum(['template', 'scenario', 'edge_case']),
   })).optional(),
-  sharedParameters: z.record(z.any()).optional(),
+  sharedParameters: z.record(z.string(), z.any()).optional(),
   concurrentProcessing: z.number().min(1).max(10).optional().default(3),
   errorHandling: z.enum(['stop', 'continue']).optional().default('continue'),
   userId: z.string().optional(),
@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
         { 
           success: false, 
           error: 'Invalid request', 
-          details: error.errors 
+          details: error.issues 
         },
         { status: 400 }
       );

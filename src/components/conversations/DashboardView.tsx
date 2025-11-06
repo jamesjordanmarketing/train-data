@@ -333,12 +333,7 @@ export function DashboardView({
       <StatsCards stats={stats} />
 
       {/* Filters */}
-      <FilterBar
-        filters={filters}
-        stats={stats}
-        onChange={handleFilterChange}
-        onExport={handleExport}
-      />
+      <FilterBar />
 
       {/* Bulk Action Bar */}
       {selectedIds.length > 0 && (
@@ -370,20 +365,14 @@ export function DashboardView({
       {/* Conversation Table */}
       <ConversationTable
         conversations={conversations}
-        selectedIds={selectedIds}
-        onSelectionChange={setSelectedIds}
-        onRefresh={async () => {
-          await fetchConversations();
-          await fetchStats();
-        }}
         isLoading={isLoading}
       />
 
       {/* Pagination */}
       <Pagination
-        pagination={pagination}
+        currentPage={pagination.page}
+        totalPages={pagination.totalPages}
         onPageChange={handlePageChange}
-        onLimitChange={handleLimitChange}
       />
     </div>
   );

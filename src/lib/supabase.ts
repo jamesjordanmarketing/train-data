@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { projectId, publicAnonKey } from '../utils/supabase/info';
 
 const supabaseUrl = `https://${projectId}.supabase.co`;
@@ -20,7 +20,10 @@ const authOptions = serviceRoleKey
     }
   : {};
 
-export const supabase = createClient(supabaseUrl, supabaseKey, authOptions);
+export const supabase = createSupabaseClient(supabaseUrl, supabaseKey, authOptions);
+
+// Note: Do not re-export server-only factories from this client module.
+// API routes should import from '@/lib/supabase/server'.
 
 export type Database = {
   public: {

@@ -3,7 +3,7 @@
  * Manages conversation review workflows, quality feedback, and approval processes
  */
 
-import type { ConversationStatus, ReviewAction, QualityMetrics, TierType } from '../../../@/lib/types';
+import type { ConversationStatus, ReviewAction, QualityMetrics, TierType } from '@/lib/types';
 
 // ============================================================================
 // Review Queue Types

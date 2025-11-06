@@ -8,7 +8,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
-import type { Template, TemplateVariable } from '../../../@/lib/types';
+import type { Template, TemplateVariable } from '@/lib/types';
 
 // ============================================================================
 // Type Definitions
@@ -36,7 +36,7 @@ export interface DeleteResult {
 // ============================================================================
 
 export class TemplateService {
-  constructor(private supabase: ReturnType<typeof createClient>) {}
+  constructor(private supabase: any) {}
 
   /**
    * Get all templates with optional filtering
@@ -130,6 +130,36 @@ export class TemplateService {
         .from('templates')
         .select('*')
         .eq('id', id)
+        .single();
+
+      if (error) {
+        if (error.code === 'PGRST116') {
+          // Not found - return null instead of throwing
+          return null;
+        }
+        console.error('Failed to fetch template:', error);
+        throw new Error(`Failed to fetch template: ${error.message}`);
+      }
+
+      return this.mapToTemplate(data);
+    } catch (error) {
+      if (error instanceof Error) throw error;
+      throw new Error('Unexpected error fetching template');
+    }
+  }
+
+  /**
+   * Get template by name
+   * 
+   * @param name - Template name to search for
+   * @returns Template if found, null otherwise
+   */
+  async getByName(name: string): Promise<Template | null> {
+    try {
+      const { data, error } = await this.supabase
+        .from('templates')
+        .select('*')
+        .eq('name', name)
         .single();
 
       if (error) {
@@ -401,7 +431,7 @@ export class TemplateService {
    * const duplicate = await service.duplicate(templateId, 'Retirement Planning (Copy)');
    * ```
    */
-  async duplicate(id: string, newName: string): Promise<Template> {
+  async duplicate(id: string, newName: string, includeScenarios?: boolean): Promise<Template> {
     try {
       // Get the original template
       const original = await this.getById(id);
@@ -419,7 +449,12 @@ export class TemplateService {
         lastModified: undefined as any,
       };
 
-      return await this.create(duplicateInput);
+      const duplicated = await this.create(duplicateInput);
+      
+      // TODO: If includeScenarios is true, duplicate related scenarios
+      // This functionality can be implemented later if needed
+      
+      return duplicated;
     } catch (error) {
       if (error instanceof Error) throw error;
       throw new Error('Unexpected error duplicating template');

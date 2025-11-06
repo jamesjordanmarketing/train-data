@@ -296,3 +296,93 @@ export interface DeleteTemplateResponse {
   canArchive?: boolean;
   error?: string;
 }
+
+// --- Adapter: Singleton service with resolver and usage stats ---
+import { getTemplateResolver } from './services/template-resolver';
+import { TemplateNotFoundError, ValidationError, DatabaseError } from './types/errors';
+import { createClient } from './supabase/server';
+
+const _supabase = createClient();
+const _baseService = new TemplateService(_supabase);
+
+export const templateService = {
+  // Delegate CRUD operations to base service
+  getAllTemplates: (filters?: any) => _baseService.getAllTemplates(filters),
+  getTemplateById: (id: string) => _baseService.getTemplateById(id),
+  createTemplate: (template: any) => _baseService.createTemplate(template),
+  updateTemplate: (id: string, updates: any) => _baseService.updateTemplate(id, updates),
+  deleteTemplate: (id: string) => _baseService.deleteTemplate(id),
+  incrementUsageCount: (id: string) => _baseService.incrementUsageCount(id),
+  archiveTemplate: (id: string) => _baseService.archiveTemplate(id),
+  activateTemplate: (id: string) => _baseService.activateTemplate(id),
+
+  // New methods for API compatibility
+  async resolveTemplate(id: string, parameters: Record<string, any>): Promise<string> {
+    const resolver = getTemplateResolver();
+    const result = await resolver.resolveTemplate({ templateId: id, parameters });
+
+    if (!result.success) {
+      throw new ValidationError('Template resolution failed', {
+        errors: result.errors,
+        warnings: result.warnings,
+      });
+    }
+
+    return result.resolvedPrompt;
+  },
+
+  async getUsageStats(templateId: string): Promise<{
+    usageCount: number;
+    rating: number;
+    successRate: number;
+    avgQualityScore: number;
+    conversationsGenerated: number;
+  }> {
+    // Fetch template basics
+    const { data: tpl, error: tplErr } = await _supabase
+      .from('templates')
+      .select('usage_count, rating')
+      .eq('id', templateId)
+      .single();
+
+    if (tplErr || !tpl) {
+      throw new TemplateNotFoundError(templateId);
+    }
+
+    // Fetch conversations related to template
+    const { data: convs, error: convErr } = await _supabase
+      .from('conversations')
+      .select('status, quality_score')
+      .eq('parent_id', templateId)
+      .eq('parent_type', 'template');
+
+    if (convErr) {
+      throw new DatabaseError('Failed to fetch conversations for usage stats', undefined, {
+        cause: convErr,
+        context: { templateId },
+      });
+    }
+
+    const total = convs?.length ?? 0;
+    const successes = (convs ?? []).filter(c => c.status === 'approved' || c.status === 'generated').length;
+    const conversationsGenerated = (convs ?? []).filter(c => c.status === 'generated').length;
+
+    const scores = (convs ?? [])
+      .map(c => c.quality_score)
+      .filter((s: any) => s !== null && s !== undefined);
+
+    const avgQualityScore = scores.length
+      ? scores.reduce((a: number, b: number) => a + b, 0) / scores.length
+      : 0;
+
+    const successRate = total ? (successes / total) * 100 : 0;
+
+    return {
+      usageCount: (tpl as any).usage_count ?? total,
+      rating: (tpl as any).rating ?? 0,
+      successRate: Math.round(successRate * 10) / 10,
+      avgQualityScore: Math.round(avgQualityScore * 100) / 100,
+      conversationsGenerated,
+    };
+  },
+};

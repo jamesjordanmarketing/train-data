@@ -92,7 +92,7 @@ export function validateWithSchema<T>(
     if (error instanceof z.ZodError) {
       return {
         valid: false,
-        errors: error.errors.map(e => ({
+        errors: error.issues.map(e => ({
           path: e.path.join('.'),
           message: e.message,
           value: e.code,

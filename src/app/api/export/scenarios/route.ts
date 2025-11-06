@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase/server';
 import { ScenarioService } from '@/lib/services/scenario-service';
 
 export async function GET(request: NextRequest) {

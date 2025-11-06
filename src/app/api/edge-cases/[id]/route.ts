@@ -108,7 +108,7 @@ export async function PATCH(
     }
 
     // Update edge case
-    const edgeCase = await edgeCaseService.update(id, validatedData);
+    const edgeCase = await edgeCaseService.update(id, validatedData as any);
 
     return NextResponse.json(
       { data: edgeCase, message: 'Edge case updated successfully' },
@@ -120,7 +120,7 @@ export async function PATCH(
       return NextResponse.json(
         {
           error: 'Validation failed',
-          details: error.errors.map((e) => ({
+          details: error.issues.map((e) => ({
             field: e.path.join('.'),
             message: e.message,
           })),
@@ -179,17 +179,10 @@ export async function DELETE(
     }
 
     // Delete edge case
-    const result = await edgeCaseService.delete(id);
-
-    if (!result.success) {
-      return NextResponse.json(
-        { error: result.message },
-        { status: 400 }
-      );
-    }
+    await edgeCaseService.delete(id);
 
     return NextResponse.json(
-      { message: result.message },
+      { message: 'Edge case deleted successfully' },
       { status: 200 }
     );
   } catch (error: any) {

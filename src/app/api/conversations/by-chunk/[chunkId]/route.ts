@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { conversationService } from '@/lib/database';
+import { conversationChunkService } from '@/lib/database';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { chunkId: string } }
 ) {
   try {
-    const conversations = await conversationService.getConversationsByChunk(params.chunkId);
+    const conversations = await conversationChunkService.getConversationsByChunk(params.chunkId);
     return NextResponse.json(conversations);
   } catch (error) {
     console.error('Get conversations by chunk error:', error);

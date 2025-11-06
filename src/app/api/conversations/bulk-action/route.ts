@@ -14,7 +14,7 @@ const BulkActionSchema = z.object({
   conversationIds: z.array(z.string().uuid()).min(1, 'At least one conversation ID is required'),
   reviewerId: z.string().uuid().optional(),
   reason: z.string().optional(),
-  updates: z.record(z.any()).optional(),
+  updates: z.record(z.string(), z.any()).optional(),
 });
 
 /**

@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
     const validatedData = createEdgeCaseSchema.parse(body);
 
     // Create edge case
-    const edgeCase = await edgeCaseService.create(validatedData);
+    const edgeCase = await edgeCaseService.create(validatedData as any);
 
     return NextResponse.json(
       { data: edgeCase, message: 'Edge case created successfully' },
@@ -153,7 +153,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Validation failed',
-          details: error.errors.map((e) => ({
+          details: error.issues.map((e) => ({
             field: e.path.join('.'),
             message: e.message,
           })),

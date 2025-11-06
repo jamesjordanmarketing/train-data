@@ -16,7 +16,7 @@ import type {
   ReviewAction,
   FilterConfig,
   TierType
-} from '../../../@/lib/types';
+} from '@/lib/types';
 
 /**
  * Conversation Service
