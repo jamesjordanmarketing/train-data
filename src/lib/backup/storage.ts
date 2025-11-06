@@ -12,10 +12,15 @@ const logger = {
   error: (message: string, error?: any, context?: any) => console.error('[ERROR]', message, error || '', context || ''),
 };
 
-// Initialize Supabase client for server-side operations
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+/**
+ * Get Supabase client with lazy initialization
+ * Avoids module-level initialization that breaks Next.js build
+ */
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  return createClient(supabaseUrl, supabaseServiceKey);
+}
 
 // Backup metadata
 export interface Backup {
@@ -68,6 +73,8 @@ export async function createBackup(
   });
 
   try {
+    const supabase = getSupabaseClient();
+    
     // Fetch conversation data
     const { data: conversations, error: fetchError } = await supabase
       .from('conversations')
@@ -182,6 +189,8 @@ export async function createBackup(
  */
 export async function getBackup(backupId: string): Promise<Backup | null> {
   try {
+    const supabase = getSupabaseClient();
+    
     const { data, error } = await supabase
       .from('backup_exports')
       .select('*')
@@ -229,6 +238,8 @@ export async function cleanupExpiredBackups(): Promise<number> {
   logger.info('Running backup cleanup');
 
   try {
+    const supabase = getSupabaseClient();
+    
     const { data: expiredBackups, error: fetchError } = await supabase
       .from('backup_exports')
       .select('*')
@@ -304,6 +315,8 @@ export async function cleanupExpiredBackups(): Promise<number> {
  */
 export async function getUserBackups(userId: string): Promise<Backup[]> {
   try {
+    const supabase = getSupabaseClient();
+    
     const { data, error } = await supabase
       .from('backup_exports')
       .select('*')

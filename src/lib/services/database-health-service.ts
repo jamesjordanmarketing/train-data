@@ -24,12 +24,18 @@ import {
   needsAnalyze,
 } from '../types/database-health';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-
 class DatabaseHealthService {
   private config: HealthMonitoringConfig = DEFAULT_HEALTH_MONITORING_CONFIG;
-  private supabase = createClient(supabaseUrl, supabaseServiceKey);
+  
+  /**
+   * Get Supabase client with lazy initialization
+   * Avoids module-level initialization that breaks Next.js build
+   */
+  private getSupabaseClient() {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+    return createClient(supabaseUrl, supabaseServiceKey);
+  }
   
   /**
    * Set custom monitoring configuration
@@ -75,7 +81,8 @@ class DatabaseHealthService {
    * Get database overview metrics from pg_stat_database
    */
   async getDatabaseOverview(): Promise<DatabaseOverviewMetrics> {
-    const { data, error } = await this.supabase
+    const supabase = this.getSupabaseClient();
+    const { data, error } = await supabase
       .rpc('get_database_overview');
     
     if (error) {
@@ -117,7 +124,8 @@ class DatabaseHealthService {
    * Get table health metrics from pg_stat_user_tables
    */
   async getTableHealthMetrics(): Promise<TableHealthMetrics[]> {
-    const { data, error } = await this.supabase
+    const supabase = this.getSupabaseClient();
+    const { data, error } = await supabase
       .rpc('get_table_health_metrics');
     
     if (error) {
@@ -155,7 +163,8 @@ class DatabaseHealthService {
    * Get index health metrics from pg_stat_user_indexes
    */
   async getIndexHealthMetrics(): Promise<IndexHealthMetrics[]> {
-    const { data, error } = await this.supabase
+    const supabase = this.getSupabaseClient();
+    const { data, error } = await supabase
       .rpc('get_index_health_metrics');
     
     if (error) {
@@ -183,7 +192,8 @@ class DatabaseHealthService {
    * Get slow query metrics from pg_stat_statements
    */
   async getSlowQueries(limit: number = 20): Promise<QueryPerformanceMetrics[]> {
-    const { data, error } = await this.supabase
+    const supabase = this.getSupabaseClient();
+    const { data, error } = await supabase
       .rpc('get_slow_queries', { 
         hours_back: 24, 
         min_duration_ms: this.config.slowQueryThresholdMs 
@@ -215,7 +225,8 @@ class DatabaseHealthService {
    * Get connection pool metrics from pg_stat_activity
    */
   async getConnectionPoolMetrics(): Promise<ConnectionPoolMetrics> {
-    const { data, error } = await this.supabase
+    const supabase = this.getSupabaseClient();
+    const { data, error } = await supabase
       .rpc('get_connection_pool_metrics');
     
     if (error) {
@@ -243,7 +254,8 @@ class DatabaseHealthService {
    * Get active health alerts
    */
   async getActiveAlerts(): Promise<DatabaseHealthAlert[]> {
-    const { data, error } = await this.supabase
+    const supabase = this.getSupabaseClient();
+    const { data, error } = await supabase
       .from('performance_alerts')
       .select('*')
       .is('resolved_at', null)
@@ -357,7 +369,8 @@ class DatabaseHealthService {
    * Acknowledge alert
    */
   async acknowledgeAlert(alertId: string, userId: string): Promise<void> {
-    const { error } = await this.supabase
+    const supabase = this.getSupabaseClient();
+    const { error } = await supabase
       .from('performance_alerts')
       .update({
         acknowledged_at: new Date().toISOString(),
@@ -375,7 +388,8 @@ class DatabaseHealthService {
    * Resolve alert
    */
   async resolveAlert(alertId: string): Promise<void> {
-    const { error } = await this.supabase
+    const supabase = this.getSupabaseClient();
+    const { error } = await supabase
       .from('performance_alerts')
       .update({
         resolved_at: new Date().toISOString(),

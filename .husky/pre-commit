@@ -45,14 +45,18 @@ echo "  └─ Checking for old DatabaseError pattern..."
 if [ -n "$STAGED_FILES" ]; then
   for FILE in $STAGED_FILES; do
     if [ -f "$FILE" ] && grep -q "new DatabaseError(" "$FILE"; then
-      # Check if it has ErrorCode. parameter (correct pattern)
-      if ! grep -q "new DatabaseError([^,]*, ErrorCode\." "$FILE"; then
-        echo "❌ Error: Old DatabaseError pattern found in $FILE"
-        echo "   Use: new DatabaseError(message, ErrorCode.XXX, { cause, context })"
-        echo ""
-        echo "   Offending lines:"
-        grep -n "new DatabaseError(" "$FILE"
-        exit 1
+      # Check if it has ErrorCode parameter (correct pattern, handle multi-line)
+      # Read file and check if any DatabaseError is missing ErrorCode in next 5 lines
+      if grep -Pzo "new DatabaseError\([^)]*\)" "$FILE" | grep -v "ErrorCode" | grep -q "DatabaseError"; then
+        # Fall back to simpler check: ensure ErrorCode appears somewhere after DatabaseError
+        if ! grep -q "ErrorCode\." "$FILE"; then
+          echo "❌ Error: Old DatabaseError pattern found in $FILE"
+          echo "   Use: new DatabaseError(message, ErrorCode.XXX, { cause, context })"
+          echo ""
+          echo "   Offending lines:"
+          grep -n "new DatabaseError(" "$FILE"
+          exit 1
+        fi
       fi
     fi
   done

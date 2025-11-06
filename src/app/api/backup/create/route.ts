@@ -4,11 +4,6 @@ import { createBackup } from '@/lib/backup/storage';
 import { errorLogger } from '@/lib/errors/error-logger';
 import { AppError, ErrorCode } from '@/lib/errors';
 
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
 /**
  * POST /api/backup/create
  * 
@@ -30,6 +25,11 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
  */
 export async function POST(request: NextRequest) {
   try {
+    // Initialize Supabase client inside handler to avoid build-time initialization
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
     // Get authenticated user
     const authHeader = request.headers.get('authorization');
     if (!authHeader) {

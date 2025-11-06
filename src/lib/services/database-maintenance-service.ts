@@ -11,11 +11,16 @@ import {
   MaintenanceOperationOptions,
 } from '../types/database-health';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-
 class DatabaseMaintenanceService {
-  private supabase = createClient(supabaseUrl, supabaseServiceKey);
+  /**
+   * Get Supabase client with lazy initialization
+   * Avoids module-level initialization that breaks Next.js build
+   */
+  private getSupabaseClient() {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+    return createClient(supabaseUrl, supabaseServiceKey);
+  }
   
   /**
    * Execute VACUUM operation on specified table or all tables
@@ -30,7 +35,8 @@ class DatabaseMaintenanceService {
     await this.performSafetyChecks(options);
     
     // Create maintenance operation record
-    const { data: operation, error: createError } = await this.supabase
+    const supabase = this.getSupabaseClient();
+    const { data: operation, error: createError } = await supabase
       .from('maintenance_operations')
       .insert({
         operation_type: options.operationType,
@@ -53,7 +59,7 @@ class DatabaseMaintenanceService {
     
     try {
       // Execute VACUUM via RPC function
-      const { error: vacuumError } = await this.supabase.rpc('execute_vacuum', {
+      const { error: vacuumError } = await supabase.rpc('execute_vacuum', {
         p_table_name: options.tableName || null,
         p_full: options.operationType === 'VACUUM FULL',
         p_analyze: options.analyze || false,
@@ -67,7 +73,7 @@ class DatabaseMaintenanceService {
       const startedAt = new Date(operation.started_at);
       const durationMs = new Date(completedAt).getTime() - startedAt.getTime();
       
-      const { data: updatedOperation, error: updateError } = await this.supabase
+      const { data: updatedOperation, error: updateError } = await supabase
         .from('maintenance_operations')
         .update({
           completed_at: completedAt,
@@ -83,7 +89,7 @@ class DatabaseMaintenanceService {
       return this.transformOperationRecord(updatedOperation);
     } catch (error) {
       // Update operation record as failed
-      await this.supabase
+      await supabase
         .from('maintenance_operations')
         .update({
           status: 'failed',
@@ -105,7 +111,8 @@ class DatabaseMaintenanceService {
     
     await this.performSafetyChecks(options);
     
-    const { data: operation, error: createError } = await this.supabase
+    const supabase = this.getSupabaseClient();
+    const { data: operation, error: createError } = await supabase
       .from('maintenance_operations')
       .insert({
         operation_type: 'ANALYZE',
@@ -123,7 +130,7 @@ class DatabaseMaintenanceService {
     if (createError) throw createError;
     
     try {
-      const { error: analyzeError } = await this.supabase.rpc('execute_analyze', {
+      const { error: analyzeError } = await supabase.rpc('execute_analyze', {
         p_table_name: options.tableName || null,
         p_verbose: options.verbose || false,
       });
@@ -134,7 +141,7 @@ class DatabaseMaintenanceService {
       const startedAt = new Date(operation.started_at);
       const durationMs = new Date(completedAt).getTime() - startedAt.getTime();
       
-      const { data: updatedOperation, error: updateError } = await this.supabase
+      const { data: updatedOperation, error: updateError } = await supabase
         .from('maintenance_operations')
         .update({
           completed_at: completedAt,
@@ -149,7 +156,7 @@ class DatabaseMaintenanceService {
       
       return this.transformOperationRecord(updatedOperation);
     } catch (error) {
-      await this.supabase
+      await supabase
         .from('maintenance_operations')
         .update({
           status: 'failed',
@@ -175,7 +182,8 @@ class DatabaseMaintenanceService {
     
     await this.performSafetyChecks(options);
     
-    const { data: operation, error: createError } = await this.supabase
+    const supabase = this.getSupabaseClient();
+    const { data: operation, error: createError } = await supabase
       .from('maintenance_operations')
       .insert({
         operation_type: 'REINDEX',
@@ -194,7 +202,7 @@ class DatabaseMaintenanceService {
     if (createError) throw createError;
     
     try {
-      const { error: reindexError } = await this.supabase.rpc('execute_reindex', {
+      const { error: reindexError } = await supabase.rpc('execute_reindex', {
         p_table_name: options.tableName || null,
         p_index_name: options.indexName || null,
         p_concurrent: options.concurrent || false,
@@ -206,7 +214,7 @@ class DatabaseMaintenanceService {
       const startedAt = new Date(operation.started_at);
       const durationMs = new Date(completedAt).getTime() - startedAt.getTime();
       
-      const { data: updatedOperation, error: updateError } = await this.supabase
+      const { data: updatedOperation, error: updateError } = await supabase
         .from('maintenance_operations')
         .update({
           completed_at: completedAt,
@@ -221,7 +229,7 @@ class DatabaseMaintenanceService {
       
       return this.transformOperationRecord(updatedOperation);
     } catch (error) {
-      await this.supabase
+      await supabase
         .from('maintenance_operations')
         .update({
           status: 'failed',
@@ -237,7 +245,8 @@ class DatabaseMaintenanceService {
    * Get maintenance operation history
    */
   async getOperationHistory(limit: number = 50): Promise<MaintenanceOperationRecord[]> {
-    const { data, error } = await this.supabase
+    const supabase = this.getSupabaseClient();
+    const { data, error } = await supabase
       .from('maintenance_operations')
       .select('*')
       .order('created_at', { ascending: false })
@@ -255,7 +264,8 @@ class DatabaseMaintenanceService {
    * Get running operations
    */
   async getRunningOperations(): Promise<MaintenanceOperationRecord[]> {
-    const { data, error } = await this.supabase
+    const supabase = this.getSupabaseClient();
+    const { data, error } = await supabase
       .from('maintenance_operations')
       .select('*')
       .eq('status', 'running')
@@ -282,8 +292,10 @@ class DatabaseMaintenanceService {
     }
     
     // Check 2: Verify table exists if tableName specified
+    const supabase = this.getSupabaseClient();
+    
     if (options.tableName) {
-      const { data, error } = await this.supabase
+      const { data, error } = await supabase
         .rpc('table_exists', { p_table_name: options.tableName });
       
       if (error || !data) {
@@ -293,7 +305,7 @@ class DatabaseMaintenanceService {
     
     // Check 3: Verify index exists if indexName specified
     if (options.indexName) {
-      const { data, error } = await this.supabase
+      const { data, error } = await supabase
         .rpc('index_exists', { p_index_name: options.indexName });
       
       if (error || !data) {

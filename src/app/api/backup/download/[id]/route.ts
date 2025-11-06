@@ -1,14 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { getBackup } from '@/lib/backup/storage';
 import { errorLogger } from '@/lib/errors/error-logger';
 import { readFile } from 'fs/promises';
 import { existsSync } from 'fs';
-
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 /**
  * GET /api/backup/download/[id]
