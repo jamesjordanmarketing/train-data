@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
       templates = [template];
     } else {
       const filters = tier ? { tier, isActive: true } : { isActive: true };
-      templates = await templateService.getAllTemplates(filters as any);
+      templates = await templateService.getAllTemplates(filters);
     }
 
     // Build analytics for each template

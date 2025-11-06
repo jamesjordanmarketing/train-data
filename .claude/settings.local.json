@@ -20,7 +20,15 @@
       "Bash(for file in \"C:/Users/james/Master/BrightHub/brun/train-data/src/lib/backup\"/*.ts)",
       "Bash(while read file)",
       "Bash(npm install:*)",
-      "Bash(for file in app/(dashboard)/upload/page.tsx components/upload/upload-dropzone.tsx components/upload/content-preview-sheet.tsx components/upload/upload-queue.tsx lib/ai/__tests__/parameter-injection.test.ts lib/ai/parameter-validation.ts app/api/documents/process/route.ts app/api/documents/upload/route.ts)"
+      "Bash(for file in app/(dashboard)/upload/page.tsx components/upload/upload-dropzone.tsx components/upload/content-preview-sheet.tsx components/upload/upload-queue.tsx lib/ai/__tests__/parameter-injection.test.ts lib/ai/parameter-validation.ts app/api/documents/process/route.ts app/api/documents/upload/route.ts)",
+      "Bash(git tag:*)",
+      "Bash(git checkout:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(e01-baseline.txt)",
+      "Bash(chmod:*)",
+      "Bash(cat:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []

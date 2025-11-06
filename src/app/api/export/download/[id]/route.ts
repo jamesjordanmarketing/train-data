@@ -140,8 +140,8 @@ export async function GET(
       try {
         await supabase
           .from('export_logs')
-          .update({ 
-            downloaded_count: (exportLog as any).downloaded_count ? (exportLog as any).downloaded_count + 1 : 1,
+          .update({
+            downloaded_count: exportLog.downloaded_count ? exportLog.downloaded_count + 1 : 1,
             last_downloaded_at: new Date().toISOString()
           })
           .eq('export_id', exportId);

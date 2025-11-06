@@ -100,7 +100,7 @@ export class CSVTransformer implements IExportTransformer {
           if (config.includeMetadata) {
             row.persona = conversation.persona;
             row.emotion = conversation.emotion;
-            row.topic = conversation.topic;
+            row.title = conversation.title;
           }
 
           if (config.includeTimestamps) {

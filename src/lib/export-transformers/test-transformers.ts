@@ -15,49 +15,50 @@ import {
 // Sample test data
 const testConversations: Conversation[] = [
   {
-    id: '1',
-    conversation_id: 'test-001',
+    id: 'test-001',
     title: 'Market Volatility Discussion',
     category: ['Finance', 'Investment'],
     status: 'approved',
     qualityScore: 8.5,
     persona: 'Anxious Investor',
     emotion: 'Fear',
-    topic: 'Market Volatility',
     tier: 'template',
     totalTurns: 4,
-    tokenCount: 500,
+    totalTokens: 500,
     parentId: 'template-001',
     parentType: 'template',
     parameters: { complexity: 'medium' },
+    turns: [],
     reviewHistory: [
       {
         action: 'approved',
-        userId: 'reviewer-1',
+        performedBy: 'reviewer-1',
+        id: 'review-1',
         timestamp: '2025-10-29T11:00:00Z',
-        notes: 'Quality content',
+        comment: 'Quality content',
       },
     ],
     createdAt: '2025-10-29T10:00:00Z',
     updatedAt: '2025-10-29T11:00:00Z',
+    createdBy: 'user-123',
   },
   {
-    id: '2',
-    conversation_id: 'test-002',
+    id: 'test-002',
     title: 'Investment Strategy Planning',
     category: ['Finance', 'Planning'],
     status: 'approved',
     qualityScore: 9.2,
     persona: 'Conservative Investor',
     emotion: 'Cautious',
-    topic: 'Long-term Planning',
-    tier: 'generated',
+    tier: 'template',
     totalTurns: 6,
-    tokenCount: 750,
+    totalTokens: 750,
+    turns: [],
     parameters: {},
     reviewHistory: [],
     createdAt: '2025-10-30T14:00:00Z',
     updatedAt: '2025-10-30T15:00:00Z',
+    createdBy: 'user-456',
   },
 ];
 
@@ -67,23 +68,27 @@ testTurns.set('test-001', [
     role: 'user',
     content: "I'm worried about the recent market crash. Should I sell everything?",
     tokenCount: 15,
+    timestamp: '2025-10-29T10:05:00Z',
   },
   {
     role: 'assistant',
     content:
       "I understand your concern about market volatility. Let me help you understand what's happening and explore your options.",
     tokenCount: 25,
+    timestamp: '2025-10-29T10:06:00Z',
   },
   {
     role: 'user',
     content: 'What should I do with my retirement investments?',
     tokenCount: 10,
+    timestamp: '2025-10-29T10:07:00Z',
   },
   {
     role: 'assistant',
     content:
       'For retirement investments, the key is maintaining a long-term perspective. Here are some strategies to consider: diversification, dollar-cost averaging, and regular portfolio rebalancing.',
     tokenCount: 35,
+    timestamp: '2025-10-29T10:08:00Z',
   },
 ]);
 
@@ -92,34 +97,40 @@ testTurns.set('test-002', [
     role: 'user',
     content: 'I want to plan my investment strategy for the next 10 years.',
     tokenCount: 15,
+    timestamp: '2025-10-30T14:05:00Z',
   },
   {
     role: 'assistant',
     content:
       "That's an excellent approach. Long-term planning is crucial for financial success. Let's break down the key components.",
     tokenCount: 25,
+    timestamp: '2025-10-30T14:06:00Z',
   },
   {
     role: 'user',
     content: 'What asset allocation do you recommend?',
     tokenCount: 8,
+    timestamp: '2025-10-30T14:07:00Z',
   },
   {
     role: 'assistant',
     content:
       'Asset allocation depends on your risk tolerance, time horizon, and financial goals. For a 10-year plan, a balanced approach might include 60% stocks, 30% bonds, and 10% alternative investments.',
     tokenCount: 40,
+    timestamp: '2025-10-30T14:08:00Z',
   },
   {
     role: 'user',
     content: 'How often should I rebalance my portfolio?',
     tokenCount: 9,
+    timestamp: '2025-10-30T14:09:00Z',
   },
   {
     role: 'assistant',
     content:
       'Generally, rebalancing annually or when allocations drift by more than 5% from targets is a good practice. This helps maintain your desired risk level.',
     tokenCount: 30,
+    timestamp: '2025-10-30T14:10:00Z',
   },
 ]);
 
@@ -246,14 +257,13 @@ async function runTests() {
   console.log('------------------------------------------');
   const largeConversations = Array.from({ length: 100 }, (_, i) => ({
     ...testConversations[0],
-    id: `${i + 1}`,
-    conversation_id: `test-${(i + 1).toString().padStart(3, '0')}`,
+    id: `test-${(i + 1).toString().padStart(3, '0')}`,
     title: `Test Conversation ${i + 1}`,
   }));
 
   const largeTurns = new Map<string, ConversationTurn[]>();
   largeConversations.forEach((conv) => {
-    largeTurns.set(conv.conversation_id, testTurns.get('test-001')!);
+    largeTurns.set(conv.id, testTurns.get('test-001')!);
   });
 
   const largeOutput = await jsonlTransformer.transform(

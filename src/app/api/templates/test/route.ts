@@ -17,6 +17,7 @@ import { TemplateService } from '@/lib/template-service';
 import { injectParameters, generateSampleParameters } from '@/lib/ai/parameter-injection';
 import Anthropic from '@anthropic-ai/sdk';
 import { AI_CONFIG } from '@/lib/ai-config';
+import { TemplateTestResult } from '@/lib/types';
 
 /**
  * Calculate quality metrics from Claude API response
@@ -209,8 +210,8 @@ export async function POST(request: NextRequest) {
 
     const executionTimeMs = Date.now() - startTime;
 
-    // Build test result
-    const testResult = {
+    // Build test result with explicit type annotation
+    const testResult: TemplateTestResult = {
       templateId,
       testParameters,
       resolvedTemplate: resolved.resolved,
@@ -222,7 +223,7 @@ export async function POST(request: NextRequest) {
       errors,
       warnings,
       timestamp: new Date().toISOString(),
-      baselineComparison: undefined as any,
+      // baselineComparison is optional - will be added conditionally below if needed
     };
 
     // Fetch baseline comparison if requested

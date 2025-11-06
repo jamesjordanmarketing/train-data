@@ -439,21 +439,26 @@ export class TemplateService {
         throw new Error(`Template with ID ${id} not found`);
       }
 
-      // Create a copy with the new name
+      // Destructure to properly omit excluded fields
+      const {
+        id: _id,
+        usageCount,
+        rating,
+        lastModified,
+        ...templateData
+      } = original;
+
+      // Create duplicate with new name
       const duplicateInput: CreateTemplateInput = {
-        ...original,
+        ...templateData,
         name: newName,
-        // Don't copy these fields
-        usageCount: undefined as any,
-        rating: undefined as any,
-        lastModified: undefined as any,
       };
 
       const duplicated = await this.create(duplicateInput);
-      
+
       // TODO: If includeScenarios is true, duplicate related scenarios
       // This functionality can be implemented later if needed
-      
+
       return duplicated;
     } catch (error) {
       if (error instanceof Error) throw error;

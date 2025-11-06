@@ -299,7 +299,7 @@ export interface DeleteTemplateResponse {
 
 // --- Adapter: Singleton service with resolver and usage stats ---
 import { getTemplateResolver } from './services/template-resolver';
-import { TemplateNotFoundError, ValidationError, DatabaseError } from './types/errors';
+import { TemplateNotFoundError, ValidationError, DatabaseError, ErrorCode } from './types/errors';
 import { createClient } from './supabase/server';
 
 const _supabase = createClient();
@@ -338,6 +338,12 @@ export const templateService = {
     avgQualityScore: number;
     conversationsGenerated: number;
   }> {
+    // Define database result type for type-safe field access
+    interface TemplateDbRow {
+      usage_count: number | null;
+      rating: number | null;
+    }
+
     // Fetch template basics
     const { data: tpl, error: tplErr } = await _supabase
       .from('templates')
@@ -349,6 +355,9 @@ export const templateService = {
       throw new TemplateNotFoundError(templateId);
     }
 
+    // Type-safe cast to database row type
+    const templateData = tpl as TemplateDbRow;
+
     // Fetch conversations related to template
     const { data: convs, error: convErr } = await _supabase
       .from('conversations')
@@ -357,7 +366,7 @@ export const templateService = {
       .eq('parent_type', 'template');
 
     if (convErr) {
-      throw new DatabaseError('Failed to fetch conversations for usage stats', undefined, {
+      throw new DatabaseError('Failed to fetch conversations for usage stats', ErrorCode.ERR_DB_QUERY, {
         cause: convErr,
         context: { templateId },
       });
@@ -378,8 +387,8 @@ export const templateService = {
     const successRate = total ? (successes / total) * 100 : 0;
 
     return {
-      usageCount: (tpl as any).usage_count ?? total,
-      rating: (tpl as any).rating ?? 0,
+      usageCount: templateData.usage_count ?? total,
+      rating: templateData.rating ?? 0,
       successRate: Math.round(successRate * 10) / 10,
       avgQualityScore: Math.round(avgQualityScore * 100) / 100,
       conversationsGenerated,

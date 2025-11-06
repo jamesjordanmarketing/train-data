@@ -14,7 +14,9 @@ import {
 import {
   EdgeCaseNotFoundError,
   DatabaseError,
+  ErrorCode,
 } from './types/errors';
+import { createDatabaseError } from './database/errors';
 
 /**
  * EdgeCaseService class
@@ -70,14 +72,28 @@ export class EdgeCaseService {
 
       if (error) {
         console.error('Error creating edge case:', error);
-        throw new DatabaseError(`Failed to create edge case: ${error.message}`, error);
+        throw new DatabaseError(
+          `Failed to create edge case`,
+          ErrorCode.ERR_DB_QUERY,
+          {
+            cause: error,
+            context: { operation: 'create edge case' }
+          }
+        );
       }
 
       return this.mapDbToEdgeCase(createdEdgeCase);
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       console.error('Unexpected error creating edge case:', error);
-      throw new DatabaseError('Unexpected error creating edge case', error as Error);
+      throw new DatabaseError(
+        'Unexpected error creating edge case',
+        ErrorCode.ERR_DB_QUERY,
+        {
+          cause: error instanceof Error ? error : new Error(String(error)),
+          context: { operation: 'create edge case' }
+        }
+      );
     }
   }
 
@@ -98,14 +114,14 @@ export class EdgeCaseService {
       if (error) {
         if (error.code === 'PGRST116') return null; // Not found
         console.error('Error fetching edge case:', error);
-        throw new DatabaseError(`Failed to fetch edge case: ${error.message}`, error);
+        throw createDatabaseError('Failed to fetch edge case', error, 'fetch edge case');
       }
 
       return this.mapDbToEdgeCase(edgeCase);
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       console.error('Unexpected error fetching edge case:', error);
-      throw new DatabaseError('Unexpected error fetching edge case', error as Error);
+      throw createDatabaseError('Unexpected error fetching edge case', error, 'fetch edge case');
     }
   }
 
@@ -155,14 +171,14 @@ export class EdgeCaseService {
 
       if (error) {
         console.error('Error listing edge cases:', error);
-        throw new DatabaseError(`Failed to list edge cases: ${error.message}`, error);
+        throw createDatabaseError('Failed to list edge cases', error, 'list edge cases');
       }
 
       return (edgeCases || []).map(this.mapDbToEdgeCase);
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       console.error('Unexpected error listing edge cases:', error);
-      throw new DatabaseError('Unexpected error listing edge cases', error as Error);
+      throw createDatabaseError('Unexpected error listing edge cases', error, 'list edge cases');
     }
   }
 
@@ -207,14 +223,14 @@ export class EdgeCaseService {
 
       if (error) {
         console.error('Error updating edge case:', error);
-        throw new DatabaseError(`Failed to update edge case: ${error.message}`, error);
+        throw createDatabaseError('Failed to update edge case', error, 'update edge case');
       }
 
       return this.mapDbToEdgeCase(edgeCase);
     } catch (error) {
       if (error instanceof EdgeCaseNotFoundError || error instanceof DatabaseError) throw error;
       console.error('Unexpected error updating edge case:', error);
-      throw new DatabaseError('Unexpected error updating edge case', error as Error);
+      throw createDatabaseError('Unexpected error updating edge case', error, 'update edge case');
     }
   }
 
@@ -238,12 +254,12 @@ export class EdgeCaseService {
 
       if (error) {
         console.error('Error deleting edge case:', error);
-        throw new DatabaseError(`Failed to delete edge case: ${error.message}`, error);
+        throw createDatabaseError('Failed to delete edge case', error, 'delete edge case');
       }
     } catch (error) {
       if (error instanceof EdgeCaseNotFoundError || error instanceof DatabaseError) throw error;
       console.error('Unexpected error deleting edge case:', error);
-      throw new DatabaseError('Unexpected error deleting edge case', error as Error);
+      throw createDatabaseError('Unexpected error deleting edge case', error, 'delete edge case');
     }
   }
 
@@ -261,7 +277,7 @@ export class EdgeCaseService {
     } catch (error) {
       if (error instanceof EdgeCaseNotFoundError || error instanceof DatabaseError) throw error;
       console.error('Unexpected error marking as tested:', error);
-      throw new DatabaseError('Unexpected error marking as tested', error as Error);
+      throw createDatabaseError('Unexpected error marking as tested', error, 'mark as tested');
     }
   }
 

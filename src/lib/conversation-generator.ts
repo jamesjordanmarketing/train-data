@@ -267,15 +267,15 @@ export class ConversationGenerator {
       return {
         ...conversation,
         id: saved.id,
-        conversationId: (saved as any).conversationId || saved.id,
+        conversationId: saved.conversationId || saved.id,
         qualityScore: qualityScoreResult.overall,
-        qualityBreakdown: qualityScoreResult.breakdown,
-        recommendations: qualityScoreResult.recommendations,
+        // Note: qualityBreakdown and recommendations are not part of GeneratedConversation type
+        // They are stored in the database but not returned in the API response
         status,
         actualCostUsd: cost,
         generationDurationMs: response.duration,
         createdAt: saved.createdAt,
-      } as any;
+      };
       
     } catch (error) {
       console.error('❌ Generation failed:', error);

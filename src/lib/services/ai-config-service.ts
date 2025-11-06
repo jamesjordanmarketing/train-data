@@ -235,13 +235,15 @@ class AIConfigService {
    * Deep merge two objects (handles nested objects)
    */
   private deepMerge<T extends Record<string, any>>(target: T, source: Partial<T>): T {
-    const output = { ...target };
+    const output = { ...target } as T;
     
     for (const key in source) {
       if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
-        output[key] = this.deepMerge(target[key] || {}, source[key] as any);
+        const targetValue = target[key] || {} as any;
+        const sourceValue = source[key] as any;
+        output[key as keyof T] = this.deepMerge(targetValue, sourceValue) as T[keyof T];
       } else if (source[key] !== undefined) {
-        output[key] = source[key] as any;
+        output[key as keyof T] = source[key] as T[keyof T];
       }
     }
     

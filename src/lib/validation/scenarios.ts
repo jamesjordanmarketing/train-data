@@ -7,8 +7,9 @@ import { z } from 'zod';
 
 /**
  * Generation Status Enum
+ * Aligned with Scenario type definition
  */
-export const generationStatusSchema = z.enum(['draft', 'queued', 'generating', 'completed', 'failed'], {
+export const generationStatusSchema = z.enum(['not_generated', 'generated', 'error'], {
   errorMap: () => ({ message: 'Invalid generation status' }),
 });
 
@@ -23,7 +24,7 @@ export const createScenarioSchema = z.object({
   contextNotes: z.string().optional(),
   targetComplexity: z.number().min(1, 'Complexity must be at least 1').max(10, 'Complexity cannot exceed 10').default(5),
   expectedOutcome: z.string().optional(),
-  generationStatus: generationStatusSchema.default('draft'),
+  generationStatus: generationStatusSchema.default('not_generated'),
   generatedConversation: z.string().optional(),
   qualityScore: z.number().min(0).max(10).optional(),
   generationMetadata: z.record(z.string(), z.any()).optional(),

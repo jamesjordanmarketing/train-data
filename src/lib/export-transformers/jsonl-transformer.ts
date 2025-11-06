@@ -28,7 +28,7 @@ export class JSONLTransformer implements IExportTransformer {
 
     for (const conversation of conversations) {
       try {
-        const conversationTurns = turns.get(conversation.conversation_id) || [];
+        const conversationTurns = turns.get(conversation.id) || [];
         const trainingConversation = this.convertToTrainingFormat(
           conversation,
           conversationTurns,
@@ -40,7 +40,7 @@ export class JSONLTransformer implements IExportTransformer {
         lines.push(line);
       } catch (error) {
         console.error(
-          `Error transforming conversation ${conversation.conversation_id}:`,
+          `Error transforming conversation ${conversation.id}:`,
           error
         );
         // Continue processing other conversations
@@ -85,7 +85,7 @@ export class JSONLTransformer implements IExportTransformer {
     config: ExportConfig
   ): Record<string, any> {
     const metadata: Record<string, any> = {
-      conversation_id: conversation.conversation_id,
+      conversation_id: conversation.id,
       title: conversation.title,
       tier: conversation.tier,
     };
@@ -114,7 +114,7 @@ export class JSONLTransformer implements IExportTransformer {
     // Add persona, emotion, topic if present
     if (conversation.persona) metadata.persona = conversation.persona;
     if (conversation.emotion) metadata.emotion = conversation.emotion;
-    if (conversation.topic) metadata.topic = conversation.topic;
+    if (conversation.title) metadata.title = conversation.title;
 
     return metadata;
   }

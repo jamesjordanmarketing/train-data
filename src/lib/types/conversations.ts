@@ -109,7 +109,11 @@ export interface Conversation {
   // Flexible Metadata
   parameters: Record<string, any>;
   reviewHistory: ReviewAction[];
-  
+
+  // Chunk Integration (from chunks-alpha module)
+  chunkContext?: string;
+  dimensionSource?: DimensionSource;
+
   // Error Handling
   errorMessage?: string;
   retryCount: number;
@@ -121,6 +125,23 @@ export interface Conversation {
   
   // Virtual fields (populated on request)
   turns?: ConversationTurn[];
+}
+
+/**
+ * Dimension metadata from chunks-alpha semantic analysis
+ * Used for parameter selection and quality scoring
+ */
+export interface DimensionSource {
+  chunkId: string;
+  dimensions: Record<string, number>; // dimension_name: value (0-1)
+  confidence: number; // overall confidence score (0-1)
+  extractedAt: string; // ISO 8601 timestamp
+  semanticDimensions?: {
+    persona?: string[];
+    emotion?: string[];
+    complexity?: number;
+    domain?: string[];
+  };
 }
 
 // ============================================================================
