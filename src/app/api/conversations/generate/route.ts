@@ -78,12 +78,12 @@ export async function POST(request: NextRequest) {
       {
         success: true,
         conversation: result.conversation,
-        cost: result.conversation.actualCostUsd,
+        cost: result.metrics.cost,
         qualityMetrics: {
           qualityScore: result.conversation.qualityScore,
           turnCount: result.conversation.totalTurns,
           tokenCount: result.conversation.totalTokens,
-          durationMs: result.conversation.generationDurationMs,
+          durationMs: result.metrics.durationMs,
         },
       },
       { status: 201 }
