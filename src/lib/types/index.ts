@@ -282,6 +282,7 @@ export interface ExportLog {
   error_message: string | null;
   created_at: string;
   updated_at: string;
+  downloaded_count?: number;
 }
 
 // User Preferences - Re-exported from dedicated module

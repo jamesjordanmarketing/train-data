@@ -83,7 +83,7 @@ export async function GET(
       if (now > expiryDate) {
         // Mark as expired
         await exportService.updateExportLog(exportId, { status: 'expired' });
-        (exportLog as any).status = 'expired';
+        exportLog.status = 'expired';
       }
     }
     
