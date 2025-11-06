@@ -7,10 +7,6 @@
     {
       "path": "/api/cron/export-file-cleanup",
       "schedule": "0 2 * * *"
-    },
-    {
-      "path": "/api/cron/export-log-cleanup",
-      "schedule": "0 3 1 * *"
     }
   ]
 }
