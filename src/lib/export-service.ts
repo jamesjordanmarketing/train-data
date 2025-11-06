@@ -32,7 +32,7 @@
  */
 
 import { SupabaseClient } from '@supabase/supabase-js';
-import { ExportConfig } from '../../@/lib/types';
+import { ExportConfig } from '@/lib/types';
 
 /**
  * ExportLog interface matching database schema
