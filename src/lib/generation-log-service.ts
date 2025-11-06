@@ -12,7 +12,8 @@ import {
   PerformanceMetrics,
   GenerationLogFilter,
 } from './types/generation-logs';
-import { DatabaseError } from './types/errors';
+import { DatabaseError, ErrorCode } from './types/errors';
+import { createDatabaseError } from './database/errors';
 
 /**
  * GenerationLogService class
@@ -74,14 +75,14 @@ export class GenerationLogService {
 
       if (error) {
         console.error('Error creating generation log:', error);
-        throw new DatabaseError(`Failed to create generation log: ${error.message}`, error);
+        throw createDatabaseError('Failed to create generation log', error, 'create generation log');
       }
 
       return this.mapDbToLog(createdLog);
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       console.error('Unexpected error creating generation log:', error);
-      throw new DatabaseError('Unexpected error creating generation log', error as Error);
+      throw createDatabaseError('Unexpected error creating generation log', error, 'create generation log');
     }
   }
 
@@ -107,14 +108,14 @@ export class GenerationLogService {
 
       if (error) {
         console.error('Error fetching generation logs:', error);
-        throw new DatabaseError(`Failed to fetch generation logs: ${error.message}`, error);
+        throw createDatabaseError('Failed to fetch generation logs', error, 'fetch generation logs');
       }
 
       return (logs || []).map(this.mapDbToLog);
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       console.error('Unexpected error fetching logs by conversation:', error);
-      throw new DatabaseError('Unexpected error fetching logs by conversation', error as Error);
+      throw createDatabaseError('Unexpected error fetching logs by conversation', error, 'fetch generation logs');
     }
   }
 
@@ -140,14 +141,14 @@ export class GenerationLogService {
 
       if (error) {
         console.error('Error fetching generation logs:', error);
-        throw new DatabaseError(`Failed to fetch generation logs: ${error.message}`, error);
+        throw createDatabaseError('Failed to fetch generation logs', error, 'fetch generation logs');
       }
 
       return (logs || []).map(this.mapDbToLog);
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       console.error('Unexpected error fetching logs by run:', error);
-      throw new DatabaseError('Unexpected error fetching logs by run', error as Error);
+      throw createDatabaseError('Unexpected error fetching logs by run', error, 'fetch generation logs');
     }
   }
 
@@ -178,7 +179,7 @@ export class GenerationLogService {
 
       if (error) {
         console.error('Error fetching cost summary:', error);
-        throw new DatabaseError(`Failed to fetch cost summary: ${error.message}`, error);
+        throw createDatabaseError('Failed to fetch cost summary', error, 'fetch cost summary');
       }
 
       const summary: CostSummary = {
@@ -250,7 +251,7 @@ export class GenerationLogService {
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       console.error('Unexpected error getting cost summary:', error);
-      throw new DatabaseError('Unexpected error getting cost summary', error as Error);
+      throw createDatabaseError('Unexpected error getting cost summary', error, 'get cost summary');
     }
   }
 
@@ -282,7 +283,7 @@ export class GenerationLogService {
 
       if (error) {
         console.error('Error fetching performance metrics:', error);
-        throw new DatabaseError(`Failed to fetch performance metrics: ${error.message}`, error);
+        throw createDatabaseError('Failed to fetch performance metrics', error, 'fetch performance metrics');
       }
 
       const metrics: PerformanceMetrics = {
@@ -337,7 +338,7 @@ export class GenerationLogService {
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       console.error('Unexpected error getting performance metrics:', error);
-      throw new DatabaseError('Unexpected error getting performance metrics', error as Error);
+      throw createDatabaseError('Unexpected error getting performance metrics', error, 'get performance metrics');
     }
   }
 
@@ -384,14 +385,14 @@ export class GenerationLogService {
 
       if (error) {
         console.error('Error listing generation logs:', error);
-        throw new DatabaseError(`Failed to list generation logs: ${error.message}`, error);
+        throw createDatabaseError('Failed to list generation logs', error, 'list generation logs');
       }
 
       return (logs || []).map(this.mapDbToLog);
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       console.error('Unexpected error listing generation logs:', error);
-      throw new DatabaseError('Unexpected error listing generation logs', error as Error);
+      throw createDatabaseError('Unexpected error listing generation logs', error, 'list generation logs');
     }
   }
 
