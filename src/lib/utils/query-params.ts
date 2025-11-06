@@ -6,6 +6,7 @@
  */
 
 import { FilterConfig, PaginationConfig } from '../types/conversations';
+import type { ConversationStatus, TierType } from '../types';
 
 /**
  * Parse filter configuration from URL search params
@@ -18,13 +19,13 @@ export function parseFilters(
   // Parse status filter
   const status = searchParams.status;
   if (status) {
-    filters.statuses = Array.isArray(status) ? status : status.split(',');
+    filters.statuses = (Array.isArray(status) ? status : status.split(',')) as ConversationStatus[];
   }
 
   // Parse tier filter
   const tier = searchParams.tier;
   if (tier) {
-    filters.tierTypes = Array.isArray(tier) ? tier : tier.split(',');
+    filters.tierTypes = (Array.isArray(tier) ? tier : tier.split(',')) as TierType[];
   }
 
   // Parse personas filter

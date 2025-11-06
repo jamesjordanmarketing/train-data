@@ -484,7 +484,7 @@ export class BatchGenerationService {
           item.id,
           'failed',
           undefined,
-          result.error?.message || 'Generation failed'
+          result.error || 'Generation failed'
         );
         
         console.error(`[BatchGeneration] Item ${item.id} failed:`, result.error);

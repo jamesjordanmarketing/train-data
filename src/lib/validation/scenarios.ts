@@ -9,9 +9,7 @@ import { z } from 'zod';
  * Generation Status Enum
  * Aligned with Scenario type definition
  */
-export const generationStatusSchema = z.enum(['not_generated', 'generated', 'error'], {
-  errorMap: () => ({ message: 'Invalid generation status' }),
-});
+export const generationStatusSchema = z.enum(['not_generated', 'generated', 'error']);
 
 /**
  * Create Scenario Schema

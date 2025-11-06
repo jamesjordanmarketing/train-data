@@ -19,9 +19,9 @@ import {
 // Initialize Services
 // ============================================================================
 
-const templateService = createTemplateService(supabase);
-const scenarioService = createScenarioService(supabase);
-const edgeCaseService = createEdgeCaseService(supabase);
+const templateService = createTemplateService(supabase as any);
+const scenarioService = createScenarioService(supabase as any);
+const edgeCaseService = createEdgeCaseService(supabase as any);
 
 // ============================================================================
 // Example 1: Create Complete Template Hierarchy

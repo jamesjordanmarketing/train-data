@@ -189,7 +189,7 @@ export class TemplateResolver {
     resolveParamsList: ResolveParams[]
   ): Promise<ResolvedTemplate[]> {
     // Pre-fetch all unique templates to minimize DB calls
-    const uniqueTemplateIds = [...new Set(resolveParamsList.map(p => p.templateId))];
+    const uniqueTemplateIds = Array.from(new Set(resolveParamsList.map(p => p.templateId)));
     await this.preloadTemplates(uniqueTemplateIds);
 
     // Resolve all templates

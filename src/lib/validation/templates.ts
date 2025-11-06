@@ -10,9 +10,7 @@ import { z } from 'zod';
  */
 export const templateVariableSchema = z.object({
   name: z.string().min(1, 'Variable name is required'),
-  type: z.enum(['text', 'number', 'dropdown'], {
-    errorMap: () => ({ message: 'Type must be text, number, or dropdown' }),
-  }),
+  type: z.enum(['text', 'number', 'dropdown']),
   defaultValue: z.string(),
   helpText: z.string().optional(),
   options: z.array(z.string()).optional(),

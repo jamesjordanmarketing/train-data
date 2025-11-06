@@ -8,16 +8,12 @@ import { z } from 'zod';
 /**
  * Test Status Enum
  */
-export const testStatusSchema = z.enum(['not_tested', 'passed', 'failed'], {
-  errorMap: () => ({ message: 'Invalid test status' }),
-});
+export const testStatusSchema = z.enum(['not_tested', 'passed', 'failed']);
 
 /**
  * Severity Enum
  */
-export const severitySchema = z.enum(['low', 'medium', 'high', 'critical'], {
-  errorMap: () => ({ message: 'Invalid severity level' }),
-});
+export const severitySchema = z.enum(['low', 'medium', 'high', 'critical']);
 
 /**
  * Create Edge Case Schema
