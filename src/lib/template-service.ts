@@ -299,7 +299,7 @@ export interface DeleteTemplateResponse {
 
 // --- Adapter: Singleton service with resolver and usage stats ---
 import { getTemplateResolver } from './services/template-resolver';
-import { TemplateNotFoundError, ValidationError, DatabaseError } from './types/errors';
+import { TemplateNotFoundError, ValidationError, DatabaseError, ErrorCode } from './types/errors';
 import { createClient } from './supabase/server';
 
 const _supabase = createClient();
@@ -357,7 +357,7 @@ export const templateService = {
       .eq('parent_type', 'template');
 
     if (convErr) {
-      throw new DatabaseError('Failed to fetch conversations for usage stats', undefined, {
+      throw new DatabaseError('Failed to fetch conversations for usage stats', ErrorCode.ERR_DB_QUERY, {
         cause: convErr,
         context: { templateId },
       });
