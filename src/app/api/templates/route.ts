@@ -127,8 +127,15 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = createTemplateSchema.parse(body);
 
+    // Add required fields from authenticated user and defaults
+    const templateInput = {
+      ...validatedData,
+      description: validatedData.description || '',
+      createdBy: user.id,
+    };
+
     // Create template
-    const template = await templateService.create(validatedData);
+    const template = await templateService.create(templateInput);
 
     return NextResponse.json(
       { data: template, message: 'Template created successfully' },

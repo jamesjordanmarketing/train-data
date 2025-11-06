@@ -32,8 +32,24 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = bulkCreateScenariosSchema.parse(body);
 
+    // Transform validated data to match service input type
+    // Note: Zod schema uses different field names than the service layer
+    const scenarioInputs = validatedData.scenarios.map(scenario => ({
+      name: scenario.name,
+      description: scenario.description || '',
+      parentTemplateId: scenario.templateId,
+      context: scenario.contextNotes || '',
+      topic: '', // Not provided by validation schema
+      persona: '', // Not provided by validation schema
+      emotionalArc: '', // Not provided by validation schema
+      parameterValues: scenario.variableValues,
+      variationCount: 0,
+      status: 'draft' as const,
+      createdBy: user.id,
+    }));
+
     // Create scenarios in bulk
-    const scenarios = await scenarioService.bulkCreate(validatedData.scenarios);
+    const scenarios = await scenarioService.bulkCreate(scenarioInputs);
 
     return NextResponse.json(
       {

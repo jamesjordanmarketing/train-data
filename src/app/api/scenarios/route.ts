@@ -140,8 +140,23 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = createScenarioSchema.parse(body);
 
+    // Transform validated data to match service input type
+    const scenarioInput = {
+      name: validatedData.name,
+      description: validatedData.description || '',
+      parentTemplateId: validatedData.templateId,
+      context: validatedData.contextNotes || '',
+      topic: '', // Not provided by validation schema
+      persona: '', // Not provided by validation schema
+      emotionalArc: '', // Not provided by validation schema
+      parameterValues: validatedData.variableValues,
+      variationCount: 0,
+      status: 'draft' as const,
+      createdBy: user.id,
+    };
+
     // Create scenario
-    const scenario = await scenarioService.create(validatedData);
+    const scenario = await scenarioService.create(scenarioInput);
 
     return NextResponse.json(
       { data: scenario, message: 'Scenario created successfully' },

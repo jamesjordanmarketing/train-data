@@ -14,6 +14,7 @@ import {
 import {
   EdgeCaseNotFoundError,
   DatabaseError,
+  ErrorCode,
 } from './types/errors';
 
 /**
@@ -70,14 +71,28 @@ export class EdgeCaseService {
 
       if (error) {
         console.error('Error creating edge case:', error);
-        throw new DatabaseError(`Failed to create edge case: ${error.message}`, error);
+        throw new DatabaseError(
+          `Failed to create edge case`,
+          ErrorCode.ERR_DB_QUERY,
+          {
+            cause: error,
+            context: { operation: 'create edge case' }
+          }
+        );
       }
 
       return this.mapDbToEdgeCase(createdEdgeCase);
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       console.error('Unexpected error creating edge case:', error);
-      throw new DatabaseError('Unexpected error creating edge case', error as Error);
+      throw new DatabaseError(
+        'Unexpected error creating edge case',
+        ErrorCode.ERR_DB_QUERY,
+        {
+          cause: error instanceof Error ? error : new Error(String(error)),
+          context: { operation: 'create edge case' }
+        }
+      );
     }
   }
 

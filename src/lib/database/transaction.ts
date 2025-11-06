@@ -152,9 +152,8 @@ export async function withTransaction<T>(
 
     if (commitError) {
       // Try to rollback if commit fails
-      await client.rpc('rollback_transaction').catch(() => {
-        // Ignore rollback errors after commit failure
-      });
+      const rollbackResult = await client.rpc('rollback_transaction');
+      // Ignore rollback errors after commit failure (rollbackResult.error)
 
       throw new DatabaseError(
         'Failed to commit transaction',

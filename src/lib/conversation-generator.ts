@@ -269,8 +269,8 @@ export class ConversationGenerator {
         id: saved.id,
         conversationId: saved.conversationId || saved.id,
         qualityScore: qualityScoreResult.overall,
-        qualityBreakdown: qualityScoreResult.breakdown,
-        recommendations: qualityScoreResult.recommendations,
+        // Note: qualityBreakdown and recommendations are not part of GeneratedConversation type
+        // They are stored in the database but not returned in the API response
         status,
         actualCostUsd: cost,
         generationDurationMs: response.duration,
