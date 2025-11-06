@@ -52,7 +52,7 @@ export class JSONTransformer implements IExportTransformer {
 
     for (const conversation of conversations) {
       try {
-        const conversationTurns = turns.get(conversation.conversation_id) || [];
+        const conversationTurns = turns.get(conversation.id) || [];
         const exportData = this.convertConversation(
           conversation,
           conversationTurns,
@@ -61,7 +61,7 @@ export class JSONTransformer implements IExportTransformer {
         conversationExports.push(exportData);
       } catch (error) {
         console.error(
-          `Error transforming conversation ${conversation.conversation_id}:`,
+          `Error transforming conversation ${conversation.id}:`,
           error
         );
       }
@@ -93,7 +93,7 @@ export class JSONTransformer implements IExportTransformer {
     config: ExportConfig
   ): ConversationExport {
     const exportData: ConversationExport = {
-      conversation_id: conversation.conversation_id,
+      conversation_id: conversation.id,
       title: conversation.title,
       status: conversation.status,
       tier: conversation.tier,
@@ -114,10 +114,10 @@ export class JSONTransformer implements IExportTransformer {
       exportData.metadata = {
         persona: conversation.persona,
         emotion: conversation.emotion,
-        topic: conversation.topic,
+        title: conversation.title,
         category: conversation.category,
         total_turns: conversation.totalTurns,
-        token_count: conversation.tokenCount,
+        token_count: conversation.totalTokens,
       };
 
       if (config.includeQualityScores) {

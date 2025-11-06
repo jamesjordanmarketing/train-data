@@ -103,8 +103,8 @@ export class MarkdownTransformer implements IExportTransformer {
       metadata.push(`- **Emotion:** ${conversation.emotion}`);
     }
 
-    if (conversation.topic) {
-      metadata.push(`- **Topic:** ${conversation.topic}`);
+    if (conversation.title) {
+      metadata.push(`- **Title:** ${conversation.title}`);
     }
 
     if (config.includeQualityScores && conversation.qualityScore !== undefined) {

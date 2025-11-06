@@ -145,7 +145,7 @@ export class BatchGenerationService {
       );
       
       items = conversations.map((conv, index) => ({
-        templateId: conv.templateId || '',
+        templateId: conv.parentId || '',
         parameters: {
           ...conv.parameters,
           ...request.sharedParameters,
@@ -244,12 +244,12 @@ export class BatchGenerationService {
         percentage: Math.round(percentage * 10) / 10,
       },
       estimatedTimeRemaining: job.estimatedTimeRemaining,
-      estimatedCost: job.estimatedCost,
-      actualCost: job.actualCost,
+      // estimatedCost: job.estimatedCost,
+      // actualCost: job.actualCost,
       startedAt: job.startedAt || undefined,
       completedAt: job.completedAt || undefined,
-      createdAt: job.createdAt,
-      updatedAt: job.updatedAt,
+      createdAt: undefined,
+      updatedAt: undefined,
     };
   }
 
@@ -289,11 +289,12 @@ export class BatchGenerationService {
     
     // Restart processing
     const config = job.configuration || {};
+    const configData = config as { concurrentProcessing?: number; errorHandling?: 'continue' | 'stop' };
     this.processJobInBackground(
-      jobId, 
-      config.concurrentProcessing || 3, 
-      config.errorHandling || 'continue',
-      job.createdBy
+      jobId,
+      configData.concurrentProcessing || 3,
+      configData.errorHandling || 'continue',
+      '' // TODO: Add createdBy to BatchJob type
     ).catch(error => {
       console.error(`[BatchGeneration] Resume error for job ${jobId}:`, error);
     });
