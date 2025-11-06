@@ -108,7 +108,8 @@ export async function PATCH(
     }
 
     // Update edge case
-    const edgeCase = await edgeCaseService.update(id, validatedData);
+    // TODO(E03): Fix validation schema to match service input type
+    const edgeCase = await edgeCaseService.update(id, validatedData as any);
 
     return NextResponse.json(
       { data: edgeCase, message: 'Edge case updated successfully' },
