@@ -164,51 +164,51 @@ export function ConversationMetadataPanel({ conversation }: ConversationMetadata
               <p className="mt-1 text-sm font-mono">{conversation.chunkId}</p>
             </div>
             
-            {(conversation as any).chunkContext && (
+            {conversation.chunkContext && (
               <div>
                 <span className="text-xs font-medium text-muted-foreground">Context Preview</span>
                 <p className="mt-1 text-sm text-muted-foreground line-clamp-3">
-                  {(conversation as any).chunkContext.slice(0, 200)}...
+                  {conversation.chunkContext.slice(0, 200)}...
                 </p>
               </div>
             )}
             
-            {(conversation as any).dimensionSource && (
+            {conversation.dimensionSource && (
               <div>
                 <span className="text-xs font-medium text-muted-foreground">Dimension Confidence</span>
                 <div className="mt-1">
                   <Badge variant="outline">
-                    {((conversation as any).dimensionSource.confidence * 100).toFixed(0)}%
+                    {(conversation.dimensionSource.confidence * 100).toFixed(0)}%
                   </Badge>
                 </div>
               </div>
             )}
             
-            {(conversation as any).dimensionSource?.semanticDimensions && (
+            {conversation.dimensionSource?.semanticDimensions && (
               <div>
                 <span className="text-xs font-medium text-muted-foreground">Semantic Dimensions</span>
                 <div className="mt-2 space-y-1">
-                  {(conversation as any).dimensionSource.semanticDimensions.persona && (
+                  {conversation.dimensionSource.semanticDimensions.persona && (
                     <div>
                       <span className="text-xs text-muted-foreground">Personas: </span>
                       <span className="text-xs">
-                        {(conversation as any).dimensionSource.semanticDimensions.persona.join(', ')}
+                        {conversation.dimensionSource.semanticDimensions.persona.join(', ')}
                       </span>
                     </div>
                   )}
-                  {(conversation as any).dimensionSource.semanticDimensions.emotion && (
+                  {conversation.dimensionSource.semanticDimensions.emotion && (
                     <div>
                       <span className="text-xs text-muted-foreground">Emotions: </span>
                       <span className="text-xs">
-                        {(conversation as any).dimensionSource.semanticDimensions.emotion.join(', ')}
+                        {conversation.dimensionSource.semanticDimensions.emotion.join(', ')}
                       </span>
                     </div>
                   )}
-                  {(conversation as any).dimensionSource.semanticDimensions.complexity !== undefined && (
+                  {conversation.dimensionSource.semanticDimensions.complexity !== undefined && (
                     <div>
                       <span className="text-xs text-muted-foreground">Complexity: </span>
                       <span className="text-xs">
-                        {((conversation as any).dimensionSource.semanticDimensions.complexity * 10).toFixed(1)}/10
+                        {(conversation.dimensionSource.semanticDimensions.complexity * 10).toFixed(1)}/10
                       </span>
                     </div>
                   )}
