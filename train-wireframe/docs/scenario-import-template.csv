@@ -1,5 +1,0 @@
-name,template_id,topic,persona,emotional_arc,description,context,status,var_product_name,var_issue_type,var_customer_segment
-"Anxious Investor - Market Volatility","template-uuid-1","Market Volatility Concerns","Anxious Investor","anxiety to confidence","Client concerned about recent market downturn affecting portfolio","Client has 60/40 stock/bond allocation, close to retirement","draft","Stock Portfolio","Market Volatility","Near-Retirement"
-"Tech Enthusiast - Product Query","template-uuid-2","Product Feature Questions","Tech Enthusiast","curiosity to satisfaction","Client asking about advanced features of platform","Client is tech-savvy and wants to maximize platform capabilities","active","Investment Platform","Feature Question","Tech-Savvy Professional"
-"Conservative Investor - Risk Assessment","template-uuid-1","Risk Tolerance Discussion","Conservative Investor","uncertainty to clarity","Client wants to reassess risk exposure after life changes","Recent inheritance, considering retirement planning","draft","Investment Portfolio","Risk Management","High Net Worth"
-

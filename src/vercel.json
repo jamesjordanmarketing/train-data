@@ -1,8 +1,4 @@
 {
-  "buildCommand": "cd src && npm run build",
-  "devCommand": "cd src && npm run dev",
-  "installCommand": "cd src && npm install",
-  "outputDirectory": "src/.next",
   "crons": [
     {
       "path": "/api/cron/daily-maintenance",
