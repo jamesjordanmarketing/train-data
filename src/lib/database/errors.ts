@@ -327,3 +327,22 @@ export const DATABASE_ERROR_MESSAGES: Record<DatabaseErrorCategory, string> = {
     'An unexpected database error occurred.',
 };
 
+/**
+ * Helper to create DatabaseError with proper error wrapping
+ * @param message - User-friendly error message
+ * @param cause - Original error object
+ * @param operation - Operation name for context
+ * @param code - ErrorCode enum value (defaults to ERR_DB_QUERY)
+ */
+export function createDatabaseError(
+  message: string,
+  cause: unknown,
+  operation: string,
+  code: ErrorCode = ErrorCode.ERR_DB_QUERY
+): DatabaseError {
+  return new DatabaseError(message, code, {
+    cause: cause instanceof Error ? cause : new Error(String(cause)),
+    context: { operation }
+  });
+}
+
