@@ -8,7 +8,7 @@ import { z } from 'zod';
 /**
  * Test Status Enum
  */
-export const testStatusSchema = z.enum(['not_tested', 'tested', 'passed', 'failed'], {
+export const testStatusSchema = z.enum(['not_tested', 'passed', 'failed'], {
   errorMap: () => ({ message: 'Invalid test status' }),
 });
 
