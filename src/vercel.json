@@ -1,15 +1,4 @@
 {
-  "functions": {
-    "app/api/chunks/extract/route.ts": {
-      "maxDuration": 300
-    },
-    "app/api/chunks/regenerate/route.ts": {
-      "maxDuration": 300
-    },
-    "app/api/chunks/generate-dimensions/route.ts": {
-      "maxDuration": 300
-    }
-  },
   "crons": [
     {
       "path": "/api/cron/daily-maintenance",
