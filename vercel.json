@@ -2,6 +2,16 @@
   "buildCommand": "cd src && npm run build",
   "devCommand": "cd src && npm run dev",
   "installCommand": "cd src && npm install",
-  "outputDirectory": "src/.next"
+  "outputDirectory": "src/.next",
+  "crons": [
+    {
+      "path": "/api/cron/daily-maintenance",
+      "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/cron/export-file-cleanup",
+      "schedule": "0 2 * * *"
+    }
+  ]
 }
 
