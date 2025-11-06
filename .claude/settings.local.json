@@ -27,7 +27,8 @@
       "Bash(git commit:*)",
       "Bash(e01-baseline.txt)",
       "Bash(chmod:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []
