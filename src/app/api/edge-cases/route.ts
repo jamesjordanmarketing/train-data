@@ -6,10 +6,29 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { EdgeCaseService } from '@/lib/services/edge-case-service';
+import { EdgeCaseService, CreateEdgeCaseInput } from '@/lib/services/edge-case-service';
 import { createEdgeCaseSchema } from '@/lib/validation/edge-cases';
 import { parseIntParam, validateSortOrder, sanitizeSearchQuery, isValidUUID } from '@/lib/utils/validation';
 import { ZodError } from 'zod';
+import { z } from 'zod';
+
+/**
+ * Transform validation schema output to service input type
+ * Maps Zod validation fields to EdgeCaseService.create() expected fields
+ */
+function transformToEdgeCaseInput(
+  validated: z.infer<typeof createEdgeCaseSchema>,
+  userId: string
+): CreateEdgeCaseInput {
+  return {
+    title: validated.name,
+    description: validated.description || '',
+    parentScenarioId: validated.scenarioId,
+    edgeCaseType: 'error_condition', // Default type, could be enhanced with mapping logic
+    complexity: 5, // Default complexity, could be derived from severity
+    createdBy: userId,
+  };
+}
 
 /**
  * GET /api/edge-cases
@@ -140,11 +159,11 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = createEdgeCaseSchema.parse(body);
 
+    // Transform validated data to service input type
+    const edgeCaseInput = transformToEdgeCaseInput(validatedData, user.id);
+
     // Create edge case
-    // TODO(E03): Fix validation schema to match service input type
-    // Validation uses: scenarioId, name, triggerCondition
-    // Service expects: parentScenarioId, title, edgeCaseType
-    const edgeCase = await edgeCaseService.create(validatedData as any);
+    const edgeCase = await edgeCaseService.create(edgeCaseInput);
 
     return NextResponse.json(
       { data: edgeCase, message: 'Edge case created successfully' },
