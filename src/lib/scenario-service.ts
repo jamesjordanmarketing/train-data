@@ -14,7 +14,9 @@ import {
 import {
   ScenarioNotFoundError,
   DatabaseError,
+  ErrorCode,
 } from './types/errors';
+import { createDatabaseError } from './database/errors';
 
 /**
  * ScenarioService class
@@ -70,14 +72,14 @@ export class ScenarioService {
 
       if (error) {
         console.error('Error creating scenario:', error);
-        throw new DatabaseError(`Failed to create scenario: ${error.message}`, error);
+        throw createDatabaseError('Failed to create scenario', error, 'create scenario');
       }
 
       return this.mapDbToScenario(createdScenario);
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       console.error('Unexpected error creating scenario:', error);
-      throw new DatabaseError('Unexpected error creating scenario', error as Error);
+      throw createDatabaseError('Unexpected error creating scenario', error, 'create scenario');
     }
   }
 
@@ -98,14 +100,14 @@ export class ScenarioService {
       if (error) {
         if (error.code === 'PGRST116') return null; // Not found
         console.error('Error fetching scenario:', error);
-        throw new DatabaseError(`Failed to fetch scenario: ${error.message}`, error);
+        throw createDatabaseError('Failed to fetch scenario', error, 'fetch scenario');
       }
 
       return this.mapDbToScenario(scenario);
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       console.error('Unexpected error fetching scenario:', error);
-      throw new DatabaseError('Unexpected error fetching scenario', error as Error);
+      throw createDatabaseError('Unexpected error fetching scenario', error, 'fetch scenario');
     }
   }
 
@@ -150,14 +152,14 @@ export class ScenarioService {
 
       if (error) {
         console.error('Error listing scenarios:', error);
-        throw new DatabaseError(`Failed to list scenarios: ${error.message}`, error);
+        throw createDatabaseError('Failed to list scenarios', error, 'list scenarios');
       }
 
       return (scenarios || []).map(this.mapDbToScenario);
     } catch (error) {
       if (error instanceof DatabaseError) throw error;
       console.error('Unexpected error listing scenarios:', error);
-      throw new DatabaseError('Unexpected error listing scenarios', error as Error);
+      throw createDatabaseError('Unexpected error listing scenarios', error, 'list scenarios');
     }
   }
 
@@ -202,14 +204,14 @@ export class ScenarioService {
 
       if (error) {
         console.error('Error updating scenario:', error);
-        throw new DatabaseError(`Failed to update scenario: ${error.message}`, error);
+        throw createDatabaseError('Failed to update scenario', error, 'update scenario');
       }
 
       return this.mapDbToScenario(scenario);
     } catch (error) {
       if (error instanceof ScenarioNotFoundError || error instanceof DatabaseError) throw error;
       console.error('Unexpected error updating scenario:', error);
-      throw new DatabaseError('Unexpected error updating scenario', error as Error);
+      throw createDatabaseError('Unexpected error updating scenario', error, 'update scenario');
     }
   }
 
@@ -233,12 +235,12 @@ export class ScenarioService {
 
       if (error) {
         console.error('Error deleting scenario:', error);
-        throw new DatabaseError(`Failed to delete scenario: ${error.message}`, error);
+        throw createDatabaseError('Failed to delete scenario', error, 'delete scenario');
       }
     } catch (error) {
       if (error instanceof ScenarioNotFoundError || error instanceof DatabaseError) throw error;
       console.error('Unexpected error deleting scenario:', error);
-      throw new DatabaseError('Unexpected error deleting scenario', error as Error);
+      throw createDatabaseError('Unexpected error deleting scenario', error, 'delete scenario');
     }
   }
 
@@ -261,12 +263,12 @@ export class ScenarioService {
 
       if (error) {
         console.error('Error incrementing variation count:', error);
-        throw new DatabaseError(`Failed to increment variation count: ${error.message}`, error);
+        throw createDatabaseError('Failed to increment variation count', error, 'increment variation count');
       }
     } catch (error) {
       if (error instanceof ScenarioNotFoundError || error instanceof DatabaseError) throw error;
       console.error('Unexpected error incrementing variation count:', error);
-      throw new DatabaseError('Unexpected error incrementing variation count', error as Error);
+      throw createDatabaseError('Unexpected error incrementing variation count', error, 'increment variation count');
     }
   }
 
