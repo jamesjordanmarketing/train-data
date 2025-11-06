@@ -1,0 +1,60 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 Running pre-commit checks..."
+
+# Change to src directory for npm commands
+cd src || exit 1
+
+# Type Check
+echo "  ├─ Type checking..."
+npm run build 2>&1 | grep -E "(Error:|Failed to compile)" && {
+  echo "❌ Type check failed. Fix errors before committing."
+  exit 1
+}
+
+# Return to root for git operations
+cd .. || exit 1
+
+# Check for 'as any' casts in production code
+echo "  ├─ Checking for type casts..."
+
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | \
+  grep -E '\.(ts|tsx)$' | \
+  grep -v '__tests__' | \
+  grep -v '.test.ts' | \
+  grep -v '.spec.ts' || true)
+
+if [ -n "$STAGED_FILES" ]; then
+  for FILE in $STAGED_FILES; do
+    if [ -f "$FILE" ] && grep -q "as any" "$FILE"; then
+      echo "❌ Error: Type cast 'as any' found in $FILE"
+      echo "   Production code should not use type casts."
+      echo ""
+      echo "   Offending lines:"
+      grep -n "as any" "$FILE"
+      exit 1
+    fi
+  done
+fi
+
+# Check for old DatabaseError pattern
+echo "  └─ Checking for old DatabaseError pattern..."
+
+if [ -n "$STAGED_FILES" ]; then
+  for FILE in $STAGED_FILES; do
+    if [ -f "$FILE" ] && grep -q "new DatabaseError(" "$FILE"; then
+      # Check if it has ErrorCode. parameter (correct pattern)
+      if ! grep -q "new DatabaseError([^,]*, ErrorCode\." "$FILE"; then
+        echo "❌ Error: Old DatabaseError pattern found in $FILE"
+        echo "   Use: new DatabaseError(message, ErrorCode.XXX, { cause, context })"
+        echo ""
+        echo "   Offending lines:"
+        grep -n "new DatabaseError(" "$FILE"
+        exit 1
+      fi
+    fi
+  done
+fi
+
+echo "✅ Pre-commit checks passed!"
