@@ -496,6 +496,34 @@ export const batchJobService = {
   },
 
   /**
+   * Update a batch item status
+   * 
+   * @param itemId - Batch item UUID
+   * @param status - New status
+   * 
+   * @example
+   * ```typescript
+   * await batchJobService.updateItemStatus(itemId, 'processing');
+   * ```
+   */
+  async updateItemStatus(itemId: string, status: string): Promise<void> {
+    try {
+      const { error } = await supabase
+        .from('batch_items')
+        .update({ 
+          status,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', itemId);
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error updating batch item status:', error);
+      throw error;
+    }
+  },
+
+  /**
    * Delete a batch job and its items
    * 
    * @param id - Batch job UUID

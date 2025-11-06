@@ -315,15 +315,8 @@ export class BatchGenerationService {
       activeJob.cancelRequested = true;
     }
     
-    await batchJobService.updateJobStatus(jobId, 'cancelled');
-    
-    // Cancel all pending items
-    const job = await batchJobService.getJobById(jobId);
-    const pendingItems = job.items?.filter(item => item.status === 'queued' || item.status === 'processing') || [];
-    
-    for (const item of pendingItems) {
-      await batchJobService.updateItemStatus(item.id, 'cancelled');
-    }
+    // Cancel job (this also updates all pending items to cancelled)
+    await batchJobService.cancelJob(jobId);
     
     this.activeJobs.delete(jobId);
     
