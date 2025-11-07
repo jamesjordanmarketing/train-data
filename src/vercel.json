@@ -1,8 +1,7 @@
 {
-  "buildCommand": "cd src && npm install && npm run build",
-  "outputDirectory": "src/.next",
-  "installCommand": "npm install --prefix ./src",
-  "devCommand": "cd src && npm run dev",
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
   "crons": [
     {
       "path": "/api/cron/daily-maintenance",
