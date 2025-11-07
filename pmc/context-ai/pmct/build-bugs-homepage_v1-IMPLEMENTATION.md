@@ -1,7 +1,8 @@
 # Vercel 404 Fix - Implementation Summary
 
 **Date:** November 7, 2025  
-**Status:** ✅ Ready to Deploy
+**Status:** ✅ Ready to Deploy (Fix 3 - Final)  
+**Iterations:** 3 fixes required to identify and resolve root cause
 
 ---
 
@@ -32,7 +33,12 @@ Added 300-second (5-minute) timeouts for long-running operations:
 - Conversation generation
 - Batch generation
 
-### 5. Created .vercelignore
+### 6. Removed Root package.json Scripts
+- **Removed:** All `scripts` from root package.json
+- **Removed:** `workspaces` field from root package.json
+- **Reason:** Prevented Vercel from treating this as a monorepo (final fix)
+
+### 7. Created .vercelignore
 Explicitly excludes non-application directories:
 - `pmc/` (project management tools)
 - `docs/` (documentation)
@@ -88,6 +94,43 @@ These are proxy scripts for local development convenience. With Vercel Root Dire
 
 ---
 
+## Build Error Fix (Third Iteration - FINAL)
+
+### Issue: Still "No Output Directory named 'public' found"
+
+Even with `outputDirectory` specified in `src/vercel.json`, the build logs showed:
+```
+> train-data-root@1.0.0 build
+> cd src && npm run build
+```
+
+**This meant Vercel was STILL using the root package.json, not the src one!**
+
+**Root Cause:** The root `package.json` had:
+```json
+{
+  "scripts": { "build": "cd src && npm run build" },
+  "workspaces": ["src"]
+}
+```
+
+The `workspaces` field made Vercel treat this as a **monorepo**, causing it to build from root even though Root Directory was set to `src`. Vercel prioritizes workspace configurations over Root Directory settings.
+
+**Solution:** Removed all `scripts` and `workspaces` from root `package.json`, leaving only minimal identification fields:
+
+```json
+{
+  "name": "train-data-root",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Bright Run LoRA Training Data Platform - Root workspace. Vercel builds from src/ directory."
+}
+```
+
+Now Vercel has no choice but to use the `src/` directory directly with its `package.json` and `vercel.json`.
+
+---
+
 ## What to Verify in Vercel Dashboard
 
 Before deploying, ensure these settings:
@@ -125,21 +168,23 @@ Should show:
 
 ### Step 2: Commit Changes
 ```bash
-git add src/vercel.json .vercelignore vercel.json.old
+git add src/vercel.json .vercelignore vercel.json.old package.json
 git rm vercel.json
-git add pmc/context-ai/pmct/build-bugs-homepage_v1.md
-git add pmc/context-ai/pmct/build-bugs-homepage_v1-IMPLEMENTATION.md
-git commit -m "fix: Move vercel.json to src folder to resolve 404 deployment issue
+git add pmc/context-ai/pmct/*.md
+git commit -m "fix: Remove root package.json scripts to resolve Vercel monorepo detection
 
-- Moved vercel.json from root to src/ to align with Vercel Root Directory setting
-- Simplified build commands (removed 'cd src' and '--prefix src')
-- Set framework to 'nextjs' for proper detection
-- Added function timeouts for long-running API routes
-- Created .vercelignore to exclude non-app directories
-- Backed up old config as vercel.json.old
+- Moved vercel.json from root to src/ to align with Root Directory setting
+- Added outputDirectory to explicitly tell Vercel where Next.js builds
+- Removed scripts and workspaces from root package.json to prevent monorepo detection
+- Vercel now uses src/ directly with its package.json and vercel.json
 
-Fixes the 404 issue by ensuring Vercel executes commands in the correct
-directory context. This matches the working chunks-alpha configuration."
+
+This resolves three issues:
+1. vercel.json location and command complexity
+2. Output directory detection
+3. Monorepo workspace interference
+
+All three fixes were necessary to resolve the deployment issue."
 ```
 
 ### Step 3: Push to GitHub
@@ -258,14 +303,26 @@ Install: npm install
 Result: Build succeeds but Vercel looks for "public" directory
 ```
 
-### After Second Fix (FIXED ✅)
+### After Second Fix (BUILD SUCCEEDS, but still wrong context) ⚠️
 ```
 Location: train-data/src/vercel.json
 Framework: nextjs
-Build: npm run build
+Build: npm run build (but root package.json executes)
 Output: .next (explicitly specified)
 Install: npm install
-Result: All routes should work correctly
+Root package.json: Has workspaces field
+Result: Vercel treats as monorepo, builds from root
+```
+
+### After Third Fix - FINAL (FIXED ✅)
+```
+Location: train-data/src/vercel.json
+Framework: nextjs
+Build: npm run build (src/package.json executes)
+Output: .next (explicitly specified)
+Install: npm install
+Root package.json: Minimal, no scripts/workspaces
+Result: Vercel uses src/ directly - all routes work correctly
 ```
 
 ### Reference (chunks-alpha - WORKING ✅)

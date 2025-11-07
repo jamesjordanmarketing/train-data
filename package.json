@@ -2,16 +2,6 @@
   "name": "train-data-root",
   "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "dev": "cd src && npm run dev",
-    "build": "cd src && npm run build",
-    "start": "cd src && npm run start",
-    "lint": "cd src && npm run lint",
-    "install-deps": "cd src && npm install"
-  },
-  "description": "Bright Run LoRA Training Data Platform - Root workspace",
-  "workspaces": [
-    "src"
-  ]
+  "description": "Bright Run LoRA Training Data Platform - Root workspace. Vercel builds from src/ directory."
 }
 
