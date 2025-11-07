@@ -1,0 +1,39 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "functions": {
+    "app/api/cron/daily-maintenance/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/cron/export-file-cleanup/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/chunks/extract/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/chunks/regenerate/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/chunks/generate-dimensions/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/conversations/generate/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/conversations/generate-batch/route.ts": {
+      "maxDuration": 300
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/cron/daily-maintenance",
+      "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/cron/export-file-cleanup",
+      "schedule": "0 2 * * *"
+    }
+  ]
+}
+

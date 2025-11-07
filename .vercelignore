@@ -1,0 +1,36 @@
+# Exclude project management and build tools
+pmc/
+docs/
+scripts/
+archive/
+
+# Exclude documentation files (except in src if any)
+*.md
+!src/**/*.md
+
+# Exclude test files
+**/__tests__/
+**/*.test.ts
+**/*.test.tsx
+
+# Exclude config backups
+*.old
+*.backup
+
+# Node modules will be reinstalled
+node_modules/
+
+# Git files
+.git/
+.gitignore
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
