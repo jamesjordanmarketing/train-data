@@ -20,7 +20,11 @@
 - **Old:** `"framework": null`
 - **New:** `"framework": "nextjs"`
 
-### 4. Added Function Timeouts
+### 4. Added Output Directory
+- **Added:** `"outputDirectory": ".next"`
+- **Reason:** Explicitly tells Vercel where Next.js outputs its build (fixes "public not found" error)
+
+### 5. Added Function Timeouts
 Added 300-second (5-minute) timeouts for long-running operations:
 - Chunk extraction
 - Chunk regeneration  
@@ -50,6 +54,37 @@ By moving vercel.json INTO the src folder with simple commands, we align with ho
 4. Vercel runs simple commands relative to current directory
 5. Build output appears in the correct location
 6. Routing works properly ✅
+
+---
+
+## Build Error Fix (Second Iteration)
+
+### Issue: "No Output Directory named 'public' found"
+
+The first deployment failed with:
+```
+Error: No Output Directory named "public" found after the Build completed.
+```
+
+**Root Cause:** The root `package.json` has build scripts that proxy to src (e.g., `"build": "cd src && npm run build"`). While this works locally, it confuses Vercel about where the output directory is located.
+
+**Solution:** Added `"outputDirectory": ".next"` to `src/vercel.json` to explicitly tell Vercel where Next.js outputs its build files.
+
+### Note About Root package.json
+
+The root has a `package.json` with these scripts:
+```json
+{
+  "scripts": {
+    "dev": "cd src && npm run dev",
+    "build": "cd src && npm run build",
+    "start": "cd src && npm run start",
+    "lint": "cd src && npm run lint"
+  }
+}
+```
+
+These are proxy scripts for local development convenience. With Vercel Root Directory set to `src`, these shouldn't interfere, but the explicit `outputDirectory` in `src/vercel.json` ensures Vercel knows exactly where to find the build output.
 
 ---
 
@@ -208,17 +243,29 @@ After this fix:
 Location: train-data/vercel.json
 Framework: null
 Build: cd src && npm run build
+Output: src/.next
 Install: npm install --prefix src
 Result: 404 errors on all routes
 ```
 
-### After (FIXED ✅)
+### After First Fix (BUILD SUCCEEDS, but wrong output) ⚠️
 ```
 Location: train-data/src/vercel.json
 Framework: nextjs
 Build: npm run build
+Output: (not specified)
 Install: npm install
-Result: All routes work correctly
+Result: Build succeeds but Vercel looks for "public" directory
+```
+
+### After Second Fix (FIXED ✅)
+```
+Location: train-data/src/vercel.json
+Framework: nextjs
+Build: npm run build
+Output: .next (explicitly specified)
+Install: npm install
+Result: All routes should work correctly
 ```
 
 ### Reference (chunks-alpha - WORKING ✅)
@@ -226,11 +273,12 @@ Result: All routes work correctly
 Location: chunks-alpha/src/vercel.json
 Framework: nextjs
 Build: npm run build
+Output: (auto-detected by Next.js)
 Install: npm install
 Result: All routes work correctly
 ```
 
-**Perfect Match! ✅**
+**Now matches chunks-alpha pattern! ✅**
 
 ---
 
