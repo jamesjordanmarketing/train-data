@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node cursor-db-helper.js sql:*)",
+      "Bash(node cursor-db-helper.js:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
