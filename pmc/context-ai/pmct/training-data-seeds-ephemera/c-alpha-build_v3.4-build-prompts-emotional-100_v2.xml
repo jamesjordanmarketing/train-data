@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<prompt>
+  <instructions>
+    <step>
+      <description>First read both of these files:</description>
+      <files>
+        <file>C:\Users\james\Master\BrightHub\brun\chunks-alpha\pmc\context-ai\pmct\c-alpha-build_v3.4-LoRA-FP-convo-steps_v1.md</file>
+        <file>C:\Users\james\Master\BrightHub\brun\chunks-alpha\pmc\context-ai\pmct\c-alpha-build_v3.4-LoRA-FP-convo-steps-carryover_v1.md</file>
+      </files>
+      <purpose>So you have the context of this project.</purpose>
+    </step>
+    
+    <step>
+      <task>We need to execute Step S3 (which is shown below)</task>
+      <requirement>In order to do that we have to give the ai agent the full context of JSON, project specifics, customization, who will create the standardized LLM prompts for each tier type.</requirement>
+    </step>
+    
+    <step>
+      <task>I want you to write a full spec on HOW to write the prompts.</task>
+      <details>Meaning I need you to collect all the relevant context for this task.</details>
+      <context>
+        <note>We have created many files, and I am no longer sure what data exactly you need to produce the high quality reports. Here are more of the documents we have that may help you provide:</note>
+        <reference_files>
+          <file>
+            <path>C:\Users\james\Master\BrightHub\brun\chunks-alpha\pmc\context-ai\pmct\c-alpha-build_v3.4-LoRA-FP-convo-10-complete.json</path>
+            <description>most recent seed file of first "10"</description>
+          </file>
+          <file>
+            <path>system\chunks-alpha-data\financial-planner-demo-conversation-and-metadata_v1.txt</path>
+            <description>first persona profiles...do we need more personas first before the next dataset creation prompts?</description>
+          </file>
+          <file>
+            <path>C:\Users\james\Master\BrightHub\brun\chunks-alpha\pmc\context-ai\pmct\c-alpha-build_v3.4_emotional-dataset-emotional-taxonomy.md</path>
+          </file>
+          <file>
+            <path>C:\Users\james\Master\BrightHub\brun\chunks-alpha\pmc\context-ai\pmct\c-alpha-build_v3.4-LoRA-FP-COMPLETE-DATASET-SUMMARY.md</path>
+          </file>
+          <file>
+            <path>C:\Users\james\Master\BrightHub\brun\chunks-alpha\pmc\context-ai\pmct\c-alpha-build_v3.4-LoRA-FP-convos-plan-mode-doc_v1.md</path>
+          </file>
+          <file>
+            <path>C:\Users\james\Master\BrightHub\brun\chunks-alpha\pmc\product\01-bmo-overview.md</path>
+            <description>full product overview</description>
+          </file>
+          <file>
+            <path>C:\Users\james\Master\BrightHub\brun\chunks-alpha\pmc\context-ai\pmct\c-alpha-build_v3.4-LoRA-FP-generation_v3.md</path>
+          </file>
+          <file>
+            <path>C:\Users\james\Master\BrightHub\brun\chunks-alpha\pmc\context-ai\pmct\GENERATION-COMPLETE-STATUS.md</path>
+          </file>
+          <file>
+            <path>C:\Users\james\Master\BrightHub\brun\chunks-alpha\pmc\context-ai\pmct\c-alpha-build_v3.4-LoRA-FP-generation_history_v1.md</path>
+          </file>
+        </reference_files>
+        <instruction>So read all of these so you have ALL the context needed to create 1 document that will instruct the next agent to create all of the prompts as described above.</instruction>
+        <note>the instructions below are more of a summary. One of the files above should have a more robust description of all the prompt types.</note>
+      </context>
+    </step>
+  </instructions>
+  
+  <requirements>
+    <requirement id="1">
+      <description>Write the output file to:</description>
+      <output_path>C:\Users\james\Master\BrightHub\brun\chunks-alpha\pmc\context-ai\pmct\c-alpha-build_v3.4-LoRA-FP-100-spec.md</output_path>
+    </requirement>
+    
+    <requirement id="2">
+      <description>Include the prompt(s) that I will submit to the Claude-4.5-sonnet Thinking LLM to execute the product build and coding changes. I must be able to cut and paste these prompts into a 200k Claude-4.5-sonnet Thinking context window in Cursor.</description>
+    </requirement>
+    
+    <requirement id="3">
+      <description>Make sure as you write the specification you don't leave any important context, direction, or instruction, outside of the prompts. Because the building agent will only see the information that is in the prompt(s)</description>
+      <organization>Organize the successive prompts so that each one can be executed in a new 200k token context window</organization>
+    </requirement>
+    
+    <requirement id="4">
+      <description>If more than one prompt(s) are needed to use the Claude-4.5-sonnet Thinking LLM to execute the product build and coding changes, I must be able to cut and paste these prompts into a 200k Claude-4.5-sonnet Thinking context window in Cursor. They should be modular, so that the subsequent prompt does not need to finish the prior component.</description>
+    </requirement>
+    
+    <requirement id="5">
+      <description>Do NOT include the same code/query/details outside the prompt sections if they same information is in the prompts. It gets confusing as to which blocks I am to copy and paste.</description>
+    </requirement>
+    
+    <requirement id="6">
+      <description>Make very clear what sections I must cut and paste (sql or prompt). At the beginning of what I must cut put a row of ======================== plus 3 new lines after the ====== line. At the end of what I must cut put a row of +++++++++++++++++ plus 3 new lines after the +++++++ line.</description>
+    </requirement>
+  </requirements>
+  
+  <step_s3>
+    <title>Step S3: Generation Prompt Templates</title>
+    
+    <objective>Create standardized LLM prompts for each tier type</objective>
+    
+    <prerequisites>
+      <prerequisite>Step S2 complete</prerequisite>
+      <prerequisite>Access to Phase 1 conversation quality examples</prerequisite>
+      <prerequisite>Understanding of JSON format requirements</prerequisite>
+    </prerequisites>
+    
+    <actions>
+      <action id="1">
+        <title>Create Tier 1 Template Prompts (5 prompt files)</title>
+        <files>
+          <file>
+            <path>C:\Users\james\Master\BrightHub\brun\chunks-alpha\pmc\context-ai\pmct\tier1-template\tier1-template-A-prompt.txt</path>
+            <description>Confusion→Clarity</description>
+          </file>
+          <file>
+            <path>C:\Users\james\Master\BrightHub\brun\chunks-alpha\pmc\context-ai\pmct\tier1-template\tier1-template-B-prompt.txt</path>
+            <description>Shame→Acceptance</description>
+          </file>
+          <file>
+            <path>C:\Users\james\Master\BrightHub\brun\chunks-alpha\pmc\context-ai\pmct\tier1-template\tier1-template-C-prompt.txt</path>
+            <description>Couple Conflict→Alignment</description>
+          </file>
+          <file>
+            <path>C:\Users\james\Master\BrightHub\brun\chunks-alpha\pmc\context-ai\pmct\tier1-template\tier1-template-D-prompt.txt</path>
+            <description>Anxiety→Confidence</description>
+          </file>
+          <file>
+            <path>C:\Users\james\Master\BrightHub\brun\chunks-alpha\pmc\context-ai\pmct\tier1-template\tier1-template-E-prompt.txt</path>
+            <description>Grief/Loss→Healing</description>
+          </file>
+        </files>
+        
+        <each_prompt_includes>
+          <item>Reference to gold standard conversation from Phase 1</item>
+          <item>Structural pattern to follow (turn sequence)</item>
+          <item>Variable placeholders: [TOPIC], [PERSONA_AGE], [INCOME], [EMOTION_START]</item>
+          <item>Elena voice principles to maintain</item>
+          <item>Quality standards (annotation depth, sentence analysis)</item>
+          <item>Output format specification (JSON schema)</item>
+        </each_prompt_includes>
+      </action>
+      
+      <action id="2">
+        <title>Create Tier 2 Scenario Prompt Template</title>
+        <file>
+          <path>C:\Users\james\Master\BrightHub\brun\chunks-alpha\pmc\context-ai\pmct\tier2-scenario\tier2-scenario-prompt-template.txt</path>
+        </file>
+        <characteristics>
+          <item>More flexible structure than Tier 1</item>
+          <item>Emphasis on custom emotional arc</item>
+          <item>Complexity handling guidelines</item>
+          <item>Expert consultation flags</item>
+        </characteristics>
+      </action>
+      
+      <action id="3">
+        <title>Create Tier 3 Edge Case Prompt Template</title>
+        <file>
+          <path>C:\Users\james\Master\BrightHub\brun\chunks-alpha\pmc\context-ai\pmct\tier3-edge\tier3-edge-prompt-template.txt</path>
+        </file>
+        <characteristics>
+          <item>Boundary maintenance emphasis</item>
+          <item>Referral language templates</item>
+          <item>Crisis protocol integration</item>
+          <item>Legal/ethical guardrails</item>
+        </characteristics>
+      </action>
+      
+      <action id="4">
+        <title>Create Quality Checklist Document</title>
+        <file>
+          <path>C:\Users\james\Master\BrightHub\brun\chunks-alpha\pmc\context-ai\pmct\quality-review\generation-quality-checklist.md</path>
+        </file>
+        <contents>
+          <item>All required fields listed</item>
+          <item>Annotation depth requirements</item>
+          <item>Elena voice consistency markers</item>
+          <item>Common errors to avoid</item>
+        </contents>
+      </action>
+    </actions>
+    
+    <outputs>
+      <output status="required">7 prompt template files created</output>
+      <output status="required">Quality checklist document</output>
+      <output status="required">Ready for repeatable generation</output>
+    </outputs>
+    
+    <reminder>
+      <note>Remember to write the output file to: Write the output file to C:\Users\james\Master\BrightHub\brun\chunks-alpha\pmc\context-ai\pmct\c-alpha-build_v3.4-LoRA-FP-100-spec.md</note>
+    </reminder>
+  </step_s3>
+</prompt>
+
