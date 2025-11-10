@@ -1,0 +1,30 @@
+[
+  {
+    "id": "quote-1",
+    "text": "He said \"hello\" to me",
+    "description": "Double quotes in text"
+  },
+  {
+    "id": "quote-2",
+    "text": "She replied 'yes' immediately",
+    "description": "Single quotes in text"
+  },
+  {
+    "id": "quote-3",
+    "text": "The message was \"It's working!\"",
+    "description": "Mix of double quotes and apostrophes"
+  },
+  {
+    "id": "quote-4",
+    "parameters": {
+      "dialogue": "\"Don't worry,\" she said, \"it's fine.\""
+    },
+    "description": "Nested quotes in JSONB"
+  },
+  {
+    "id": "quote-5",
+    "text": "JSON example: {\"key\": \"value\"}",
+    "description": "JSON-like content with quotes"
+  }
+]
+

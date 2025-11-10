@@ -2,7 +2,15 @@
   "permissions": {
     "allow": [
       "Bash(node cursor-db-helper.js sql:*)",
-      "Bash(node cursor-db-helper.js:*)"
+      "Bash(node cursor-db-helper.js:*)",
+      "Bash(node scripts/populate-mock-conversations.js:*)",
+      "Bash(dir:*)",
+      "Bash(node scripts/cursor-db-helper.js:*)",
+      "Bash(npm install:*)",
+      "Bash(node scripts/execute-sql-direct.js:*)",
+      "Bash(node scripts/execute-inserts-via-supabase.js:*)",
+      "Bash(node src/scripts/cursor-db-helper.js:*)",
+      "Bash(node:*)"
     ],
     "deny": [],
     "ask": []

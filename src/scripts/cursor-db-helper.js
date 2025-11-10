@@ -208,6 +208,141 @@ async function countRecords(tableName) {
   }
 }
 
+async function runSql(sqlQuery) {
+  const q = sqlQuery.trim();
+
+  const countMatch = q.match(/^SELECT\s+COUNT\(\*\)\s+FROM\s+(\w+)/i);
+  if (countMatch) {
+    const table = countMatch[1];
+    const { count, error } = await client.from(table).select('*', { count: 'exact', head: true });
+    if (error) {
+      console.error('❌ Error:', error.message);
+      return;
+    }
+    console.log(`${table}: ${count}`);
+    return;
+  }
+
+  if (/SELECT\s+status,\s*COUNT\(\*\)\s+FROM\s+conversations\s+GROUP\s+BY\s+status/i.test(q)) {
+    const { data, error } = await client.from('conversations').select('status');
+    if (error) return console.error('❌ Error:', error.message);
+    const total = data.length;
+    const counts = {};
+    data.forEach(r => { counts[r.status] = (counts[r.status] || 0) + 1; });
+    Object.entries(counts).sort((a, b) => b[1] - a[1]).forEach(([status, count]) => {
+      const pct = ((count / total) * 100).toFixed(2);
+      console.log(`${status}\t${count}\t${pct}%`);
+    });
+    return;
+  }
+
+  if (/SELECT\s+tier,\s*COUNT\(\*\)\s+FROM\s+conversations\s+GROUP\s+BY\s+tier/i.test(q)) {
+    const { data, error } = await client.from('conversations').select('tier,quality_score');
+    if (error) return console.error('❌ Error:', error.message);
+    const byTier = {};
+    data.forEach(r => {
+      const t = r.tier || 'NULL';
+      const arr = byTier[t] || [];
+      arr.push(r.quality_score || 0);
+      byTier[t] = arr;
+    });
+    Object.entries(byTier).sort((a, b) => b[1].length - a[1].length).forEach(([tier, arr]) => {
+      const count = arr.length;
+      const avg = arr.length ? (arr.reduce((s, v) => s + v, 0) / arr.length).toFixed(2) : 'N/A';
+      console.log(`${tier}\t${count}\tavg_quality=${avg}`);
+    });
+    return;
+  }
+
+  if (/SELECT\s+AVG\(quality_score\).*FROM\s+conversations/i.test(q)) {
+    const { data, error } = await client.from('conversations').select('quality_score').not('quality_score', 'is', null);
+    if (error) return console.error('❌ Error:', error.message);
+    const scores = data.map(r => r.quality_score);
+    const avg = (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(2);
+    const min = Math.min(...scores);
+    const max = Math.max(...scores);
+    console.log(`avg_quality=${avg}\tmin=${min}\tmax=${max}`);
+    return;
+  }
+
+  const recentMatch = q.match(/ORDER\s+BY\s+created_at\s+DESC\s+LIMIT\s+(\d+)/i);
+  if (recentMatch && /FROM\s+conversations/i.test(q)) {
+    const limit = parseInt(recentMatch[1], 10);
+    const { data, error } = await client
+      .from('conversations')
+      .select('id,conversation_id,persona,emotion,status,tier,created_at')
+      .order('created_at', { ascending: false })
+      .limit(limit);
+    if (error) return console.error('❌ Error:', error.message);
+    data.forEach(r => console.log(JSON.stringify(r)));
+    return;
+  }
+
+  if (/FROM\s+templates/i.test(q)) {
+    const limMatch = q.match(/LIMIT\s+(\d+)/i);
+    const limit = limMatch ? parseInt(limMatch[1], 10) : 5;
+    const { data, error } = await client
+      .from('templates')
+      .select('id,template_name,category,tier,usage_count,is_active')
+      .limit(limit);
+    if (error) return console.error('❌ Error:', error.message);
+    data.forEach(r => console.log(JSON.stringify(r)));
+    return;
+  }
+
+  if (/JOIN\s+templates/i.test(q) && /FROM\s+conversations/i.test(q)) {
+    const { data, error } = await client
+      .from('conversations')
+      .select('conversation_id,parent_id,parent_type')
+      .eq('parent_type', 'template')
+      .limit(10);
+    if (error) return console.error('❌ Error:', error.message);
+    const ids = [...new Set(data.map(r => r.parent_id).filter(Boolean))];
+    if (ids.length) {
+      const { data: tdata, error: terr } = await client.from('templates').select('id,template_name').in('id', ids);
+      if (terr) return console.error('❌ Error:', terr.message);
+      const nameMap = Object.fromEntries(tdata.map(t => [t.id, t.template_name]));
+      data.forEach(r => {
+        console.log(`${r.conversation_id}\t${r.parent_id}\t${nameMap[r.parent_id] || 'UNKNOWN'}`);
+      });
+    } else {
+      console.log('No template-linked conversations found.');
+    }
+    return;
+  }
+
+  if (/jsonb_typeof\s*\(\s*parameters\s*\)/i.test(q)) {
+    const { data, error } = await client.from('conversations').select('id,parameters,review_history').limit(5);
+    if (error) return console.error('❌ Error:', error.message);
+    data.forEach(r => {
+      const paramsType = r.parameters && typeof r.parameters === 'object' ? 'object' : typeof r.parameters;
+      const reviewType = Array.isArray(r.review_history) ? 'array' : (r.review_history && typeof r.review_history);
+      console.log(`${r.id}\tparams_type=${paramsType}\treview_type=${reviewType}`);
+    });
+    return;
+  }
+
+  if (/id\s*!~\s*'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\$'/i.test(q)) {
+    const { data, error } = await client.from('conversations').select('id,conversation_id').limit(50);
+    if (error) return console.error('❌ Error:', error.message);
+    const bad = data.filter(r => !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(r.id));
+    bad.slice(0, 5).forEach(r => console.log(`${r.id}\t${r.conversation_id}`));
+    if (bad.length === 0) console.log('No invalid UUIDs found.');
+    return;
+  }
+
+  if (/created_at\s*>\s*updated_at/i.test(q)) {
+    const { data, error } = await client.from('conversations').select('id,created_at,updated_at').limit(50);
+    if (error) return console.error('❌ Error:', error.message);
+    const invalid = data.filter(r => new Date(r.created_at) > new Date(r.updated_at));
+    invalid.slice(0, 5).forEach(r => console.log(`${r.id}\tcreated_at=${r.created_at}\tupdated_at=${r.updated_at}`));
+    if (invalid.length === 0) console.log('All timestamps valid.');
+    return;
+  }
+
+  console.log('⚠️ Unsupported SQL pattern for helper. Try built-in commands or Supabase SQL Editor.');
+}
+
 // Main command handler
 async function main() {
   const args = process.argv.slice(2);
@@ -258,6 +393,15 @@ async function main() {
       await countRecords(countTableName);
       break;
       
+    case 'sql':
+      const sqlQuery = args.slice(1).join(' ');
+      if (!sqlQuery) {
+        console.error('❌ Please provide a SQL SELECT query string in quotes');
+        return;
+      }
+      await runSql(sqlQuery);
+      break;
+      
     default:
       console.log('🔧 Cursor Database Helper');
       console.log('========================');
@@ -267,6 +411,7 @@ async function main() {
       console.log('  describe <table>               - Show table structure');
       console.log('  query <table> [--limit N]      - Query table data');
       console.log('  count <table>                  - Count records in table');
+      console.log('  sql \"SELECT ...\"               - Run supported SELECT queries');
       console.log('');
       console.log('Examples:');
       console.log('  node scripts/cursor-db-helper.js list-tables');

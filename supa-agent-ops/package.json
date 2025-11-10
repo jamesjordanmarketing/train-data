@@ -1,0 +1,38 @@
+{
+  "name": "supa-agent-ops",
+  "version": "1.0.0",
+  "description": "Agent-optimized TypeScript library for robust Supabase data operations with comprehensive error handling and special character safety",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "benchmark": "node dist/__tests__/benchmark.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "supabase",
+    "agent",
+    "automation",
+    "database",
+    "crud",
+    "typescript"
+  ],
+  "author": "BrightHub",
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.10.6",
+    "@types/pg": "^8.10.9",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.3.3"
+  }
+}
+

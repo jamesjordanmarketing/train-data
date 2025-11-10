@@ -1,0 +1,48 @@
+[
+  {
+    "id": "e02-1",
+    "persona": "Marcus - The Overwhelmed Avoider",
+    "parameters": {
+      "strategy_rationale": "most people don't understand it",
+      "quote": "He said \"I can't do this\""
+    },
+    "description": "E02 problematic record with apostrophes in JSONB"
+  },
+  {
+    "id": "e02-2",
+    "persona": "Sarah - Detail Seeker",
+    "parameters": {
+      "notes": "She's very thorough.\nAttention to detail is key.",
+      "feedback": "Great! 😊"
+    },
+    "description": "Mix of apostrophes, newlines, and emoji"
+  },
+  {
+    "id": "e02-3",
+    "persona": "Alex - The Pragmatist",
+    "parameters": {
+      "path": "C:\\Users\\Documents\\data.json",
+      "query": "SELECT * FROM users WHERE name='John'"
+    },
+    "description": "Windows paths and SQL with quotes"
+  },
+  {
+    "id": "e02-4",
+    "persona": "Jamie - The Skeptic",
+    "parameters": {
+      "objection": "\"I don't think this'll work,\" Jamie said skeptically.",
+      "response": "Let's see what happens"
+    },
+    "description": "Complex nested quotes and contractions"
+  },
+  {
+    "id": "e02-5",
+    "persona": "Taylor - The Enthusiast",
+    "parameters": {
+      "message": "It's amazing! 🎉\nI can't believe it works!\n\"This is incredible,\" they said.",
+      "tags": ["exciting", "can't-wait", "it's-working"]
+    },
+    "description": "All problematic characters combined"
+  }
+]
+

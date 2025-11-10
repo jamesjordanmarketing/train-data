@@ -1,0 +1,36 @@
+[
+  {
+    "id": "emoji-1",
+    "text": "I'm happy 😊",
+    "description": "Single emoji"
+  },
+  {
+    "id": "emoji-2",
+    "text": "Reactions: 😊😍🎉👍",
+    "description": "Multiple emojis"
+  },
+  {
+    "id": "emoji-3",
+    "text": "✅ Task completed!",
+    "description": "Emoji at start"
+  },
+  {
+    "id": "emoji-4",
+    "parameters": {
+      "feedback": "Great work! 🎉🎊",
+      "status": "approved ✓"
+    },
+    "description": "Emojis in JSONB field"
+  },
+  {
+    "id": "emoji-5",
+    "text": "café résumé naïve",
+    "description": "Accented characters (not emoji but UTF-8)"
+  },
+  {
+    "id": "emoji-6",
+    "text": "中文 日本語 한글",
+    "description": "Multi-byte Unicode characters"
+  }
+]
+

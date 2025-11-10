@@ -1,0 +1,30 @@
+[
+  {
+    "id": "multiline-1",
+    "text": "Line 1\nLine 2\nLine 3",
+    "description": "Unix-style newlines"
+  },
+  {
+    "id": "multiline-2",
+    "text": "Line 1\r\nLine 2\r\nLine 3",
+    "description": "Windows-style newlines (CRLF)"
+  },
+  {
+    "id": "multiline-3",
+    "text": "Column1\tColumn2\tColumn3",
+    "description": "Tab-separated values"
+  },
+  {
+    "id": "multiline-4",
+    "parameters": {
+      "template": "Dear {name},\n\nThank you for your message.\n\nBest regards"
+    },
+    "description": "Email template with newlines in JSONB"
+  },
+  {
+    "id": "multiline-5",
+    "text": "Paragraph 1\n\nParagraph 2\n\nParagraph 3",
+    "description": "Multiple consecutive newlines"
+  }
+]
+

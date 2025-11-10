@@ -1,0 +1,31 @@
+[
+  {
+    "id": "apostrophe-1",
+    "text": "don't",
+    "description": "Simple apostrophe in contraction"
+  },
+  {
+    "id": "apostrophe-2",
+    "text": "can't, won't, shouldn't",
+    "description": "Multiple apostrophes"
+  },
+  {
+    "id": "apostrophe-3",
+    "text": "It's Marcus's strategy",
+    "description": "Possessive apostrophes"
+  },
+  {
+    "id": "apostrophe-4",
+    "parameters": {
+      "strategy_rationale": "most people don't understand it",
+      "note": "He said 'I can't do this'"
+    },
+    "description": "Apostrophes in JSONB field"
+  },
+  {
+    "id": "apostrophe-5",
+    "text": "The user's data isn't valid",
+    "description": "Mix of contractions and possessives"
+  }
+]
+
