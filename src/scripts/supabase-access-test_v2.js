@@ -9,18 +9,47 @@
  *   node supabase-access-test_v2.js cleanup
  */
 
-require('dotenv').config({ path: '../../.env.local' });
+const fs = require('fs');
+const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
 const { v4: uuidv4 } = require('uuid');
 
+// Load environment variables manually (same approach as cursor-db-helper.js)
+const envPath = path.resolve(__dirname, '../../.env.local');
+console.log(`📁 Loading environment from: ${envPath}\n`);
+
+if (!fs.existsSync(envPath)) {
+  console.error('❌ HARD BLOCK: .env.local file not found');
+  console.error(`   Expected location: ${envPath}`);
+  process.exit(1);
+}
+
+const envContent = fs.readFileSync(envPath, 'utf8');
+const envVars = {};
+envContent.split('\n').forEach(line => {
+  const trimmedLine = line.trim();
+  // Skip empty lines and comments
+  if (!trimmedLine || trimmedLine.startsWith('#')) return;
+
+  const [key, ...valueParts] = trimmedLine.split('=');
+  const value = valueParts.join('=');
+  if (key && value) {
+    envVars[key.trim()] = value.trim();
+  }
+});
+
 // Initialize Supabase client with service role key
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseUrl = envVars.NEXT_PUBLIC_SUPABASE_URL;
+const serviceRoleKey = envVars.SUPABASE_SERVICE_ROLE_KEY;
+
+console.log('✅ Environment variables loaded:');
+console.log(`   - NEXT_PUBLIC_SUPABASE_URL: ${supabaseUrl || '(not found)'}`);
+console.log(`   - SUPABASE_SERVICE_ROLE_KEY: ${serviceRoleKey ? serviceRoleKey.substring(0, 20) + '...' : '(not found)'}\n`);
 
 if (!supabaseUrl || !serviceRoleKey) {
   console.error('❌ HARD BLOCK: Missing required environment variables');
   console.error('Required: NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY');
-  console.error('Check .env.local at: C:\\Users\\james\\Master\\BrightHub\\BRun\\train-data\\.env.local');
+  console.error(`Check .env.local at: ${envPath}`);
   process.exit(1);
 }
 
