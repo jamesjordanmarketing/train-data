@@ -18,7 +18,6 @@ import { DashboardLayout } from './DashboardLayout';
 import { DashboardSkeleton, FilterBarSkeleton } from '@/components/ui/skeletons';
 import { NoConversationsEmpty, NoSearchResultsEmpty, ErrorStateEmpty } from '@/components/empty-states';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ExportModal } from '@/components/import-export';
 
 export function ConversationDashboard() {
   // Enable keyboard shortcuts
@@ -29,9 +28,6 @@ export function ConversationDashboard() {
   const filterConfig = useConversationStore((state) => state.filterConfig);
   const resetFilters = useConversationStore((state) => state.resetFilters);
   const openBatchGeneration = useConversationStore((state) => state.openBatchGenerationModal);
-  const modalState = useConversationStore((state) => state.modalState);
-  const closeExportModal = useConversationStore((state) => state.closeExportModal);
-  const selectedConversationIds = useConversationStore((state) => state.selectedConversationIds);
   
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -199,24 +195,15 @@ export function ConversationDashboard() {
       
       {/* Conversation Detail Modal */}
       <ConversationDetailModal />
-
-      {/* Export Modal */}
-      <ExportModal
-        open={modalState.exportModalOpen}
-        onClose={closeExportModal}
-        entityType="conversations"
-        selectedIds={selectedConversationIds}
-      />
-
+      
       {/* Bulk actions toolbar (appears when items selected) */}
       <BulkActionsToolbar />
-
+      
       {/* Keyboard shortcuts help (opens with ?) */}
       <KeyboardShortcutsHelp />
-
+      
       {/* Confirmation dialog */}
       <ConfirmationDialog />
     </DashboardLayout>
   );
 }
-
