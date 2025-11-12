@@ -36,15 +36,24 @@ export function EmptyState({ icon, title, description, action }: EmptyStateProps
 
 export function NoConversationsEmpty({ onCreate }: { onCreate?: () => void }) {
   return (
-    <EmptyState
-      icon={<MessageSquare className="h-16 w-16" />}
-      title="No conversations yet"
-      description="Get started by generating your first batch of training conversations. You can create conversations from templates, scenarios, or edge cases."
-      action={onCreate ? {
-        label: 'Generate Conversations',
-        onClick: onCreate
-      } : undefined}
-    />
+    <div className="flex flex-col items-center justify-center py-20 px-4">
+      <div className="text-muted-foreground mb-8">
+        <FileText className="h-32 w-32" />
+      </div>
+
+      <h2 className="text-2xl font-bold mb-4">No Conversations Yet</h2>
+      <p className="text-muted-foreground text-center max-w-md mb-8">
+        Get started by generating your first AI-powered training conversation.
+        Select a template, configure parameters, and let Claude create realistic conversations.
+      </p>
+
+      {onCreate && (
+        <Button onClick={onCreate} size="lg">
+          <MessageSquare className="h-5 w-5 mr-2" />
+          Generate First Conversation
+        </Button>
+      )}
+    </div>
   );
 }
 

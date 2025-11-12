@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { useFilteredConversations, useComputedConversationStats } from '@/hooks/use-filtered-conversations';
 import { useConversationStore } from '@/stores/conversation-store';
 import { ConversationTable } from './ConversationTable';
@@ -21,6 +22,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { ExportModal } from '@/components/import-export';
 
 export function ConversationDashboard() {
+  const router = useRouter();
+  
   // Enable keyboard shortcuts
   useKeyboardShortcuts();
   
@@ -28,7 +31,6 @@ export function ConversationDashboard() {
   const stats = useComputedConversationStats();
   const filterConfig = useConversationStore((state) => state.filterConfig);
   const resetFilters = useConversationStore((state) => state.resetFilters);
-  const openBatchGeneration = useConversationStore((state) => state.openBatchGenerationModal);
   const modalState = useConversationStore((state) => state.modalState);
   const closeExportModal = useConversationStore((state) => state.closeExportModal);
   const selectedConversationIds = useConversationStore((state) => state.selectedConversationIds);
@@ -71,7 +73,7 @@ export function ConversationDashboard() {
   if (conversations.length === 0 && !hasFilters) {
     return (
       <DashboardLayout>
-        <NoConversationsEmpty onCreate={openBatchGeneration} />
+        <NoConversationsEmpty onCreate={() => router.push('/conversations/generate')} />
       </DashboardLayout>
     );
   }
@@ -106,9 +108,9 @@ export function ConversationDashboard() {
             </p>
           </div>
           
-          <Button onClick={openBatchGeneration}>
+          <Button onClick={() => router.push('/conversations/generate')}>
             <Plus className="h-4 w-4 mr-2" />
-            Generate Conversations
+            Generate Conversation
           </Button>
         </div>
         
