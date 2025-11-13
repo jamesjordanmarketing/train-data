@@ -138,6 +138,89 @@ export const ERROR_MAPPINGS: ErrorMapping[] = [
     description: 'Column does not exist',
     remediation: 'Verify column names match table schema',
     automatable: false
+  },
+  // Schema operation errors (v1.1)
+  {
+    code: 'ERR_SCHEMA_ACCESS_DENIED',
+    pgCode: '42501',
+    patterns: ['permission denied for schema', 'must be owner of'],
+    category: 'AUTH',
+    description: 'Insufficient permissions to access schema',
+    remediation: 'Use service role key or grant schema permissions',
+    example: 'GRANT USAGE ON SCHEMA public TO your_role;',
+    automatable: false
+  },
+  {
+    code: 'ERR_RPC_NOT_FOUND',
+    patterns: ['Could not find the function', 'function does not exist'],
+    category: 'DB',
+    description: 'RPC function does not exist',
+    remediation: 'Create the RPC function in Supabase SQL Editor',
+    example: `CREATE OR REPLACE FUNCTION exec_sql(sql_script text)
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  result jsonb;
+BEGIN
+  EXECUTE sql_script INTO result;
+  RETURN result;
+EXCEPTION WHEN OTHERS THEN
+  RETURN jsonb_build_object('error', SQLERRM, 'code', SQLSTATE);
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION exec_sql(text) TO service_role;`,
+    automatable: true
+  },
+  {
+    code: 'ERR_DDL_SYNTAX',
+    pgCode: '42601',
+    patterns: ['syntax error at or near', 'syntax error'],
+    category: 'VALIDATION',
+    description: 'Invalid SQL syntax in DDL statement',
+    remediation: 'Review and correct SQL syntax',
+    example: 'Check PostgreSQL documentation for correct DDL syntax',
+    automatable: false
+  },
+  {
+    code: 'ERR_INDEX_EXISTS',
+    pgCode: '42P07',
+    patterns: ['already exists', 'relation'],
+    category: 'DB',
+    description: 'Index or relation already exists',
+    remediation: 'Use DROP INDEX first, or use CREATE INDEX IF NOT EXISTS, or rename the index',
+    example: 'DROP INDEX IF EXISTS index_name; CREATE INDEX index_name ON table(column);',
+    automatable: true
+  },
+  {
+    code: 'ERR_INDEX_NOT_FOUND',
+    pgCode: '42704',
+    patterns: ['does not exist', 'index'],
+    category: 'DB',
+    description: 'Index does not exist',
+    remediation: 'Verify index name is correct',
+    example: 'SELECT indexname FROM pg_indexes WHERE tablename = \'your_table\';',
+    automatable: false
+  },
+  {
+    code: 'ERR_RPC_TIMEOUT',
+    patterns: ['timeout', 'statement timeout'],
+    category: 'DB',
+    description: 'RPC or SQL execution timed out',
+    remediation: 'Increase timeout parameter or optimize query',
+    example: 'await agentExecuteSQL({ sql: \'...\', timeout: 60000 });',
+    automatable: false
+  },
+  {
+    code: 'ERR_TRANSACTION_FAILED',
+    pgCode: '25P02',
+    patterns: ['current transaction is aborted', 'transaction'],
+    category: 'DB',
+    description: 'Transaction failed and was rolled back',
+    remediation: 'Review transaction logic and fix errors',
+    automatable: false
   }
 ];
 

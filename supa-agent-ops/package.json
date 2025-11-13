@@ -1,7 +1,7 @@
 {
   "name": "supa-agent-ops",
-  "version": "1.0.0",
-  "description": "Agent-optimized TypeScript library for robust Supabase data operations with comprehensive error handling and special character safety",
+  "version": "1.2.0",
+  "description": "Agent-optimized TypeScript library for Supabase operations including CRUD, schema operations, DDL execution, RPC, query, export, and delete with comprehensive error handling",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -18,12 +18,17 @@
     "automation",
     "database",
     "crud",
+    "schema",
+    "ddl",
+    "rpc",
+    "sql",
     "typescript"
   ],
   "author": "BrightHub",
   "license": "MIT",
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
+    "csv-stringify": "^6.4.5",
     "pg": "^8.11.3"
   },
   "devDependencies": {

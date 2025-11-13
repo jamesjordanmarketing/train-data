@@ -1,6 +1,99 @@
 # Supabase Agent Ops Library
 
-> **Production-grade, agent-first TypeScript/JavaScript library for Supabase CRUD operations with comprehensive error handling, special character safety, and intelligent failure reporting.**
+> **Production-grade, agent-first TypeScript/JavaScript library for Supabase operations with comprehensive error handling, special character safety, and intelligent failure reporting.**
+
+**Version 1.3** adds maintenance operations, table verification, and performance monitoring.
+
+## What's New in v1.3 🎉
+
+🔧 **Maintenance Operations**
+- VACUUM operations to reclaim storage space
+- ANALYZE operations to update query planner statistics
+- REINDEX operations with CONCURRENTLY support for non-blocking rebuilds
+- Dry-run mode for safe preview of maintenance operations
+
+✅ **Table Verification**
+- Validate table structure against expected schema
+- Detect missing columns, indexes, and constraints
+- Automatic fix SQL generation
+- Severity categorization (OK, Warning, Critical, Blocking)
+
+📊 **Performance Monitoring**
+- Index usage analysis to identify unused indexes
+- Table bloat analysis for optimization recommendations
+- Query pg_stat_user_indexes for usage statistics
+- Actionable recommendations for database optimization
+
+See [Maintenance Guide](./MAINTENANCE_GUIDE.md) for complete guide.
+
+## What's New in v1.2 🎉
+
+🔍 **Advanced Query Operations**
+- Complex filtering with 9 operators (eq, neq, gt, gte, lt, lte, like, in, is)
+- Ordering, pagination, and aggregations (SUM, AVG, COUNT, MIN, MAX)
+- Optimized count queries with filtering
+
+📤 **Multi-Format Export**
+- JSONL format (OpenAI/Anthropic training compatible)
+- JSON format (structured with metadata)
+- CSV format (Excel-compatible with UTF-8 BOM)
+- Markdown format (human-readable reports)
+
+🛡️ **Safe Delete Operations**
+- Dry-run mode to preview deletions
+- Mandatory WHERE clause (prevents accidental full table deletes)
+- Explicit confirmation required
+- Automatic backup suggestions
+
+See [Quick Start v1.2](./QUICK_START_V1.2.md) for complete guide.
+
+### Quick Examples (v1.3)
+
+```typescript
+import { 
+  agentVacuum, 
+  agentAnalyze, 
+  agentVerifyTable,
+  agentAnalyzeIndexUsage 
+} from 'supa-agent-ops';
+
+// VACUUM with ANALYZE to reclaim space and update statistics
+await agentVacuum({ 
+  table: 'conversations',
+  analyze: true 
+});
+
+// Verify table structure
+const verification = await agentVerifyTable({
+  table: 'conversations',
+  expectedColumns: [
+    { name: 'id', type: 'uuid', required: true },
+    { name: 'persona', type: 'text', required: true }
+  ],
+  generateFixSQL: true
+});
+
+if (!verification.canProceed) {
+  console.log('Fix SQL:', verification.fixSQL);
+}
+
+// Analyze index usage
+const indexAnalysis = await agentAnalyzeIndexUsage({ 
+  table: 'conversations',
+  minScans: 100 
+});
+console.log('Recommendations:', indexAnalysis.recommendations);
+```
+
+## Previous Features
+
+**v1.1: Schema Operations & RPC**
+- Query database structure (tables, columns, indexes, constraints, policies)
+- Execute DDL statements (CREATE, ALTER, DROP) with transaction safety
+- Manage indexes with concurrent creation support
+- Execute custom RPC functions and raw SQL
+
+See [Schema Operations Guide](./SCHEMA_OPERATIONS_GUIDE.md) for details.
 
 ## Quick Start
 

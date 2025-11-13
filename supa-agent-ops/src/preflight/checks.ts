@@ -210,6 +210,172 @@ export async function detectPrimaryKey(
 }
 
 /**
+ * Checks if an RPC function exists
+ */
+async function checkRPCExists(functionName: string): Promise<{
+  passed: boolean;
+  recommendation?: Recommendation;
+}> {
+  try {
+    const client = await getPgClient();
+    const result = await client.query(
+      `SELECT EXISTS (
+        SELECT FROM pg_proc p
+        JOIN pg_namespace n ON p.pronamespace = n.oid
+        WHERE n.nspname = 'public'
+        AND p.proname = $1
+      )`,
+      [functionName]
+    );
+    
+    if (!result.rows[0].exists) {
+      return {
+        passed: false,
+        recommendation: {
+          description: `RPC function "${functionName}" does not exist`,
+          example: functionName === 'exec_sql' 
+            ? `CREATE OR REPLACE FUNCTION exec_sql(sql_script text)
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  result jsonb;
+BEGIN
+  EXECUTE sql_script INTO result;
+  RETURN result;
+EXCEPTION WHEN OTHERS THEN
+  RETURN jsonb_build_object('error', SQLERRM, 'code', SQLSTATE);
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION exec_sql(text) TO service_role;`
+            : `Create the "${functionName}" function in Supabase SQL Editor`,
+          priority: 'HIGH'
+        }
+      };
+    }
+
+    return { passed: true };
+  } catch (error: any) {
+    logger.warn('RPC existence check failed', { error: error.message });
+    return { passed: true }; // Assume it exists if we can't check
+  }
+}
+
+/**
+ * Checks if user has permissions for schema modifications
+ */
+async function checkPermissions(permission: string): Promise<{
+  passed: boolean;
+  recommendation?: Recommendation;
+}> {
+  try {
+    const client = await getPgClient();
+    
+    // Check if we can create/modify schema objects
+    if (permission === 'schema_modify') {
+      const result = await client.query(
+        `SELECT has_schema_privilege(current_user, 'public', 'CREATE') as can_create`
+      );
+      
+      if (!result.rows[0].can_create) {
+        return {
+          passed: false,
+          recommendation: {
+            description: 'Insufficient permissions to modify schema',
+            example: 'Use service role key or grant CREATE privileges on schema public',
+            priority: 'HIGH'
+          }
+        };
+      }
+    }
+
+    return { passed: true };
+  } catch (error: any) {
+    logger.warn('Permission check failed', { error: error.message });
+    return { passed: true }; // Assume permissions are OK if we can't check
+  }
+}
+
+/**
+ * Runs preflight checks for schema operations
+ */
+export async function preflightSchemaOperation(params: {
+  operation: string;
+  table?: string;
+  transport?: 'supabase' | 'pg' | 'auto';
+}): Promise<PreflightResult> {
+  const { operation, table, transport = 'pg' } = params;
+  const issues: string[] = [];
+  const recommendations: Recommendation[] = [];
+
+  logger.info('Running schema operation preflight checks', { operation, table, transport });
+
+  // Check 1: Environment variables
+  const envCheck = await checkEnvironmentVariables(transport);
+  if (!envCheck.passed && envCheck.recommendation) {
+    issues.push('Missing environment variables');
+    recommendations.push(envCheck.recommendation);
+  }
+
+  // Check 2: Service role key
+  const serviceRoleCheck = await checkServiceRoleKey();
+  if (!serviceRoleCheck.passed && serviceRoleCheck.recommendation) {
+    issues.push('Service role key issue');
+    recommendations.push(serviceRoleCheck.recommendation);
+  }
+
+  // Check 3: RPC function exists (for operations that might use RPC)
+  if (operation === 'introspect' || operation === 'ddl') {
+    const rpcCheck = await checkRPCExists('exec_sql');
+    if (!rpcCheck.passed && rpcCheck.recommendation) {
+      // RPC is optional, so just add as recommendation
+      recommendations.push({
+        ...rpcCheck.recommendation,
+        priority: 'MEDIUM'
+      });
+    }
+  }
+
+  // Check 4: Schema modification permissions
+  if (operation === 'ddl' || operation.startsWith('index_')) {
+    const permCheck = await checkPermissions('schema_modify');
+    if (!permCheck.passed && permCheck.recommendation) {
+      issues.push('Insufficient schema permissions');
+      recommendations.push(permCheck.recommendation);
+    }
+  }
+
+  // Check 5: Table exists (if table is specified)
+  if (table) {
+    const tableCheck = await checkTableExists(table, transport);
+    if (!tableCheck.passed && tableCheck.recommendation) {
+      // For introspection, table not existing is OK
+      if (operation !== 'introspect') {
+        issues.push(`Table "${table}" not found`);
+        recommendations.push(tableCheck.recommendation);
+      }
+    }
+  }
+
+  // Close pg client if opened
+  if (transport === 'pg') {
+    await closePgClient();
+  }
+
+  const ok = issues.length === 0;
+  
+  logger.info('Schema operation preflight checks completed', { ok, issuesCount: issues.length });
+
+  return {
+    ok,
+    issues,
+    recommendations
+  };
+}
+
+/**
  * Runs all preflight checks
  */
 export async function agentPreflight(params: {
