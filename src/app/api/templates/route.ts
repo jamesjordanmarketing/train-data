@@ -18,16 +18,6 @@ import { ZodError } from 'zod';
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient();
-    
-    // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized', details: 'Authentication required' },
-        { status: 401 }
-      );
-    }
-
     const templateService = new TemplateService(supabase);
 
     // Parse query parameters
