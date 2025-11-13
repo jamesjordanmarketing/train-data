@@ -18,8 +18,10 @@ export function useTemplates() {
           throw new Error('Failed to fetch templates');
         }
 
-        const data = await response.json();
-        setTemplates(data);
+        const result = await response.json();
+        // API returns { data: [...], pagination: {...} }
+        // Handle both formats for backwards compatibility
+        setTemplates(result.data || result);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
       } finally {
