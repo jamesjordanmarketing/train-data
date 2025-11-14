@@ -1,0 +1,307 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://brightrun.ai/schemas/emotional-lora-training-v3.4.3.json",
+  "title": "Emotionally-Aware LoRA Training Dataset Format v3.4.3 (Production - Revised)",
+  "description": "Updated production schema based on actual training file structure. Reflects real implementation of emotionally intelligent conversational AI training data.",
+  
+  "format_notes": {
+    "version": "3.4.3",
+    "created_date": "2025-11-13",
+    "updated_from": "v3.4.2",
+    "changes_from_v3_4_2": [
+      "Corrected conversation_metadata fields based on actual usage",
+      "Updated emotional_context structure to match production files",
+      "Removed speculative fields not present in real training data",
+      "Added behavioral_assessment fields actually used",
+      "Corrected response_strategy structure",
+      "Updated response_breakdown to match actual sentence analysis format",
+      "Aligned training_metadata fields with production usage",
+      "Simplified emotional_indicators structure"
+    ],
+    "core_philosophy": "Schema must exactly match production training file structure"
+  },
+
+  "dataset_structure": {
+    "dataset_metadata": {
+      "description": "Overall dataset information",
+      "required_fields": {
+        "dataset_name": "string - name of the training dataset",
+        "version": "string - semantic version (e.g., 1.0.0)",
+        "created_date": "string - ISO date format",
+        "vertical": "string - business vertical (e.g., financial_planning_consultant)",
+        "consultant_persona": "string - name and role of the assistant",
+        "target_use": "string - intended use case",
+        "conversation_source": "string - source type (synthetic_expert_authored, real_anonymized, etc.)",
+        "quality_tier": "string - quality level (seed_dataset, production, experimental)",
+        "total_conversations": "integer - number of complete conversations",
+        "total_turns": "integer - total number of turns across all conversations",
+        "notes": "string - additional context about the conversation"
+      }
+    },
+
+    "consultant_profile": {
+      "description": "Detailed persona of the AI assistant being trained",
+      "required_fields": {
+        "name": "string - full name and credentials",
+        "business": "string - business or practice name",
+        "expertise": "string - area of specialization",
+        "years_experience": "integer",
+        "core_philosophy": {
+          "principle_1": "string - first core principle",
+          "principle_2": "string - second core principle",
+          "principle_3": "string - third core principle",
+          "principle_4": "string - fourth core principle",
+          "principle_5": "string - fifth core principle"
+        },
+        "communication_style": {
+          "tone": "string - overall tone description",
+          "techniques": ["array", "of", "communication", "techniques"],
+          "avoid": ["array", "of", "things", "to", "avoid"]
+        }
+      }
+    },
+
+    "training_pairs": {
+      "description": "Array of individual conversation turns, each a complete training example",
+      "structure": "array of turn objects",
+      "turn_object": {
+        "id": "string - unique identifier (e.g., fp_david_001_turn1)",
+        "conversation_id": "string - groups turns into conversations",
+        "turn_number": "integer - position in conversation (1-based)",
+        
+        "conversation_metadata": {
+          "client_persona": "string - name and archetype of user",
+          "client_background": "string - relevant context about user",
+          "session_context": "string - when/why this interaction is happening",
+          "conversation_phase": "string - stage of conversation (initial_opportunity_exploration, exploring_deeper_concern, practical_implementation, commitment_and_closure, etc.)",
+          "expected_outcome": "string - what this turn should accomplish"
+        },
+
+        "system_prompt": "string - complete system prompt text that defines the AI's role, principles, and behavior. Single string, not an object.",
+
+        "conversation_history": {
+          "description": "Array of previous turns in this conversation. Empty array for turn 1.",
+          "structure": "array of simplified turn objects",
+          "turn_format": {
+            "turn": "integer - turn number",
+            "role": "string - 'user' or 'assistant' (optional, included when helpful)",
+            "content": "string - what was said (may be summarized with ellipsis)",
+            "emotional_state": {
+              "primary": "string - primary emotion",
+              "secondary": "string - secondary emotion (optional)",
+              "intensity": "float 0-1"
+            },
+            "strategy_applied": "string - brief strategy description (for assistant turns, optional)",
+            "outcome": "string - result of the turn (optional)"
+          },
+          "note": "Format varies - can be very concise summaries or fuller representations"
+        },
+
+        "current_user_input": "string - the exact user message in this turn. Single string, not an object with content field.",
+
+        "emotional_context": {
+          "description": "Deep emotional analysis of user's current state",
+          "detected_emotions": {
+            "primary": "string - most prominent emotion",
+            "primary_confidence": "float 0-1",
+            "secondary": "string - second emotion (optional)",
+            "secondary_confidence": "float 0-1",
+            "tertiary": "string - third emotion (optional)",
+            "tertiary_confidence": "float 0-1",
+            "intensity": "float 0-1 - overall emotional intensity",
+            "valence": "string - positive/negative/mixed descriptor"
+          },
+          "emotional_progression": {
+            "description": "How emotions have changed across turns (turn 2+)",
+            "previous_turn_primary": "string - emotion from previous turn (turn 2+)",
+            "previous_turn_intensity": "float 0-1 (turn 2+)",
+            "current_turn_primary": "string - emotion this turn",
+            "current_turn_intensity": "float 0-1",
+            "trajectory": "string - improving/worsening/stable/positive_progression/slight_decline_into_worry/complete_positive_transformation",
+            "interpretation": "string - what the change means",
+            "alternative_format": {
+              "note": "May also be multi-turn summary",
+              "turn_1": "string - emotion summary",
+              "turn_2": "string - emotion summary",
+              "turn_n": "string - emotion summary",
+              "trajectory": "string",
+              "interpretation": "string"
+            }
+          },
+          "emotional_indicators": {
+            "description": "Specific textual cues categorized by type",
+            "note": "Categories vary by conversation. Common categories include:",
+            "example_categories": {
+              "excitement_markers": ["array of specific words/phrases"],
+              "values_statements": ["array"],
+              "practical_details": ["array"],
+              "timeline_awareness": ["array"],
+              "partnership_mention": ["array"],
+              "responsibility_concern": ["array"],
+              "direct_question": ["array"],
+              "stability_concern": ["array"],
+              "self_questioning": ["array"],
+              "relief": ["array"],
+              "transparency": ["array"],
+              "clarity": ["array"],
+              "gratitude": ["array"]
+            }
+          },
+          "transformation_indicators": {
+            "description": "Present in final turns to show overall transformation",
+            "format": "object with boolean fields",
+            "example": {
+              "from_values_vs_responsibility_to_both": true,
+              "from_uncertainty_to_clear_plan": true,
+              "from_concern_to_empowerment": true
+            }
+          },
+          "behavioral_assessment": {
+            "risk_level": "string - dropout/disengagement risk level (low_thoughtful_and_prepared, very_low_engaged_and_planning, zero_clear_empowered_plan, etc.)",
+            "engagement_readiness": "string - readiness for next step (very_high_wants_framework, high_wants_realistic_assessment, complete, etc.)",
+            "knowledge_level": "string - user's knowledge state (pragmatic_has_compared_basics, understands_tradeoffs_needs_perspective, financially_aware_doing_math, sufficient_with_framework, etc.)",
+            "trust_level": "string - rapport level (building_direct_communication, high_sharing_real_concern, very_high, etc.)"
+          },
+          "client_needs_hierarchy": {
+            "description": "Prioritized list of what user needs in this moment",
+            "structure": "array of need objects",
+            "need_object": {
+              "priority": "integer - 1 is highest",
+              "need": "string - concise need description (e.g., validate_that_values_matter_in_career_decisions)",
+              "rationale": "string - why this is needed"
+            }
+          },
+          "red_flags": {
+            "description": "Warning signals requiring special handling (optional, only when present)",
+            "structure": "array of flag objects",
+            "flag_object": {
+              "flag": "string - flag name",
+              "implication": "string - what it means",
+              "handling": "string - how to address it"
+            }
+          }
+        },
+
+        "response_strategy": {
+          "description": "Strategy selection for the response",
+          "primary_strategy": "string - main approach (e.g., validate_values_importance_then_provide_evaluation_framework)",
+          "primary_rationale": "string - detailed explanation of why this strategy was chosen and how it addresses the user's needs",
+          "secondary_strategies": ["array of supporting strategies"],
+          "tone_selection": "string - tone to use in response (e.g., enthusiastic_and_practical)",
+          "tone_rationale": "string - why this tone",
+          "pacing": "string - speed/intensity of response (moderate, efficient_closing, etc.)",
+          "tactical_choices": {
+            "description": "Object with boolean or other values indicating specific tactics",
+            "format": "flexible key-value pairs",
+            "example": {
+              "validate_mission_importance": true,
+              "provide_evaluation_framework": true,
+              "assess_financial_impact": true,
+              "address_timing_concern": true,
+              "celebrate_raise_and_benefits": true
+            }
+          },
+          "avoid_tactics": ["array of things to avoid"],
+          "specific_techniques": {
+            "description": "Array of detailed technique explanations (optional)",
+            "structure": "array of technique objects",
+            "technique_object": {
+              "technique": "string - technique name",
+              "application": "string - how to apply it",
+              "purpose": "string - why it works"
+            }
+          }
+        },
+
+        "target_response": "string - the complete ideal assistant response text that the model should learn to generate. Single string, not an object.",
+
+        "response_breakdown": {
+          "description": "Sentence-by-sentence analysis of why the response works",
+          "total_sentences": "integer",
+          "structure_type": "string - overall response structure pattern (e.g., validate_values → provide_framework → explore_hesitation)",
+          "sentences": {
+            "description": "Array of sentence analysis objects",
+            "structure": "array",
+            "sentence_object": {
+              "sentence_number": "integer",
+              "text": "string - exact sentence text",
+              "function": "string - what this sentence does",
+              "emotional_purpose": "string - emotional goal",
+              "technique": "string - technique used",
+              "teaches_model": "string - pattern to learn",
+              "word_choice_rationale": {
+                "description": "Object with key words/phrases as keys and rationales as values",
+                "format": "object",
+                "example": {
+                  "first off": "prioritizes celebration",
+                  "congratulations": "affirms good news"
+                }
+              },
+              "stylistic_note": "string - formatting/style notes (optional)",
+              "psychological_principle": "string - underlying psychology (optional)",
+              "avoids": "string - what this avoids doing (optional)"
+            }
+          },
+          "note": "Not all sentences from target_response are always analyzed - may focus on key sentences"
+        },
+
+        "expected_user_response_patterns": {
+          "description": "Predicted user reactions to assess response effectiveness",
+          "positive_indicators": ["array of good signs"],
+          "neutral_indicators": ["array of neutral signs"],
+          "negative_indicators": ["array of warning signs"]
+        },
+
+        "training_metadata": {
+          "description": "Information for training pipeline and quality control",
+          "difficulty_level": "string - complexity level (e.g., intermediate_values_based_career_evaluation)",
+          "key_learning_objective": "string - main lesson for model",
+          "demonstrates_skills": ["array of skills shown"],
+          "conversation_turn": "integer - turn number (same as turn_number)",
+          "emotional_progression_target": "string - desired emotional change with specific values (e.g., excitement(0.75) + concern(0.65) → validated_excitement(0.80) + reduced_concern(0.50))",
+          "quality_score": "integer 1-5 - overall quality",
+          "quality_criteria": {
+            "empathy_score": "integer 1-5",
+            "clarity_score": "integer 1-5",
+            "appropriateness_score": "integer 1-5",
+            "brand_voice_alignment": "integer 1-5",
+            "additional_custom_criteria": "integer 1-5 - can add domain-specific criteria like values_integration, realistic_assessment, practical_guidance, transformation_celebration"
+          },
+          "human_reviewed": "boolean",
+          "reviewer_notes": "string - human reviewer comments",
+          "use_as_seed_example": "boolean - use for synthetic generation",
+          "generate_variations_count": "integer - how many variations to create"
+        }
+      }
+    }
+  },
+
+  "key_differences_from_v3_4_2": {
+    "system_prompt": "Changed from object with 'content' field to plain string",
+    "current_user_input": "Changed from object with 'content' field to plain string",
+    "target_response": "Changed from object with 'content' field to plain string",
+    "conversation_history": "Simplified structure - can be very concise summaries",
+    "emotional_indicators": "Flexible categories that vary by conversation context, not fixed structure",
+    "transformation_indicators": "Added - only present in later conversation turns",
+    "behavioral_assessment": "Updated to match actual terminology used in production files",
+    "response_strategy": "primary_rationale is a single detailed string, not separate fields",
+    "response_breakdown": "Not all sentences are necessarily analyzed - focuses on key teaching moments",
+    "emotional_progression": "Can have alternative multi-turn summary format in later turns"
+  },
+
+  "implementation_notes": {
+    "flexibility": "This schema describes common patterns, but actual files show variation in structure. Not all optional fields appear in every turn. Context-specific fields (like transformation_indicators) only appear when relevant.",
+    "consistency": "Use consistent emotion labels and strategy names across conversations for best training results.",
+    "file_organization": "Each conversation is typically a separate JSON file with the structure: dataset_metadata → consultant_profile → training_pairs array",
+    "human_readability": "Format with proper indentation. Files are designed for both machine training and human review.",
+    "string_vs_object": "Critical fields like system_prompt, current_user_input, and target_response are plain strings, not objects with content properties"
+  },
+
+  "example_usage": {
+    "reference_file": "See c-alpha-build_v3.4-LoRA-FP-convo-09-complete.json for accurate production example",
+    "conversation_structure": {
+      "root_level_keys": ["dataset_metadata", "consultant_profile", "training_pairs"],
+      "training_pairs": "Array of turn objects, each representing one exchange in the conversation"
+    }
+  }
+}
