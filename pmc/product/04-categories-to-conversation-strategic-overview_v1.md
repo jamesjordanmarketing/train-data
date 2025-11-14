@@ -12,7 +12,7 @@
 This document provides strategic analysis and direction for implementing the **categories-to-conversations pipeline module**, which transforms document categorization and chunk dimension data into emotionally intelligent LoRA training conversations. After deep analysis of the current system architecture, existing specifications, and user clarifications, this overview addresses critical gaps, refutes incorrect assumptions, and provides clear strategic paths forward for both short-term POC and long-term scalable solutions.
 
 **Critical Finding:** The system currently has THREE distinct data sources that need integration:
-1. **Document Categorization Module** - Statement of Belonging, 11 categories, 7 tag dimensions (document-level)
+1. **Document Categorization Module (Categ-Module)** - Statement of Belonging, 11 categories, 7 tag dimensions (document-level)
 2. **Chunks-Alpha Dimensions** - 60+ semantic dimensions (chunk-level)
 3. **Conversation Configuration Data** - Personas, emotional arcs, topics (currently missing as structured data)
 
@@ -413,7 +413,7 @@ Template Naming Convention:
 **Original Confusion:** Functional requirements document conflated two systems.
 
 **CORRECTED UNDERSTANDING:**
-- **Document Categorization Module** (`categ-module`) = Statement of Belonging + 11 categories + 7 tag dimensions (DOCUMENT level)
+- **Document Categorization Module (Categ-Module)** (`categ-module`) = Statement of Belonging + 11 categories + 7 tag dimensions (DOCUMENT level)
 - **Chunks-Alpha Module** (`chunks-alpha`) = 60+ semantic dimensions (CHUNK level)
 - **Different purposes:**
   - Categorization: Business value assessment, human judgment

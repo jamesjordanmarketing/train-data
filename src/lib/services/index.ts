@@ -30,6 +30,19 @@ export {
   createEdgeCaseService,
 } from './edge-case-service';
 
+// Scaffolding Services
+export {
+  ScaffoldingDataService,
+} from './scaffolding-data-service';
+
+export {
+  TemplateSelectionService,
+} from './template-selection-service';
+
+export {
+  ParameterAssemblyService,
+} from './parameter-assembly-service';
+
 // AI Generation Services
 export { 
   ClaudeAPIClient,
@@ -129,3 +142,16 @@ export type {
   BatchGenerationRequest,
   BatchJobStatus,
 } from './batch-generation-service';
+
+// Scaffolding Service Types
+export type {
+  Persona,
+  EmotionalArc,
+  TrainingTopic,
+  CompatibilityResult,
+  ConversationParameters,
+  AssembledParameters,
+  ValidationResult as ScaffoldingValidationResult,
+  TemplateSelectionCriteria,
+  TemplateSelectionResult,
+} from '@/lib/types/scaffolding.types';

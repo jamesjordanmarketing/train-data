@@ -7,17 +7,29 @@ import { TemplateSelector } from '@/components/generation/TemplateSelector';
 import { ParameterForm } from '@/components/generation/ParameterForm';
 import { GenerationProgress } from '@/components/generation/GenerationProgress';
 import { GenerationResult } from '@/components/generation/GenerationResult';
+import { ScaffoldingSelector, ScaffoldingSelection } from '@/components/conversations/scaffolding-selector';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowLeft } from 'lucide-react';
 import { Template } from '@/types/templates';
 import { GenerationParameters } from '@/lib/schemas/generation';
+
+type GenerationMode = 'template' | 'scaffolding';
 
 export default function GeneratePage() {
   const router = useRouter();
   const { templates, loading: templatesLoading } = useTemplates();
 
+  const [mode, setMode] = useState<GenerationMode>('scaffolding');
   const [step, setStep] = useState<'select' | 'configure' | 'generating' | 'complete'>('select');
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
+  const [scaffoldingSelection, setScaffoldingSelection] = useState<ScaffoldingSelection>({
+    persona_id: null,
+    emotional_arc_id: null,
+    training_topic_id: null,
+    tier: 'template'
+  });
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState<'starting' | 'generating' | 'validating' | 'saving' | 'complete'>('starting');
@@ -92,6 +104,58 @@ export default function GeneratePage() {
     }
   };
 
+  const handleGenerateWithScaffolding = async () => {
+    if (!scaffoldingSelection.persona_id || !scaffoldingSelection.emotional_arc_id || !scaffoldingSelection.training_topic_id) {
+      return;
+    }
+
+    setIsGenerating(true);
+    setStep('generating');
+    setProgress(10);
+    setStatus('starting');
+    setError(null);
+
+    try {
+      // Simulate progress stages
+      setTimeout(() => {
+        setProgress(30);
+        setStatus('generating');
+      }, 500);
+
+      const response = await fetch('/api/conversations/generate-with-scaffolding', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(scaffoldingSelection)
+      });
+
+      setProgress(85);
+      setStatus('validating');
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Generation failed');
+      }
+
+      const data = await response.json();
+
+      setProgress(95);
+      setStatus('saving');
+
+      setTimeout(() => {
+        setProgress(100);
+        setStatus('complete');
+        setResult(data);
+        setStep('complete');
+      }, 500);
+
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+      setStep('complete');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   const handleViewConversation = () => {
     if (result?.conversation?.id) {
       router.push(`/conversations?id=${result.conversation.id}`);
@@ -101,6 +165,12 @@ export default function GeneratePage() {
   const handleGenerateAnother = () => {
     setStep('select');
     setSelectedTemplate(null);
+    setScaffoldingSelection({
+      persona_id: null,
+      emotional_arc_id: null,
+      training_topic_id: null,
+      tier: 'template'
+    });
     setResult(null);
     setError(null);
     setProgress(0);
@@ -109,6 +179,11 @@ export default function GeneratePage() {
   const handleGoToDashboard = () => {
     router.push('/conversations');
   };
+
+  const isScaffoldingSelectionComplete = 
+    scaffoldingSelection.persona_id &&
+    scaffoldingSelection.emotional_arc_id &&
+    scaffoldingSelection.training_topic_id;
 
   return (
     <div className="container mx-auto p-6 max-w-7xl">
@@ -129,47 +204,61 @@ export default function GeneratePage() {
         </div>
       </div>
 
-      {/* Step Indicator */}
-      <div className="flex items-center gap-4 mb-8">
-        <div className={`flex items-center gap-2 ${step === 'select' ? 'text-primary font-medium' : 'text-muted-foreground'}`}>
-          <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step === 'select' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
-            1
-          </div>
-          <span>Select Template</span>
-        </div>
-        <div className="h-px flex-1 bg-border" />
-        <div className={`flex items-center gap-2 ${step === 'configure' ? 'text-primary font-medium' : 'text-muted-foreground'}`}>
-          <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step === 'configure' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
-            2
-          </div>
-          <span>Configure</span>
-        </div>
-        <div className="h-px flex-1 bg-border" />
-        <div className={`flex items-center gap-2 ${step === 'generating' || step === 'complete' ? 'text-primary font-medium' : 'text-muted-foreground'}`}>
-          <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step === 'generating' || step === 'complete' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
-            3
-          </div>
-          <span>Generate</span>
-        </div>
-      </div>
-
       {/* Content */}
       <div className="space-y-6">
-        {/* Step 1: Template Selection */}
+        {/* Step 1: Selection (Template or Scaffolding) */}
         {step === 'select' && (
           <div className="space-y-4">
-            <div>
-              <h2 className="text-xl font-semibold mb-2">Step 1: Select a Template</h2>
-              <p className="text-muted-foreground">
-                Choose a template to use for generating your conversation
-              </p>
-            </div>
-            <TemplateSelector
-              templates={templates}
-              selectedTemplateId={selectedTemplate?.id || null}
-              onSelectTemplate={handleSelectTemplate}
-              loading={templatesLoading}
-            />
+            <Tabs value={mode} onValueChange={(v) => setMode(v as GenerationMode)}>
+              <TabsList className="grid w-full max-w-md grid-cols-2">
+                <TabsTrigger value="scaffolding">Scaffolding-Based</TabsTrigger>
+                <TabsTrigger value="template">Template-Based</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="scaffolding" className="mt-6">
+                <div className="space-y-4">
+                  <div>
+                    <h2 className="text-xl font-semibold mb-2">Configure Conversation Scaffolding</h2>
+                    <p className="text-muted-foreground">
+                      Select persona, emotional journey, and training topic to generate a structured conversation
+                    </p>
+                  </div>
+                  <Card className="p-6">
+                    <ScaffoldingSelector
+                      value={scaffoldingSelection}
+                      onChange={setScaffoldingSelection}
+                      disabled={isGenerating}
+                    />
+                    <div className="mt-6 flex justify-end">
+                      <Button
+                        onClick={handleGenerateWithScaffolding}
+                        disabled={!isScaffoldingSelectionComplete || isGenerating}
+                        size="lg"
+                      >
+                        {isGenerating ? 'Generating...' : 'Generate Conversation'}
+                      </Button>
+                    </div>
+                  </Card>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="template" className="mt-6">
+                <div className="space-y-4">
+                  <div>
+                    <h2 className="text-xl font-semibold mb-2">Select a Template</h2>
+                    <p className="text-muted-foreground">
+                      Choose a template to use for generating your conversation
+                    </p>
+                  </div>
+                  <TemplateSelector
+                    templates={templates}
+                    selectedTemplateId={selectedTemplate?.id || null}
+                    onSelectTemplate={handleSelectTemplate}
+                    loading={templatesLoading}
+                  />
+                </div>
+              </TabsContent>
+            </Tabs>
           </div>
         )}
 
