@@ -1200,33 +1200,7 @@ Batch process multiple chunks.
 **Variation**: Multiple different conversations generated from the same source chunk by varying persona, emotion, or template.
 
 ---
-
-## Document Status
-
-**Version:** 0.1
-**Status:** Draft for Review
-**Next Steps:**
-1. Review with stakeholders
-2. Validate technical feasibility
-3. Refine mapping rules based on sample chunks
-4. Prioritize FR implementation order
-5. Create detailed implementation tickets
-
-**Feedback Requested:**
-- Are the mapping rules sensible for your content types?
-- Is the database schema complete?
-- Which features are highest priority for Phase 1?
-- Are there edge cases not covered?
-
----
-
-*This document represents an honest, critical analysis of the current state and proposed solution. The user's initial assumptions were well-intentioned but oversimplified. This refined approach provides a structured path forward with clear requirements, realistic implementation phases, and measurable success criteria.*
-
-
-# Appendix 1
-
-Model Comments and Quick Info:
-
+## Appendix D: Model Comments and Quick Info:
 Deep Research Analysis Complete
 
   I've completed a comprehensive analysis of your system and created the functional
@@ -1294,3 +1268,27 @@ Deep Research Analysis Complete
 
   Review the document and let me know which sections need clarification or if you
   disagree with any of my analysis.
+
+---
+## Document Status
+
+**Version:** 0.1
+**Status:** Draft for Review
+**Next Steps:**
+1. Review with stakeholders
+2. Validate technical feasibility
+3. Refine mapping rules based on sample chunks
+4. Prioritize FR implementation order
+5. Create detailed implementation tickets
+
+**Feedback Requested:**
+- Are the mapping rules sensible for your content types?
+- Is the database schema complete?
+- Which features are highest priority for Phase 1?
+- Are there edge cases not covered?
+
+---
+
+*This document represents an honest, critical analysis of the current state and proposed solution. The user's initial assumptions were well-intentioned but oversimplified. This refined approach provides a structured path forward with clear requirements, realistic implementation phases, and measurable success criteria.*
+
+

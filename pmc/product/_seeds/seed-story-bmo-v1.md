@@ -334,7 +334,7 @@ This module presents a focused, dual-panel "workbench" interface designed for co
 
 **Backend & Data Model:**
 
-* **Supabase Tables:** The QAPairs table (as defined in Section 4\) is the single source of truth.  
+* **Supabase Table(s):** The QAPairs table (as defined in Section 4\) is the single source of truth.  
 * **Logic:** When the user navigates to this view, an Edge Function is invoked to generate the initial AI suggestions for the input, output, alternate\_outputs, and attributes fields of the corresponding QAPairs record. As the user edits the form, the changes are saved to the record (either on blur or via a save button). Clicking "Submit for Review" updates the record's status to pending\_review and can trigger a notification (e.g., via email or an in-app system) to users with the "Reviewer" role.
 
 ### **Module 5: Collaborative Review & Approval ("The Quality Gate")**
