@@ -1,0 +1,31 @@
+{
+  "runId": "20251115T193109Z",
+  "table": "personas",
+  "totals": {
+    "total": 0,
+    "success": 0,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 4
+  },
+  "warnings": [
+    "Preflight failed: Missing environment variables"
+  ],
+  "config": {
+    "mode": "upsert",
+    "onConflict": "persona_key",
+    "batchSize": 200,
+    "concurrency": 2,
+    "sanitize": true,
+    "normalization": "NFC",
+    "transport": "supabase"
+  },
+  "nextActions": [
+    {
+      "action": "FIX_CONFIGURATION",
+      "description": "Missing required environment variables: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY",
+      "example": "export SUPABASE_URL=your-value-here\nexport SUPABASE_SERVICE_ROLE_KEY=your-value-here",
+      "priority": "HIGH"
+    }
+  ]
+}

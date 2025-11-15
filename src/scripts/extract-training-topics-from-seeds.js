@@ -1,0 +1,1211 @@
+const fs = require('fs');
+const path = require('path');
+
+function extractTrainingTopicsFromSeeds() {
+  const topics = [];
+
+  // RETIREMENT PLANNING (15 topics)
+  topics.push({
+    topic_key: 'hsa_vs_fsa',
+    name: 'HSA vs FSA Comparison',
+    category: 'retirement',
+    description: 'Understanding differences between Health Savings Accounts and Flexible Spending Accounts, including tax advantages, rollover rules, and optimal usage strategies.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'Should I choose an HSA or FSA at work?',
+      'Can I use both an HSA and FSA?',
+      'What happens to unused HSA funds?',
+      'How does an HSA work as a retirement account?'
+    ],
+    key_concepts: ['tax advantages', 'healthcare costs', 'rollover rules', 'contribution limits'],
+    suitable_personas: ['overwhelmed_avoider', 'anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['confusion_to_clarity', 'overwhelm_to_empowerment'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'roth_ira_conversion',
+    name: 'Roth IRA Conversion Strategy',
+    category: 'retirement',
+    description: 'Converting traditional IRA to Roth IRA, understanding tax implications, timing strategies, and long-term benefits.',
+    complexity_level: 'advanced',
+    typical_question_examples: [
+      'Should I convert my traditional IRA to Roth?',
+      'When is the best time to do a Roth conversion?',
+      'How much tax will I pay on a Roth conversion?',
+      'Can I undo a Roth conversion?'
+    ],
+    key_concepts: ['tax planning', 'retirement income', 'conversion timing', 'brackets'],
+    suitable_personas: ['overwhelmed_avoider', 'anxious_planner'],
+    suitable_emotional_arcs: ['confusion_to_clarity', 'fear_to_confidence'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'backdoor_roth',
+    name: 'Backdoor Roth IRA Strategy',
+    category: 'retirement',
+    description: 'Using non-deductible traditional IRA contributions to fund Roth IRA when income exceeds limits, including pro-rata rule considerations.',
+    complexity_level: 'advanced',
+    typical_question_examples: [
+      'What is a backdoor Roth IRA?',
+      'Am I eligible for backdoor Roth contributions?',
+      'What is the pro-rata rule?',
+      'How do I execute a backdoor Roth?'
+    ],
+    key_concepts: ['income limits', 'contribution strategies', 'tax forms', 'pro-rata rule'],
+    suitable_personas: ['overwhelmed_avoider', 'anxious_planner'],
+    suitable_emotional_arcs: ['confusion_to_clarity', 'overwhelm_to_empowerment'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'rmds_at_retirement',
+    name: 'Required Minimum Distributions',
+    category: 'retirement',
+    description: 'Understanding RMD requirements, calculations, timing, and tax implications at age 73+.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'When do I have to start taking RMDs?',
+      'How are RMDs calculated?',
+      'What happens if I miss an RMD?',
+      'Can I delay my first RMD?'
+    ],
+    key_concepts: ['age requirements', 'distribution rules', 'tax implications', 'penalties'],
+    suitable_personas: ['anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['confusion_to_clarity', 'fear_to_confidence'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'no_retirement_at_45',
+    name: 'Starting Retirement Savings Late',
+    category: 'retirement',
+    description: 'Strategies for catching up on retirement savings when starting later in career, including catch-up contributions.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'I\'m 45 with no retirement savings - is it too late?',
+      'How much do I need to save to catch up?',
+      'What are catch-up contributions?',
+      'Can I still retire comfortably if I start now?'
+    ],
+    key_concepts: ['catch-up contributions', 'aggressive saving', 'timeline planning', 'realistic goals'],
+    suitable_personas: ['overwhelmed_avoider', 'anxious_planner'],
+    suitable_emotional_arcs: ['shame_to_acceptance', 'fear_to_confidence', 'overwhelm_to_empowerment'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'ignored_401k',
+    name: 'Optimizing Neglected 401k',
+    category: 'retirement',
+    description: 'Reviewing and optimizing 401k that has been on autopilot, including fund selection and contribution rate.',
+    complexity_level: 'beginner',
+    typical_question_examples: [
+      'I haven\'t looked at my 401k in years - what should I do?',
+      'How do I know if my 401k is set up correctly?',
+      'What funds should I choose in my 401k?',
+      'Am I contributing enough to my 401k?'
+    ],
+    key_concepts: ['fund selection', 'contribution rates', 'employer match', 'rebalancing'],
+    suitable_personas: ['overwhelmed_avoider', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['shame_to_acceptance', 'overwhelm_to_empowerment'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'retirement_running_out',
+    name: 'Retirement Longevity Risk',
+    category: 'retirement',
+    description: 'Addressing fears about outliving retirement savings, including sustainable withdrawal strategies.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'What if I run out of money in retirement?',
+      'How much can I safely withdraw each year?',
+      'What is the 4% rule?',
+      'How long will my retirement savings last?'
+    ],
+    key_concepts: ['withdrawal rates', 'longevity planning', '4% rule', 'sequence risk'],
+    suitable_personas: ['anxious_planner'],
+    suitable_emotional_arcs: ['fear_to_confidence', 'confusion_to_clarity'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'confusing_401k_options',
+    name: 'Navigating 401k Investment Options',
+    category: 'retirement',
+    description: 'Understanding and choosing between target-date funds, index funds, and other 401k investment options.',
+    complexity_level: 'beginner',
+    typical_question_examples: [
+      'What\'s the difference between all these 401k funds?',
+      'Should I choose a target-date fund?',
+      'How many funds should I choose?',
+      'What do all these fund abbreviations mean?'
+    ],
+    key_concepts: ['fund types', 'target-date funds', 'expense ratios', 'diversification'],
+    suitable_personas: ['overwhelmed_avoider', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['confusion_to_clarity', 'frustration_to_relief'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'roth_vs_traditional_401k',
+    name: 'Roth vs Traditional 401k Decision',
+    category: 'retirement',
+    description: 'Choosing between Roth and Traditional 401k contributions based on current and future tax situations.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'Should I do Roth or Traditional 401k contributions?',
+      'Which is better for my tax situation?',
+      'Can I split between both?',
+      'How do I decide between Roth and Traditional?'
+    ],
+    key_concepts: ['tax planning', 'current vs future brackets', 'contribution strategies', 'flexibility'],
+    suitable_personas: ['overwhelmed_avoider', 'anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['confusion_to_clarity', 'overwhelm_to_empowerment'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'early_retirement_planning',
+    name: 'Early Retirement (FIRE) Strategy',
+    category: 'retirement',
+    description: 'Planning for financial independence and early retirement, including savings rates and withdrawal strategies.',
+    complexity_level: 'advanced',
+    typical_question_examples: [
+      'How much do I need to retire early?',
+      'What savings rate do I need for early retirement?',
+      'How do I access retirement accounts before 59.5?',
+      'Is FIRE realistic for my income level?'
+    ],
+    key_concepts: ['savings rates', 'withdrawal strategies', '72(t) distributions', 'Roth ladders'],
+    suitable_personas: ['pragmatic_optimist', 'anxious_planner'],
+    suitable_emotional_arcs: ['confusion_to_clarity', 'fear_to_confidence'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'spousal_ira',
+    name: 'Spousal IRA Contributions',
+    category: 'retirement',
+    description: 'Understanding how non-working spouses can contribute to IRAs using household income.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'Can my spouse contribute to an IRA without working?',
+      'How does a spousal IRA work?',
+      'What are the contribution limits for spousal IRAs?',
+      'Should we both have IRAs?'
+    ],
+    key_concepts: ['household income', 'contribution rules', 'joint filing', 'retirement parity'],
+    suitable_personas: ['anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['confusion_to_clarity', 'couple_conflict_to_alignment'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'pension_vs_lump_sum',
+    name: 'Pension vs Lump Sum Decision',
+    category: 'retirement',
+    description: 'Evaluating whether to take pension payments or lump sum distribution at retirement.',
+    complexity_level: 'advanced',
+    typical_question_examples: [
+      'Should I take my pension or a lump sum?',
+      'How do I compare pension options?',
+      'What happens to my pension if I die?',
+      'Can I take part of both?'
+    ],
+    key_concepts: ['present value', 'longevity risk', 'survivor benefits', 'investment alternatives'],
+    suitable_personas: ['anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['fear_to_confidence', 'confusion_to_clarity'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'retirement_income_strategies',
+    name: 'Retirement Income Distribution Strategy',
+    category: 'retirement',
+    description: 'Planning optimal sequence for withdrawing from different retirement account types to minimize taxes.',
+    complexity_level: 'advanced',
+    typical_question_examples: [
+      'Which retirement accounts should I withdraw from first?',
+      'How do I minimize taxes in retirement?',
+      'Should I convert to Roth before retiring?',
+      'What order should I tap different accounts?'
+    ],
+    key_concepts: ['withdrawal sequencing', 'tax efficiency', 'Roth conversions', 'bracket management'],
+    suitable_personas: ['anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['confusion_to_clarity', 'overwhelm_to_empowerment'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'social_security_timing',
+    name: 'Social Security Claiming Strategy',
+    category: 'retirement',
+    description: 'Deciding when to claim Social Security benefits between ages 62-70 to maximize lifetime benefits.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'When should I start taking Social Security?',
+      'Should I wait until 70 to maximize benefits?',
+      'How much more do I get if I delay?',
+      'What about spousal benefits?'
+    ],
+    key_concepts: ['delayed credits', 'break-even analysis', 'spousal strategies', 'longevity considerations'],
+    suitable_personas: ['anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['fear_to_confidence', 'confusion_to_clarity'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'retirement_healthcare_bridge',
+    name: 'Healthcare Before Medicare',
+    category: 'retirement',
+    description: 'Planning for healthcare coverage between early retirement and Medicare eligibility at 65.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'How do I afford healthcare if I retire before 65?',
+      'What are my options for health insurance before Medicare?',
+      'How much does healthcare cost in early retirement?',
+      'Can I use HSA funds in early retirement?'
+    ],
+    key_concepts: ['ACA marketplace', 'COBRA', 'HSA strategies', 'premium costs'],
+    suitable_personas: ['anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['fear_to_confidence', 'confusion_to_clarity'],
+    is_active: true
+  });
+
+  // INVESTMENT PLANNING (12 topics)
+  topics.push({
+    topic_key: 'getting_started_investing',
+    name: 'Getting Started with Investing',
+    category: 'investment',
+    description: 'Basic principles for beginning investors, including asset allocation and risk tolerance.',
+    complexity_level: 'beginner',
+    typical_question_examples: [
+      'How do I start investing?',
+      'What\'s the difference between stocks and bonds?',
+      'How much risk should I take?',
+      'Should I use a robo-advisor?'
+    ],
+    key_concepts: ['asset allocation', 'risk tolerance', 'diversification', 'index funds'],
+    suitable_personas: ['overwhelmed_avoider', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['overwhelm_to_empowerment', 'confusion_to_clarity'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'market_crash_fears',
+    name: 'Handling Market Volatility Anxiety',
+    category: 'investment',
+    description: 'Managing emotional response to market downturns and maintaining investment discipline.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'Should I sell everything when the market crashes?',
+      'How do I protect my money from market losses?',
+      'Is it too late to invest after a big run-up?',
+      'How do I stay calm during market volatility?'
+    ],
+    key_concepts: ['market timing', 'dollar-cost averaging', 'long-term perspective', 'rebalancing'],
+    suitable_personas: ['anxious_planner'],
+    suitable_emotional_arcs: ['fear_to_confidence', 'confusion_to_clarity'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'index_funds_vs_active',
+    name: 'Index Funds vs Active Management',
+    category: 'investment',
+    description: 'Comparing passive index investing to active fund management, including cost and performance considerations.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'Should I use index funds or actively managed funds?',
+      'Are index funds really better?',
+      'What about all the fancy funds my advisor recommends?',
+      'How much do fees really matter?'
+    ],
+    key_concepts: ['expense ratios', 'passive investing', 'performance comparison', 'fee impact'],
+    suitable_personas: ['overwhelmed_avoider', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['confusion_to_clarity', 'frustration_to_relief'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'taxable_account_investing',
+    name: 'Taxable Account Investment Strategy',
+    category: 'investment',
+    description: 'Optimizing investments in taxable brokerage accounts for tax efficiency.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'What should I invest in outside of retirement accounts?',
+      'How are taxable investments taxed?',
+      'Should I invest in municipal bonds?',
+      'What\'s tax-loss harvesting?'
+    ],
+    key_concepts: ['tax efficiency', 'qualified dividends', 'capital gains', 'tax-loss harvesting'],
+    suitable_personas: ['overwhelmed_avoider', 'anxious_planner'],
+    suitable_emotional_arcs: ['confusion_to_clarity', 'overwhelm_to_empowerment'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'risk_tolerance_mismatch',
+    name: 'Couple Risk Tolerance Differences',
+    category: 'investment',
+    description: 'Navigating different risk tolerances between partners in joint investment decisions.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'My partner and I have very different risk tolerances - what do we do?',
+      'How do we invest when one of us is conservative and one is aggressive?',
+      'Can we each have different investment strategies?',
+      'How do couples handle investment disagreements?'
+    ],
+    key_concepts: ['risk assessment', 'compromise strategies', 'separate accounts', 'communication'],
+    suitable_personas: ['anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['couple_conflict_to_alignment', 'frustration_to_relief'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'rebalancing_strategy',
+    name: 'Portfolio Rebalancing',
+    category: 'investment',
+    description: 'When and how to rebalance investment portfolio to maintain target allocation.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'How often should I rebalance my portfolio?',
+      'When is the best time to rebalance?',
+      'Should I rebalance in a down market?',
+      'What triggers a rebalancing?'
+    ],
+    key_concepts: ['asset allocation', 'drift thresholds', 'tax implications', 'frequency'],
+    suitable_personas: ['anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['confusion_to_clarity', 'fear_to_confidence'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'emergency_fund_investing',
+    name: 'Emergency Fund Placement',
+    category: 'investment',
+    description: 'Where to hold emergency funds balancing accessibility and return.',
+    complexity_level: 'beginner',
+    typical_question_examples: [
+      'Where should I keep my emergency fund?',
+      'Should I invest my emergency fund?',
+      'How much should be in emergency funds?',
+      'What about high-yield savings accounts?'
+    ],
+    key_concepts: ['liquidity', 'HYSA options', 'risk levels', 'access speed'],
+    suitable_personas: ['overwhelmed_avoider', 'anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['confusion_to_clarity', 'fear_to_confidence'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'rsu_diversification',
+    name: 'RSU and Stock Compensation Diversification',
+    category: 'investment',
+    description: 'Managing concentrated stock positions from RSUs, stock options, and ESPP.',
+    complexity_level: 'advanced',
+    typical_question_examples: [
+      'I have too much company stock - when should I sell?',
+      'How do I diversify RSUs?',
+      'What are the tax implications of selling RSUs?',
+      'Should I hold or sell my ESPP shares?'
+    ],
+    key_concepts: ['concentration risk', 'diversification', 'tax timing', 'company stock exposure'],
+    suitable_personas: ['overwhelmed_avoider', 'anxious_planner'],
+    suitable_emotional_arcs: ['confusion_to_clarity', 'overwhelm_to_empowerment'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'esg_investing',
+    name: 'ESG and Values-Based Investing',
+    category: 'investment',
+    description: 'Incorporating environmental, social, and governance factors into investment decisions.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'Can I invest according to my values?',
+      'What is ESG investing?',
+      'Do sustainable funds perform worse?',
+      'How do I screen investments for values alignment?'
+    ],
+    key_concepts: ['ESG criteria', 'impact investing', 'performance comparison', 'values alignment'],
+    suitable_personas: ['pragmatic_optimist', 'anxious_planner'],
+    suitable_emotional_arcs: ['guilt_to_permission', 'confusion_to_clarity'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'investment_fee_structures',
+    name: 'Understanding Investment Fees',
+    category: 'investment',
+    description: 'Decoding advisor fees, fund expenses, and total investment costs.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'How much am I really paying in investment fees?',
+      'What\'s a reasonable advisor fee?',
+      'What\'s the difference between expense ratio and load?',
+      'Are my investment fees too high?'
+    ],
+    key_concepts: ['expense ratios', 'advisor fees', 'loads', 'fee transparency'],
+    suitable_personas: ['overwhelmed_avoider', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['frustration_to_relief', 'confusion_to_clarity'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'target_date_funds',
+    name: 'Target-Date Fund Evaluation',
+    category: 'investment',
+    description: 'Understanding how target-date funds work and whether they\'re appropriate for your situation.',
+    complexity_level: 'beginner',
+    typical_question_examples: [
+      'What is a target-date fund?',
+      'Should I just use a target-date fund?',
+      'How do I pick the right target date?',
+      'Are target-date funds too conservative?'
+    ],
+    key_concepts: ['glide paths', 'automatic rebalancing', 'simplicity', 'customization tradeoffs'],
+    suitable_personas: ['overwhelmed_avoider', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['overwhelm_to_empowerment', 'confusion_to_clarity'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'dividend_investing',
+    name: 'Dividend Investing Strategy',
+    category: 'investment',
+    description: 'Using dividend-paying stocks for income and total return.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'Should I focus on dividend stocks?',
+      'Are dividend stocks better for retirement?',
+      'How are dividends taxed?',
+      'What about dividend reinvestment?'
+    ],
+    key_concepts: ['dividend yield', 'qualified dividends', 'DRIP programs', 'income vs growth'],
+    suitable_personas: ['pragmatic_optimist', 'anxious_planner'],
+    suitable_emotional_arcs: ['confusion_to_clarity', 'fear_to_confidence'],
+    is_active: true
+  });
+
+  // INSURANCE PLANNING (8 topics)
+  topics.push({
+    topic_key: 'life_insurance_types',
+    name: 'Term vs Whole Life Insurance',
+    category: 'insurance',
+    description: 'Understanding different life insurance types and which is appropriate for various situations.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'Should I buy term or whole life insurance?',
+      'What\'s the difference between term and permanent insurance?',
+      'Is whole life insurance a good investment?',
+      'How much life insurance do I need?'
+    ],
+    key_concepts: ['term insurance', 'whole life', 'universal life', 'coverage needs'],
+    suitable_personas: ['overwhelmed_avoider', 'anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['confusion_to_clarity', 'fear_to_confidence'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'disability_insurance',
+    name: 'Disability Insurance Evaluation',
+    category: 'insurance',
+    description: 'Assessing need for disability insurance and understanding policy features.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'Do I need disability insurance?',
+      'What does disability insurance cover?',
+      'How much disability insurance should I have?',
+      'What\'s the difference between short and long-term disability?'
+    ],
+    key_concepts: ['income protection', 'own-occupation', 'benefit periods', 'elimination periods'],
+    suitable_personas: ['anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['fear_to_confidence', 'confusion_to_clarity'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'umbrella_liability',
+    name: 'Umbrella Liability Insurance',
+    category: 'insurance',
+    description: 'Understanding when umbrella policies are needed and how much coverage is appropriate.',
+    complexity_level: 'beginner',
+    typical_question_examples: [
+      'Do I need umbrella insurance?',
+      'What does umbrella insurance cover?',
+      'How much umbrella coverage should I have?',
+      'Is umbrella insurance worth the cost?'
+    ],
+    key_concepts: ['liability protection', 'asset protection', 'coverage limits', 'cost-benefit'],
+    suitable_personas: ['anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['fear_to_confidence', 'confusion_to_clarity'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'long_term_care',
+    name: 'Long-Term Care Planning',
+    category: 'insurance',
+    description: 'Evaluating long-term care insurance options and alternative strategies.',
+    complexity_level: 'advanced',
+    typical_question_examples: [
+      'Should I buy long-term care insurance?',
+      'When is the right time to buy LTC insurance?',
+      'What are alternatives to LTC insurance?',
+      'How much does long-term care cost?'
+    ],
+    key_concepts: ['LTC costs', 'self-insuring', 'hybrid policies', 'timing considerations'],
+    suitable_personas: ['anxious_planner'],
+    suitable_emotional_arcs: ['fear_to_confidence', 'confusion_to_clarity'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'healthcare_costs',
+    name: 'Healthcare Cost Planning',
+    category: 'insurance',
+    description: 'Estimating and planning for healthcare costs in retirement.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'How much will healthcare cost in retirement?',
+      'What does Medicare not cover?',
+      'Should I get a Medigap policy?',
+      'How do I plan for medical expenses?'
+    ],
+    key_concepts: ['Medicare parts', 'Medigap', 'out-of-pocket costs', 'HSA strategies'],
+    suitable_personas: ['anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['fear_to_confidence', 'confusion_to_clarity'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'insurance_policy_confusion',
+    name: 'Understanding Insurance Policies',
+    category: 'insurance',
+    description: 'Decoding insurance policy language, exclusions, and coverage details.',
+    complexity_level: 'beginner',
+    typical_question_examples: [
+      'What does my insurance policy actually cover?',
+      'What are all these insurance exclusions?',
+      'Am I over-insured or under-insured?',
+      'How do I read my insurance policy?'
+    ],
+    key_concepts: ['policy terms', 'exclusions', 'coverage gaps', 'declarations page'],
+    suitable_personas: ['overwhelmed_avoider', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['frustration_to_relief', 'confusion_to_clarity'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'life_insurance_needs',
+    name: 'Calculating Life Insurance Needs',
+    category: 'insurance',
+    description: 'Determining appropriate life insurance coverage amount based on family situation.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'How much life insurance do I need?',
+      'What happens if I die without life insurance?',
+      'Should both spouses have life insurance?',
+      'Do I still need life insurance in retirement?'
+    ],
+    key_concepts: ['income replacement', 'debt coverage', 'education funding', 'coverage duration'],
+    suitable_personas: ['anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['fear_to_confidence', 'couple_conflict_to_alignment'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'insurance_laddering',
+    name: 'Life Insurance Laddering Strategy',
+    category: 'insurance',
+    description: 'Using multiple term policies with different durations to match changing coverage needs.',
+    complexity_level: 'advanced',
+    typical_question_examples: [
+      'What is life insurance laddering?',
+      'Should I have multiple life insurance policies?',
+      'How do I match insurance to my needs over time?',
+      'Is laddering worth the complexity?'
+    ],
+    key_concepts: ['coverage timing', 'cost optimization', 'needs analysis', 'policy coordination'],
+    suitable_personas: ['anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['confusion_to_clarity', 'overwhelm_to_empowerment'],
+    is_active: true
+  });
+
+  // EDUCATION & FAMILY PLANNING (6 topics)
+  topics.push({
+    topic_key: '529_vs_utma',
+    name: '529 vs UTMA/UGMA Accounts',
+    category: 'education',
+    description: 'Comparing tax-advantaged education savings options and custodial accounts.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'Should I use a 529 or UTMA for college savings?',
+      'What are the pros and cons of each?',
+      'What if my child doesn\'t go to college?',
+      'How do these affect financial aid?'
+    ],
+    key_concepts: ['tax advantages', 'flexibility', 'financial aid impact', 'ownership'],
+    suitable_personas: ['anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['confusion_to_clarity', 'fear_to_confidence'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'college_vs_retirement',
+    name: 'Balancing College and Retirement Savings',
+    category: 'education',
+    description: 'Prioritizing between funding children\'s education and own retirement security.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'Should I save for retirement or my kid\'s college?',
+      'Can I afford to do both?',
+      'What\'s more important - college or retirement?',
+      'How much should I save for college?'
+    ],
+    key_concepts: ['priority setting', 'financial aid', 'loan options', 'tradeoff analysis'],
+    suitable_personas: ['anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['guilt_to_permission', 'couple_conflict_to_alignment'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'private_school_vs_college_fund',
+    name: 'Private School vs College Savings',
+    category: 'education',
+    description: 'Weighing immediate private school costs against future college savings.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'Should we pay for private school or save for college?',
+      'Can we afford both private school and college?',
+      'What\'s the long-term impact of private school tuition?',
+      'How do we prioritize education spending?'
+    ],
+    key_concepts: ['opportunity cost', 'education value', 'financial tradeoffs', 'long-term planning'],
+    suitable_personas: ['anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['guilt_to_permission', 'couple_conflict_to_alignment', 'fear_to_confidence'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'grandparent_529',
+    name: 'Grandparent 529 Contributions',
+    category: 'education',
+    description: 'Coordinating education savings when grandparents want to contribute.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'Should grandparents open their own 529?',
+      'How do grandparent 529s affect financial aid?',
+      'Can grandparents contribute to our 529?',
+      'What\'s the best way for grandparents to help with college?'
+    ],
+    key_concepts: ['financial aid impact', 'gift tax', 'ownership options', 'coordination'],
+    suitable_personas: ['anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['confusion_to_clarity', 'couple_conflict_to_alignment'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'student_loan_payoff',
+    name: 'Student Loan Repayment Strategy',
+    category: 'education',
+    description: 'Optimizing student loan repayment vs other financial goals.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'Should I aggressively pay off student loans?',
+      'Invest or pay down student debt?',
+      'What about student loan forgiveness programs?',
+      'How do I balance loan payments with saving?'
+    ],
+    key_concepts: ['interest rates', 'opportunity cost', 'forgiveness programs', 'priority setting'],
+    suitable_personas: ['overwhelmed_avoider', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['overwhelm_to_empowerment', 'guilt_to_permission'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'stay_home_parent_finances',
+    name: 'Single Income Family Planning',
+    category: 'family',
+    description: 'Financial planning when one parent stays home with children.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'Can we afford for one parent to stay home?',
+      'How do we protect a stay-at-home parent financially?',
+      'What about retirement savings for non-working spouse?',
+      'Should the stay-at-home parent have life insurance?'
+    ],
+    key_concepts: ['spousal IRA', 'life insurance', 'budget adjustments', 'long-term security'],
+    suitable_personas: ['anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['fear_to_confidence', 'couple_conflict_to_alignment'],
+    is_active: true
+  });
+
+  // DEBT & CASH FLOW (8 topics)
+  topics.push({
+    topic_key: 'credit_card_debt_lifestyle',
+    name: 'Breaking Lifestyle Debt Cycle',
+    category: 'debt',
+    description: 'Addressing credit card debt from lifestyle inflation and creating sustainable spending.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'How do I get out of credit card debt?',
+      'Why do I keep accumulating credit card debt?',
+      'Should I consolidate credit card debt?',
+      'What\'s the fastest way to pay off credit cards?'
+    ],
+    key_concepts: ['debt payoff methods', 'spending patterns', 'consolidation', 'behavioral change'],
+    suitable_personas: ['overwhelmed_avoider', 'anxious_planner'],
+    suitable_emotional_arcs: ['shame_to_acceptance', 'overwhelm_to_empowerment'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'wedding_debt_vs_house',
+    name: 'Wedding Debt vs House Down Payment',
+    category: 'debt',
+    description: 'Balancing wedding costs, existing debt, and saving for home purchase.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'Should we pay off wedding debt before buying a house?',
+      'How much should we spend on a wedding?',
+      'Can we afford both a wedding and a house down payment?',
+      'What\'s more important - wedding or house?'
+    ],
+    key_concepts: ['priority setting', 'debt timing', 'mortgage qualification', 'tradeoff analysis'],
+    suitable_personas: ['pragmatic_optimist', 'anxious_planner'],
+    suitable_emotional_arcs: ['couple_conflict_to_alignment', 'guilt_to_permission'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'mortgage_payoff_strategy',
+    name: 'Accelerated Mortgage Payoff',
+    category: 'debt',
+    description: 'Evaluating whether to pay off mortgage early vs invest the difference.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'Should I pay off my mortgage early?',
+      'Is it better to invest or pay down the mortgage?',
+      'What about the mortgage interest deduction?',
+      'Should I refinance or pay extra principal?'
+    ],
+    key_concepts: ['opportunity cost', 'interest rate comparison', 'tax considerations', 'risk tolerance'],
+    suitable_personas: ['anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['confusion_to_clarity', 'couple_conflict_to_alignment'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'paycheck_to_paycheck_high_income',
+    name: 'High Income, No Savings Problem',
+    category: 'cash_flow',
+    description: 'Addressing why high income doesn\'t translate to savings and building wealth despite good earnings.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'Why can\'t I save money despite a high income?',
+      'Where is all my money going?',
+      'How do I break the paycheck-to-paycheck cycle?',
+      'Why don\'t I feel wealthy despite earning a lot?'
+    ],
+    key_concepts: ['lifestyle inflation', 'expense tracking', 'automated savings', 'spending awareness'],
+    suitable_personas: ['overwhelmed_avoider', 'anxious_planner'],
+    suitable_emotional_arcs: ['shame_to_acceptance', 'overwhelm_to_empowerment'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'spending_priorities',
+    name: 'Values-Based Spending Decisions',
+    category: 'cash_flow',
+    description: 'Aligning spending with personal values and priorities.',
+    complexity_level: 'beginner',
+    typical_question_examples: [
+      'How do I decide what\'s worth spending on?',
+      'Is it okay to spend money on things I enjoy?',
+      'How do I balance enjoying life now vs saving?',
+      'What spending should I feel good about?'
+    ],
+    key_concepts: ['values alignment', 'conscious spending', 'guilt-free spending', 'priority setting'],
+    suitable_personas: ['pragmatic_optimist', 'anxious_planner'],
+    suitable_emotional_arcs: ['guilt_to_permission', 'couple_conflict_to_alignment'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'vacation_vs_debt_payoff',
+    name: 'Vacation Spending vs Debt Payoff',
+    category: 'cash_flow',
+    description: 'Balancing desire for experiences/vacation with debt reduction goals.',
+    complexity_level: 'beginner',
+    typical_question_examples: [
+      'Should I take a vacation if I have debt?',
+      'How do I balance enjoying life with paying off debt?',
+      'Is it irresponsible to vacation with student loans?',
+      'Can I afford this trip?'
+    ],
+    key_concepts: ['balanced approach', 'guilt-free spending', 'priority setting', 'sustainability'],
+    suitable_personas: ['pragmatic_optimist', 'anxious_planner'],
+    suitable_emotional_arcs: ['guilt_to_permission', 'couple_conflict_to_alignment'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'refinancing_evaluation',
+    name: 'Mortgage Refinancing Decision',
+    category: 'debt',
+    description: 'Evaluating when refinancing makes sense considering costs and break-even.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'Should I refinance my mortgage?',
+      'How much do I need to save to make refinancing worth it?',
+      'What\'s a good rate to refinance?',
+      'Should I refinance to a shorter term?'
+    ],
+    key_concepts: ['break-even analysis', 'closing costs', 'rate comparison', 'term decisions'],
+    suitable_personas: ['pragmatic_optimist', 'anxious_planner'],
+    suitable_emotional_arcs: ['confusion_to_clarity', 'fear_to_confidence'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'home_equity_uses',
+    name: 'Home Equity Management',
+    category: 'debt',
+    description: 'Understanding when and how to use home equity for various financial goals.',
+    complexity_level: 'advanced',
+    typical_question_examples: [
+      'Should I tap my home equity for renovations?',
+      'Is a HELOC or home equity loan better?',
+      'Can I use home equity to pay off other debt?',
+      'What are the risks of borrowing against my home?'
+    ],
+    key_concepts: ['HELOC', 'home equity loans', 'risk considerations', 'alternative funding'],
+    suitable_personas: ['anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['confusion_to_clarity', 'fear_to_confidence'],
+    is_active: true
+  });
+
+  // TAX PLANNING (5 topics)
+  topics.push({
+    topic_key: 'tax_optimization_complex',
+    name: 'Comprehensive Tax Optimization',
+    category: 'tax',
+    description: 'Advanced tax planning strategies for high earners with complex situations.',
+    complexity_level: 'advanced',
+    typical_question_examples: [
+      'How can I reduce my tax bill?',
+      'What tax strategies am I missing?',
+      'Should I work with a CPA?',
+      'How do I optimize taxes with multiple income sources?'
+    ],
+    key_concepts: ['tax brackets', 'deductions', 'credits', 'timing strategies'],
+    suitable_personas: ['overwhelmed_avoider', 'anxious_planner'],
+    suitable_emotional_arcs: ['overwhelm_to_empowerment', 'confusion_to_clarity'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'tax_loss_harvesting',
+    name: 'Tax-Loss Harvesting Strategy',
+    category: 'tax',
+    description: 'Using investment losses to offset gains and reduce tax liability.',
+    complexity_level: 'advanced',
+    typical_question_examples: [
+      'What is tax-loss harvesting?',
+      'Should I sell losing investments for tax benefits?',
+      'What\'s the wash sale rule?',
+      'Is tax-loss harvesting worth the effort?'
+    ],
+    key_concepts: ['capital losses', 'wash sale rule', 'tax timing', 'opportunity cost'],
+    suitable_personas: ['anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['confusion_to_clarity', 'overwhelm_to_empowerment'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'tax_form_complexity',
+    name: 'Understanding Tax Forms',
+    category: 'tax',
+    description: 'Navigating complex tax forms like 1099s, K-1s, and investment tax reporting.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'What do all these tax forms mean?',
+      'How do I report RSU income?',
+      'What\'s a K-1 and why did I get one?',
+      'Do I need to file in multiple states?'
+    ],
+    key_concepts: ['tax forms', 'reporting requirements', 'form types', 'compliance'],
+    suitable_personas: ['overwhelmed_avoider', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['frustration_to_relief', 'confusion_to_clarity'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'charitable_giving_strategy',
+    name: 'Tax-Efficient Charitable Giving',
+    category: 'tax',
+    description: 'Maximizing impact and tax benefits of charitable contributions.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'How can I maximize tax benefits from charity?',
+      'What\'s a donor-advised fund?',
+      'Should I donate stock or cash?',
+      'Can I bunch charitable deductions?'
+    ],
+    key_concepts: ['itemized deductions', 'DAF', 'appreciated assets', 'bunching strategies'],
+    suitable_personas: ['anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['confusion_to_clarity', 'guilt_to_permission'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'estimated_tax_payments',
+    name: 'Estimated Tax Payment Management',
+    category: 'tax',
+    description: 'Managing quarterly estimated taxes for self-employed and side income.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'Do I need to make estimated tax payments?',
+      'How much should I pay in estimated taxes?',
+      'What happens if I underpay estimated taxes?',
+      'How do I calculate quarterly tax payments?'
+    ],
+    key_concepts: ['quarterly payments', 'safe harbor', 'penalties', 'withholding'],
+    suitable_personas: ['overwhelmed_avoider', 'anxious_planner'],
+    suitable_emotional_arcs: ['fear_to_confidence', 'confusion_to_clarity'],
+    is_active: true
+  });
+
+  // ESTATE & FAMILY (4 topics)
+  topics.push({
+    topic_key: 'estate_planning_basics',
+    name: 'Essential Estate Planning',
+    category: 'estate',
+    description: 'Getting started with wills, trusts, and beneficiary designations.',
+    complexity_level: 'beginner',
+    typical_question_examples: [
+      'Do I need a will?',
+      'What\'s the difference between a will and a trust?',
+      'How do beneficiary designations work?',
+      'What happens if I die without a will?'
+    ],
+    key_concepts: ['wills', 'trusts', 'beneficiaries', 'probate'],
+    suitable_personas: ['overwhelmed_avoider', 'anxious_planner'],
+    suitable_emotional_arcs: ['overwhelm_to_empowerment', 'fear_to_confidence'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'supporting_parents_vs_own_retirement',
+    name: 'Supporting Aging Parents vs Retirement',
+    category: 'family',
+    description: 'Balancing financial support for parents with own retirement security.',
+    complexity_level: 'advanced',
+    typical_question_examples: [
+      'How do I help my parents financially without sacrificing my retirement?',
+      'Should I support my parents or save for retirement?',
+      'What\'s my responsibility to aging parents?',
+      'How do I talk to parents about their finances?'
+    ],
+    key_concepts: ['family obligations', 'boundary setting', 'resource allocation', 'tough conversations'],
+    suitable_personas: ['anxious_planner', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['guilt_to_permission', 'couple_conflict_to_alignment', 'fear_to_confidence'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'eldercare_costs',
+    name: 'Planning for Eldercare Expenses',
+    category: 'family',
+    description: 'Anticipating and planning for costs of caring for aging parents.',
+    complexity_level: 'advanced',
+    typical_question_examples: [
+      'How much does eldercare cost?',
+      'Who pays for parent\'s nursing home?',
+      'What does Medicare cover for eldercare?',
+      'How do I plan for parent\'s care costs?'
+    ],
+    key_concepts: ['eldercare costs', 'Medicaid', 'family responsibility', 'LTC insurance'],
+    suitable_personas: ['anxious_planner'],
+    suitable_emotional_arcs: ['fear_to_confidence', 'overwhelm_to_empowerment'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'financial_organization',
+    name: 'Financial Document Organization',
+    category: 'organization',
+    description: 'Creating systems for organizing financial accounts, documents, and information.',
+    complexity_level: 'beginner',
+    typical_question_examples: [
+      'How do I organize my financial accounts?',
+      'What financial documents should I keep?',
+      'How do I create a financial filing system?',
+      'What does my spouse need to know about our finances?'
+    ],
+    key_concepts: ['document retention', 'account inventory', 'emergency binder', 'system creation'],
+    suitable_personas: ['overwhelmed_avoider', 'anxious_planner'],
+    suitable_emotional_arcs: ['overwhelm_to_empowerment', 'couple_conflict_to_alignment'],
+    is_active: true
+  });
+
+  // CAREER & INCOME (4 topics)
+  topics.push({
+    topic_key: 'job_loss_scenarios',
+    name: 'Job Loss Financial Planning',
+    category: 'career',
+    description: 'Preparing for and handling unexpected job loss.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'How do I prepare financially for potential job loss?',
+      'What should I do if I lose my job?',
+      'How long will my emergency fund last?',
+      'Should I take a severance package or keep my job?'
+    ],
+    key_concepts: ['emergency fund', 'severance evaluation', 'COBRA', 'unemployment benefits'],
+    suitable_personas: ['anxious_planner', 'overwhelmed_avoider'],
+    suitable_emotional_arcs: ['fear_to_confidence', 'overwhelm_to_empowerment'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'career_change_income_reduction',
+    name: 'Career Change with Income Reduction',
+    category: 'career',
+    description: 'Planning for career change that involves temporary or permanent income reduction.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'Can I afford a career change that pays less?',
+      'How do I prepare financially for a career pivot?',
+      'Should I pursue a lower-paying but fulfilling career?',
+      'What\'s the long-term financial impact of a pay cut?'
+    ],
+    key_concepts: ['budget adjustments', 'runway planning', 'values alignment', 'long-term view'],
+    suitable_personas: ['pragmatic_optimist', 'anxious_planner'],
+    suitable_emotional_arcs: ['guilt_to_permission', 'fear_to_confidence', 'couple_conflict_to_alignment'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'side_hustle_finances',
+    name: 'Side Income Management',
+    category: 'career',
+    description: 'Managing taxes, accounting, and planning for side income or freelance work.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'How do I handle taxes from side income?',
+      'Should I open a separate bank account for my side hustle?',
+      'Do I need to make estimated tax payments?',
+      'When does my side hustle become a real business?'
+    ],
+    key_concepts: ['self-employment tax', 'estimated payments', 'record keeping', 'business structure'],
+    suitable_personas: ['overwhelmed_avoider', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['confusion_to_clarity', 'overwhelm_to_empowerment'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'negotiating_compensation',
+    name: 'Compensation Negotiation Strategy',
+    category: 'career',
+    description: 'Negotiating salary, RSUs, and benefits packages effectively.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'How do I negotiate a higher salary?',
+      'What should I prioritize in a comp package?',
+      'How do I evaluate RSU offers?',
+      'Is it okay to negotiate after accepting?'
+    ],
+    key_concepts: ['total compensation', 'RSU valuation', 'negotiation tactics', 'benefits value'],
+    suitable_personas: ['overwhelmed_avoider', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['fear_to_confidence', 'confusion_to_clarity'],
+    is_active: true
+  });
+
+  // MISC FINANCIAL CONCERNS (3 topics)
+  topics.push({
+    topic_key: 'hiding_financial_problems',
+    name: 'Financial Transparency in Relationships',
+    category: 'relationships',
+    description: 'Addressing hidden financial problems and building transparency with partner.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'How do I tell my partner about my debt?',
+      'I\'ve been hiding financial problems - what do I do?',
+      'How do we merge finances after hiding spending?',
+      'What if my partner finds out about my secret debt?'
+    ],
+    key_concepts: ['financial transparency', 'difficult conversations', 'rebuilding trust', 'forward planning'],
+    suitable_personas: ['overwhelmed_avoider', 'anxious_planner'],
+    suitable_emotional_arcs: ['shame_to_acceptance', 'fear_to_confidence'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'multiple_accounts_consolidation',
+    name: 'Account Consolidation Strategy',
+    category: 'organization',
+    description: 'Simplifying finances by consolidating old 401ks, IRAs, and bank accounts.',
+    complexity_level: 'intermediate',
+    typical_question_examples: [
+      'Should I consolidate my old 401k accounts?',
+      'How do I rollover a 401k to an IRA?',
+      'Is it better to have one account or many?',
+      'What are the risks of consolidating accounts?'
+    ],
+    key_concepts: ['account rollovers', 'simplification benefits', 'transfer process', 'fees comparison'],
+    suitable_personas: ['overwhelmed_avoider', 'anxious_planner'],
+    suitable_emotional_arcs: ['overwhelm_to_empowerment', 'confusion_to_clarity'],
+    is_active: true
+  });
+
+  topics.push({
+    topic_key: 'contradictory_financial_advice',
+    name: 'Evaluating Conflicting Financial Advice',
+    category: 'education',
+    description: 'Making sense of contradictory financial advice from different sources.',
+    complexity_level: 'beginner',
+    typical_question_examples: [
+      'Why does everyone give different financial advice?',
+      'How do I know what advice to follow?',
+      'What financial advice can I trust?',
+      'Why do experts disagree on basic finance questions?'
+    ],
+    key_concepts: ['advice quality', 'personal circumstances', 'general principles', 'critical evaluation'],
+    suitable_personas: ['overwhelmed_avoider', 'pragmatic_optimist'],
+    suitable_emotional_arcs: ['frustration_to_relief', 'confusion_to_clarity'],
+    is_active: true
+  });
+
+  return topics;
+}
+
+async function main() {
+  const topics = extractTrainingTopicsFromSeeds();
+
+  const outputPath = path.join(__dirname, '../../data/training-topics-seed.ndjson');
+  const ndjsonContent = topics.map(t => JSON.stringify(t)).join('\n');
+  fs.writeFileSync(outputPath, ndjsonContent, 'utf-8');
+
+  console.log(`✓ Extracted ${topics.length} training topics to ${outputPath}`);
+  
+  // Count by category
+  const categories = {};
+  topics.forEach(t => {
+    categories[t.category] = (categories[t.category] || 0) + 1;
+  });
+  
+  console.log('\nTopics by category:');
+  Object.entries(categories).forEach(([cat, count]) => {
+    console.log(`  ${cat}: ${count} topics`);
+  });
+}
+
+main().catch(console.error);
+

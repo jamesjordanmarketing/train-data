@@ -1,0 +1,407 @@
+const fs = require('fs');
+const path = require('path');
+
+function extractEmotionalArcsFromSpec() {
+  const arcs = [];
+
+  // Arc 1: Confusion → Clarity (Template A)
+  arcs.push({
+    arc_key: 'confusion_to_clarity',
+    name: 'Confusion → Clarity',
+    starting_emotion: 'confusion',
+    starting_intensity_min: 0.70,
+    starting_intensity_max: 0.85,
+    ending_emotion: 'clarity',
+    ending_intensity_min: 0.70,
+    ending_intensity_max: 0.80,
+    arc_strategy: 'normalize_confusion_then_educate',
+    key_principles: [
+      'Confusion is normal and common',
+      'Break complexity into simple steps',
+      'Use concrete numbers not abstractions',
+      'Ask permission before educating',
+      'Celebrate understanding progress'
+    ],
+    characteristic_phrases: [
+      'I can hear the confusion in your question',
+      'This is incredibly common',
+      'Let\'s start simple...',
+      'Would it be helpful if I explained...',
+      'You\'re asking exactly the right question',
+      'Does that make sense?'
+    ],
+    response_techniques: [
+      'Normalize confusion explicitly',
+      'Break down complexity step-by-step',
+      'Use specific numbers ($X, Y%)',
+      'Provide concrete examples',
+      'Check understanding frequently'
+    ],
+    avoid_tactics: [
+      'Using jargon without explanation',
+      'Assuming knowledge level',
+      'Overwhelming with too many options at once',
+      'Making user feel stupid for not knowing'
+    ],
+    typical_turn_count_min: 3,
+    typical_turn_count_max: 5,
+    complexity_baseline: 7,
+    tier: 'template',
+    suitable_personas: ['overwhelmed_avoider', 'anxious_planner', 'pragmatic_optimist'],
+    suitable_topics: [
+      'hsa_vs_fsa',
+      'roth_ira_conversion',
+      'life_insurance_types',
+      '529_vs_utma',
+      'backdoor_roth',
+      'rmds_at_retirement'
+    ],
+    example_conversation_id: 'fp_marcus_002',
+    is_active: true
+  });
+
+  // Arc 2: Shame → Acceptance (Template B)
+  arcs.push({
+    arc_key: 'shame_to_acceptance',
+    name: 'Shame → Acceptance',
+    starting_emotion: 'shame',
+    starting_intensity_min: 0.70,
+    starting_intensity_max: 0.90,
+    ending_emotion: 'acceptance',
+    ending_intensity_min: 0.55,
+    ending_intensity_max: 0.70,
+    arc_strategy: 'powerful_normalization_then_future_focus',
+    key_principles: [
+      'You are not alone - this is more common than you think',
+      'There\'s no judgment here',
+      'Separate past from future',
+      'Celebrate courage in facing this',
+      'Find and affirm existing strengths'
+    ],
+    characteristic_phrases: [
+      'You are not alone',
+      'This is more common than you think',
+      'There\'s no judgment here',
+      'It takes real courage to face this honestly',
+      'You can\'t change the past, but you can change what happens next'
+    ],
+    response_techniques: [
+      'Immediate powerful normalization',
+      'Explicit non-judgment statement',
+      'Separate past (can\'t change) from future (can)',
+      'Celebrate courage in sharing',
+      'Reframe existing actions as strengths',
+      'Provide concrete forward path quickly'
+    ],
+    avoid_tactics: [
+      'Never say "you should have..."',
+      'Never minimize shame ("it\'s not that bad")',
+      'Never rush to solutions before validating emotion',
+      'Never use comparative language ("others have it worse")'
+    ],
+    typical_turn_count_min: 4,
+    typical_turn_count_max: 5,
+    complexity_baseline: 8,
+    tier: 'template',
+    suitable_personas: ['overwhelmed_avoider', 'anxious_planner'],
+    suitable_topics: [
+      'no_retirement_at_45',
+      'paycheck_to_paycheck_high_income',
+      'ignored_401k',
+      'credit_card_debt_lifestyle',
+      'hiding_financial_problems'
+    ],
+    example_conversation_id: 'fp_marcus_006',
+    is_active: true
+  });
+
+  // Arc 3: Couple Conflict → Alignment (Template C)
+  arcs.push({
+    arc_key: 'couple_conflict_to_alignment',
+    name: 'Couple Conflict → Alignment',
+    starting_emotion: 'frustration',
+    starting_intensity_min: 0.65,
+    starting_intensity_max: 0.80,
+    ending_emotion: 'clarity',
+    ending_intensity_min: 0.75,
+    ending_intensity_max: 0.85,
+    arc_strategy: 'validate_both_then_show_third_way',
+    key_principles: [
+      'Money disagreements are common for couples',
+      'Validate BOTH perspectives equally',
+      'Challenge either/or thinking',
+      'Show both/and possibilities',
+      'Emphasize partnership throughout'
+    ],
+    characteristic_phrases: [
+      'Money disagreements are one of the most common sources of tension for couples',
+      'You\'re both bringing valid perspectives',
+      'Let me validate both concerns...',
+      'What if you didn\'t have to choose?',
+      'How would [partner] feel about this approach?'
+    ],
+    response_techniques: [
+      'Normalize couple money disagreements immediately',
+      'Name both partners\' perspectives explicitly',
+      'Challenge false dichotomies (either/or)',
+      'Provide specific both/and solutions',
+      'Use partnership language ("you two," "together")',
+      'Check alignment: "Would [partner] feel good about this?"'
+    ],
+    avoid_tactics: [
+      'Never take sides between partners',
+      'Never dismiss either concern as "less valid"',
+      'Never rush to solution before validating both',
+      'Never assume traditional gender roles'
+    ],
+    typical_turn_count_min: 3,
+    typical_turn_count_max: 4,
+    complexity_baseline: 7,
+    tier: 'template',
+    suitable_personas: ['pragmatic_optimist', 'anxious_planner'],
+    suitable_topics: [
+      'wedding_debt_vs_house',
+      'risk_tolerance_mismatch',
+      'spending_priorities',
+      'supporting_parents_vs_own_retirement'
+    ],
+    example_conversation_id: 'fp_david_002',
+    is_active: true
+  });
+
+  // Arc 4: Fear → Confidence
+  arcs.push({
+    arc_key: 'fear_to_confidence',
+    name: 'Fear → Confidence',
+    starting_emotion: 'fear',
+    starting_intensity_min: 0.75,
+    starting_intensity_max: 0.90,
+    ending_emotion: 'confidence',
+    ending_intensity_min: 0.65,
+    ending_intensity_max: 0.80,
+    arc_strategy: 'reality_test_fears_then_build_agency',
+    key_principles: [
+      'Name the fear explicitly',
+      'Reality-test catastrophic thinking',
+      'Provide specific contingency plans',
+      'Build agency through concrete actions',
+      'Celebrate existing protective measures'
+    ],
+    characteristic_phrases: [
+      'Let\'s reality-test that fear',
+      'What would actually happen if...',
+      'You already have protections in place',
+      'Here\'s what you can control',
+      'That\'s a legitimate concern, and here\'s how to address it'
+    ],
+    response_techniques: [
+      'Validate fear as legitimate first',
+      'Ask "what would actually happen?" questions',
+      'Separate likely from unlikely scenarios',
+      'Provide specific action steps',
+      'Point to existing safety measures',
+      'Build confidence through agency'
+    ],
+    avoid_tactics: [
+      'Never dismiss fears as "irrational"',
+      'Never say "don\'t worry"',
+      'Never minimize with statistics alone',
+      'Never rush to reassurance without validation'
+    ],
+    typical_turn_count_min: 4,
+    typical_turn_count_max: 6,
+    complexity_baseline: 8,
+    tier: 'template',
+    suitable_personas: ['anxious_planner', 'overwhelmed_avoider'],
+    suitable_topics: [
+      'market_crash_fears',
+      'job_loss_scenarios',
+      'healthcare_costs',
+      'retirement_running_out',
+      'eldercare_costs'
+    ],
+    example_conversation_id: 'fp_jennifer_003',
+    is_active: true
+  });
+
+  // Arc 5: Overwhelm → Empowerment
+  arcs.push({
+    arc_key: 'overwhelm_to_empowerment',
+    name: 'Overwhelm → Empowerment',
+    starting_emotion: 'overwhelm',
+    starting_intensity_min: 0.70,
+    starting_intensity_max: 0.85,
+    ending_emotion: 'empowerment',
+    ending_intensity_min: 0.70,
+    ending_intensity_max: 0.85,
+    arc_strategy: 'simplify_then_prioritize_then_act',
+    key_principles: [
+      'Overwhelm is a signal of caring, not failing',
+      'You don\'t have to solve everything at once',
+      'Start with ONE thing',
+      'Progress over perfection',
+      'Celebrate any forward movement'
+    ],
+    characteristic_phrases: [
+      'The fact that you care this much is good',
+      'You don\'t have to solve all of this today',
+      'Let\'s pick ONE thing to start with',
+      'What would feel like progress to you?',
+      'That\'s a great first step'
+    ],
+    response_techniques: [
+      'Normalize overwhelm explicitly',
+      'Break down into smaller components',
+      'Help prioritize: "If you could only do one thing..."',
+      'Provide clear next action',
+      'Celebrate momentum over completion',
+      'Give permission to iterate'
+    ],
+    avoid_tactics: [
+      'Never add more options when someone is overwhelmed',
+      'Never say "it\'s not that complicated"',
+      'Never provide comprehensive plans when someone needs simplicity',
+      'Never minimize with "just do X"'
+    ],
+    typical_turn_count_min: 3,
+    typical_turn_count_max: 5,
+    complexity_baseline: 7,
+    tier: 'template',
+    suitable_personas: ['overwhelmed_avoider', 'anxious_planner'],
+    suitable_topics: [
+      'getting_started_investing',
+      'multiple_accounts_consolidation',
+      'tax_optimization_complex',
+      'estate_planning_basics',
+      'financial_organization'
+    ],
+    example_conversation_id: 'fp_marcus_001',
+    is_active: true
+  });
+
+  // Arc 6: Guilt → Permission
+  arcs.push({
+    arc_key: 'guilt_to_permission',
+    name: 'Guilt → Permission',
+    starting_emotion: 'guilt',
+    starting_intensity_min: 0.65,
+    starting_intensity_max: 0.80,
+    ending_emotion: 'permission',
+    ending_intensity_min: 0.60,
+    ending_intensity_max: 0.75,
+    arc_strategy: 'validate_conflict_then_reframe_tradeoff',
+    key_principles: [
+      'The guilt means you care about both things',
+      'All financial decisions involve tradeoffs',
+      'There\'s no "perfect" choice',
+      'You can honor both values simultaneously',
+      'Self-care isn\'t selfish when done thoughtfully'
+    ],
+    characteristic_phrases: [
+      'The fact that you feel torn shows you care',
+      'All financial decisions involve tradeoffs',
+      'What if both were valid?',
+      'You can care about yourself AND others',
+      'This isn\'t either/or - it\'s both/and'
+    ],
+    response_techniques: [
+      'Validate the conflict explicitly',
+      'Name both values at play',
+      'Challenge false dichotomies',
+      'Show how both/and is possible',
+      'Give explicit permission',
+      'Reframe tradeoff as values alignment'
+    ],
+    avoid_tactics: [
+      'Never say "don\'t feel guilty"',
+      'Never pick one value over the other',
+      'Never rush to solutions before validating conflict',
+      'Never use "should" language'
+    ],
+    typical_turn_count_min: 3,
+    typical_turn_count_max: 5,
+    complexity_baseline: 7,
+    tier: 'template',
+    suitable_personas: ['pragmatic_optimist', 'anxious_planner'],
+    suitable_topics: [
+      'spending_priorities',
+      'vacation_vs_debt_payoff',
+      'career_change_income_reduction',
+      'supporting_parents_vs_own_retirement',
+      'private_school_vs_college_fund'
+    ],
+    example_conversation_id: 'fp_david_003',
+    is_active: true
+  });
+
+  // Arc 7: Frustration → Relief
+  arcs.push({
+    arc_key: 'frustration_to_relief',
+    name: 'Frustration → Relief',
+    starting_emotion: 'frustration',
+    starting_intensity_min: 0.60,
+    starting_intensity_max: 0.75,
+    ending_emotion: 'relief',
+    ending_intensity_min: 0.65,
+    ending_intensity_max: 0.80,
+    arc_strategy: 'validate_frustration_then_simplify_path',
+    key_principles: [
+      'Your frustration is valid',
+      'This should be clearer than it is',
+      'You\'re not missing something obvious',
+      'Let me make this simple',
+      'Progress is possible quickly'
+    ],
+    characteristic_phrases: [
+      'I hear your frustration',
+      'This is more confusing than it should be',
+      'You\'re not missing anything - this IS complicated',
+      'Let me simplify this',
+      'Here\'s the straightforward answer'
+    ],
+    response_techniques: [
+      'Validate frustration immediately',
+      'Acknowledge systemic complexity',
+      'Provide clear, direct answer',
+      'Cut through jargon',
+      'Give actionable next steps',
+      'Show path is clearer than it seemed'
+    ],
+    avoid_tactics: [
+      'Never minimize frustration',
+      'Never blame user for confusion',
+      'Never add more complexity',
+      'Never say "it\'s actually simple"'
+    ],
+    typical_turn_count_min: 2,
+    typical_turn_count_max: 4,
+    complexity_baseline: 6,
+    tier: 'template',
+    suitable_personas: ['pragmatic_optimist', 'overwhelmed_avoider'],
+    suitable_topics: [
+      'confusing_401k_options',
+      'contradictory_financial_advice',
+      'tax_form_complexity',
+      'insurance_policy_confusion',
+      'investment_fee_structures'
+    ],
+    example_conversation_id: 'fp_david_001',
+    is_active: true
+  });
+
+  return arcs;
+}
+
+async function main() {
+  const arcs = extractEmotionalArcsFromSpec();
+
+  const outputPath = path.join(__dirname, '../../data/emotional-arcs-seed.ndjson');
+  const ndjsonContent = arcs.map(a => JSON.stringify(a)).join('\n');
+  fs.writeFileSync(outputPath, ndjsonContent, 'utf-8');
+
+  console.log(`✓ Extracted ${arcs.length} emotional arcs to ${outputPath}`);
+  console.log('Arcs:', arcs.map(a => a.name).join(', '));
+}
+
+main().catch(console.error);
+

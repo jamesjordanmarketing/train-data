@@ -1,0 +1,29 @@
+{
+  "runId": "20251115T195752Z",
+  "table": "prompt_templates",
+  "totals": {
+    "total": 1,
+    "success": 1,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 78
+  },
+  "warnings": [],
+  "config": {
+    "mode": "upsert",
+    "onConflict": "template_name",
+    "batchSize": 200,
+    "concurrency": 2,
+    "sanitize": true,
+    "normalization": "NFC",
+    "transport": "supabase"
+  },
+  "nextActions": [
+    {
+      "action": "VERIFY_DATA",
+      "description": "Import completed successfully. Verify data in database.",
+      "example": "SELECT * FROM your_table LIMIT 10;",
+      "priority": "LOW"
+    }
+  ]
+}
