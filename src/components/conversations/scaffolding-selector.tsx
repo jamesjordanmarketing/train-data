@@ -20,13 +20,24 @@ export interface ScaffoldingSelection {
   emotional_arc_id: string | null;
   training_topic_id: string | null;
   tier: 'template' | 'scenario' | 'edge_case';
+  template_id?: string | null;
+}
+
+interface AvailableTemplate {
+  id: string;
+  template_name: string;
+  description?: string;
+  quality_threshold?: number;
+  rating?: number;
 }
 
 export function ScaffoldingSelector({ value, onChange, disabled }: ScaffoldingSelectorProps) {
   const [personas, setPersonas] = useState<Persona[]>([]);
   const [emotionalArcs, setEmotionalArcs] = useState<EmotionalArc[]>([]);
   const [trainingTopics, setTrainingTopics] = useState<TrainingTopic[]>([]);
+  const [availableTemplates, setAvailableTemplates] = useState<AvailableTemplate[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingTemplates, setLoadingTemplates] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [compatibilityWarnings, setCompatibilityWarnings] = useState<string[]>([]);
 
@@ -41,6 +52,15 @@ export function ScaffoldingSelector({ value, onChange, disabled }: ScaffoldingSe
       setCompatibilityWarnings([]);
     }
   }, [value.persona_id, value.emotional_arc_id, value.training_topic_id]);
+
+  useEffect(() => {
+    // Load available templates when emotional arc changes (arc-first strategy)
+    if (value.emotional_arc_id) {
+      loadAvailableTemplates();
+    } else {
+      setAvailableTemplates([]);
+    }
+  }, [value.emotional_arc_id, value.tier, value.persona_id, value.training_topic_id]);
 
   async function loadScaffoldingData() {
     try {
@@ -93,6 +113,44 @@ export function ScaffoldingSelector({ value, onChange, disabled }: ScaffoldingSe
     } catch (error) {
       console.error('Failed to check compatibility:', error);
       // Don't show error to user, just log it
+    }
+  }
+
+  async function loadAvailableTemplates() {
+    try {
+      setLoadingTemplates(true);
+      
+      // Find the selected emotional arc to get its arc_type
+      const selectedArc = emotionalArcs.find(arc => arc.id === value.emotional_arc_id);
+      if (!selectedArc) return;
+
+      const selectedPersona = personas.find(p => p.id === value.persona_id);
+      const selectedTopic = trainingTopics.find(t => t.id === value.training_topic_id);
+
+      // Build query parameters
+      const params = new URLSearchParams({
+        emotional_arc_type: selectedArc.arc_type,
+        tier: value.tier,
+      });
+
+      if (selectedPersona) {
+        params.append('persona_type', selectedPersona.persona_type);
+      }
+      if (selectedTopic) {
+        params.append('topic_key', selectedTopic.topic_key);
+      }
+
+      const res = await fetch(`/api/templates/select?${params.toString()}`);
+      
+      if (res.ok) {
+        const result = await res.json();
+        setAvailableTemplates(result.templates || []);
+      }
+    } catch (error) {
+      console.error('Failed to load available templates:', error);
+      // Don't show error to user, just log it
+    } finally {
+      setLoadingTemplates(false);
     }
   }
 
@@ -291,6 +349,79 @@ export function ScaffoldingSelector({ value, onChange, disabled }: ScaffoldingSe
           </SelectContent>
         </Select>
       </div>
+
+      {/* Available Templates (Arc-First Selection) */}
+      {value.emotional_arc_id && (
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <Label htmlFor="template-select">Available Templates (Optional)</Label>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <InfoIcon className="h-4 w-4 text-muted-foreground cursor-help" />
+                </TooltipTrigger>
+                <TooltipContent className="max-w-sm">
+                  <p>
+                    Select a specific template or leave blank to auto-select the best match.
+                    Templates are filtered based on your emotional arc selection (arc-first strategy).
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+          
+          {loadingTemplates ? (
+            <div className="h-10 bg-muted animate-pulse rounded" />
+          ) : availableTemplates.length > 0 ? (
+            <Select
+              value={value.template_id || undefined}
+              onValueChange={(val) => onChange({ ...value, template_id: val })}
+              disabled={disabled}
+            >
+              <SelectTrigger id="template-select">
+                <SelectValue placeholder="Auto-select best template..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">
+                  <span className="text-muted-foreground">Auto-select best match</span>
+                </SelectItem>
+                {availableTemplates.map((template) => (
+                  <SelectItem key={template.id} value={template.id}>
+                    <div className="flex flex-col">
+                      <span className="font-medium">{template.template_name}</span>
+                      {template.description && (
+                        <span className="text-xs text-muted-foreground line-clamp-1">
+                          {template.description}
+                        </span>
+                      )}
+                      {(template.quality_threshold || template.rating) && (
+                        <span className="text-xs text-muted-foreground">
+                          {template.quality_threshold && `Quality: ${template.quality_threshold}/10`}
+                          {template.quality_threshold && template.rating && ' • '}
+                          {template.rating && `Rating: ${template.rating}/5`}
+                        </span>
+                      )}
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          ) : (
+            <Alert>
+              <InfoIcon className="h-4 w-4" />
+              <AlertDescription className="text-sm">
+                No templates found for this combination. Try adjusting your selections.
+              </AlertDescription>
+            </Alert>
+          )}
+          
+          {availableTemplates.length > 0 && (
+            <p className="text-xs text-muted-foreground">
+              Found {availableTemplates.length} compatible template{availableTemplates.length !== 1 ? 's' : ''}
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Compatibility Warnings */}
       {compatibilityWarnings.length > 0 && (

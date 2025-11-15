@@ -1,8 +1,9 @@
 /**
  * Template Selection Service
  * 
- * Selects appropriate prompt templates based on emotional arc, tier, and context.
- * Provides template ranking and selection rationale for transparency.
+ * Selects appropriate prompt templates based on emotional arc (primary selector), 
+ * tier, persona, and topic compatibility.
+ * Implements the "emotional arc as primary selector" strategy.
  */
 
 import { SupabaseClient } from '@supabase/supabase-js';
@@ -11,55 +12,146 @@ import {
   TemplateSelectionResult
 } from '@/lib/types/scaffolding.types';
 
+export interface PromptTemplate {
+  id: string;
+  template_name: string;
+  description?: string;
+  category?: string;
+  tier: 'template' | 'scenario' | 'edge_case';
+  template_text: string;
+  emotional_arc_type: string;
+  emotional_arc_id?: string;
+  suitable_personas?: string[];
+  suitable_topics?: string[];
+  quality_threshold?: number;
+  rating?: number;
+  usage_count?: number;
+  is_active: boolean;
+}
+
 export class TemplateSelectionService {
   constructor(private supabase: SupabaseClient) {}
 
   /**
-   * Select best template based on criteria
-   * Returns template ID of the highest-ranked match
+   * Select templates based on emotional arc (primary) and optional filters
+   * CRITICAL: Emotional arc is the primary selector
    */
-  async selectTemplate(criteria: TemplateSelectionCriteria): Promise<string> {
-    // 1. Query templates matching emotional arc and tier
-    const { data: templates, error } = await this.supabase
+  async selectTemplates(criteria: TemplateSelectionCriteria): Promise<PromptTemplate[]> {
+    // Step 1: Query by emotional arc (required, primary selector)
+    let query = this.supabase
       .from('prompt_templates')
       .select('*')
       .eq('emotional_arc_type', criteria.emotional_arc_type)
-      .eq('tier', criteria.tier)
-      .eq('is_active', true)
-      .order('rating', { ascending: false })
-      .order('usage_count', { ascending: false });
+      .eq('is_active', true);
 
-    if (error || !templates || templates.length === 0) {
+    // Step 2: Filter by tier if provided
+    if (criteria.tier) {
+      query = query.eq('tier', criteria.tier);
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+    if (!data || data.length === 0) {
+      throw new Error(`No templates found for emotional arc: ${criteria.emotional_arc_type}`);
+    }
+
+    let templates = data as PromptTemplate[];
+
+    // Step 3: Filter by persona compatibility if provided
+    if (criteria.persona_type) {
+      templates = templates.filter(t =>
+        !t.suitable_personas ||
+        t.suitable_personas.length === 0 ||
+        t.suitable_personas.includes(criteria.persona_type!)
+      );
+    }
+
+    // Step 4: Filter by topic compatibility if provided
+    if (criteria.topic_key) {
+      templates = templates.filter(t =>
+        !t.suitable_topics ||
+        t.suitable_topics.length === 0 ||
+        t.suitable_topics.includes(criteria.topic_key!)
+      );
+    }
+
+    // Step 5: Sort by quality_threshold (higher first), then rating
+    templates.sort((a, b) => {
+      const qualityDiff = (b.quality_threshold || 0) - (a.quality_threshold || 0);
+      if (qualityDiff !== 0) return qualityDiff;
+      return (b.rating || 0) - (a.rating || 0);
+    });
+
+    return templates;
+  }
+
+  /**
+   * Get template by ID
+   */
+  async getTemplate(templateId: string): Promise<PromptTemplate | null> {
+    const { data, error } = await this.supabase
+      .from('prompt_templates')
+      .select('*')
+      .eq('id', templateId)
+      .eq('is_active', true)
+      .single();
+
+    if (error) {
+      if (error.code === 'PGRST116') return null;
+      throw error;
+    }
+
+    return data as PromptTemplate;
+  }
+
+  /**
+   * Validate template compatibility with persona and topic
+   */
+  async validateCompatibility(
+    templateId: string,
+    personaKey: string,
+    topicKey: string
+  ): Promise<{ compatible: boolean; warnings: string[] }> {
+    const template = await this.getTemplate(templateId);
+    if (!template) {
+      return { compatible: false, warnings: ['Template not found'] };
+    }
+
+    const warnings: string[] = [];
+
+    // Check persona compatibility
+    if (template.suitable_personas && template.suitable_personas.length > 0) {
+      if (!template.suitable_personas.includes(personaKey)) {
+        warnings.push(`Persona "${personaKey}" not in template's suitable personas list`);
+      }
+    }
+
+    // Check topic compatibility
+    if (template.suitable_topics && template.suitable_topics.length > 0) {
+      if (!template.suitable_topics.includes(topicKey)) {
+        warnings.push(`Topic "${topicKey}" not in template's suitable topics list`);
+      }
+    }
+
+    return {
+      compatible: warnings.length === 0,
+      warnings
+    };
+  }
+
+  /**
+   * Select best template based on criteria (legacy method)
+   * Returns template ID of the highest-ranked match
+   */
+  async selectTemplate(criteria: TemplateSelectionCriteria): Promise<string> {
+    const templates = await this.selectTemplates(criteria);
+    
+    if (templates.length === 0) {
       throw new Error(`No templates found for arc: ${criteria.emotional_arc_type}, tier: ${criteria.tier}`);
     }
 
-    // 2. If persona specified, filter for compatibility
-    let filtered_templates = templates;
-    if (criteria.persona_type) {
-      filtered_templates = templates.filter(t =>
-        !t.suitable_personas ||
-        t.suitable_personas.length === 0 ||
-        t.suitable_personas.includes(criteria.persona_type)
-      );
-    }
-
-    // 3. If topic specified, filter for compatibility
-    if (criteria.topic_key) {
-      filtered_templates = filtered_templates.filter(t =>
-        !t.suitable_topics ||
-        t.suitable_topics.length === 0 ||
-        t.suitable_topics.includes(criteria.topic_key)
-      );
-    }
-
-    // 4. Fallback if filtering eliminated all options
-    if (filtered_templates.length === 0) {
-      console.warn('No perfectly matching templates, using best arc+tier match');
-      filtered_templates = templates;
-    }
-
-    // 5. Return highest rated template
-    return filtered_templates[0].id;
+    return templates[0].id;
   }
 
   /**

@@ -472,6 +472,95 @@ export class TemplateResolver {
       ttlMs: this.cacheTTL,
     };
   }
+
+  /**
+   * Resolve scaffolding template with persona, emotional arc, and topic data
+   * This method resolves ALL scaffolding placeholders
+   */
+  async resolveScaffoldingTemplate(
+    templateText: string,
+    scaffoldingData: {
+      persona: any;
+      emotional_arc: any;
+      training_topic: any;
+    }
+  ): Promise<string> {
+    let resolved = templateText;
+
+    // Resolve persona variables
+    resolved = resolved.replace(/\{\{persona_name\}\}/g, scaffoldingData.persona.name || '');
+    resolved = resolved.replace(/\{\{persona_type\}\}/g, scaffoldingData.persona.persona_type || '');
+    resolved = resolved.replace(/\{\{persona_archetype\}\}/g, scaffoldingData.persona.archetype_summary || '');
+    resolved = resolved.replace(/\{\{persona_demographics\}\}/g, this.formatDemographics(scaffoldingData.persona.demographics));
+    resolved = resolved.replace(/\{\{persona_financial_background\}\}/g, scaffoldingData.persona.financial_background || '');
+    resolved = resolved.replace(/\{\{persona_financial_situation\}\}/g, scaffoldingData.persona.financial_situation || '');
+    resolved = resolved.replace(/\{\{persona_communication_style\}\}/g, scaffoldingData.persona.communication_style || '');
+    resolved = resolved.replace(/\{\{persona_emotional_baseline\}\}/g, scaffoldingData.persona.emotional_baseline || '');
+    resolved = resolved.replace(/\{\{persona_decision_style\}\}/g, scaffoldingData.persona.decision_style || '');
+    resolved = resolved.replace(/\{\{persona_typical_questions\}\}/g, this.formatArray(scaffoldingData.persona.typical_questions));
+    resolved = resolved.replace(/\{\{persona_common_concerns\}\}/g, this.formatArray(scaffoldingData.persona.common_concerns));
+    resolved = resolved.replace(/\{\{persona_language_patterns\}\}/g, this.formatArray(scaffoldingData.persona.language_patterns));
+    resolved = resolved.replace(/\{\{persona_personality_traits\}\}/g, this.formatArray(scaffoldingData.persona.personality_traits));
+
+    // Resolve emotional arc variables
+    resolved = resolved.replace(/\{\{emotional_arc_name\}\}/g, scaffoldingData.emotional_arc.name || '');
+    resolved = resolved.replace(/\{\{arc_type\}\}/g, scaffoldingData.emotional_arc.arc_type || '');
+    resolved = resolved.replace(/\{\{starting_emotion\}\}/g, scaffoldingData.emotional_arc.starting_emotion || '');
+    resolved = resolved.replace(/\{\{starting_intensity_min\}\}/g, (scaffoldingData.emotional_arc.starting_intensity_min || 0).toString());
+    resolved = resolved.replace(/\{\{starting_intensity_max\}\}/g, (scaffoldingData.emotional_arc.starting_intensity_max || 0).toString());
+    resolved = resolved.replace(/\{\{ending_emotion\}\}/g, scaffoldingData.emotional_arc.ending_emotion || '');
+    resolved = resolved.replace(/\{\{ending_intensity_min\}\}/g, (scaffoldingData.emotional_arc.ending_intensity_min || 0).toString());
+    resolved = resolved.replace(/\{\{ending_intensity_max\}\}/g, (scaffoldingData.emotional_arc.ending_intensity_max || 0).toString());
+    resolved = resolved.replace(/\{\{midpoint_emotion\}\}/g, scaffoldingData.emotional_arc.midpoint_emotion || '');
+    resolved = resolved.replace(/\{\{primary_strategy\}\}/g, scaffoldingData.emotional_arc.primary_strategy || '');
+    resolved = resolved.replace(/\{\{response_techniques\}\}/g, this.formatArray(scaffoldingData.emotional_arc.response_techniques));
+    resolved = resolved.replace(/\{\{avoid_tactics\}\}/g, this.formatArray(scaffoldingData.emotional_arc.avoid_tactics));
+    resolved = resolved.replace(/\{\{key_principles\}\}/g, this.formatArray(scaffoldingData.emotional_arc.key_principles));
+    resolved = resolved.replace(/\{\{characteristic_phrases\}\}/g, this.formatArray(scaffoldingData.emotional_arc.characteristic_phrases));
+    
+    // Calculate turn count ranges
+    const minTurns = scaffoldingData.emotional_arc.typical_turn_count_min || 4;
+    const maxTurns = scaffoldingData.emotional_arc.typical_turn_count_max || 8;
+    const targetTurns = Math.ceil((minTurns + maxTurns) / 2);
+    
+    resolved = resolved.replace(/\{\{typical_turn_count_min\}\}/g, minTurns.toString());
+    resolved = resolved.replace(/\{\{typical_turn_count_max\}\}/g, maxTurns.toString());
+    resolved = resolved.replace(/\{\{target_turn_count\}\}/g, targetTurns.toString());
+
+    // Resolve topic variables
+    resolved = resolved.replace(/\{\{topic_name\}\}/g, scaffoldingData.training_topic.name || '');
+    resolved = resolved.replace(/\{\{topic_key\}\}/g, scaffoldingData.training_topic.topic_key || '');
+    resolved = resolved.replace(/\{\{topic_description\}\}/g, scaffoldingData.training_topic.description || '');
+    resolved = resolved.replace(/\{\{topic_category\}\}/g, scaffoldingData.training_topic.category || '');
+    resolved = resolved.replace(/\{\{topic_complexity\}\}/g, scaffoldingData.training_topic.complexity_level || 'intermediate');
+    resolved = resolved.replace(/\{\{topic_example_questions\}\}/g, this.formatArray(scaffoldingData.training_topic.typical_question_examples));
+    resolved = resolved.replace(/\{\{topic_related_topics\}\}/g, this.formatArray(scaffoldingData.training_topic.related_topics));
+    resolved = resolved.replace(/\{\{requires_numbers\}\}/g, scaffoldingData.training_topic.requires_numbers ? 'yes' : 'no');
+    resolved = resolved.replace(/\{\{requires_timeframe\}\}/g, scaffoldingData.training_topic.requires_timeframe ? 'yes' : 'no');
+    resolved = resolved.replace(/\{\{requires_personal_context\}\}/g, scaffoldingData.training_topic.requires_personal_context ? 'yes' : 'no');
+
+    return resolved;
+  }
+
+  /**
+   * Format demographics object as readable string
+   * @private
+   */
+  private formatDemographics(demographics: any): string {
+    if (!demographics) return '';
+    return Object.entries(demographics)
+      .map(([key, value]) => `${key}: ${value}`)
+      .join(', ');
+  }
+
+  /**
+   * Format array as bullet list
+   * @private
+   */
+  private formatArray(arr: string[] | null | undefined): string {
+    if (!arr || arr.length === 0) return '';
+    return arr.map(item => `- ${item}`).join('\n');
+  }
 }
 
 /**
