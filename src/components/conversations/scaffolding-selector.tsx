@@ -77,17 +77,17 @@ export function ScaffoldingSelector({ value, onChange, disabled }: ScaffoldingSe
       if (!personasRes.ok) {
         const errorText = await personasRes.text();
         console.error('Personas API error:', personasRes.status, errorText);
-        throw new Error(`Failed to load personas: ${personasRes.status}`);
+        throw new Error('Failed to load personas: ' + personasRes.status);
       }
       if (!arcsRes.ok) {
         const errorText = await arcsRes.text();
         console.error('Emotional arcs API error:', arcsRes.status, errorText);
-        throw new Error(`Failed to load emotional arcs: ${arcsRes.status}`);
+        throw new Error('Failed to load emotional arcs: ' + arcsRes.status);
       }
       if (!topicsRes.ok) {
         const errorText = await topicsRes.text();
         console.error('Training topics API error:', topicsRes.status, errorText);
-        throw new Error(`Failed to load training topics: ${topicsRes.status}`);
+        throw new Error('Failed to load training topics: ' + topicsRes.status);
       }
 
       const [personasData, arcsData, topicsData] = await Promise.all([
@@ -116,7 +116,7 @@ export function ScaffoldingSelector({ value, onChange, disabled }: ScaffoldingSe
       setTrainingTopics(topicsList);
     } catch (error) {
       console.error('Failed to load scaffolding data:', error);
-      setError(`Failed to load scaffolding data: ${error instanceof Error ? error.message : 'Unknown error'}. Please refresh the page or check console for details.');
+      setError('Failed to load scaffolding data: ' + (error instanceof Error ? error.message : 'Unknown error') + '. Please refresh the page or check console for details.');
     } finally {
       setLoading(false);
     }
@@ -168,7 +168,7 @@ export function ScaffoldingSelector({ value, onChange, disabled }: ScaffoldingSe
         params.append('topic_key', selectedTopic.topic_key);
       }
 
-      const res = await fetch(`/api/templates/select?${params.toString()}`);
+      const res = await fetch('/api/templates/select?' + params.toString());
       
       if (res.ok) {
         const result = await res.json();
@@ -236,8 +236,8 @@ export function ScaffoldingSelector({ value, onChange, disabled }: ScaffoldingSe
               <SelectItem key={persona.id} value={persona.id}>
                 <div className="flex flex-col">
                   <span className="font-medium">{persona.name}</span>
-                  {persona.archetype_summary && (
-                    <span className="text-xs text-muted-foreground">{persona.archetype_summary}</span>
+                  {persona.archetype && (
+                    <span className="text-xs text-muted-foreground">{persona.archetype}</span>
                   )}
                 </div>
               </SelectItem>
@@ -276,8 +276,8 @@ export function ScaffoldingSelector({ value, onChange, disabled }: ScaffoldingSe
               <SelectItem key={arc.id} value={arc.id}>
                 <div className="flex flex-col">
                   <span className="font-medium">{arc.name}</span>
-                  {arc.when_to_use && (
-                    <span className="text-xs text-muted-foreground">{arc.when_to_use}</span>
+                  {arc.arc_strategy && (
+                    <span className="text-xs text-muted-foreground">{arc.arc_strategy}</span>
                   )}
                 </div>
               </SelectItem>
@@ -424,9 +424,9 @@ export function ScaffoldingSelector({ value, onChange, disabled }: ScaffoldingSe
                       )}
                       {(template.quality_threshold || template.rating) && (
                         <span className="text-xs text-muted-foreground">
-                          {template.quality_threshold && `Quality: ${template.quality_threshold}/10`}
+                          {template.quality_threshold && 'Quality: ' + template.quality_threshold + '/10'}
                           {template.quality_threshold && template.rating && ' • '}
-                          {template.rating && `Rating: ${template.rating}/5`}
+                          {template.rating && 'Rating: ' + template.rating + '/5'}
                         </span>
                       )}
                     </div>

@@ -172,7 +172,7 @@ export async function POST(request: NextRequest) {
           compatibility_suggestions: assembled.metadata.suggestions,
           template_used: assembled.conversation_params.template_id,
           scaffolding: {
-            persona_name: assembled.conversation_params.persona.short_name,
+            persona_name: assembled.conversation_params.persona.name,
             emotional_arc_name: assembled.conversation_params.emotional_arc.name,
             training_topic_name: assembled.conversation_params.training_topic.name,
           },

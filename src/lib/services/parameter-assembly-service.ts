@@ -156,29 +156,20 @@ export class ParameterAssemblyService {
     }
 
     // Check tier suitability for emotional arc
-    if (params.emotional_arc.tier_suitability.length > 0 && 
-        !params.emotional_arc.tier_suitability.includes(params.tier)) {
-      warnings.push(`Emotional arc "${params.emotional_arc.name}" is not typically suitable for ${params.tier} tier`);
-      suggestions.push(`Consider using a tier from: ${params.emotional_arc.tier_suitability.join(', ')}`);
-    }
+    // Note: EmotionalArc has a 'tier' field but not 'tier_suitability' array
+    // Skipping tier validation for now
 
     // Check tier suitability for training topic
-    if (params.training_topic.suitable_tiers.length > 0 &&
-        !params.training_topic.suitable_tiers.includes(params.tier)) {
-      warnings.push(`Training topic "${params.training_topic.name}" is not typically suitable for ${params.tier} tier`);
-    }
+    // Note: TrainingTopic doesn't have 'suitable_tiers' field
+    // Skipping tier validation for now
 
     // Validate domain consistency
-    if (params.persona.domain !== params.emotional_arc.domain) {
-      warnings.push('Persona and emotional arc have different domains');
-    }
-    if (params.persona.domain !== params.training_topic.domain) {
-      warnings.push('Persona and training topic have different domains');
-    }
+    // Note: Persona, EmotionalArc, and TrainingTopic don't have 'domain' field in current schema
+    // Skipping domain validation for now
 
     // Check if all entities are active
     if (!params.persona.is_active) {
-      warnings.push(`Persona "${params.persona.short_name}" is marked as inactive`);
+      warnings.push(`Persona "${params.persona.name}" is marked as inactive`);
     }
     if (!params.emotional_arc.is_active) {
       warnings.push(`Emotional arc "${params.emotional_arc.name}" is marked as inactive`);
@@ -218,16 +209,16 @@ export class ParameterAssemblyService {
       emotional_arc_type: params.emotional_arc.arc_key,
       starting_emotion: params.emotional_arc.starting_emotion,
       ending_emotion: params.emotional_arc.ending_emotion,
-      midpoint_emotion: params.emotional_arc.midpoint_emotion || 'transitioning',
-      arc_strategy: params.emotional_arc.primary_strategy,
+      midpoint_emotion: 'transitioning', // midpoint_emotion field doesn't exist
+      arc_strategy: params.emotional_arc.arc_strategy, // was primary_strategy
       arc_key_principles: params.emotional_arc.key_principles.join(', '),
-      arc_phases: params.emotional_arc.conversation_phases.join(' → '),
+      arc_phases: '', // conversation_phases field doesn't exist
 
       // Topic variables
       topic_name: params.training_topic.name,
       topic_key: params.training_topic.topic_key,
       topic_description: params.training_topic.description,
-      topic_category: params.training_topic.content_category || params.training_topic.category || 'general',
+      topic_category: params.training_topic.category || 'general', // content_category doesn't exist
       topic_complexity: params.training_topic.complexity_level,
       typical_questions: params.training_topic.typical_question_examples.join('\n- '),
 
@@ -247,13 +238,9 @@ export class ParameterAssemblyService {
    * Builds Elena Morales system prompt with all 5 core principles
    */
   constructSystemPrompt(params: ConversationParameters): string {
-    const openingTemplates = params.emotional_arc.opening_templates.length > 0
-      ? `\n\nSuggested opening approaches:\n${params.emotional_arc.opening_templates.map(t => `- ${t}`).join('\n')}`
-      : '';
-
-    const closingTemplates = params.emotional_arc.closing_templates.length > 0
-      ? `\n\nSuggested closing approaches:\n${params.emotional_arc.closing_templates.map(t => `- ${t}`).join('\n')}`
-      : '';
+    // Note: opening_templates and closing_templates don't exist in EmotionalArc schema
+    const openingTemplates = '';
+    const closingTemplates = '';
 
     return `You are an emotionally intelligent financial planning chatbot representing Elena Morales, CFP of Pathways Financial Planning.
 
@@ -273,24 +260,23 @@ Current conversation context:
 - Target Turns: ${params.target_turn_count || '3-5'}
 
 Persona background:
-${params.persona.description}
-
-Key personality traits:
-${params.persona.personality_traits.map(t => `- ${t}`).join('\n')}
+- Name: ${params.persona.name}
+- Archetype: ${params.persona.archetype}
+- Emotional Baseline: ${params.persona.emotional_baseline}
 
 Communication patterns for this arc:
-${params.emotional_arc.characteristic_phrases.slice(0, 5).map(p => `- ${p}`).join('\n')}
+${params.emotional_arc.characteristic_phrases.slice(0, 5).map(p => '- ' + p).join('\n')}
 
 Response techniques to use:
-${params.emotional_arc.response_techniques.slice(0, 5).map(t => `- ${t}`).join('\n')}
+${params.emotional_arc.response_techniques.slice(0, 5).map(t => '- ' + t).join('\n')}
 
 Tactics to avoid:
-${params.emotional_arc.avoid_tactics.slice(0, 5).map(t => `- ${t}`).join('\n')}
+${params.emotional_arc.avoid_tactics.slice(0, 5).map(t => '- ' + t).join('\n')}
 
 Client communication style: ${params.persona.communication_style || 'conversational'}
 
 Typical client concerns:
-${params.persona.common_concerns.slice(0, 5).map(c => `- ${c}`).join('\n')}${openingTemplates}${closingTemplates}
+${params.persona.common_concerns.slice(0, 5).map(c => '- ' + c).join('\n')}${openingTemplates}${closingTemplates}
 
 ${params.chunk_context ? `\nAdditional context from knowledge base:\n${params.chunk_context}\n` : ''}
 Your goal: Guide this client from ${params.emotional_arc.starting_emotion} to ${params.emotional_arc.ending_emotion} through ${params.target_turn_count || '3-5'} conversational turns, maintaining Elena's voice and methodology throughout.`;
@@ -300,16 +286,10 @@ Your goal: Guide this client from ${params.emotional_arc.starting_emotion} to ${
    * Determine optimal temperature based on arc and topic characteristics
    */
   private determineTemperature(arc: EmotionalArc, topic: TrainingTopic): number {
-    // Educational arcs: Lower temperature (more structured)
-    if (arc.category === 'educational') return 0.65;
-
-    // Therapeutic/conflict arcs: Higher temperature (more empathetic)
-    if (arc.category === 'therapeutic' || arc.category === 'conflict_resolution') return 0.75;
-
-    // Complex topics: Moderate temperature
+    // Note: EmotionalArc doesn't have 'category' field in current schema
+    // Using complexity_level from topic if available
+    
     if (topic.complexity_level === 'advanced') return 0.70;
-
-    // Simple topics: Slightly lower temperature
     if (topic.complexity_level === 'beginner') return 0.65;
 
     // Default moderate temperature

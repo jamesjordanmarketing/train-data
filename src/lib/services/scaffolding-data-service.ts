@@ -260,10 +260,7 @@ export class ScaffoldingDataService {
     // Generate suggestions based on warnings
     if (warnings.length > 0) {
       suggestions.push('Review the compatibility warnings and consider alternative combinations.');
-
-      if (persona.compatible_arcs.length > 0) {
-        suggestions.push(`Consider using one of ${persona.short_name}'s compatible arcs: ${persona.compatible_arcs.slice(0, 3).join(', ')}`);
-      }
+      // Note: Persona doesn't have 'compatible_arcs' field in current schema
     }
 
     return {
