@@ -21,9 +21,9 @@ export default function ConversationsPage() {
   const [loading, setLoading] = useState(true);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [filters, setFilters] = useState({
-    status: '',
-    tier: '',
-    quality_min: ''
+    status: 'all',
+    tier: 'all',
+    quality_min: 'all'
   });
   const [pagination, setPagination] = useState({
     page: 1,
@@ -42,9 +42,9 @@ export default function ConversationsPage() {
       const params = new URLSearchParams({
         page: pagination.page.toString(),
         limit: pagination.limit.toString(),
-        ...(filters.status && { status: filters.status }),
-        ...(filters.tier && { tier: filters.tier }),
-        ...(filters.quality_min && { quality_min: filters.quality_min })
+        ...(filters.status !== 'all' && { status: filters.status }),
+        ...(filters.tier !== 'all' && { tier: filters.tier }),
+        ...(filters.quality_min !== 'all' && { quality_min: filters.quality_min })
       });
 
       const response = await fetch(`/api/conversations?${params}`);
@@ -101,7 +101,7 @@ export default function ConversationsPage() {
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Statuses</SelectItem>
+            <SelectItem value="all">All Statuses</SelectItem>
             <SelectItem value="pending_review">Pending Review</SelectItem>
             <SelectItem value="approved">Approved</SelectItem>
             <SelectItem value="rejected">Rejected</SelectItem>
@@ -114,7 +114,7 @@ export default function ConversationsPage() {
             <SelectValue placeholder="Filter by tier" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Tiers</SelectItem>
+            <SelectItem value="all">All Tiers</SelectItem>
             <SelectItem value="template">Template</SelectItem>
             <SelectItem value="scenario">Scenario</SelectItem>
             <SelectItem value="edge_case">Edge Case</SelectItem>
@@ -126,7 +126,7 @@ export default function ConversationsPage() {
             <SelectValue placeholder="Min quality score" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Any Quality</SelectItem>
+            <SelectItem value="all">Any Quality</SelectItem>
             <SelectItem value="8.0">8.0+ (Excellent)</SelectItem>
             <SelectItem value="7.0">7.0+ (Good)</SelectItem>
             <SelectItem value="6.0">6.0+ (Fair)</SelectItem>
