@@ -67,9 +67,9 @@ export class ParameterAssemblyService {
     let template_id = input.template_id;
     if (!template_id) {
       template_id = await this.templateSelectionService.selectTemplate({
-        emotional_arc_type: emotional_arc.arc_type,
+        emotional_arc_type: emotional_arc.arc_key,
         tier: input.tier,
-        persona_type: persona.persona_type,
+        persona_type: persona.persona_key,
         topic_key: training_topic.topic_key
       });
     }
@@ -202,20 +202,20 @@ export class ParameterAssemblyService {
   buildTemplateVariables(params: ConversationParameters): Record<string, any> {
     return {
       // Persona variables
-      persona_name: params.persona.short_name,
-      persona_type: params.persona.persona_type,
-      persona_archetype: params.persona.archetype_summary || params.persona.description,
-      persona_age: params.persona.demographics.age_range || 'Not specified',
-      persona_career: params.persona.demographics.career || 'Not specified',
-      persona_income: params.persona.demographics.income_range || 'Not specified',
+      persona_name: params.persona.name,
+      persona_type: params.persona.persona_key,
+      persona_archetype: params.persona.archetype,
+      persona_age: params.persona.age_range || 'Not specified',
+      persona_career: params.persona.occupation || 'Not specified',
+      persona_income: params.persona.income_range || 'Not specified',
       persona_financial_situation: params.persona.financial_background || params.persona.financial_situation || 'Not specified',
       persona_communication_style: params.persona.communication_style || 'conversational',
       persona_emotional_baseline: params.persona.emotional_baseline,
-      persona_traits: params.persona.personality_traits.join(', '),
+      persona_traits: params.persona.language_patterns?.join(', ') || 'Not specified',
 
       // Emotional arc variables
       emotional_arc_name: params.emotional_arc.name,
-      emotional_arc_type: params.emotional_arc.arc_type,
+      emotional_arc_type: params.emotional_arc.arc_key,
       starting_emotion: params.emotional_arc.starting_emotion,
       ending_emotion: params.emotional_arc.ending_emotion,
       midpoint_emotion: params.emotional_arc.midpoint_emotion || 'transitioning',

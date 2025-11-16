@@ -148,7 +148,7 @@ export function ScaffoldingSelector({ value, onChange, disabled }: ScaffoldingSe
     try {
       setLoadingTemplates(true);
       
-      // Find the selected emotional arc to get its arc_type
+      // Find the selected emotional arc to get its arc_key
       const selectedArc = emotionalArcs.find(arc => arc.id === value.emotional_arc_id);
       if (!selectedArc) return;
 
@@ -157,12 +157,12 @@ export function ScaffoldingSelector({ value, onChange, disabled }: ScaffoldingSe
 
       // Build query parameters
       const params = new URLSearchParams({
-        emotional_arc_type: selectedArc.arc_type,
+        emotional_arc_type: selectedArc.arc_key,
         tier: value.tier,
       });
 
       if (selectedPersona) {
-        params.append('persona_type', selectedPersona.persona_type);
+        params.append('persona_type', selectedPersona.persona_key);
       }
       if (selectedTopic) {
         params.append('topic_key', selectedTopic.topic_key);

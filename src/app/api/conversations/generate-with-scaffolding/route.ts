@@ -127,14 +127,13 @@ export async function POST(request: NextRequest) {
           persona: {
             id: assembled.conversation_params.persona.id,
             name: assembled.conversation_params.persona.name,
-            short_name: assembled.conversation_params.persona.short_name,
-            persona_type: assembled.conversation_params.persona.persona_type,
+            persona_key: assembled.conversation_params.persona.persona_key,
             emotional_baseline: assembled.conversation_params.persona.emotional_baseline,
           },
           emotional_arc: {
             id: assembled.conversation_params.emotional_arc.id,
             name: assembled.conversation_params.emotional_arc.name,
-            arc_type: assembled.conversation_params.emotional_arc.arc_type,
+            arc_key: assembled.conversation_params.emotional_arc.arc_key,
             starting_emotion: assembled.conversation_params.emotional_arc.starting_emotion,
             ending_emotion: assembled.conversation_params.emotional_arc.ending_emotion,
           },

@@ -489,22 +489,22 @@ export class TemplateResolver {
 
     // Resolve persona variables
     resolved = resolved.replace(/\{\{persona_name\}\}/g, scaffoldingData.persona.name || '');
-    resolved = resolved.replace(/\{\{persona_type\}\}/g, scaffoldingData.persona.persona_type || '');
-    resolved = resolved.replace(/\{\{persona_archetype\}\}/g, scaffoldingData.persona.archetype_summary || '');
+    resolved = resolved.replace(/\{\{persona_type\}\}/g, scaffoldingData.persona.persona_key || '');
+    resolved = resolved.replace(/\{\{persona_archetype\}\}/g, scaffoldingData.persona.archetype || '');
     resolved = resolved.replace(/\{\{persona_demographics\}\}/g, this.formatDemographics(scaffoldingData.persona.demographics));
     resolved = resolved.replace(/\{\{persona_financial_background\}\}/g, scaffoldingData.persona.financial_background || '');
     resolved = resolved.replace(/\{\{persona_financial_situation\}\}/g, scaffoldingData.persona.financial_situation || '');
     resolved = resolved.replace(/\{\{persona_communication_style\}\}/g, scaffoldingData.persona.communication_style || '');
     resolved = resolved.replace(/\{\{persona_emotional_baseline\}\}/g, scaffoldingData.persona.emotional_baseline || '');
-    resolved = resolved.replace(/\{\{persona_decision_style\}\}/g, scaffoldingData.persona.decision_style || '');
+    resolved = resolved.replace(/\{\{persona_decision_style\}\}/g, '');
     resolved = resolved.replace(/\{\{persona_typical_questions\}\}/g, this.formatArray(scaffoldingData.persona.typical_questions));
     resolved = resolved.replace(/\{\{persona_common_concerns\}\}/g, this.formatArray(scaffoldingData.persona.common_concerns));
     resolved = resolved.replace(/\{\{persona_language_patterns\}\}/g, this.formatArray(scaffoldingData.persona.language_patterns));
-    resolved = resolved.replace(/\{\{persona_personality_traits\}\}/g, this.formatArray(scaffoldingData.persona.personality_traits));
+    resolved = resolved.replace(/\{\{persona_personality_traits\}\}/g, '');
 
     // Resolve emotional arc variables
     resolved = resolved.replace(/\{\{emotional_arc_name\}\}/g, scaffoldingData.emotional_arc.name || '');
-    resolved = resolved.replace(/\{\{arc_type\}\}/g, scaffoldingData.emotional_arc.arc_type || '');
+    resolved = resolved.replace(/\{\{arc_type\}\}/g, scaffoldingData.emotional_arc.arc_key || '');
     resolved = resolved.replace(/\{\{starting_emotion\}\}/g, scaffoldingData.emotional_arc.starting_emotion || '');
     resolved = resolved.replace(/\{\{starting_intensity_min\}\}/g, (scaffoldingData.emotional_arc.starting_intensity_min || 0).toString());
     resolved = resolved.replace(/\{\{starting_intensity_max\}\}/g, (scaffoldingData.emotional_arc.starting_intensity_max || 0).toString());
