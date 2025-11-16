@@ -415,3 +415,191 @@ export const PaginationConfigSchema = z.object({
   sortDirection: z.enum(['asc', 'desc']).optional(),
 });
 
+// ============================================================================
+// CONVERSATION STORAGE SYSTEM TYPES (File Storage + Metadata)
+// ============================================================================
+// These types support the conversation storage service that manages
+// file storage in Supabase Storage + metadata in PostgreSQL
+
+/**
+ * Storage-enabled conversation record matching database schema
+ * Used by ConversationStorageService for file + metadata operations
+ */
+export interface StorageConversation {
+  id: string;
+  conversation_id: string;
+
+  // Scaffolding references
+  persona_id: string | null;
+  emotional_arc_id: string | null;
+  training_topic_id: string | null;
+  template_id: string | null;
+
+  // Scaffolding keys
+  persona_key: string | null;
+  emotional_arc_key: string | null;
+  topic_key: string | null;
+
+  // Metadata
+  conversation_name: string | null;
+  description: string | null;
+  turn_count: number;
+  tier: 'template' | 'scenario' | 'edge_case';
+  category: string | null;
+
+  // Quality scores
+  quality_score: number | null;
+  empathy_score: number | null;
+  clarity_score: number | null;
+  appropriateness_score: number | null;
+  brand_voice_alignment: number | null;
+
+  // Processing status
+  status: 'pending_review' | 'approved' | 'rejected' | 'archived';
+  processing_status: 'queued' | 'processing' | 'completed' | 'failed';
+
+  // File storage
+  file_url: string | null;
+  file_size: number | null;
+  file_path: string | null;
+  storage_bucket: string;
+
+  // Emotional progression
+  starting_emotion: string | null;
+  ending_emotion: string | null;
+  emotional_intensity_start: number | null;
+  emotional_intensity_end: number | null;
+
+  // Usage tracking
+  usage_count: number;
+  last_exported_at: string | null;
+  export_count: number;
+
+  // Audit
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+  reviewed_by: string | null;
+  reviewed_at: string | null;
+  review_notes: string | null;
+
+  // Retention
+  expires_at: string | null;
+  is_active: boolean;
+}
+
+/**
+ * Individual conversation turn record (normalized storage)
+ */
+export interface StorageConversationTurn {
+  id: string;
+  conversation_id: string;
+  turn_number: number;
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  detected_emotion: string | null;
+  emotion_confidence: number | null;
+  emotional_intensity: number | null;
+  primary_strategy: string | null;
+  tone: string | null;
+  word_count: number | null;
+  sentence_count: number | null;
+  created_at: string;
+}
+
+/**
+ * Conversation JSON file structure (matches seed dataset format)
+ * This is the format stored in Supabase Storage
+ */
+export interface ConversationJSONFile {
+  dataset_metadata: {
+    dataset_name: string;
+    version: string;
+    created_date: string;
+    vertical: string;
+    consultant_persona: string;
+    target_use: string;
+    conversation_source: string;
+    quality_tier: string;
+    total_conversations: number;
+    total_turns: number;
+    notes: string;
+  };
+  consultant_profile: {
+    name: string;
+    business: string;
+    expertise: string;
+    years_experience: number;
+    core_philosophy: Record<string, string>;
+    communication_style: {
+      tone: string;
+      techniques: string[];
+      avoid: string[];
+    };
+  };
+  training_pairs: Array<{
+    id: string;
+    conversation_id: string;
+    turn_number: number;
+    conversation_metadata?: any;
+    system_prompt: string;
+    conversation_history: any[];
+    current_user_input: string;
+    emotional_context: any;
+    response_strategy: any;
+    target_response: string;
+    response_breakdown: any;
+    expected_user_response_patterns: any;
+    training_metadata: any;
+  }>;
+}
+
+/**
+ * Input for creating a new conversation with file upload
+ */
+export interface CreateStorageConversationInput {
+  conversation_id: string;
+  persona_id?: string;
+  emotional_arc_id?: string;
+  training_topic_id?: string;
+  template_id?: string;
+  conversation_name?: string;
+  file_content: ConversationJSONFile | string;
+  created_by: string;
+}
+
+/**
+ * Filters for querying conversations
+ */
+export interface StorageConversationFilters {
+  status?: StorageConversation['status'];
+  tier?: StorageConversation['tier'];
+  persona_id?: string;
+  emotional_arc_id?: string;
+  training_topic_id?: string;
+  created_by?: string;
+  quality_min?: number;
+  quality_max?: number;
+}
+
+/**
+ * Pagination options
+ */
+export interface StorageConversationPagination {
+  page?: number;
+  limit?: number;
+  sortBy?: keyof StorageConversation;
+  sortDirection?: 'asc' | 'desc';
+}
+
+/**
+ * Response for list conversations query
+ */
+export interface StorageConversationListResponse {
+  conversations: StorageConversation[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
