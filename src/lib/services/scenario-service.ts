@@ -236,7 +236,7 @@ export class ScenarioService {
       // Validate parent template exists (if provided)
       if (input.parentTemplateId) {
         const { data: template, error: templateError } = await this.supabase
-          .from('templates')
+          .from('prompt_templates')
           .select('id, name')
           .eq('id', input.parentTemplateId)
           .single();
@@ -328,7 +328,7 @@ export class ScenarioService {
       if (input.parentTemplateId !== undefined) {
         // Validate new parent template exists
         const { data: template, error: templateError } = await this.supabase
-          .from('templates')
+          .from('prompt_templates')
           .select('id')
           .eq('id', input.parentTemplateId)
           .single();

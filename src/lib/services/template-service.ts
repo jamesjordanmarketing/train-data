@@ -52,7 +52,7 @@ export class TemplateService {
   async getAll(filters?: TemplateFilters): Promise<Template[]> {
     try {
       let query = this.supabase
-        .from('templates')
+        .from('prompt_templates')
         .select('*')
         .order('created_at', { ascending: false });
 
@@ -127,7 +127,7 @@ export class TemplateService {
   async getById(id: string): Promise<Template | null> {
     try {
       const { data, error } = await this.supabase
-        .from('templates')
+        .from('prompt_templates')
         .select('*')
         .eq('id', id)
         .single();
@@ -157,7 +157,7 @@ export class TemplateService {
   async getByName(name: string): Promise<Template | null> {
     try {
       const { data, error } = await this.supabase
-        .from('templates')
+        .from('prompt_templates')
         .select('*')
         .eq('name', name)
         .single();
@@ -241,7 +241,7 @@ export class TemplateService {
       };
 
       const { data, error } = await this.supabase
-        .from('templates')
+        .from('prompt_templates')
         .insert(dbData)
         .select()
         .single();
@@ -305,7 +305,7 @@ export class TemplateService {
       if (input.applicableEmotions !== undefined) dbUpdates.applicable_emotions = input.applicableEmotions;
 
       const { data, error } = await this.supabase
-        .from('templates')
+        .from('prompt_templates')
         .update(dbUpdates)
         .eq('id', id)
         .select()
@@ -378,7 +378,7 @@ export class TemplateService {
 
           // No dependencies, proceed with delete
           const { error: deleteError } = await this.supabase
-            .from('templates')
+            .from('prompt_templates')
             .delete()
             .eq('id', id);
 
@@ -496,7 +496,7 @@ export class TemplateService {
         // If function doesn't exist, fall back to manual increment
         if (rpcError.code === '42883') {
           const { error } = await this.supabase
-            .from('templates')
+            .from('prompt_templates')
             .update({ usage_count: existing.usageCount + 1 })
             .eq('id', id);
 
@@ -540,7 +540,7 @@ export class TemplateService {
       }
 
       const { error } = await this.supabase
-        .from('templates')
+        .from('prompt_templates')
         .update({ rating })
         .eq('id', id);
 

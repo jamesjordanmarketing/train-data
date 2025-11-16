@@ -300,7 +300,7 @@ export class TemplateResolver {
     // Fetch from database
     try {
       const { data, error } = await supabase
-        .from('templates')
+        .from('prompt_templates')
         .select('*')
         .eq('id', templateId)
         .single();
@@ -369,7 +369,7 @@ export class TemplateResolver {
 
     try {
       const { data, error } = await supabase
-        .from('templates')
+        .from('prompt_templates')
         .select('*')
         .in('id', uncachedIds);
 

@@ -1,6 +1,28 @@
 # Conversation Generation Debugging Guide
-**Date:** 2025-11-16
-**Status:** ✅ Fixes Deployed
+**Date:** 2025-11-16 (Updated 23:30)
+**Status:** ✅ Critical Fixes Applied - Ready for Testing
+
+---
+
+## 🔧 LATEST FIX (Nov 16, 23:30)
+
+### Bug Fixed: Wrong Table Name in Template Queries
+
+**Problem:** Template queries were failing with PGRST116 error because code queried `templates` table but database has `prompt_templates` table.
+
+**Fix Applied:**
+- Changed all `.from('templates')` to `.from('prompt_templates')` in:
+  - `src/lib/services/template-resolver.ts` (2 locations)
+  - `src/lib/services/template-service.ts` (10 locations)
+  - `src/lib/template-service.ts` (1 location)
+  - `src/lib/services/quality-feedback-service.ts` (1 location)
+  - `src/lib/services/scenario-service.ts` (2 locations)
+
+**Status:** Code fixed, ready to commit and deploy
+
+**Also Fixed (Optional):** Added script to install missing RPC functions for usage tracking
+- Script: `scripts/setup-scaffolding-functions.js`
+- Functions: `increment_persona_usage`, `increment_arc_usage`, `increment_topic_usage`
 
 ---
 

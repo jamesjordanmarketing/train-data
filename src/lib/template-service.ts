@@ -346,7 +346,7 @@ export const templateService = {
 
     // Fetch template basics
     const { data: tpl, error: tplErr } = await _supabase
-      .from('templates')
+      .from('prompt_templates')
       .select('usage_count, rating')
       .eq('id', templateId)
       .single();

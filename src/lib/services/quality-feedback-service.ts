@@ -103,7 +103,7 @@ async function aggregateFeedbackClientSide(
 
     // Fetch all templates
     const { data: templates, error: templatesError } = await supabase
-      .from('templates')
+      .from('prompt_templates')
       .select('id, name, tier');
 
     if (templatesError) throw templatesError;
