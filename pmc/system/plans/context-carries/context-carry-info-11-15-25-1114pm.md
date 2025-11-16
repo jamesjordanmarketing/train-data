@@ -662,6 +662,11 @@ curl https://your-app.vercel.app/api/conversations
 - Vercel: https://vercel.com/
 - Anthropic: https://console.anthropic.com/
 
+### Supabase Project Operations
+For all Supabase operations use the Supabase Agent Ops Library (SAOL):
+**Library location:** `C:\Users\james\Master\BrightHub\brun\train-data\supa-agent-ops\`  
+**Quick Start Guide:** `C:\Users\james\Master\BrightHub\brun\train-data\supa-agent-ops\saol-agent-quick-start-guide_v1.md`
+
 
 
 ## Project Reference Guide
