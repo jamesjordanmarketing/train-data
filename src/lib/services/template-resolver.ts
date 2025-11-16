@@ -315,13 +315,20 @@ export class TemplateResolver {
       }
 
       // Map database record to Template type
+      // Ensure variables is always an array (handle null, undefined, or non-array values)
+      let variables = data.variables;
+      if (!Array.isArray(variables)) {
+        console.warn(`Template ${data.id} has non-array variables field:`, typeof variables);
+        variables = [];
+      }
+
       const template: Template = {
         id: data.id,
         name: data.name,
         description: data.description || '',
         category: data.category || '',
         structure: data.structure,
-        variables: data.variables || [],
+        variables: variables,
         tone: data.tone || '',
         complexityBaseline: data.complexity_baseline || 5,
         styleNotes: data.style_notes,
@@ -384,13 +391,20 @@ export class TemplateResolver {
 
       // Cache all templates
       data.forEach(dbRecord => {
+        // Ensure variables is always an array
+        let variables = dbRecord.variables;
+        if (!Array.isArray(variables)) {
+          console.warn(`Template ${dbRecord.id} has non-array variables field:`, typeof variables);
+          variables = [];
+        }
+
         const template: Template = {
           id: dbRecord.id,
           name: dbRecord.name,
           description: dbRecord.description || '',
           category: dbRecord.category || '',
           structure: dbRecord.structure,
-          variables: dbRecord.variables || [],
+          variables: variables,
           tone: dbRecord.tone || '',
           complexityBaseline: dbRecord.complexity_baseline || 5,
           styleNotes: dbRecord.style_notes,
