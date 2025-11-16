@@ -5,93 +5,67 @@
 
 export interface Persona {
   id: string;
+  persona_key: string;
   name: string;
-  persona_type: string;
-  short_name: string;
-  description: string;
-  archetype_summary?: string;
+  archetype: string;
+  age_range?: string;
+  occupation?: string;
+  income_range?: string;
   demographics: Record<string, any>;
   financial_background?: string;
   financial_situation?: string;
-  personality_traits: string[];
   communication_style?: string;
   emotional_baseline: string;
-  decision_style?: string;
   typical_questions: string[];
   common_concerns: string[];
   language_patterns: string[];
-  domain: string;
   is_active: boolean;
-  usage_count: number;
-  compatible_arcs: string[];
-  complexity_preference?: string;
   created_at: string;
   updated_at: string;
-  created_by?: string;
 }
 
 export interface EmotionalArc {
   id: string;
+  arc_key: string;
   name: string;
-  arc_type: string;
-  category?: string;
-  description: string;
-  when_to_use?: string;
   starting_emotion: string;
   starting_intensity_min: number;
   starting_intensity_max: number;
-  secondary_starting_emotions: string[];
-  midpoint_emotion?: string;
-  midpoint_intensity?: number;
   ending_emotion: string;
   ending_intensity_min: number;
   ending_intensity_max: number;
-  secondary_ending_emotions: string[];
-  turn_structure: Record<string, any>;
-  conversation_phases: string[];
-  primary_strategy: string;
-  response_techniques: string[];
-  avoid_tactics: string[];
+  arc_strategy: string;
   key_principles: string[];
   characteristic_phrases: string[];
-  opening_templates: string[];
-  closing_templates: string[];
-  tier_suitability: string[];
-  domain: string;
-  is_active: boolean;
-  usage_count: number;
+  response_techniques: string[];
+  avoid_tactics: string[];
   typical_turn_count_min?: number;
   typical_turn_count_max?: number;
-  complexity_level?: string;
+  complexity_baseline?: number;
+  tier?: string;
+  suitable_personas: string[];
+  suitable_topics: string[];
+  example_conversation_id?: string;
+  is_active: boolean;
   created_at: string;
   updated_at: string;
-  created_by?: string;
 }
 
 export interface TrainingTopic {
   id: string;
-  name: string;
   topic_key: string;
+  name: string;
   category?: string;
   description: string;
-  typical_question_examples: string[];
-  domain: string;
-  content_category?: string;
   complexity_level: string;
-  requires_numbers: boolean;
-  requires_timeframe: boolean;
-  requires_personal_context: boolean;
+  typical_question_examples: string[];
+  key_concepts: string[];
   suitable_personas: string[];
-  suitable_arcs: string[];
-  suitable_tiers: string[];
-  tags: string[];
-  related_topics: string[];
+  suitable_emotional_arcs: string[];
+  requires_specialist: boolean;
   is_active: boolean;
-  usage_count: number;
-  priority: string;
   created_at: string;
   updated_at: string;
-  created_by?: string;
 }
 
 export interface CompatibilityResult {

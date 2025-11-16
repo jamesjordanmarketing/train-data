@@ -21,20 +21,12 @@ export class ScaffoldingDataService {
   // ============================================================================
 
   async getAllPersonas(filters?: {
-    domain?: string;
     is_active?: boolean;
-    emotional_baseline?: string;
   }): Promise<Persona[]> {
     let query = this.supabase.from('personas').select('*');
 
-    if (filters?.domain) {
-      query = query.eq('domain', filters.domain);
-    }
     if (filters?.is_active !== undefined) {
       query = query.eq('is_active', filters.is_active);
-    }
-    if (filters?.emotional_baseline) {
-      query = query.eq('emotional_baseline', filters.emotional_baseline);
     }
 
     const { data, error } = await query.order('name');
@@ -61,17 +53,16 @@ export class ScaffoldingDataService {
     return data;
   }
 
-  async getPersonaByType(persona_type: string, domain = 'financial_planning'): Promise<Persona | null> {
+  async getPersonaByKey(persona_key: string): Promise<Persona | null> {
     const { data, error } = await this.supabase
       .from('personas')
       .select('*')
-      .eq('persona_type', persona_type)
-      .eq('domain', domain)
+      .eq('persona_key', persona_key)
       .single();
 
     if (error) {
       if (error.code === 'PGRST116') return null;
-      throw new Error(`Failed to fetch persona by type: ${error.message}`);
+      throw new Error(`Failed to fetch persona by key: ${error.message}`);
     }
 
     return data;
@@ -90,20 +81,12 @@ export class ScaffoldingDataService {
   // ============================================================================
 
   async getAllEmotionalArcs(filters?: {
-    domain?: string;
     is_active?: boolean;
-    category?: string;
   }): Promise<EmotionalArc[]> {
     let query = this.supabase.from('emotional_arcs').select('*');
 
-    if (filters?.domain) {
-      query = query.eq('domain', filters.domain);
-    }
     if (filters?.is_active !== undefined) {
       query = query.eq('is_active', filters.is_active);
-    }
-    if (filters?.category) {
-      query = query.eq('category', filters.category);
     }
 
     const { data, error } = await query.order('name');
@@ -130,17 +113,16 @@ export class ScaffoldingDataService {
     return data;
   }
 
-  async getEmotionalArcByType(arc_type: string, domain = 'financial_planning'): Promise<EmotionalArc | null> {
+  async getEmotionalArcByKey(arc_key: string): Promise<EmotionalArc | null> {
     const { data, error } = await this.supabase
       .from('emotional_arcs')
       .select('*')
-      .eq('arc_type', arc_type)
-      .eq('domain', domain)
+      .eq('arc_key', arc_key)
       .single();
 
     if (error) {
       if (error.code === 'PGRST116') return null;
-      throw new Error(`Failed to fetch emotional arc by type: ${error.message}`);
+      throw new Error(`Failed to fetch emotional arc by key: ${error.message}`);
     }
 
     return data;
@@ -159,16 +141,12 @@ export class ScaffoldingDataService {
   // ============================================================================
 
   async getAllTrainingTopics(filters?: {
-    domain?: string;
     is_active?: boolean;
     category?: string;
     complexity_level?: string;
   }): Promise<TrainingTopic[]> {
     let query = this.supabase.from('training_topics').select('*');
 
-    if (filters?.domain) {
-      query = query.eq('domain', filters.domain);
-    }
     if (filters?.is_active !== undefined) {
       query = query.eq('is_active', filters.is_active);
     }
@@ -255,28 +233,28 @@ export class ScaffoldingDataService {
     const suggestions: string[] = [];
     let confidence = 1.0;
 
-    // Check persona-arc compatibility
-    if (persona.compatible_arcs.length > 0 && !persona.compatible_arcs.includes(arc.arc_type)) {
-      warnings.push(`Persona "${persona.short_name}" typically doesn't use the ${arc.name} arc. This may still work, but consider alternative arcs.`);
+    // Check arc-persona suitability
+    if (arc.suitable_personas.length > 0 && !arc.suitable_personas.includes(persona.persona_key)) {
+      warnings.push(`Arc "${arc.name}" typically isn't used with persona "${persona.name}". This may still work, but consider alternative arcs.`);
       confidence -= 0.2;
     }
 
     // Check arc-topic suitability
-    if (topic.suitable_arcs.length > 0 && !topic.suitable_arcs.includes(arc.arc_type)) {
-      warnings.push(`Topic "${topic.name}" is not typically paired with ${arc.name}. Consider alternative topics or arcs.`);
+    if (arc.suitable_topics.length > 0 && !arc.suitable_topics.includes(topic.topic_key)) {
+      warnings.push(`Arc "${arc.name}" is not typically paired with topic "${topic.name}". Consider alternative topics or arcs.`);
       confidence -= 0.2;
     }
 
-    // Check persona-topic suitability
-    if (topic.suitable_personas.length > 0 && !topic.suitable_personas.includes(persona.persona_type)) {
-      warnings.push(`Persona "${persona.short_name}" typically doesn't ask about ${topic.name}. Consider if this combination makes sense for your use case.`);
+    // Check topic-persona suitability
+    if (topic.suitable_personas.length > 0 && !topic.suitable_personas.includes(persona.persona_key)) {
+      warnings.push(`Topic "${topic.name}" typically isn't asked about by persona "${persona.name}". Consider if this combination makes sense for your use case.`);
       confidence -= 0.15;
     }
 
-    // Check complexity alignment
-    if (persona.complexity_preference === 'simple' && topic.complexity_level === 'advanced') {
-      warnings.push(`Persona prefers simple topics, but "${topic.name}" is advanced. This may create an unrealistic conversation.`);
-      confidence -= 0.1;
+    // Check topic-arc suitability
+    if (topic.suitable_emotional_arcs.length > 0 && !topic.suitable_emotional_arcs.includes(arc.arc_key)) {
+      warnings.push(`Topic "${topic.name}" typically isn't paired with arc "${arc.name}". Consider alternative arcs.`);
+      confidence -= 0.15;
     }
 
     // Generate suggestions based on warnings

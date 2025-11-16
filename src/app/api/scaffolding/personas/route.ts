@@ -14,14 +14,10 @@ export async function GET(request: NextRequest) {
     const service = new ScaffoldingDataService(supabase);
 
     const { searchParams } = new URL(request.url);
-    const domain = searchParams.get('domain') || 'financial_planning';
     const is_active = searchParams.get('is_active') !== 'false';
-    const emotional_baseline = searchParams.get('emotional_baseline') || undefined;
 
     const personas = await service.getAllPersonas({
-      domain,
-      is_active,
-      emotional_baseline
+      is_active
     });
 
     return NextResponse.json({
