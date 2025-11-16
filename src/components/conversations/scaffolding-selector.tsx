@@ -403,14 +403,14 @@ export function ScaffoldingSelector({ value, onChange, disabled }: ScaffoldingSe
           ) : availableTemplates.length > 0 ? (
             <Select
               value={value.template_id || undefined}
-              onValueChange={(val) => onChange({ ...value, template_id: val })}
+              onValueChange={(val) => onChange({ ...value, template_id: val === 'auto' ? null : val })}
               disabled={disabled}
             >
               <SelectTrigger id="template-select">
                 <SelectValue placeholder="Auto-select best template..." />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">
+                <SelectItem value="auto">
                   <span className="text-muted-foreground">Auto-select best match</span>
                 </SelectItem>
                 {availableTemplates.map((template) => (

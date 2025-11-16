@@ -58,32 +58,42 @@ export class TemplateSelectionService {
 
     let templates = data as PromptTemplate[];
 
-    // Step 3: Filter by persona compatibility if provided
-    if (criteria.persona_type) {
-      templates = templates.filter(t =>
-        !t.suitable_personas ||
-        t.suitable_personas.length === 0 ||
-        t.suitable_personas.includes(criteria.persona_type!)
-      );
-    }
-
-    // Step 4: Filter by topic compatibility if provided
-    if (criteria.topic_key) {
-      templates = templates.filter(t =>
-        !t.suitable_topics ||
-        t.suitable_topics.length === 0 ||
-        t.suitable_topics.includes(criteria.topic_key!)
-      );
-    }
-
-    // Step 5: Sort by quality_threshold (higher first), then rating
-    templates.sort((a, b) => {
-      const qualityDiff = (b.quality_threshold || 0) - (a.quality_threshold || 0);
-      if (qualityDiff !== 0) return qualityDiff;
-      return (b.rating || 0) - (a.rating || 0);
+    // Step 3: Score templates by persona compatibility (don't filter out, just rank)
+    const scoredTemplates = templates.map(t => {
+      let score = 1.0;
+      
+      // Reduce score if persona doesn't match (but don't eliminate)
+      if (criteria.persona_type && t.suitable_personas && t.suitable_personas.length > 0) {
+        if (!t.suitable_personas.includes(criteria.persona_type)) {
+          score *= 0.5; // Less ideal, but still usable
+        }
+      }
+      
+      // Reduce score if topic doesn't match (but don't eliminate)
+      if (criteria.topic_key && t.suitable_topics && t.suitable_topics.length > 0) {
+        if (!t.suitable_topics.includes(criteria.topic_key)) {
+          score *= 0.5; // Less ideal, but still usable
+        }
+      }
+      
+      return { template: t, score };
     });
 
-    return templates;
+    // Step 4: Sort by score (higher first), then quality_threshold, then rating
+    scoredTemplates.sort((a, b) => {
+      // First by compatibility score
+      const scoreDiff = b.score - a.score;
+      if (scoreDiff !== 0) return scoreDiff;
+      
+      // Then by quality threshold
+      const qualityDiff = (b.template.quality_threshold || 0) - (a.template.quality_threshold || 0);
+      if (qualityDiff !== 0) return qualityDiff;
+      
+      // Finally by rating
+      return (b.template.rating || 0) - (a.template.rating || 0);
+    });
+
+    return scoredTemplates.map(st => st.template);
   }
 
   /**
