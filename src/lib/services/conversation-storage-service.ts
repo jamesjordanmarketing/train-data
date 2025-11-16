@@ -2,7 +2,7 @@
  * Conversation Storage Service
  * 
  * Manages conversation file storage (Supabase Storage) + metadata (PostgreSQL)
- * Uses SAOL library for database operations
+ * Uses Supabase client for all database operations
  * 
  * Features:
  * - Atomic file upload + metadata insert
@@ -23,26 +23,6 @@ import type {
   StorageConversationListResponse,
 } from '../types/conversations';
 import { validateConversationJSON, validateAndParseConversationJSON } from '../validators/conversation-schema';
-
-// Import SAOL library (dynamically to handle both server and client)
-let saol: any = null;
-
-// Lazy load SAOL (server-side only)
-function getSAOL() {
-  if (saol) return saol;
-  
-  try {
-    // Try to require SAOL (Node.js environment)
-    if (typeof window === 'undefined') {
-      saol = require('../../../supa-agent-ops');
-      return saol;
-    }
-  } catch (error) {
-    console.warn('SAOL library not available, using direct Supabase client');
-  }
-  
-  return null;
-}
 
 export class ConversationStorageService {
   private supabase: SupabaseClient;
@@ -136,61 +116,30 @@ export class ConversationStorageService {
         is_active: true,
       };
 
-      // Try to use SAOL for insert, fallback to direct Supabase
-      const saolLib = getSAOL();
-      let insertedConversation: StorageConversation;
+      // Insert conversation metadata using Supabase client
+      const { data, error } = await this.supabase
+        .from('conversations')
+        .insert(conversationRecord)
+        .select()
+        .single();
 
-      if (saolLib) {
-        // Use SAOL for insert
-        const importResult = await saolLib.agentImportTool({
-          source: [conversationRecord],
-          table: 'conversations',
-          mode: 'insert',
-        });
-
-        if (!importResult.success) {
-          throw new Error(`Metadata insert failed: ${importResult.summary}`);
-        }
-
-        // Query back the inserted record
-        const queryResult = await saolLib.agentQuery({
-          table: 'conversations',
-          where: [{ column: 'conversation_id', operator: 'eq', value: conversationId }],
-          limit: 1,
-        });
-
-        if (!queryResult.data || queryResult.data.length === 0) {
-          throw new Error('Failed to retrieve inserted conversation');
-        }
-
-        insertedConversation = queryResult.data[0] as StorageConversation;
-      } else {
-        // Fallback to direct Supabase client
-        const { data, error } = await this.supabase
-          .from('conversations')
-          .insert(conversationRecord)
-          .select()
-          .single();
-
-        if (error) {
-          throw new Error(`Metadata insert failed: ${error.message}`);
-        }
-
-        insertedConversation = data as StorageConversation;
+      if (error) {
+        throw new Error(`Metadata insert failed: ${error.message}`);
       }
+
+      const insertedConversation = data as StorageConversation;
 
       // Step 6: Extract and insert conversation turns
       const turns = this.extractTurns(conversationData, insertedConversation.id);
 
       if (turns.length > 0) {
-        if (saolLib) {
-          await saolLib.agentImportTool({
-            source: turns,
-            table: 'conversation_turns',
-            mode: 'insert',
-          });
-        } else {
-          await this.supabase.from('conversation_turns').insert(turns);
+        const { error: turnsError } = await this.supabase
+          .from('conversation_turns')
+          .insert(turns);
+        
+        if (turnsError) {
+          console.error('Failed to insert turns:', turnsError);
+          // Don't throw - conversation is already created
         }
       }
 
@@ -216,34 +165,18 @@ export class ConversationStorageService {
    * Get conversation by conversation_id
    */
   async getConversation(conversationId: string): Promise<StorageConversation | null> {
-    const saolLib = getSAOL();
+    const { data, error } = await this.supabase
+      .from('conversations')
+      .select('*')
+      .eq('conversation_id', conversationId)
+      .single();
 
-    if (saolLib) {
-      const result = await saolLib.agentQuery({
-        table: 'conversations',
-        where: [{ column: 'conversation_id', operator: 'eq', value: conversationId }],
-        limit: 1,
-      });
-
-      if (!result.data || result.data.length === 0) {
-        return null;
-      }
-
-      return result.data[0] as StorageConversation;
-    } else {
-      const { data, error } = await this.supabase
-        .from('conversations')
-        .select('*')
-        .eq('conversation_id', conversationId)
-        .single();
-
-      if (error) {
-        if (error.code === 'PGRST116') return null; // Not found
-        throw error;
-      }
-
-      return data as StorageConversation;
+    if (error) {
+      if (error.code === 'PGRST116') return null; // Not found
+      throw error;
     }
+
+    return data as StorageConversation;
   }
 
   /**
@@ -463,19 +396,13 @@ export class ConversationStorageService {
       }
 
       // Delete database record (cascade will delete turns)
-      const saolLib = getSAOL();
-
-      if (saolLib) {
-        await saolLib.agentDelete({
-          table: 'conversations',
-          where: [{ column: 'conversation_id', operator: 'eq', value: conversationId }],
-          confirm: true,
-        });
-      } else {
-        await this.supabase
-          .from('conversations')
-          .delete()
-          .eq('conversation_id', conversationId);
+      const { error: deleteError } = await this.supabase
+        .from('conversations')
+        .delete()
+        .eq('conversation_id', conversationId);
+      
+      if (deleteError) {
+        throw new Error(`Failed to delete conversation: ${deleteError.message}`);
       }
     } else {
       // Soft delete: Set is_active = false
@@ -561,50 +488,21 @@ export class ConversationStorageService {
    * Count conversations by filters
    */
   async countConversations(filters?: StorageConversationFilters): Promise<number> {
-    const saolLib = getSAOL();
+    let query = this.supabase
+      .from('conversations')
+      .select('*', { count: 'exact', head: true })
+      .eq('is_active', true);
 
-    if (saolLib) {
-      const whereConditions: any[] = [
-        { column: 'is_active', operator: 'eq', value: true },
-      ];
+    if (filters?.status) query = query.eq('status', filters.status);
+    if (filters?.tier) query = query.eq('tier', filters.tier);
+    if (filters?.persona_id) query = query.eq('persona_id', filters.persona_id);
+    if (filters?.created_by) query = query.eq('created_by', filters.created_by);
 
-      if (filters?.status) {
-        whereConditions.push({ column: 'status', operator: 'eq', value: filters.status });
-      }
-      if (filters?.tier) {
-        whereConditions.push({ column: 'tier', operator: 'eq', value: filters.tier });
-      }
-      if (filters?.persona_id) {
-        whereConditions.push({ column: 'persona_id', operator: 'eq', value: filters.persona_id });
-      }
-      if (filters?.created_by) {
-        whereConditions.push({ column: 'created_by', operator: 'eq', value: filters.created_by });
-      }
+    const { count, error } = await query;
 
-      const result = await saolLib.agentCount({
-        table: 'conversations',
-        where: whereConditions,
-      });
+    if (error) throw error;
 
-      return result.count || 0;
-    } else {
-      // Fallback to Supabase client
-      let query = this.supabase
-        .from('conversations')
-        .select('*', { count: 'exact', head: true })
-        .eq('is_active', true);
-
-      if (filters?.status) query = query.eq('status', filters.status);
-      if (filters?.tier) query = query.eq('tier', filters.tier);
-      if (filters?.persona_id) query = query.eq('persona_id', filters.persona_id);
-      if (filters?.created_by) query = query.eq('created_by', filters.created_by);
-
-      const { count, error } = await query;
-
-      if (error) throw error;
-
-      return count || 0;
-    }
+    return count || 0;
   }
 
   // ========================================================================
@@ -711,8 +609,22 @@ export class ConversationStorageService {
   }
 }
 
-// Export singleton instance
-export const conversationStorageService = new ConversationStorageService();
+// Lazy singleton instance
+let conversationStorageServiceInstance: ConversationStorageService | null = null;
+
+export function getConversationStorageService(): ConversationStorageService {
+  if (!conversationStorageServiceInstance) {
+    conversationStorageServiceInstance = new ConversationStorageService();
+  }
+  return conversationStorageServiceInstance;
+}
+
+// Export for backwards compatibility
+export const conversationStorageService = {
+  get instance() {
+    return getConversationStorageService();
+  }
+};
 
 // Export class for testing with custom clients
 export default ConversationStorageService;

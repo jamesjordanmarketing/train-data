@@ -99,7 +99,8 @@ export function validateConversationJSON(data: any): { valid: boolean; errors: s
   }
 
   const errors = (validate.errors || []).map(err => {
-    const path = err.instancePath || 'root';
+    // AJV v6 uses dataPath, v7+ uses instancePath
+    const path = (err as any).dataPath || (err as any).instancePath || 'root';
     const message = err.message || 'validation failed';
     return `${path}: ${message}`;
   });

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { conversationStorageService } from '@/lib/services/conversation-storage-service';
+import { getConversationStorageService } from '@/lib/services/conversation-storage-service';
 
 /**
  * PATCH /api/conversations/[id]/status - Update conversation status
@@ -30,7 +30,8 @@ export async function PATCH(
 
     const userId = request.headers.get('x-user-id') || 'test-user';
 
-    const conversation = await conversationStorageService.updateConversationStatus(
+    const service = getConversationStorageService();
+    const conversation = await service.updateConversationStatus(
       params.id,
       status,
       userId,
@@ -55,7 +56,8 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const conversation = await conversationStorageService.getConversation(params.id);
+    const service = getConversationStorageService();
+    const conversation = await service.getConversation(params.id);
 
     return NextResponse.json({
       conversation_id: conversation.conversation_id,

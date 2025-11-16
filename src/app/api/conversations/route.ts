@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { conversationStorageService } from '@/lib/services/conversation-storage-service';
+import { getConversationStorageService } from '@/lib/services/conversation-storage-service';
 
 /**
  * GET /api/conversations - List conversations with filtering and pagination
@@ -30,7 +30,8 @@ export async function GET(request: NextRequest) {
     // Get user ID from auth (placeholder - implement with actual auth)
     const userId = request.headers.get('x-user-id') || undefined;
 
-    const result = await conversationStorageService.listConversations(
+    const service = getConversationStorageService();
+    const result = await service.listConversations(
       { 
         status, 
         tier, 
@@ -64,7 +65,8 @@ export async function POST(request: NextRequest) {
     // Get user ID from auth
     const userId = request.headers.get('x-user-id') || 'test-user';
 
-    const conversation = await conversationStorageService.createConversation({
+    const service = getConversationStorageService();
+    const conversation = await service.createConversation({
       ...body,
       created_by: userId
     });
