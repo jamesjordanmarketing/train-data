@@ -46,9 +46,9 @@ Version 2 MUST be complete. Include the full scope of `C:\Users\james\Master\Bri
 
 Write the entire new spec to: `C:\Users\james\Master\BrightHub\brun\train-data\pmc\product\_mapping\unique\cat-to-conv-P01\01-cat-to-conv-conversation-storage-spec_v2.md`
 
-Use the following "### Execution Plan Execution Instructions" to implement this spec (it was already used to create `C:\Users\james\Master\BrightHub\brun\train-data\pmc\product\_mapping\unique\cat-to-conv-P01\01-cat-to-conv-conversation-storage-spec_v1.md`)
+Use the following "### Execution Plan Execution Instructions" to implement this spec.
 
-Do not update any code or write to any other file but the output file `C:\Users\james\Master\BrightHub\brun\train-data\pmc\product\_mapping\unique\cat-to-conv-P01\01-cat-to-conv-conversation-storage-spec_v2.md`
+Do not update any code or write to any other file but the output file.
 
 
 ### Execution Plan Execution Instructions
