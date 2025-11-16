@@ -18,11 +18,42 @@
   - `src/lib/services/quality-feedback-service.ts` (1 location)
   - `src/lib/services/scenario-service.ts` (2 locations)
 
-**Status:** Code fixed, ready to commit and deploy
+**Status:** ✅ DEPLOYED (Commit 26380db pushed to main)
+
+**Vercel Build:** Monitor at https://vercel.com/dashboard for deployment status
 
 **Also Fixed (Optional):** Added script to install missing RPC functions for usage tracking
 - Script: `scripts/setup-scaffolding-functions.js`
 - Functions: `increment_persona_usage`, `increment_arc_usage`, `increment_topic_usage`
+
+---
+
+## 🧪 TESTING AFTER DEPLOYMENT
+
+Once Vercel deployment completes:
+
+1. **Navigate to:** https://train-data-three.vercel.app/conversations/generate
+   
+2. **Use the same parameters that failed before:**
+   - Persona: Jennifer Martinez (The Anxious Planner)
+   - Emotional Arc: Confusion → Clarity
+   - Topic: Backdoor Roth IRA Strategy  
+   - Tier: Template (Tier 1)
+   - Template: Template - Confusion → Clarity - Education Focus
+
+3. **Click "Generate Conversation"**
+
+4. **Expected Result:** ✅ SUCCESS
+   - Conversation generates successfully
+   - Returns JSON with turns, quality score, metadata
+   - Stored in conversation_storage table
+   - Visible in /conversations dashboard
+
+5. **Check Vercel Logs:**
+   - Should see: "✓ Parameters assembled with template"
+   - Should see: Template fetched from prompt_templates successfully
+   - Should NOT see: "Template not found" error
+   - May still see: "Failed to increment usage" warnings (non-critical)
 
 ---
 
@@ -466,4 +497,42 @@ Possible Combinations: 3 × 5 × 20 = 300
 
 ---
 
-*Generated: 2025-11-16T22:38:30.811Z*
+## 📝 SUMMARY OF FIX (Nov 16, 23:30)
+
+### Problem
+Conversation generation was completely broken due to incorrect table name in template queries.
+
+### Root Cause
+- Code queried: `templates` table
+- Database has: `prompt_templates` table
+- Result: PGRST116 "0 rows returned" error
+
+### Solution
+Changed all `.from('templates')` to `.from('prompt_templates')` in 5 TypeScript files:
+1. template-resolver.ts (2 locations)
+2. template-service.ts (10 locations)
+3. template-service.ts root (1 location)
+4. quality-feedback-service.ts (1 location)
+5. scenario-service.ts (2 locations)
+
+### Deployment
+- Commit: 26380db
+- Pushed to: main branch
+- Status: Vercel deploying automatically
+
+### Testing
+After deployment completes, test at `/conversations/generate` with:
+- Persona: Jennifer Martinez
+- Arc: Confusion → Clarity
+- Topic: Backdoor Roth IRA Strategy
+- Expected: ✅ SUCCESS (conversation generated)
+
+### Non-Critical Issue (Optional Fix)
+Missing RPC functions for usage tracking cause warnings but don't block generation.
+- Added setup script: `scripts/setup-scaffolding-functions.js`
+- Run in Supabase to install functions (optional)
+
+---
+
+*Last Updated: 2025-11-16T23:30:00Z*
+*Deployment Status: In Progress*
