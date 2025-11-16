@@ -73,8 +73,21 @@ export function ScaffoldingSelector({ value, onChange, disabled }: ScaffoldingSe
         fetch('/api/scaffolding/training-topics')
       ]);
 
-      if (!personasRes.ok || !arcsRes.ok || !topicsRes.ok) {
-        throw new Error('Failed to load scaffolding data');
+      // Check each response and log specific errors
+      if (!personasRes.ok) {
+        const errorText = await personasRes.text();
+        console.error('Personas API error:', personasRes.status, errorText);
+        throw new Error(`Failed to load personas: ${personasRes.status}`);
+      }
+      if (!arcsRes.ok) {
+        const errorText = await arcsRes.text();
+        console.error('Emotional arcs API error:', arcsRes.status, errorText);
+        throw new Error(`Failed to load emotional arcs: ${arcsRes.status}`);
+      }
+      if (!topicsRes.ok) {
+        const errorText = await topicsRes.text();
+        console.error('Training topics API error:', topicsRes.status, errorText);
+        throw new Error(`Failed to load training topics: ${topicsRes.status}`);
       }
 
       const [personasData, arcsData, topicsData] = await Promise.all([
@@ -83,12 +96,27 @@ export function ScaffoldingSelector({ value, onChange, disabled }: ScaffoldingSe
         topicsRes.json()
       ]);
 
-      setPersonas(personasData.personas || []);
-      setEmotionalArcs(arcsData.emotional_arcs || []);
-      setTrainingTopics(topicsData.training_topics || []);
+      const personasList = personasData.personas || [];
+      const arcsList = arcsData.emotional_arcs || [];
+      const topicsList = topicsData.training_topics || [];
+
+      console.log('Scaffolding data loaded:', {
+        personas: personasList.length,
+        arcs: arcsList.length,
+        topics: topicsList.length
+      });
+
+      // Check if we have any data
+      if (personasList.length === 0 && arcsList.length === 0 && topicsList.length === 0) {
+        throw new Error('No scaffolding data found. Database tables may be empty. Please run setup scripts or contact administrator.');
+      }
+
+      setPersonas(personasList);
+      setEmotionalArcs(arcsList);
+      setTrainingTopics(topicsList);
     } catch (error) {
       console.error('Failed to load scaffolding data:', error);
-      setError('Failed to load scaffolding data. Please refresh the page.');
+      setError(`Failed to load scaffolding data: ${error instanceof Error ? error.message : 'Unknown error'}. Please refresh the page or check console for details.');
     } finally {
       setLoading(false);
     }
