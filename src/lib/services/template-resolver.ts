@@ -327,7 +327,7 @@ export class TemplateResolver {
         name: data.name,
         description: data.description || '',
         category: data.category || '',
-        structure: data.structure,
+        structure: data.template_text || data.structure, // Use template_text (full prompt) instead of structure (brief notes)
         variables: variables,
         tone: data.tone || '',
         complexityBaseline: data.complexity_baseline || 5,
@@ -403,7 +403,7 @@ export class TemplateResolver {
           name: dbRecord.name,
           description: dbRecord.description || '',
           category: dbRecord.category || '',
-          structure: dbRecord.structure,
+          structure: dbRecord.template_text || dbRecord.structure, // Use template_text (full prompt) instead of structure (brief notes)
           variables: variables,
           tone: dbRecord.tone || '',
           complexityBaseline: dbRecord.complexity_baseline || 5,
