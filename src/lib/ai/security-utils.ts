@@ -73,9 +73,11 @@ export function containsDangerousPattern(input: string): boolean {
     // Data protocol with script
     /data:text\/html[^,]*,[\s\S]*<script/gi,
     
-    // Potentially dangerous SQL patterns
-    /(\b(union|select|insert|update|delete|drop|create|alter|exec|execute)\b)/gi,
-    /(--|;|\/\*|\*\/|xp_|sp_)/gi,
+    // Potentially dangerous SQL patterns (only in context that looks like SQL)
+    // Look for SQL keywords followed by SQL-like syntax, not just the words themselves
+    /(\bunion\s+select\b|\bselect\s+\*\s+from\b|\binsert\s+into\b|\bupdate\s+.*\s+set\b|\bdelete\s+from\b|\bdrop\s+table\b)/gi,
+    // SQL comment patterns (but more specific to avoid false positives with regular punctuation)
+    /(--\s*\w|\/\*.*\*\/)/gi,
     
     // Template injection patterns
     /\{\{.*(__import__|eval|exec|compile|globals|locals|open|file).*\}\}/gi,
