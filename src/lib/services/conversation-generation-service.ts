@@ -324,8 +324,18 @@ export class ConversationGenerationService {
     template: any
   ): { title: string; turns: ConversationTurn[] } {
     try {
+      // Strip markdown code fences if present (Claude sometimes wraps JSON in ```json ... ```)
+      let cleanedContent = content.trim();
+      if (cleanedContent.startsWith('```')) {
+        // Remove opening fence (```json or just ```)
+        cleanedContent = cleanedContent.replace(/^```(?:json)?\s*\n?/, '');
+        // Remove closing fence
+        cleanedContent = cleanedContent.replace(/\n?```\s*$/, '');
+        cleanedContent = cleanedContent.trim();
+      }
+
       // Claude should return JSON with conversation structure
-      const parsed = JSON.parse(content);
+      const parsed = JSON.parse(cleanedContent);
 
       // Validate structure
       if (!parsed.turns || !Array.isArray(parsed.turns)) {
