@@ -334,6 +334,9 @@ export class ConversationGenerationService {
         cleanedContent = cleanedContent.trim();
       }
 
+      // Try to fix common JSON issues before parsing
+      cleanedContent = this.sanitizeJSON(cleanedContent);
+
       // Claude should return JSON with conversation structure
       const parsed = JSON.parse(cleanedContent);
 
@@ -366,15 +369,60 @@ export class ConversationGenerationService {
       };
     } catch (error) {
       console.error('Error parsing Claude response:', error);
+      
+      // Log a sample of the problematic content for debugging
+      let contentToLog = content.trim();
+      if (contentToLog.startsWith('```')) {
+        contentToLog = contentToLog.replace(/^```(?:json)?\s*\n?/, '');
+        contentToLog = contentToLog.replace(/\n?```\s*$/, '');
+        contentToLog = contentToLog.trim();
+      }
+      contentToLog = this.sanitizeJSON(contentToLog);
+      
+      const errorPosition = error instanceof SyntaxError ? 
+        error.message.match(/position (\d+)/)?.[1] : null;
+      
+      if (errorPosition) {
+        const pos = parseInt(errorPosition);
+        const start = Math.max(0, pos - 100);
+        const end = Math.min(contentToLog.length, pos + 100);
+        const snippet = contentToLog.substring(start, end);
+        console.error(`JSON error context (position ${pos}):\n...${snippet}...`);
+      }
 
       // If JSON parsing fails, try to extract as plain text
       if (content.includes('user:') || content.includes('assistant:')) {
+        console.log('Attempting plain text fallback parsing...');
         return this.parseAsPlainText(content, params);
       }
 
       throw new Error(
         `Failed to parse Claude response: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
+    }
+  }
+
+  /**
+   * Sanitize JSON string to fix common issues
+   * @private
+   */
+  private sanitizeJSON(json: string): string {
+    // Remove trailing commas before closing braces/brackets
+    json = json.replace(/,(\s*[}\]])/g, '$1');
+    
+    // Remove any BOM or invisible characters
+    json = json.replace(/^\uFEFF/, '');
+    
+    // Try to fix common quote issues in content fields
+    // This is a best-effort approach - may not catch all cases
+    try {
+      // If the JSON has obvious syntax errors, try a more aggressive fix
+      // Replace single quotes with double quotes (but be careful)
+      // This is risky and may cause issues, so only do it if parsing fails
+      
+      return json;
+    } catch (e) {
+      return json;
     }
   }
 
