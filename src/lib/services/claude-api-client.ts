@@ -147,30 +147,35 @@ export class ClaudeAPIClient {
 
       const durationMs = Date.now() - startTime;
 
-      // Log successful generation
-      await generationLogService.logGeneration({
-        conversationId: config.conversationId,
-        runId: config.runId,
-        templateId: config.templateId,
-        requestPayload: {
-          prompt,
-          model: config.model || AI_CONFIG.model,
-          temperature: config.temperature || AI_CONFIG.temperature,
-          maxTokens: config.maxTokens || AI_CONFIG.maxTokens,
-        },
-        responsePayload: {
-          id: response.id,
-          content: response.content,
-        },
-        modelUsed: response.model,
-        inputTokens: response.usage.input_tokens,
-        outputTokens: response.usage.output_tokens,
-        costUsd: response.cost,
-        durationMs,
-        status: 'success',
-        retryAttempt: 0,
-        createdBy: config.userId || 'system',
-      });
+      // Log successful generation (non-blocking)
+      try {
+        await generationLogService.logGeneration({
+          conversationId: config.conversationId,
+          runId: config.runId,
+          templateId: config.templateId,
+          requestPayload: {
+            prompt,
+            model: config.model || AI_CONFIG.model,
+            temperature: config.temperature || AI_CONFIG.temperature,
+            maxTokens: config.maxTokens || AI_CONFIG.maxTokens,
+          },
+          responsePayload: {
+            id: response.id,
+            content: response.content,
+          },
+          modelUsed: response.model,
+          inputTokens: response.usage.input_tokens,
+          outputTokens: response.usage.output_tokens,
+          costUsd: response.cost,
+          durationMs,
+          status: 'success',
+          retryAttempt: 0,
+          createdBy: config.userId || 'system',
+        });
+      } catch (logError) {
+        // Log error but don't fail the generation
+        console.error('Error logging generation:', logError);
+      }
 
       console.log(`[${requestId}] ✓ Generation successful (${durationMs}ms, $${response.cost.toFixed(4)})`);
 
@@ -182,27 +187,32 @@ export class ClaudeAPIClient {
       const durationMs = Date.now() - startTime;
       const apiError = error as APIError;
 
-      // Log failed generation
-      await generationLogService.logGeneration({
-        conversationId: config.conversationId,
-        runId: config.runId,
-        templateId: config.templateId,
-        requestPayload: {
-          prompt,
-          model: config.model || AI_CONFIG.model,
-          temperature: config.temperature || AI_CONFIG.temperature,
-          maxTokens: config.maxTokens || AI_CONFIG.maxTokens,
-        },
-        modelUsed: config.model || AI_CONFIG.model,
-        inputTokens: 0,
-        outputTokens: 0,
-        durationMs,
-        status: 'failed',
-        errorMessage: apiError.message,
-        errorCode: apiError.code,
-        retryAttempt: 0,
-        createdBy: config.userId || 'system',
-      });
+      // Log failed generation (non-blocking)
+      try {
+        await generationLogService.logGeneration({
+          conversationId: config.conversationId,
+          runId: config.runId,
+          templateId: config.templateId,
+          requestPayload: {
+            prompt,
+            model: config.model || AI_CONFIG.model,
+            temperature: config.temperature || AI_CONFIG.temperature,
+            maxTokens: config.maxTokens || AI_CONFIG.maxTokens,
+          },
+          modelUsed: config.model || AI_CONFIG.model,
+          inputTokens: 0,
+          outputTokens: 0,
+          durationMs,
+          status: 'failed',
+          errorMessage: apiError.message,
+          errorCode: apiError.code,
+          retryAttempt: 0,
+          createdBy: config.userId || 'system',
+        });
+      } catch (logError) {
+        // Log error but don't fail the generation
+        console.error('Error logging generation:', logError);
+      }
 
       console.error(`[${requestId}] ✗ Generation failed:`, apiError.message);
       throw error;
