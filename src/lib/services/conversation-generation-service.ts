@@ -386,7 +386,7 @@ export class ConversationGenerationService {
         contentToLog = contentToLog.replace(/\n?```\s*$/, '');
         contentToLog = contentToLog.trim();
       }
-      contentToLog = this.sanitizeJSON(contentToLog);
+      // Note: Don't apply full repair pipeline here, just show raw content for debugging
       
       const errorPosition = error instanceof SyntaxError ? 
         error.message.match(/position (\d+)/)?.[1] : null;
