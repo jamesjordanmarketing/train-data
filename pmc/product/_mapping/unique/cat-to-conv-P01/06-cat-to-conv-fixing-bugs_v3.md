@@ -39,6 +39,28 @@ if (!Array.isArray(variables)) {
 
 ---
 
+### Fix #3 (Nov 17, 00:05) - Overly Strict Security Validation
+**Commit:** fc2437b  
+**Status:** ✅ DEPLOYED
+
+**Problem:** Security validation rejecting legitimate text containing semicolons (e.g., `"High anxiety; hypervigilant about risks; needs reassurance"`) as potential SQL injection attack.
+
+**Root Cause:** The regex pattern `/(--|;|\/\*|\*\/|xp_|sp_)/gi` was flagging ANY semicolon as dangerous SQL, including normal punctuation in prose.
+
+**Fix:** Made SQL injection detection more context-aware in `security-utils.ts`:
+```typescript
+// Before: Flag any semicolon or double-dash
+/(--|;|\/\*|\*\/|xp_|sp_)/gi
+
+// After: Only flag SQL keywords in SQL-like syntax
+/(\bunion\s+select\b|\bselect\s+\*\s+from\b|\binsert\s+into\b)/gi
+/(--\s*\w|\/\*.*\*\/)/gi  // SQL comments only if followed by word
+```
+
+Now allows normal punctuation while still protecting against actual SQL injection.
+
+---
+
 ## 🎯 QUICK START - How to Generate Successfully
 
 After the fixes deployed on 2025-11-16, conversation generation should work smoothly:
