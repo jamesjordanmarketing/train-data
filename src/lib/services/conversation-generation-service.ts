@@ -459,75 +459,113 @@ export class ConversationGenerationService {
   private repairQuoteEscaping(json: string): string {
     try {
       console.log('[repairQuoteEscaping] Starting quote repair');
+      let repairCount = 0;
       
-      // Find all "content": occurrences and repair the string value that follows
+      // Find all string values in JSON and repair them
       let result = '';
       let i = 0;
+      let inString = false;
+      let stringStart = -1;
       
       while (i < json.length) {
-        // Look for "content":
-        if (json.substring(i, i + 9) === '"content"') {
-          result += '"content"';
-          i += 9;
-          
-          // Skip whitespace and colon
-          while (i < json.length && /[\s:]/.test(json[i])) {
+        if (!inString) {
+          // Not in a string - look for opening quote
+          if (json[i] === '"') {
+            // Check if this is a property name or value
+            // Property names are followed by : eventually
+            // Find the matching closing quote first
+            let j = i + 1;
+            let isPropertyName = false;
+            
+            // Scan ahead to see if this looks like a property name
+            while (j < json.length) {
+              if (json[j] === '\\' && j + 1 < json.length) {
+                j += 2; // Skip escaped character
+                continue;
+              }
+              if (json[j] === '"') {
+                // Found closing quote - check what comes after
+                let k = j + 1;
+                while (k < json.length && /\s/.test(json[k])) k++;
+                if (k < json.length && json[k] === ':') {
+                  isPropertyName = true;
+                }
+                break;
+              }
+              j++;
+            }
+            
+            if (isPropertyName) {
+              // This is a property name, copy as-is until closing quote
+              result += json[i];
+              i++;
+              while (i < json.length) {
+                result += json[i];
+                if (json[i] === '\\' && i + 1 < json.length) {
+                  i++;
+                  result += json[i];
+                  i++;
+                  continue;
+                }
+                if (json[i] === '"') {
+                  i++;
+                  break;
+                }
+                i++;
+              }
+            } else {
+              // This is a string value - enter string parsing mode
+              inString = true;
+              stringStart = i;
+              result += '"';
+              i++;
+            }
+          } else {
             result += json[i];
             i++;
           }
-          
-          // Should now be at the opening quote of the content string
-          if (json[i] === '"') {
-            result += '"';
-            i++;
-            
-            // Now parse the string content and escape unescaped quotes
-            let stringContent = '';
-            while (i < json.length) {
-              if (json[i] === '\\') {
-                // Backslash - check what's being escaped
-                if (i + 1 < json.length) {
-                  const next = json[i + 1];
-                  if (next === '"' || next === '\\' || next === 'n' || next === 'r' || next === 't' || next === '/') {
-                    // Already properly escaped
-                    stringContent += json[i] + json[i + 1];
-                    i += 2;
-                    continue;
-                  }
-                }
-                // Lone backslash, keep it
-                stringContent += json[i];
-                i++;
-              } else if (json[i] === '"') {
-                // Found closing quote (or unescaped quote inside string)
-                // Check if this looks like the end of the string (followed by comma or brace)
-                let j = i + 1;
-                while (j < json.length && /\s/.test(json[j])) j++;
-                
-                if (j < json.length && (json[j] === ',' || json[j] === '}')) {
-                  // This is likely the closing quote
-                  result += stringContent + '"';
-                  i++;
-                  break;
-                } else {
-                  // This is an unescaped quote inside the string - escape it
-                  stringContent += '\\"';
-                  i++;
-                }
-              } else {
-                // Regular character
-                stringContent += json[i];
-                i++;
+        } else {
+          // In a string - parse carefully and escape unescaped quotes
+          if (json[i] === '\\') {
+            // Backslash - check what's being escaped
+            if (i + 1 < json.length) {
+              const next = json[i + 1];
+              if (next === '"' || next === '\\' || next === 'n' || next === 'r' || next === 't' || next === '/' || next === 'b' || next === 'f') {
+                // Already properly escaped
+                result += json[i] + json[i + 1];
+                i += 2;
+                continue;
               }
             }
+            // Lone backslash, keep it
+            result += json[i];
+            i++;
+          } else if (json[i] === '"') {
+            // Found a quote - is it the closing quote or an embedded quote?
+            // Check what comes after (skip whitespace)
+            let j = i + 1;
+            while (j < json.length && /\s/.test(json[j])) j++;
+            
+            if (j >= json.length || json[j] === ',' || json[j] === '}' || json[j] === ']') {
+              // This is the closing quote
+              result += '"';
+              i++;
+              inString = false;
+            } else {
+              // Embedded unescaped quote - escape it
+              result += '\\"';
+              repairCount++;
+              i++;
+            }
+          } else {
+            // Regular character
+            result += json[i];
+            i++;
           }
-        } else {
-          result += json[i];
-          i++;
         }
       }
       
-      console.log('[repairQuoteEscaping] Quote repair complete');
+      console.log(`[repairQuoteEscaping] Quote repair complete - fixed ${repairCount} unescaped quotes`);
       return result;
     } catch (error) {
       console.warn('[repairQuoteEscaping] Error during quote repair:', error);
