@@ -526,8 +526,8 @@ export class ConversationGenerationService {
       // This is tricky - we only want to fix newlines inside strings
       // Not structural newlines in the JSON
       
-      // Pattern to match content fields
-      const contentPattern = /"content"\s*:\s*"([^"]*(?:\\.[^"]*)*)"/gs;
+      // Pattern to match content fields (using [\s\S] instead of dotAll flag for ES5 compatibility)
+      const contentPattern = /"content"\s*:\s*"([\s\S]*?)"/g;
       
       json = json.replace(contentPattern, (match, capturedContent) => {
         // Replace actual newlines with \n escape sequences
