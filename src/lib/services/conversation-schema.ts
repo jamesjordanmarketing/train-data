@@ -66,9 +66,7 @@ export const CONVERSATION_JSON_SCHEMA = {
               },
               intensity: { 
                 type: "number",
-                minimum: 0,
-                maximum: 1,
-                description: "Emotional intensity from 0 (none) to 1 (extreme)"
+                description: "Emotional intensity from 0 (none) to 1 (extreme). Must be between 0.0 and 1.0."
               }
             },
             required: ["primary_emotion", "intensity"],
