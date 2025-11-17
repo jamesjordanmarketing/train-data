@@ -1105,7 +1105,19 @@ For all Supabase operations use the Supabase Agent Ops Library (SAOL):
 **Library location:** `C:\Users\james\Master\BrightHub\brun\train-data\supa-agent-ops\`  
 **Quick Start Guide:** `C:\Users\james\Master\BrightHub\brun\train-data\supa-agent-ops\saol-agent-quick-start-guide_v1.md`
 
+## Quick Reference: Essential Commands
 
+### Database Operations
+```bash
+# Query conversations
+node -e "const saol=require('supa-agent-ops');(async()=>{const r=await saol.agentQuery({table:'conversations',limit:10});console.log(r.data);})();"
+
+# Check schema
+node -e "const saol=require('supa-agent-ops');(async()=>{const r=await saol.agentIntrospectSchema({table:'conversations',transport:'pg'});console.log(r.tables[0].columns);})();"
+
+# Count by status
+node -e "const saol=require('supa-agent-ops');(async()=>{const r=await saol.agentCount({table:'conversations',where:[{column:'status',operator:'eq',value:'approved'}]});console.log('Count:',r.count);})();"
+```
 
 ## Project Reference Guide
 REFERENCE MATERIALS

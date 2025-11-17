@@ -3,15 +3,25 @@
  * Simple script to execute a SQL migration file
  */
 
-import * as dotenv from 'dotenv';
 import * as path from 'path';
 import * as fs from 'fs';
 import { createClient } from '@supabase/supabase-js';
 
-// Load environment variables
+// Load environment variables manually
 const envPath = path.resolve(process.cwd(), '.env.local');
-dotenv.config({ path: envPath });
-dotenv.config();
+if (fs.existsSync(envPath)) {
+  const envContent = fs.readFileSync(envPath, 'utf8');
+  envContent.split('\n').forEach(line => {
+    const match = line.match(/^([^=]+)=(.*)$/);
+    if (match) {
+      const key = match[1].trim();
+      const value = match[2].trim();
+      if (!process.env[key]) {
+        process.env[key] = value;
+      }
+    }
+  });
+}
 
 async function runMigration() {
   console.log('Running migration: 20251117_add_raw_response_storage_columns.sql\n');
@@ -66,12 +76,8 @@ async function runMigration() {
           const { error: stmtError } = await supabase.rpc('exec_sql', { sql_string: statement });
           
           if (stmtError) {
-            // Try as a query instead
-            const { error: queryError } = await (supabase as any).from('_').select(statement);
-            if (queryError && !queryError.message.includes('already exists')) {
-              console.error(`❌ Error executing statement:`, queryError);
-              throw queryError;
-            }
+            console.error(`❌ Error executing statement via RPC:`, stmtError);
+            throw stmtError;
           }
         }
         

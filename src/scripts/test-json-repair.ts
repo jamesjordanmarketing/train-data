@@ -7,15 +7,24 @@
  * 3. Manual review (1% remaining failures)
  */
 
-// Load environment variables
-import * as dotenv from 'dotenv';
+// Load environment variables manually
 import * as path from 'path';
+import * as fs from 'fs';
 
-// Try loading .env.local first, then .env
 const envPath = path.resolve(process.cwd(), '.env.local');
-dotenv.config({ path: envPath });
-// Fallback to .env if .env.local doesn't exist
-dotenv.config();
+if (fs.existsSync(envPath)) {
+  const envContent = fs.readFileSync(envPath, 'utf8');
+  envContent.split('\n').forEach(line => {
+    const match = line.match(/^([^=]+)=(.*)$/);
+    if (match) {
+      const key = match[1].trim();
+      const value = match[2].trim();
+      if (!process.env[key]) {
+        process.env[key] = value;
+      }
+    }
+  });
+}
 
 import { ConversationStorageService } from '../lib/services/conversation-storage-service';
 

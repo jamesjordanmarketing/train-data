@@ -464,6 +464,17 @@ export interface StorageConversation {
   file_path: string | null;
   storage_bucket: string;
 
+  // Raw response storage (for zero data loss)
+  raw_response_url: string | null;
+  raw_response_path: string | null;
+  raw_response_size: number | null;
+  raw_stored_at: string | null;
+  parse_attempts: number;
+  last_parse_attempt_at: string | null;
+  parse_error_message: string | null;
+  parse_method_used: string | null;
+  requires_manual_review: boolean;
+
   // Emotional progression
   starting_emotion: string | null;
   ending_emotion: string | null;
