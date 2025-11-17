@@ -19,6 +19,7 @@ import { getRateLimiter } from '../ai/rate-limiter';
 import { RetryExecutor } from '../ai/retry-executor';
 import { createRetryStrategy } from '../ai/retry-strategy';
 import { generationLogService } from './generation-log-service';
+import { CONVERSATION_JSON_SCHEMA } from './conversation-schema';
 
 /**
  * Configuration for a generation request
@@ -31,6 +32,7 @@ export interface GenerationConfig {
   model?: string;
   userId?: string;
   runId?: string;
+  useStructuredOutputs?: boolean; // Enable structured outputs (default: true)
 }
 
 /**
@@ -231,13 +233,17 @@ export class ClaudeAPIClient {
     const model = config.model || AI_CONFIG.model;
     const temperature = config.temperature ?? AI_CONFIG.temperature;
     const maxTokens = config.maxTokens || AI_CONFIG.maxTokens;
+    const useStructuredOutputs = config.useStructuredOutputs !== false; // Default true
 
     console.log(`[${requestId}] Calling Claude API: ${model}`);
+    if (useStructuredOutputs) {
+      console.log(`[${requestId}] ✅ Using structured outputs for guaranteed valid JSON`);
+    }
 
     // Track request in rate limiter
     this.rateLimiter.addRequest(requestId);
 
-    const requestBody = {
+    const requestBody: any = {
       model,
       max_tokens: maxTokens,
       temperature,
@@ -249,14 +255,29 @@ export class ClaudeAPIClient {
       ],
     };
 
+    // TIER 1: Add structured outputs configuration
+    if (useStructuredOutputs) {
+      requestBody.output_format = {
+        type: "json_schema",
+        schema: CONVERSATION_JSON_SCHEMA
+      };
+    }
+
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'x-api-key': AI_CONFIG.apiKey,
+      'anthropic-version': '2023-06-01',
+    };
+
+    // Add beta header for structured outputs
+    if (useStructuredOutputs) {
+      headers['anthropic-beta'] = 'structured-outputs-2025-11-13';
+    }
+
     try {
       const response = await fetch(`${AI_CONFIG.baseUrl}/messages`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': AI_CONFIG.apiKey,
-          'anthropic-version': '2023-06-01',
-        },
+        headers,
         body: JSON.stringify(requestBody),
         signal: AbortSignal.timeout(AI_CONFIG.timeout),
       });

@@ -20,6 +20,7 @@ import { randomUUID } from 'crypto';
 import { ClaudeAPIClient, getClaudeAPIClient } from './claude-api-client';
 import { TemplateResolver, getTemplateResolver } from './template-resolver';
 import { QualityValidator, getQualityValidator } from './quality-validator';
+import { ConversationStorageService } from './conversation-storage-service';
 import { conversationService } from './conversation-service';
 import { generationLogService } from './generation-log-service';
 import type {
@@ -103,15 +104,18 @@ export class ConversationGenerationService {
   private claudeClient: ClaudeAPIClient;
   private templateResolver: TemplateResolver;
   private qualityValidator: QualityValidator;
+  private storageService: ConversationStorageService;
 
   constructor(
     claudeClient?: ClaudeAPIClient,
     templateResolver?: TemplateResolver,
-    qualityValidator?: QualityValidator
+    qualityValidator?: QualityValidator,
+    storageService?: ConversationStorageService
   ) {
     this.claudeClient = claudeClient || getClaudeAPIClient();
     this.templateResolver = templateResolver || getTemplateResolver();
     this.qualityValidator = qualityValidator || getQualityValidator();
+    this.storageService = storageService || new ConversationStorageService();
   }
 
   /**
@@ -182,6 +186,7 @@ export class ConversationGenerationService {
           maxTokens: params.maxTokens,
           userId: params.userId,
           runId: params.runId,
+          useStructuredOutputs: true, // Enable structured outputs for guaranteed valid JSON
         }
       );
 
@@ -189,106 +194,72 @@ export class ConversationGenerationService {
         `[${generationId}] ✓ API response received (${apiResponse.usage.output_tokens} tokens, $${apiResponse.cost.toFixed(4)})`
       );
 
-      // Step 3: Parse Claude response
-      console.log(`[${generationId}] Step 3: Parsing response...`);
-      const parsedConversation = this.parseClaudeResponse(
-        apiResponse.content,
-        params,
-        resolvedTemplate.template
-      );
-
-      console.log(
-        `[${generationId}] ✓ Parsed ${parsedConversation.turns.length} turns`
-      );
-
-      // Step 4: Validate quality
-      console.log(`[${generationId}] Step 4: Validating quality...`);
-      const qualityResult = this.qualityValidator.validateConversation({
-        turns: parsedConversation.turns,
-        parameters: params.parameters,
+      // TIER 2: Store raw response BEFORE any parsing (NEW)
+      console.log(`[${generationId}] Step 3: Storing raw response...`);
+      const rawStorageResult = await this.storageService.storeRawResponse({
+        conversationId: generationId,
+        rawResponse: apiResponse.content,
+        userId: params.userId,
+        metadata: {
+          templateId: params.templateId,
+          tier: params.tier,
+          personaId: params.parameters?.persona_id,
+          emotionalArcId: params.parameters?.emotional_arc_id,
+          trainingTopicId: params.parameters?.training_topic_id,
+        },
       });
 
-      const qualityScore = qualityResult.qualityMetrics.overall;
-      console.log(
-        `[${generationId}] ✓ Quality score: ${qualityScore}/10 (${qualityResult.qualityMetrics.confidence} confidence)`
-      );
-
-      if (qualityResult.issues.length > 0) {
-        console.log(
-          `[${generationId}] Issues: ${qualityResult.issues.join('; ')}`
-        );
+      if (!rawStorageResult.success) {
+        console.error(`[${generationId}] ❌ Failed to store raw response:`, rawStorageResult.error);
+        // Don't throw - continue to parse attempt
       }
 
-      // Step 5: Determine status based on quality
-      const status: ConversationStatus = this.determineStatus(
-        qualityScore,
-        resolvedTemplate.template.qualityThreshold || 7
-      );
+      console.log(`[${generationId}] ✅ Raw response stored at ${rawStorageResult.rawPath}`);
 
-      console.log(`[${generationId}] Status: ${status}`);
+      // TIER 3: Parse and store final version (NEW)
+      console.log(`[${generationId}] Step 4: Parsing and storing final version...`);
+      const parseResult = await this.storageService.parseAndStoreFinal({
+        conversationId: generationId,
+        rawResponse: apiResponse.content,  // Pass raw response (already have it)
+        userId: params.userId,
+      });
 
-      // Step 6: Build complete conversation object
-      const conversation: Conversation = {
-        id: '', // Will be assigned by database
-        title:
-          parsedConversation.title ||
-          this.generateTitle(params.parameters),
-        persona: params.parameters.persona || 'Unknown',
-        emotion: params.parameters.emotion || 'Neutral',
-        tier: params.tier,
-        category: params.category || [],
-        status,
-        qualityScore,
-        qualityMetrics: qualityResult.qualityMetrics,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        createdBy: params.userId,
-        turns: parsedConversation.turns,
-        totalTurns: parsedConversation.turns.length,
-        totalTokens:
-          apiResponse.usage.input_tokens + apiResponse.usage.output_tokens,
-        parentId: params.templateId,
-        parentType: 'template',
-        parameters: params.parameters,
-        reviewHistory: [
-          {
-            id: randomUUID(),
-            action: 'generated',
-            performedBy: params.userId,
-            timestamp: new Date().toISOString(),
-            comment: `Generated with quality score ${qualityScore}/10`,
+      if (!parseResult.success) {
+        console.warn(`[${generationId}] ⚠️  Parse failed, but raw response is saved`);
+        console.warn(`[${generationId}] Error: ${parseResult.error}`);
+        console.warn(`[${generationId}] Conversation marked for manual review`);
+        
+        // Return partial success - raw data is saved, parse failed
+        const durationMs = Date.now() - startTime;
+        return {
+          conversation: {
+            id: generationId,
+            status: 'pending_review',
+            processing_status: 'parse_failed',
+            conversation_id: generationId,
+          } as any,
+          success: false,
+          error: `Parse failed: ${parseResult.error}. Raw response saved for retry.`,
+          metrics: {
+            durationMs,
+            cost: apiResponse.cost,
+            totalTokens: apiResponse.usage.input_tokens + apiResponse.usage.output_tokens,
           },
-        ],
-      };
+        };
+      }
 
-      // Step 7: Save to database
-      console.log(`[${generationId}] Step 5: Saving to database...`);
-      const savedConversation = await conversationService.create(
-        conversation,
-        conversation.turns
-      );
+      console.log(`[${generationId}] ✅ Final conversation stored (method: ${parseResult.parseMethod})`);
 
-      console.log(`[${generationId}] ✓ Saved as ${savedConversation.id}`);
-
+      // Step 5: Return success result
       const durationMs = Date.now() - startTime;
 
-      console.log(
-        `[${generationId}] ✅ Generation complete (${durationMs}ms, $${apiResponse.cost.toFixed(4)})`
-      );
-
       return {
-        conversation: savedConversation,
+        conversation: parseResult.conversation,
         success: true,
-        qualityDetails: {
-          score: qualityScore,
-          issues: qualityResult.issues,
-          suggestions: qualityResult.suggestions,
-        },
         metrics: {
           durationMs,
           cost: apiResponse.cost,
-          totalTokens:
-            apiResponse.usage.input_tokens + apiResponse.usage.output_tokens,
+          totalTokens: apiResponse.usage.input_tokens + apiResponse.usage.output_tokens,
         },
       };
     } catch (error) {

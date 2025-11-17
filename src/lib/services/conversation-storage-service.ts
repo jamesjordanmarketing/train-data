@@ -10,7 +10,12 @@
  * - Conversation status management (approve/reject)
  * - Filtering and pagination
  * - Soft/hard delete
+ * - Three-tier JSON parsing: direct parse → jsonrepair → manual review
  */
+
+// JSON repair library for resilient parsing (Prompt 3)
+// Using dynamic require() to avoid TypeScript issues with jsonrepair types
+// import { jsonrepair } from 'jsonrepair';  // Not used - require() instead
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import type {
@@ -503,6 +508,363 @@ export class ConversationStorageService {
     if (error) throw error;
 
     return count || 0;
+  }
+
+  // ========================================================================
+  // RAW RESPONSE STORAGE & PARSING (PHASE 2: ZERO DATA LOSS)
+  // ========================================================================
+
+  /**
+   * Store raw Claude API response as "first draft" BEFORE any parsing attempts
+   * 
+   * This is TIER 2 of the three-tier JSON handling strategy:
+   * - TIER 1: Structured outputs (prevention)
+   * - TIER 2: Raw storage (recovery) ← YOU ARE HERE
+   * - TIER 3: JSON repair (resilience)
+   * 
+   * This method:
+   * - Stores the raw response exactly as Claude returned it
+   * - Creates or updates conversation record with raw_response_* fields
+   * - Sets processing_status = 'raw_stored'
+   * - NEVER fails (even if content is garbage)
+   * 
+   * @param params - Raw response storage parameters
+   * @returns Storage result with URLs and metadata
+   */
+  async storeRawResponse(params: {
+    conversationId: string;
+    rawResponse: string;  // Raw string from Claude, may be invalid JSON
+    userId: string;
+    metadata?: {
+      templateId?: string;
+      personaId?: string;
+      emotionalArcId?: string;
+      trainingTopicId?: string;
+      tier?: string;
+    };
+  }): Promise<{
+    success: boolean;
+    rawUrl: string;
+    rawPath: string;
+    rawSize: number;
+    conversationId: string;
+    error?: string;
+  }> {
+    const { conversationId, rawResponse, userId, metadata } = params;
+
+    try {
+      console.log(`[storeRawResponse] Storing raw response for conversation ${conversationId}`);
+      console.log(`[storeRawResponse] Raw response size: ${rawResponse.length} bytes`);
+
+      // STEP 1: Upload raw response to storage (under /raw directory)
+      const rawPath = `raw/${userId}/${conversationId}.json`;
+      
+      // Store as blob (text content, not parsed)
+      const rawBlob = new Blob([rawResponse], { type: 'application/json' });
+      const rawSize = rawBlob.size;
+
+      const { data: uploadData, error: uploadError } = await this.supabase.storage
+        .from('conversation-files')
+        .upload(rawPath, rawBlob, {
+          contentType: 'application/json',
+          upsert: true,  // Overwrite if exists (for retry scenarios)
+        });
+
+      if (uploadError) {
+        console.error('[storeRawResponse] Storage upload failed:', uploadError);
+        throw new Error(`Raw response upload failed: ${uploadError.message}`);
+      }
+
+      console.log(`[storeRawResponse] ✅ Raw file uploaded to ${rawPath}`);
+
+      // STEP 2: Get public URL for raw response
+      const { data: urlData } = this.supabase.storage
+        .from('conversation-files')
+        .getPublicUrl(rawPath);
+
+      const rawUrl = urlData.publicUrl;
+
+      // STEP 3: Create or update conversation record with raw response metadata
+      const conversationRecord: any = {
+        conversation_id: conversationId,
+        raw_response_url: rawUrl,
+        raw_response_path: rawPath,
+        raw_response_size: rawSize,
+        raw_stored_at: new Date().toISOString(),
+        processing_status: 'raw_stored',  // Mark as "raw stored, not yet parsed"
+        status: 'pending_review',  // Default status
+        created_by: userId,
+        is_active: true,
+      };
+
+      // Add optional scaffolding metadata if provided
+      if (metadata?.templateId) conversationRecord.template_id = metadata.templateId;
+      if (metadata?.personaId) conversationRecord.persona_id = metadata.personaId;
+      if (metadata?.emotionalArcId) conversationRecord.emotional_arc_id = metadata.emotionalArcId;
+      if (metadata?.trainingTopicId) conversationRecord.training_topic_id = metadata.trainingTopicId;
+      if (metadata?.tier) conversationRecord.tier = metadata.tier;
+
+      // Upsert: Create if doesn't exist, update if exists
+      const { data, error } = await this.supabase
+        .from('conversations')
+        .upsert(conversationRecord, {
+          onConflict: 'conversation_id',  // Match on conversation_id
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('[storeRawResponse] Database upsert failed:', error);
+        throw new Error(`Conversation record upsert failed: ${error.message}`);
+      }
+
+      console.log(`[storeRawResponse] ✅ Conversation record updated in database`);
+      console.log(`[storeRawResponse] Raw URL: ${rawUrl}`);
+      console.log(`[storeRawResponse] Size: ${rawSize} bytes`);
+
+      return {
+        success: true,
+        rawUrl,
+        rawPath,
+        rawSize,
+        conversationId,
+      };
+    } catch (error) {
+      console.error('[storeRawResponse] Fatal error storing raw response:', error);
+      
+      // Return error but don't throw - we want to continue pipeline
+      return {
+        success: false,
+        rawUrl: '',
+        rawPath: '',
+        rawSize: 0,
+        conversationId,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      };
+    }
+  }
+
+  /**
+   * Parse raw response and store final conversation (if successful)
+   * 
+   * This is TIER 3 of the three-tier JSON handling strategy:
+   * - TIER 1: Structured outputs (prevention)
+   * - TIER 2: Raw storage (recovery)
+   * - TIER 3: JSON repair (resilience) ← YOU ARE HERE
+   * 
+   * Parsing strategy:
+   * 1. Try JSON.parse() directly (handles structured output success cases)
+   * 2. If fails: Try jsonrepair library (Prompt 3 will add this)
+   * 3. If still fails: Mark requires_manual_review=true
+   * 
+   * This method updates parse attempt tracking regardless of success/failure.
+   * 
+   * @param params - Parse parameters
+   * @returns Parse result with conversation data or error details
+   */
+  async parseAndStoreFinal(params: {
+    conversationId: string;
+    rawResponse?: string;  // Optional: pass if already have it, else fetch from storage
+    userId: string;
+  }): Promise<{
+    success: boolean;
+    parseMethod: 'direct' | 'jsonrepair' | 'failed';
+    conversation?: any;
+    error?: string;
+  }> {
+    const { conversationId, userId } = params;
+    let { rawResponse } = params;
+
+    try {
+      console.log(`[parseAndStoreFinal] Parsing conversation ${conversationId}`);
+
+      // STEP 1: Get raw response if not provided
+      if (!rawResponse) {
+        console.log('[parseAndStoreFinal] Fetching raw response from storage...');
+        
+        const { data } = await this.supabase
+          .from('conversations')
+          .select('raw_response_path')
+          .eq('conversation_id', conversationId)
+          .single();
+
+        if (!data?.raw_response_path) {
+          throw new Error('No raw response found for conversation');
+        }
+
+        // Download raw response from storage
+        const { data: fileData, error: downloadError } = await this.supabase.storage
+          .from('conversation-files')
+          .download(data.raw_response_path);
+
+        if (downloadError || !fileData) {
+          throw new Error(`Failed to download raw response: ${downloadError?.message}`);
+        }
+
+        rawResponse = await fileData.text();
+        console.log(`[parseAndStoreFinal] ✅ Raw response fetched (${rawResponse.length} bytes)`);
+      }
+
+      // STEP 2: Increment parse attempt counter
+      // First get current count
+      const { data: currentConv } = await this.supabase
+        .from('conversations')
+        .select('parse_attempts')
+        .eq('conversation_id', conversationId)
+        .single();
+      
+      await this.supabase
+        .from('conversations')
+        .update({
+          parse_attempts: (currentConv?.parse_attempts || 0) + 1,
+          last_parse_attempt_at: new Date().toISOString(),
+        })
+        .eq('conversation_id', conversationId);
+
+      // STEP 3: Try direct JSON.parse() (handles structured outputs)
+      let parsed: any;
+      let parseMethod: 'direct' | 'jsonrepair' | 'failed' = 'direct';
+
+      try {
+        console.log('[parseAndStoreFinal] Attempting direct JSON.parse()...');
+        parsed = JSON.parse(rawResponse);
+        console.log('[parseAndStoreFinal] ✅ Direct parse succeeded');
+      } catch (directError) {
+        console.log('[parseAndStoreFinal] ⚠️  Direct parse failed, trying jsonrepair library...');
+        
+        // TIER 3: Try jsonrepair library (NEW in Prompt 3)
+        try {
+          const { jsonrepair } = require('jsonrepair');
+          const repairedJSON = jsonrepair(rawResponse);
+          
+          console.log('[parseAndStoreFinal] JSON repaired, attempting parse...');
+          parsed = JSON.parse(repairedJSON);
+          
+          parseMethod = 'jsonrepair';
+          console.log('[parseAndStoreFinal] ✅ jsonrepair succeeded');
+          
+          // Log successful repair for monitoring
+          console.log(`[parseAndStoreFinal] 📊 Repair stats: Original ${rawResponse.length} bytes → Repaired ${repairedJSON.length} bytes`);
+          
+        } catch (repairError) {
+          console.error('[parseAndStoreFinal] ❌ jsonrepair failed:', repairError);
+          parseMethod = 'failed';
+          
+          // Both direct parse AND jsonrepair failed - mark for manual review
+          const errorMessage = `Direct parse: ${directError instanceof Error ? directError.message : 'Unknown'}. jsonrepair: ${repairError instanceof Error ? repairError.message : 'Unknown'}`;
+          
+          await this.supabase
+            .from('conversations')
+            .update({
+              requires_manual_review: true,
+              processing_status: 'parse_failed',
+              parse_error_message: errorMessage,
+            })
+            .eq('conversation_id', conversationId);
+
+          return {
+            success: false,
+            parseMethod: 'failed',
+            error: `All parse methods failed. ${errorMessage}`,
+          };
+        }
+      }
+
+      // STEP 4: Validate parsed structure
+      if (!parsed.turns || !Array.isArray(parsed.turns)) {
+        throw new Error('Invalid conversation structure: missing turns array');
+      }
+
+      console.log(`[parseAndStoreFinal] ✅ Validated structure: ${parsed.turns.length} turns`);
+
+      // Log parse method for analytics
+      console.log(`[parseAndStoreFinal] 📊 Parse method: ${parseMethod}`);
+
+      if (parseMethod === 'jsonrepair') {
+        // Track jsonrepair usage for monitoring
+        console.log(`[parseAndStoreFinal] 🔧 JSON repair was required for conversation ${conversationId}`);
+        
+        // Optional: Could send to analytics service here
+        // analytics.track('json_repair_used', { conversationId, userId });
+      }
+
+      // STEP 5: Store final parsed conversation to permanent location
+      const finalPath = `${userId}/${conversationId}/conversation.json`;
+      const finalContent = JSON.stringify(parsed, null, 2);
+      const finalBlob = new Blob([finalContent], { type: 'application/json' });
+
+      const { data: uploadData, error: uploadError } = await this.supabase.storage
+        .from('conversation-files')
+        .upload(finalPath, finalBlob, {
+          contentType: 'application/json',
+          upsert: true,
+        });
+
+      if (uploadError) {
+        throw new Error(`Final file upload failed: ${uploadError.message}`);
+      }
+
+      const { data: urlData } = this.supabase.storage
+        .from('conversation-files')
+        .getPublicUrl(finalPath);
+
+      const finalUrl = urlData.publicUrl;
+
+      console.log(`[parseAndStoreFinal] ✅ Final conversation stored at ${finalPath}`);
+
+      // STEP 6: Update conversation record with final data
+      const updateData: any = {
+        file_url: finalUrl,
+        file_path: finalPath,
+        file_size: finalBlob.size,
+        processing_status: 'completed',
+        parse_method_used: parseMethod,
+        conversation_name: parsed.conversation_metadata?.client_persona || 'Untitled Conversation',
+        turn_count: parsed.turns.length,
+      };
+
+      // Extract quality scores if present
+      if (parsed.quality_score !== undefined) {
+        updateData.quality_score = parsed.quality_score;
+      }
+
+      const { data: updatedConv, error: updateError } = await this.supabase
+        .from('conversations')
+        .update(updateData)
+        .eq('conversation_id', conversationId)
+        .select()
+        .single();
+
+      if (updateError) {
+        throw new Error(`Failed to update conversation record: ${updateError.message}`);
+      }
+
+      console.log(`[parseAndStoreFinal] ✅ Parse complete (method: ${parseMethod})`);
+
+      return {
+        success: true,
+        parseMethod,
+        conversation: updatedConv,
+      };
+    } catch (error) {
+      console.error('[parseAndStoreFinal] Unexpected error:', error);
+      
+      // Update error in database
+      await this.supabase
+        .from('conversations')
+        .update({
+          requires_manual_review: true,
+          processing_status: 'parse_failed',
+          parse_error_message: error instanceof Error ? error.message : 'Unknown error',
+        })
+        .eq('conversation_id', conversationId);
+
+      return {
+        success: false,
+        parseMethod: 'failed',
+        error: error instanceof Error ? error.message : 'Unknown error',
+      };
+    }
   }
 
   // ========================================================================
