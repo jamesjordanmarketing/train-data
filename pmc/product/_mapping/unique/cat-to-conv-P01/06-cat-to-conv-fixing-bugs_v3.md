@@ -1,10 +1,49 @@
 # Conversation Generation Debugging Guide
-**Date:** 2025-11-16 (Updated 00:15)
-**Status:** ✅ All Critical Fixes Applied - Conversation Generation Working
+**Date:** 2025-11-17 (Updated 00:44)
+**Status:** ✅ 6 Critical Fixes Applied - Conversation Generation Fully Working
 
 ---
 
 ## 🔧 LATEST FIXES
+
+### Fix #6 (Nov 17, 00:44) - Markdown Code Fences in JSON Response ⭐ CRITICAL
+**Commit:** e42d107  
+**Status:** ✅ DEPLOYED
+
+**Problem**: Claude API returning valid JSON wrapped in markdown code fences (```json ... ```), causing parse error: `Unexpected token '`', "```json\n{"... is not valid JSON`. Even though Fix #5 provided proper JSON output instructions in the template, Claude still occasionally wraps responses in markdown formatting.
+
+**Root Cause**: The `parseClaudeResponse()` method was directly calling `JSON.parse()` on the raw content without preprocessing to handle markdown formatting that Claude sometimes adds.
+
+**Fix Applied**:
+```typescript
+// File: src/lib/services/conversation-generation-service.ts
+// parseClaudeResponse method
+
+// Strip markdown code fences if present
+let cleanedContent = content.trim();
+if (cleanedContent.startsWith('```')) {
+  // Remove opening fence (```json or just ```)
+  cleanedContent = cleanedContent.replace(/^```(?:json)?\s*\n?/, '');
+  // Remove closing fence
+  cleanedContent = cleanedContent.replace(/\n?```\s*$/, '');
+  cleanedContent = cleanedContent.trim();
+}
+
+const parsed = JSON.parse(cleanedContent);
+```
+
+**Impact**: 
+- Handles both ```json and plain ``` fence variants
+- Strips opening and closing fences before JSON parsing
+- Makes parser robust to Claude's formatting variations
+- Allows successful parsing regardless of whether Claude wraps JSON or not
+
+**Files Modified**:
+- `src/lib/services/conversation-generation-service.ts` (parseClaudeResponse method)
+
+**Result**: Conversation generation now succeeds even when Claude adds markdown formatting around JSON responses.
+
+---
 
 ### Fix #5 (Nov 17, 00:15) - Wrong Template Field Used
 **Commit:** 01b4a87  
