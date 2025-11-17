@@ -10,15 +10,24 @@ interface GenerationResultProps {
   result: {
     conversation: {
       id: string;
-      title: string;
-      totalTurns: number;
-      totalTokens: number;
-      qualityScore: number;
-      status: string;
+      title?: string;
+      totalTurns?: number;
+      totalTokens?: number;
+      qualityScore?: number;
+      status?: string;
     };
-    cost: number;
-    qualityMetrics: {
-      durationMs: number;
+    cost?: number;
+    quality_metrics?: {
+      quality_score?: number;
+      turn_count?: number;
+      status?: string;
+    };
+    metadata?: {
+      generation_time_ms?: number;
+      token_count?: number;
+    };
+    qualityMetrics?: {
+      durationMs?: number;
     };
   } | null;
   error: string | null;
@@ -54,9 +63,17 @@ export function GenerationResult({
 
   // Success state
   if (result) {
-    const { conversation, cost, qualityMetrics } = result;
-    const qualityColor = conversation.qualityScore >= 8 ? 'text-green-500' :
-                         conversation.qualityScore >= 6 ? 'text-yellow-500' :
+    const { conversation, cost, quality_metrics, metadata, qualityMetrics } = result;
+    
+    // Extract values with fallbacks
+    const qualityScore = conversation.qualityScore ?? quality_metrics?.quality_score;
+    const totalTurns = conversation.totalTurns ?? quality_metrics?.turn_count;
+    const totalTokens = conversation.totalTokens ?? metadata?.token_count;
+    const status = conversation.status ?? quality_metrics?.status ?? 'generated';
+    const durationMs = qualityMetrics?.durationMs ?? metadata?.generation_time_ms;
+    
+    const qualityColor = qualityScore && qualityScore >= 8 ? 'text-green-500' :
+                         qualityScore && qualityScore >= 6 ? 'text-yellow-500' :
                          'text-red-500';
 
     return (
@@ -84,44 +101,56 @@ export function GenerationResult({
                   <p className="font-mono text-xs">{conversation.id}</p>
                 </div>
 
-                <div>
-                  <span className="text-muted-foreground">Title:</span>
-                  <p>{conversation.title}</p>
-                </div>
+                {conversation.title && (
+                  <div>
+                    <span className="text-muted-foreground">Title:</span>
+                    <p>{conversation.title}</p>
+                  </div>
+                )}
 
-                <div>
-                  <span className="text-muted-foreground">Turns:</span>
-                  <p>{conversation.totalTurns}</p>
-                </div>
+                {totalTurns !== undefined && (
+                  <div>
+                    <span className="text-muted-foreground">Turns:</span>
+                    <p>{totalTurns}</p>
+                  </div>
+                )}
 
-                <div>
-                  <span className="text-muted-foreground">Tokens:</span>
-                  <p>{conversation.totalTokens.toLocaleString()}</p>
-                </div>
+                {totalTokens !== undefined && (
+                  <div>
+                    <span className="text-muted-foreground">Tokens:</span>
+                    <p>{totalTokens.toLocaleString()}</p>
+                  </div>
+                )}
 
-                <div>
-                  <span className="text-muted-foreground">Quality Score:</span>
-                  <p className={`font-bold ${qualityColor}`}>
-                    {conversation.qualityScore.toFixed(1)}/10
-                  </p>
-                </div>
+                {qualityScore !== undefined && (
+                  <div>
+                    <span className="text-muted-foreground">Quality Score:</span>
+                    <p className={`font-bold ${qualityColor}`}>
+                      {qualityScore.toFixed(1)}/10
+                    </p>
+                  </div>
+                )}
 
                 <div>
                   <span className="text-muted-foreground">Status:</span>
-                  <Badge variant={conversation.status === 'generated' ? 'default' : 'secondary'}>
-                    {conversation.status}
+                  <Badge variant={status === 'generated' ? 'default' : 'secondary'}>
+                    {status}
                   </Badge>
                 </div>
 
-                <div>
-                  <span className="text-muted-foreground">Cost:</span>
-                  <p>${cost.toFixed(4)}</p>
-                </div>
+                {cost !== undefined && (
+                  <div>
+                    <span className="text-muted-foreground">Cost:</span>
+                    <p>${cost.toFixed(4)}</p>
+                  </div>
+                )}
 
-                <div>
-                  <span className="text-muted-foreground">Duration:</span>
-                  <p>{(qualityMetrics.durationMs / 1000).toFixed(1)}s</p>
-                </div>
+                {durationMs !== undefined && (
+                  <div>
+                    <span className="text-muted-foreground">Duration:</span>
+                    <p>{(durationMs / 1000).toFixed(1)}s</p>
+                  </div>
+                )}
               </div>
             </div>
 
