@@ -453,26 +453,82 @@ export class ConversationGenerationService {
   /**
    * Stage 2: Fix unescaped quotes in content strings
    * This is the most critical repair for Claude responses
+   * Uses character-by-character parsing to handle complex escaping scenarios
    * @private
    */
   private repairQuoteEscaping(json: string): string {
     try {
-      // Strategy: Find "content": "..." blocks and fix unescaped quotes inside
-      // We need to be careful not to break already-escaped quotes
+      console.log('[repairQuoteEscaping] Starting quote repair');
       
-      // Pattern to match content fields: "content"\s*:\s*"..."
-      // We use a more sophisticated approach: find each content field and process it
+      // Find all "content": occurrences and repair the string value that follows
+      let result = '';
+      let i = 0;
       
-      const contentPattern = /"content"\s*:\s*"([^"]*(?:\\.[^"]*)*)"/g;
+      while (i < json.length) {
+        // Look for "content":
+        if (json.substring(i, i + 9) === '"content"') {
+          result += '"content"';
+          i += 9;
+          
+          // Skip whitespace and colon
+          while (i < json.length && /[\s:]/.test(json[i])) {
+            result += json[i];
+            i++;
+          }
+          
+          // Should now be at the opening quote of the content string
+          if (json[i] === '"') {
+            result += '"';
+            i++;
+            
+            // Now parse the string content and escape unescaped quotes
+            let stringContent = '';
+            while (i < json.length) {
+              if (json[i] === '\\') {
+                // Backslash - check what's being escaped
+                if (i + 1 < json.length) {
+                  const next = json[i + 1];
+                  if (next === '"' || next === '\\' || next === 'n' || next === 'r' || next === 't' || next === '/') {
+                    // Already properly escaped
+                    stringContent += json[i] + json[i + 1];
+                    i += 2;
+                    continue;
+                  }
+                }
+                // Lone backslash, keep it
+                stringContent += json[i];
+                i++;
+              } else if (json[i] === '"') {
+                // Found closing quote (or unescaped quote inside string)
+                // Check if this looks like the end of the string (followed by comma or brace)
+                let j = i + 1;
+                while (j < json.length && /\s/.test(json[j])) j++;
+                
+                if (j < json.length && (json[j] === ',' || json[j] === '}')) {
+                  // This is likely the closing quote
+                  result += stringContent + '"';
+                  i++;
+                  break;
+                } else {
+                  // This is an unescaped quote inside the string - escape it
+                  stringContent += '\\"';
+                  i++;
+                }
+              } else {
+                // Regular character
+                stringContent += json[i];
+                i++;
+              }
+            }
+          }
+        } else {
+          result += json[i];
+          i++;
+        }
+      }
       
-      json = json.replace(contentPattern, (match, capturedContent) => {
-        // The captured content may have escaped quotes already
-        // We need to fix any unescaped quotes
-        const fixed = this.escapeUnescapedQuotes(capturedContent);
-        return `"content": "${fixed}"`;
-      });
-      
-      return json;
+      console.log('[repairQuoteEscaping] Quote repair complete');
+      return result;
     } catch (error) {
       console.warn('[repairQuoteEscaping] Error during quote repair:', error);
       return json; // Return original if repair fails
