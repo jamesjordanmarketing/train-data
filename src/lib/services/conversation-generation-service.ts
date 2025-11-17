@@ -413,17 +413,11 @@ export class ConversationGenerationService {
     // Remove any BOM or invisible characters
     json = json.replace(/^\uFEFF/, '');
     
-    // Try to fix common quote issues in content fields
-    // This is a best-effort approach - may not catch all cases
-    try {
-      // If the JSON has obvious syntax errors, try a more aggressive fix
-      // Replace single quotes with double quotes (but be careful)
-      // This is risky and may cause issues, so only do it if parsing fails
-      
-      return json;
-    } catch (e) {
-      return json;
-    }
+    // Note: Complex quote escaping is difficult with regex
+    // The real fix is in the template instructions to Claude
+    // This is just basic cleanup
+    
+    return json;
   }
 
   /**
