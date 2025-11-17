@@ -324,26 +324,35 @@ export class ConversationGenerationService {
     template: any
   ): { title: string; turns: ConversationTurn[] } {
     try {
-      // Strip markdown code fences if present (Claude sometimes wraps JSON in ```json ... ```)
+      // Log original content length for diagnostics
+      console.log(`[parseClaudeResponse] Original content length: ${content.length} chars`);
+      
+      // STAGE 1: Strip markdown code fences
       let cleanedContent = content.trim();
       if (cleanedContent.startsWith('```')) {
-        // Remove opening fence (```json or just ```)
+        console.log('[parseClaudeResponse] Removing markdown code fences');
         cleanedContent = cleanedContent.replace(/^```(?:json)?\s*\n?/, '');
-        // Remove closing fence
         cleanedContent = cleanedContent.replace(/\n?```\s*$/, '');
         cleanedContent = cleanedContent.trim();
       }
 
-      // Try to fix common JSON issues before parsing
-      cleanedContent = this.sanitizeJSON(cleanedContent);
+      // STAGE 2: Apply multi-stage JSON repair pipeline
+      console.log('[parseClaudeResponse] Applying JSON repair pipeline');
+      cleanedContent = this.repairJSON(cleanedContent);
 
-      // Claude should return JSON with conversation structure
+      // STAGE 3: Attempt to parse JSON
+      console.log('[parseClaudeResponse] Attempting JSON.parse...');
       const parsed = JSON.parse(cleanedContent);
+      console.log('[parseClaudeResponse] ✓ JSON parsed successfully');
 
-      // Validate structure
+      // STAGE 4: Validate structure
       if (!parsed.turns || !Array.isArray(parsed.turns)) {
+        console.log('[parseClaudeResponse] ❌ Missing turns array');
+        console.log('[parseClaudeResponse] Parsed object keys:', Object.keys(parsed).join(', '));
         throw new Error('Invalid response structure: missing turns array');
       }
+      
+      console.log(`[parseClaudeResponse] ✓ Valid structure with ${parsed.turns.length} turns`);
 
       // Map turns to ConversationTurn format
       const turns: ConversationTurn[] = parsed.turns.map(
@@ -403,21 +412,144 @@ export class ConversationGenerationService {
   }
 
   /**
-   * Sanitize JSON string to fix common issues
+   * Multi-stage JSON repair pipeline
+   * Handles common issues in Claude API responses:
+   * - Unescaped quotes in strings
+   * - Unescaped newlines
+   * - Trailing commas
+   * - BOM and invisible characters
    * @private
    */
-  private sanitizeJSON(json: string): string {
-    // Remove trailing commas before closing braces/brackets
-    json = json.replace(/,(\s*[}\]])/g, '$1');
+  private repairJSON(json: string): string {
+    // REPAIR STAGE 1: Basic cleanup
+    json = this.cleanupBasics(json);
     
-    // Remove any BOM or invisible characters
-    json = json.replace(/^\uFEFF/, '');
+    // REPAIR STAGE 2: Fix quote escaping (THE CRITICAL FIX)
+    json = this.repairQuoteEscaping(json);
     
-    // Note: Complex quote escaping is difficult with regex
-    // The real fix is in the template instructions to Claude
-    // This is just basic cleanup
+    // REPAIR STAGE 3: Fix newline escaping
+    json = this.repairNewlineEscaping(json);
+    
+    // REPAIR STAGE 4: Remove trailing commas
+    json = this.removeTrailingCommas(json);
     
     return json;
+  }
+
+  /**
+   * Stage 1: Basic cleanup - remove BOM, invisible chars
+   * @private
+   */
+  private cleanupBasics(json: string): string {
+    // Remove BOM
+    json = json.replace(/^\uFEFF/, '');
+    
+    // Remove invisible characters
+    json = json.replace(/[\u200B-\u200D\uFEFF]/g, '');
+    
+    return json.trim();
+  }
+
+  /**
+   * Stage 2: Fix unescaped quotes in content strings
+   * This is the most critical repair for Claude responses
+   * @private
+   */
+  private repairQuoteEscaping(json: string): string {
+    try {
+      // Strategy: Find "content": "..." blocks and fix unescaped quotes inside
+      // We need to be careful not to break already-escaped quotes
+      
+      // Pattern to match content fields: "content"\s*:\s*"..."
+      // We use a more sophisticated approach: find each content field and process it
+      
+      const contentPattern = /"content"\s*:\s*"([^"]*(?:\\.[^"]*)*)"/g;
+      
+      json = json.replace(contentPattern, (match, capturedContent) => {
+        // The captured content may have escaped quotes already
+        // We need to fix any unescaped quotes
+        const fixed = this.escapeUnescapedQuotes(capturedContent);
+        return `"content": "${fixed}"`;
+      });
+      
+      return json;
+    } catch (error) {
+      console.warn('[repairQuoteEscaping] Error during quote repair:', error);
+      return json; // Return original if repair fails
+    }
+  }
+
+  /**
+   * Helper: Escape quotes that aren't already escaped
+   * @private
+   */
+  private escapeUnescapedQuotes(str: string): string {
+    let result = '';
+    let i = 0;
+    
+    while (i < str.length) {
+      if (str[i] === '\\') {
+        // Found backslash - check what follows
+        if (i + 1 < str.length) {
+          const next = str[i + 1];
+          if (next === '"' || next === '\\' || next === 'n' || next === 'r' || next === 't') {
+            // Already escaped, keep both characters
+            result += str[i] + str[i + 1];
+            i += 2;
+            continue;
+          }
+        }
+        // Backslash but not escaping anything special, keep it
+        result += str[i];
+        i += 1;
+      } else if (str[i] === '"') {
+        // Unescaped quote - escape it!
+        result += '\\"';
+        i += 1;
+      } else {
+        // Regular character
+        result += str[i];
+        i += 1;
+      }
+    }
+    
+    return result;
+  }
+
+  /**
+   * Stage 3: Fix unescaped newlines in content strings
+   * @private
+   */
+  private repairNewlineEscaping(json: string): string {
+    try {
+      // Replace actual newlines inside content strings with \n
+      // This is tricky - we only want to fix newlines inside strings
+      // Not structural newlines in the JSON
+      
+      // Pattern to match content fields
+      const contentPattern = /"content"\s*:\s*"([^"]*(?:\\.[^"]*)*)"/gs;
+      
+      json = json.replace(contentPattern, (match, capturedContent) => {
+        // Replace actual newlines with \n escape sequences
+        let fixed = capturedContent.replace(/\r\n/g, '\\n');
+        fixed = fixed.replace(/\n/g, '\\n');
+        fixed = fixed.replace(/\r/g, '\\r');
+        return `"content": "${fixed}"`;
+      });
+      
+      return json;
+    } catch (error) {
+      console.warn('[repairNewlineEscaping] Error during newline repair:', error);
+      return json;
+    }
+  }
+
+  /**
+   * Stage 4: Remove trailing commas before closing braces/brackets
+   * @private
+   */
+  private removeTrailingCommas(json: string): string {
+    return json.replace(/,(\s*[}\]])/g, '$1');
   }
 
   /**

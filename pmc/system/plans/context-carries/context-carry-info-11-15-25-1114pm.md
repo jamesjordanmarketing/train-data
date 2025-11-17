@@ -410,12 +410,24 @@ If generation still fails, check:
 
 **Updated Files**:
 - `pmc/product/_mapping/unique/cat-to-conv-P01/06-cat-to-conv-fixing-bugs_v3.md` - Complete bug fix log
+`pmc\product\_mapping\unique\cat-to-conv-P01\06-cat-to-conv-fixing-bugs_v4.md` - Current remediation plan. You must read this so you can help me fix these issues.
 - `pmc/system/plans/context-carries/context-carry-info-11-15-25-1114pm.md` - This file (context carryover)
 
 **Key References**:
 - All 5 commits pushed to main branch
 - Vercel auto-deployed all fixes
 - Production should be functional now
+- I already ran this SQL: 
+`-- Temporary test: Replace template instructions with simple request
+UPDATE prompt_templates
+SET template_text = 'Return ONLY this exact JSON with no modifications: {"status": "YES"}'
+WHERE id = 'c06809f4-a165-4e5a-a866-80997c152ea9';
+
+-- Test generation
+-- Then restore original template` 
+
+Then I submitted conversation generation for that prompt template. And I still got back a JSON parsing error. I will show you the error once you are doing preparing your context here.
+
 
 ---
 
