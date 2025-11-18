@@ -112,17 +112,6 @@ type TierType = 'template' | 'scenario' | 'edge_case';
 
 ---
 
-## Development Commands
-
-```bash
-npm run dev          # Start dev server
-npm run build        # Build for production
-npm run type-check   # TypeScript validation
-npm run lint         # Run linter
-```
-
----
-
 ## Context Document Usage Guidelines
 
 **For Bug Reports:**
