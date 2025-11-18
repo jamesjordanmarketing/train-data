@@ -117,7 +117,7 @@ export async function exportLogCleanup(
 
   try {
     // Create Supabase client if not provided
-    const client = supabase || createServerSupabaseClient();
+    const client = supabase || await createServerSupabaseClient();
 
     // Step 1: Calculate cutoff date
     const cutoffDate = new Date();

@@ -14,6 +14,8 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Download, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 import type { StorageConversation } from '@/lib/types/conversations';
 
 export default function ConversationsPage() {
@@ -31,10 +33,24 @@ export default function ConversationsPage() {
     total: 0
   });
   const [viewingConversation, setViewingConversation] = useState<StorageConversation | null>(null);
+  const [downloadingConversationId, setDownloadingConversationId] = useState<string | null>(null);
 
   useEffect(() => {
     loadConversations();
   }, [filters, pagination.page]);
+
+  // Keyboard shortcut: Cmd/Ctrl+D to download when conversation is selected
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (viewingConversation && (e.metaKey || e.ctrlKey) && e.key === 'd') {
+        e.preventDefault();
+        handleDownloadConversation(viewingConversation.conversation_id);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [viewingConversation]);
 
   async function loadConversations() {
     setLoading(true);
@@ -84,6 +100,79 @@ export default function ConversationsPage() {
       setSelectedIds([]);
     } else {
       setSelectedIds(conversations.map(c => c.id));
+    }
+  }
+
+  /**
+   * Download conversation JSON file
+   * 
+   * Calls API endpoint to generate fresh signed URL, then opens it.
+   * Signed URLs are generated on-demand and expire after 1 hour.
+   */
+  async function handleDownloadConversation(conversationId: string) {
+    try {
+      setDownloadingConversationId(conversationId);
+      console.log(`[Download] Requesting download URL for conversation: ${conversationId}`);
+
+      // Call download API endpoint
+      // Supabase client automatically includes JWT in request
+      const response = await fetch(`/api/conversations/${conversationId}/download`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        console.error('[Download] API error:', error);
+        
+        if (response.status === 401) {
+          toast.error('Authentication Required', {
+            description: 'Please log in to download conversations',
+          });
+          return;
+        }
+        
+        if (response.status === 403) {
+          toast.error('Access Denied', {
+            description: 'You do not have permission to download this conversation',
+          });
+          return;
+        }
+        
+        if (response.status === 404) {
+          toast.error('File Not Available', {
+            description: error.message || 'Conversation file not found',
+          });
+          return;
+        }
+
+        throw new Error(error.message || 'Failed to generate download URL');
+      }
+
+      const downloadInfo = await response.json();
+      console.log('[Download] ✅ Received download URL:', {
+        conversation_id: downloadInfo.conversation_id,
+        filename: downloadInfo.filename,
+        expires_at: downloadInfo.expires_at,
+      });
+
+      // Open signed URL in new tab
+      // URL is valid for 1 hour
+      window.open(downloadInfo.download_url, '_blank');
+
+      toast.success('Download Started', {
+        description: `Downloading ${downloadInfo.filename}`,
+      });
+
+    } catch (error: any) {
+      console.error('[Download] Error:', error);
+      toast.error('Download Failed', {
+        description: error.message || 'Failed to download conversation. Please try again.',
+      });
+    } finally {
+      setDownloadingConversationId(null);
     }
   }
 
@@ -232,6 +321,22 @@ export default function ConversationsPage() {
                       >
                         View
                       </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={(e) => {
+                          e.stopPropagation(); // Don't trigger row click
+                          handleDownloadConversation(conversation.conversation_id);
+                        }}
+                        disabled={downloadingConversationId === conversation.conversation_id}
+                        title="Download JSON"
+                      >
+                        {downloadingConversationId === conversation.conversation_id ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Download className="h-4 w-4" />
+                        )}
+                      </Button>
                       {conversation.status === 'pending_review' && (
                         <>
                           <Button
@@ -348,12 +453,25 @@ export default function ConversationsPage() {
               )}
 
               <div className="flex gap-2">
+                {/* Download Button - Generates fresh signed URL on-demand */}
                 <Button
+                  size="sm"
                   variant="outline"
-                  onClick={() => viewingConversation.file_url && window.open(viewingConversation.file_url, '_blank')}
-                  disabled={!viewingConversation.file_url}
+                  onClick={() => handleDownloadConversation(viewingConversation.conversation_id)}
+                  disabled={downloadingConversationId === viewingConversation.conversation_id}
+                  title="Download conversation JSON file"
                 >
-                  Download JSON File
+                  {downloadingConversationId === viewingConversation.conversation_id ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Download JSON
+                    </>
+                  )}
                 </Button>
                 {viewingConversation.status === 'pending_review' && (
                   <>

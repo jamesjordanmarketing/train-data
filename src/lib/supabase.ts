@@ -1,29 +1,24 @@
-import { createClient as createSupabaseClient } from '@supabase/supabase-js';
-import { projectId, publicAnonKey } from '../utils/supabase/info';
+/**
+ * Legacy Supabase client export
+ * 
+ * IMPORTANT: This file is deprecated for direct auth operations
+ * - For client-side: use getSupabaseClient() from '@/lib/supabase-client'
+ * - For server-side: use createServerSupabaseClient() from '@/lib/supabase-server'
+ * - For API routes: use requireAuth() or getAuthenticatedUser() from '@/lib/supabase-server'
+ * 
+ * This export is kept for backward compatibility with existing code
+ */
 
-const supabaseUrl = `https://${projectId}.supabase.co`;
+import { getSupabaseClient } from './supabase-client';
 
-// Check if we're running server-side (Node.js) with service role key
-const isServer = typeof window === 'undefined';
-const serviceRoleKey = isServer ? process.env.SUPABASE_SERVICE_ROLE_KEY : undefined;
+// Export singleton client for backward compatibility
+// This will work on client-side; server-side code should use server helpers
+export const supabase = typeof window !== 'undefined' 
+  ? getSupabaseClient() 
+  : null as unknown as ReturnType<typeof getSupabaseClient>;
 
-// Use service role key if available (server-side), otherwise use anon key (client-side)
-const supabaseKey = serviceRoleKey || publicAnonKey;
-
-// Configure auth options for server vs client
-const authOptions = serviceRoleKey
-  ? {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false
-      }
-    }
-  : {};
-
-export const supabase = createSupabaseClient(supabaseUrl, supabaseKey, authOptions);
-
-// Note: Do not re-export server-only factories from this client module.
-// API routes should import from '@/lib/supabase/server'.
+// Note: Do not use this in new code
+// API routes should import from '@/lib/supabase-server'
 
 export type Database = {
   public: {

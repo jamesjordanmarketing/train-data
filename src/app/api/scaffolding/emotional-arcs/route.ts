@@ -10,7 +10,7 @@ import { ScaffoldingDataService } from '@/lib/services/scaffolding-data-service'
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createServerSupabaseClient();
+    const supabase = await createServerSupabaseClient();
     const service = new ScaffoldingDataService(supabase);
 
     const { searchParams } = new URL(request.url);

@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Initialize service
-    const supabase = createClient();
+    const supabase = await createClient();
     const templateSelectionService = new TemplateSelectionService(supabase);
 
     // Build criteria
@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Initialize service
-    const supabase = createClient();
+    const supabase = await createClient();
     const templateSelectionService = new TemplateSelectionService(supabase);
 
     // Validate compatibility

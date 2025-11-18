@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     const { config, conversationIds, filters } = validated;
     
     // Create Supabase client
-    const supabase = createServerSupabaseClient();
+    const supabase = await createServerSupabaseClient();
     
     // Get authenticated user
     // TODO: Replace with actual auth when available

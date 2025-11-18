@@ -90,12 +90,12 @@ async function runMigration() {
       console.log('Result:', data);
     }
     
-    // Verify columns were added
+    // Verify columns exist
     console.log('\nVerifying migration...');
     
     const { data: columns, error: verifyError } = await supabase
       .from('conversations')
-      .select('parse_method_used, raw_response_url, parse_attempts')
+      .select('parse_method_used, raw_response_path, parse_attempts')
       .limit(0);
     
     if (verifyError && verifyError.message.includes('parse_method_used')) {

@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
     const templateId = searchParams.get('templateId');
     const tier = searchParams.get('tier');
 
-    const supabase = createServerSupabaseClient();
+    const supabase = await createServerSupabaseClient();
     const templateService = new TemplateService(supabase);
 
     // Fetch specific template or all templates

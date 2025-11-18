@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { User, Session } from '@supabase/supabase-js'
-import { supabase } from './supabase'
+import { getSupabaseClient } from './supabase-client'
 
 interface AuthContextType {
   user: User | null
@@ -31,16 +31,18 @@ export function AuthProvider({
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
+    const supabase = getSupabaseClient();
+    
     // Get initial session with timeout
     const getSession = async () => {
       try {
         // Add timeout to prevent hanging
         const sessionPromise = supabase.auth.getSession()
-        const timeoutPromise = new Promise((_, reject) => 
+        const timeoutPromise = new Promise<never>((_, reject) => 
           setTimeout(() => reject(new Error('Session timeout')), 10000)
         )
         
-        const { data: { session }, error } = await Promise.race([sessionPromise, timeoutPromise]) as any
+        const { data: { session }, error } = await Promise.race([sessionPromise, timeoutPromise])
         
         if (error) {
           console.error('Error getting session:', error)
@@ -95,9 +97,10 @@ export function AuthProvider({
     )
 
     return () => subscription.unsubscribe()
-  }, [])
+  }, []) // Empty dependency array is correct - we want this to run once
 
   const loadUserProfile = async (userId: string) => {
+    const supabase = getSupabaseClient();
     try {
       // Add timeout to profile loading to prevent hanging
       const profilePromise = supabase
@@ -106,11 +109,11 @@ export function AuthProvider({
         .eq('id', userId)
         .single()
         
-      const timeoutPromise = new Promise((_, reject) => 
+      const timeoutPromise = new Promise<never>((_, reject) => 
         setTimeout(() => reject(new Error('Profile loading timeout')), 5000)
       )
       
-      const { data: profile, error } = await Promise.race([profilePromise, timeoutPromise]) as any
+      const { data: profile, error } = await Promise.race([profilePromise, timeoutPromise])
 
       if (error) {
         if (error.code === 'PGRST116') {
@@ -131,6 +134,7 @@ export function AuthProvider({
   }
 
   const signUp = async (email: string, password: string, metadata: any = {}) => {
+    const supabase = getSupabaseClient();
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -167,6 +171,7 @@ export function AuthProvider({
   }
 
   const signIn = async (email: string, password: string) => {
+    const supabase = getSupabaseClient();
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -184,6 +189,7 @@ export function AuthProvider({
   }
 
   const signOut = async () => {
+    const supabase = getSupabaseClient();
     try {
       // Set loading to true during signout
       setIsLoading(true)
@@ -209,6 +215,7 @@ export function AuthProvider({
   const updateProfile = async (updates: any) => {
     if (!user) throw new Error('No user logged in')
     
+    const supabase = getSupabaseClient();
     try {
       const { data, error } = await supabase
         .from('user_profiles')

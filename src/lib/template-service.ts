@@ -302,19 +302,19 @@ import { getTemplateResolver } from './services/template-resolver';
 import { TemplateNotFoundError, ValidationError, DatabaseError, ErrorCode } from './types/errors';
 import { createClient } from './supabase/server';
 
-const _supabase = createClient();
-const _baseService = new TemplateService(_supabase);
+const _supabasePromise = createClient();
+const _baseServicePromise = (async () => new TemplateService(await _supabasePromise))();
 
 export const templateService = {
   // Delegate CRUD operations to base service
-  getAllTemplates: (filters?: any) => _baseService.getAllTemplates(filters),
-  getTemplateById: (id: string) => _baseService.getTemplateById(id),
-  createTemplate: (template: any) => _baseService.createTemplate(template),
-  updateTemplate: (id: string, updates: any) => _baseService.updateTemplate(id, updates),
-  deleteTemplate: (id: string) => _baseService.deleteTemplate(id),
-  incrementUsageCount: (id: string) => _baseService.incrementUsageCount(id),
-  archiveTemplate: (id: string) => _baseService.archiveTemplate(id),
-  activateTemplate: (id: string) => _baseService.activateTemplate(id),
+  getAllTemplates: async (filters?: any) => (await _baseServicePromise).getAllTemplates(filters),
+  getTemplateById: async (id: string) => (await _baseServicePromise).getTemplateById(id),
+  createTemplate: async (template: any) => (await _baseServicePromise).createTemplate(template),
+  updateTemplate: async (id: string, updates: any) => (await _baseServicePromise).updateTemplate(id, updates),
+  deleteTemplate: async (id: string) => (await _baseServicePromise).deleteTemplate(id),
+  incrementUsageCount: async (id: string) => (await _baseServicePromise).incrementUsageCount(id),
+  archiveTemplate: async (id: string) => (await _baseServicePromise).archiveTemplate(id),
+  activateTemplate: async (id: string) => (await _baseServicePromise).activateTemplate(id),
 
   // New methods for API compatibility
   async resolveTemplate(id: string, parameters: Record<string, any>): Promise<string> {
@@ -345,7 +345,8 @@ export const templateService = {
     }
 
     // Fetch template basics
-    const { data: tpl, error: tplErr } = await _supabase
+    const supabase = await _supabasePromise;
+    const { data: tpl, error: tplErr } = await supabase
       .from('prompt_templates')
       .select('usage_count, rating')
       .eq('id', templateId)
@@ -359,7 +360,7 @@ export const templateService = {
     const templateData = tpl as TemplateDbRow;
 
     // Fetch conversations related to template
-    const { data: convs, error: convErr } = await _supabase
+    const { data: convs, error: convErr } = await supabase
       .from('conversations')
       .select('status, quality_score')
       .eq('parent_id', templateId)

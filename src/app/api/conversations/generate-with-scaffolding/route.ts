@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Initialize services
-    const supabase = createClient();
+    const supabase = await createClient();
     const scaffoldingService = new ScaffoldingDataService(supabase);
     const templateSelectionService = new TemplateSelectionService(supabase);
     const parameterAssemblyService = new ParameterAssemblyService(

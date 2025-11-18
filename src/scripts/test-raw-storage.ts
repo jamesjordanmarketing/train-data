@@ -93,7 +93,6 @@ async function testRawStorage() {
     }
     
     console.log('✅ Raw storage succeeded');
-    console.log(`   URL: ${result.rawUrl}`);
     console.log(`   Path: ${result.rawPath}`);
     console.log(`   Size: ${result.rawSize} bytes`);
     console.log();
@@ -132,11 +131,11 @@ async function testRawStorage() {
       } else {
         console.log('✅ Database record exists');
         console.log(`   Conversation ID: ${conversation.conversation_id}`);
-        console.log(`   Raw URL: ${conversation.raw_response_url ? 'Set' : 'Missing'}`);
         console.log(`   Raw Path: ${conversation.raw_response_path || 'Missing'}`);
         console.log(`   Raw Size: ${conversation.raw_response_size || 0} bytes`);
         console.log(`   Raw Stored At: ${conversation.raw_stored_at || 'Missing'}`);
         console.log(`   Processing Status: ${conversation.processing_status}`);
+        console.log(`   Note: Use getPresignedDownloadUrl(raw_response_path) to get download URL`);
       }
     } catch (error) {
       console.error('❌ Error querying database:', error);

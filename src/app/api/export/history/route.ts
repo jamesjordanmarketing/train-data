@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
     const { format, status, page, limit } = validated;
     
     // Create Supabase client and export service
-    const supabase = createServerSupabaseClient();
+    const supabase = await createServerSupabaseClient();
     const exportService = new ExportService(supabase);
     
     // Get authenticated user

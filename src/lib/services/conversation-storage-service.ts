@@ -26,6 +26,7 @@ import type {
   StorageConversationFilters,
   StorageConversationPagination,
   StorageConversationListResponse,
+  ConversationDownloadResponse,
 } from '../types/conversations';
 import { validateConversationJSON, validateAndParseConversationJSON } from '../validators/conversation-schema';
 
@@ -84,17 +85,11 @@ export class ConversationStorageService {
         throw new Error(`File upload failed: ${uploadError.message}`);
       }
 
-      // Step 3: Get file URL
-      const { data: urlData } = this.supabase.storage
-        .from('conversation-files')
-        .getPublicUrl(filePath);
-
-      const fileUrl = urlData.publicUrl;
-
-      // Step 4: Extract metadata from conversation JSON
+      // Step 3: Extract metadata from conversation JSON
       const metadata = this.extractMetadata(conversationData, conversationId);
 
-      // Step 5: Insert conversation metadata
+      // Step 4: Insert conversation metadata (file_path only, NO URLs)
+      // CRITICAL: Never store file_url - signed URLs expire. Store file_path and generate URLs on-demand.
       const conversationRecord = {
         conversation_id: conversationId,
         persona_id: input.persona_id || null,
@@ -111,9 +106,8 @@ export class ConversationStorageService {
         brand_voice_alignment: metadata.brand_voice_alignment,
         status: 'pending_review' as const,
         processing_status: 'completed' as const,
-        file_url: fileUrl,
         file_size: fileBlob.size,
-        file_path: filePath,
+        file_path: filePath, // Store path only, generate URL on-demand
         storage_bucket: 'conversation-files',
         starting_emotion: metadata.starting_emotion,
         ending_emotion: metadata.ending_emotion,
@@ -168,13 +162,71 @@ export class ConversationStorageService {
 
   /**
    * Get conversation by conversation_id
+   * 
+   * IMPORTANT: This method returns file_path, NOT file_url.
+   * Signed URLs expire after 1 hour and must be generated on-demand.
+   * 
+   * To get download URL:
+   *   const conversation = await getConversation(id);
+   *   const url = await getPresignedDownloadUrl(conversation.file_path);
+   * 
+   * @param conversationId - Conversation UUID
+   * @returns Conversation with file_path (NOT file_url)
    */
   async getConversation(conversationId: string): Promise<StorageConversation | null> {
     const { data, error } = await this.supabase
       .from('conversations')
-      .select('*')
+      .select(`
+        id,
+        conversation_id,
+        persona_id,
+        emotional_arc_id,
+        training_topic_id,
+        template_id,
+        persona_key,
+        emotional_arc_key,
+        topic_key,
+        conversation_name,
+        description,
+        turn_count,
+        tier,
+        category,
+        quality_score,
+        empathy_score,
+        clarity_score,
+        appropriateness_score,
+        brand_voice_alignment,
+        status,
+        processing_status,
+        file_path,
+        raw_response_path,
+        file_size,
+        raw_response_size,
+        storage_bucket,
+        starting_emotion,
+        ending_emotion,
+        emotional_intensity_start,
+        emotional_intensity_end,
+        raw_stored_at,
+        parse_attempts,
+        last_parse_attempt_at,
+        parse_error_message,
+        parse_method_used,
+        requires_manual_review,
+        created_by,
+        created_at,
+        updated_at,
+        reviewed_by,
+        reviewed_at,
+        review_notes,
+        expires_at,
+        is_active
+      `)
       .eq('conversation_id', conversationId)
       .single();
+
+    // Note: Explicitly NOT selecting file_url or raw_response_url
+    // Those columns are deprecated and contain expired signed URLs
 
     if (error) {
       if (error.code === 'PGRST116') return null; // Not found
@@ -455,18 +507,42 @@ export class ConversationStorageService {
   /**
    * Generate presigned URL for file download (valid for 1 hour)
    * 
-   * @param filePath - The file path in storage bucket
-   * @returns Presigned URL valid for 1 hour
+   * CRITICAL: This generates a NEW signed URL each time. The URL expires after 1 hour.
+   * DO NOT store the result in the database or cache it long-term.
+   * 
+   * Usage pattern:
+   *   // When user clicks "Download" button:
+   *   const conversation = await getConversation(id);
+   *   const signedUrl = await getPresignedDownloadUrl(conversation.file_path);
+   *   // Return signedUrl to client immediately
+   *   // Client opens URL (valid for 1 hour)
+   * 
+   * @param filePath - Storage path relative to bucket (e.g., "user-id/conv-id/conversation.json")
+   * @returns Fresh signed URL, valid for 3600 seconds (1 hour)
+   * @throws Error if file doesn't exist or storage access fails
    */
   async getPresignedDownloadUrl(filePath: string): Promise<string> {
+    if (!filePath) {
+      throw new Error('File path is required');
+    }
+
+    console.log(`[getPresignedDownloadUrl] Generating signed URL for path: ${filePath}`);
+
     const { data, error } = await this.supabase.storage
       .from('conversation-files')
       .createSignedUrl(filePath, 3600); // 1 hour expiration
 
     if (error) {
+      console.error('[getPresignedDownloadUrl] Failed to generate signed URL:', error);
       throw new Error(`Failed to generate presigned URL: ${error.message}`);
     }
 
+    if (!data?.signedUrl) {
+      throw new Error('Signed URL generation returned no URL');
+    }
+
+    console.log(`[getPresignedDownloadUrl] ✅ Generated signed URL (expires in 1 hour)`);
+    
     return data.signedUrl;
   }
 
@@ -487,6 +563,95 @@ export class ConversationStorageService {
     }
 
     return this.getPresignedDownloadUrl(conversation.file_path);
+  }
+
+  /**
+   * Get conversation and generate download URL in one call
+   * 
+   * This is a convenience method for the common pattern:
+   *   1. Fetch conversation from database
+   *   2. Verify file_path exists
+   *   3. Generate fresh signed URL
+   *   4. Return URL with metadata
+   * 
+   * Usage in API route:
+   *   const downloadInfo = await service.getDownloadUrlForConversation(conversationId);
+   *   return NextResponse.json(downloadInfo);
+   * 
+   * @param conversationId - Conversation UUID
+   * @returns Object with signed URL and metadata
+   * @throws Error if conversation not found or no file path
+   */
+  async getDownloadUrlForConversation(
+    conversationId: string
+  ): Promise<ConversationDownloadResponse> {
+    // Step 1: Fetch conversation
+    const conversation = await this.getConversation(conversationId);
+    
+    if (!conversation) {
+      throw new Error(`Conversation not found: ${conversationId}`);
+    }
+
+    // Step 2: Verify file path exists
+    if (!conversation.file_path) {
+      throw new Error(`No file path for conversation: ${conversationId}`);
+    }
+
+    // Step 3: Generate fresh signed URL
+    const signedUrl = await this.getPresignedDownloadUrl(conversation.file_path);
+    
+    // Step 4: Extract filename from path
+    const filename = conversation.file_path.split('/').pop() || 'conversation.json';
+
+    // Step 5: Calculate expiry timestamp
+    const expiresAt = new Date(Date.now() + 3600 * 1000).toISOString();
+
+    // Step 6: Return complete download info
+    return {
+      conversation_id: conversationId,
+      download_url: signedUrl, // Fresh URL, valid for 1 hour
+      filename: filename,
+      file_size: conversation.file_size,
+      expires_at: expiresAt,
+      expires_in_seconds: 3600,
+    };
+  }
+
+  /**
+   * Get download URL for raw Claude API response
+   * 
+   * Similar to getDownloadUrlForConversation but for raw response files.
+   * Raw responses are stored in raw/ directory and contain unprocessed Claude output.
+   * 
+   * @param conversationId - Conversation UUID
+   * @returns Object with signed URL for raw response file
+   * @throws Error if conversation not found or no raw response path
+   */
+  async getRawResponseDownloadUrl(
+    conversationId: string
+  ): Promise<ConversationDownloadResponse> {
+    const conversation = await this.getConversation(conversationId);
+    
+    if (!conversation) {
+      throw new Error(`Conversation not found: ${conversationId}`);
+    }
+
+    if (!conversation.raw_response_path) {
+      throw new Error(`No raw response path for conversation: ${conversationId}`);
+    }
+
+    const signedUrl = await this.getPresignedDownloadUrl(conversation.raw_response_path);
+    const filename = conversation.raw_response_path.split('/').pop() || 'raw-response.json';
+    const expiresAt = new Date(Date.now() + 3600 * 1000).toISOString();
+
+    return {
+      conversation_id: conversationId,
+      download_url: signedUrl,
+      filename: filename,
+      file_size: conversation.raw_response_size,
+      expires_at: expiresAt,
+      expires_in_seconds: 3600,
+    };
   }
 
   /**
@@ -528,8 +693,11 @@ export class ConversationStorageService {
    * - Sets processing_status = 'raw_stored'
    * - NEVER fails (even if content is garbage)
    * 
+   * IMPORTANT: Stores file_path only, NOT file_url.
+   * URLs are generated on-demand when user requests download.
+   * 
    * @param params - Raw response storage parameters
-   * @returns Storage result with URLs and metadata
+   * @returns Storage result with path and metadata (NO URLs)
    */
   async storeRawResponse(params: {
     conversationId: string;
@@ -544,8 +712,7 @@ export class ConversationStorageService {
     };
   }): Promise<{
     success: boolean;
-    rawUrl: string;
-    rawPath: string;
+    rawPath: string; // Path, not URL
     rawSize: number;
     conversationId: string;
     error?: string;
@@ -577,18 +744,15 @@ export class ConversationStorageService {
 
       console.log(`[storeRawResponse] ✅ Raw file uploaded to ${rawPath}`);
 
-      // STEP 2: Get public URL for raw response
-      const { data: urlData } = this.supabase.storage
-        .from('conversation-files')
-        .getPublicUrl(rawPath);
-
-      const rawUrl = urlData.publicUrl;
-
-      // STEP 3: Create or update conversation record with raw response metadata
+      // STEP 2: Create or update conversation record with raw response metadata (path only, NO URLs)
+      // CRITICAL: Never store raw_response_url - signed URLs expire. Store raw_response_path only.
+      
+      // Assert that we're storing a path, not a URL
+      this.assertIsPath(rawPath, 'raw_response_path');
+      
       const conversationRecord: any = {
         conversation_id: conversationId,
-        raw_response_url: rawUrl,
-        raw_response_path: rawPath,
+        raw_response_path: rawPath, // Store path only, generate URL on-demand
         raw_response_size: rawSize,
         raw_stored_at: new Date().toISOString(),
         processing_status: 'raw_stored',  // Mark as "raw stored, not yet parsed"
@@ -619,13 +783,12 @@ export class ConversationStorageService {
       }
 
       console.log(`[storeRawResponse] ✅ Conversation record updated in database`);
-      console.log(`[storeRawResponse] Raw URL: ${rawUrl}`);
+      console.log(`[storeRawResponse] Raw path: ${rawPath} (path only, no URL stored)`);
       console.log(`[storeRawResponse] Size: ${rawSize} bytes`);
 
       return {
         success: true,
-        rawUrl,
-        rawPath,
+        rawPath, // Return path, not URL
         rawSize,
         conversationId,
       };
@@ -635,7 +798,6 @@ export class ConversationStorageService {
       // Return error but don't throw - we want to continue pipeline
       return {
         success: false,
-        rawUrl: '',
         rawPath: '',
         rawSize: 0,
         conversationId,
@@ -804,18 +966,16 @@ export class ConversationStorageService {
         throw new Error(`Final file upload failed: ${uploadError.message}`);
       }
 
-      const { data: urlData } = this.supabase.storage
-        .from('conversation-files')
-        .getPublicUrl(finalPath);
-
-      const finalUrl = urlData.publicUrl;
-
       console.log(`[parseAndStoreFinal] ✅ Final conversation stored at ${finalPath}`);
 
-      // STEP 6: Update conversation record with final data
+      // STEP 5: Update conversation record with final data (path only, NO URLs)
+      // CRITICAL: Never store file_url - signed URLs expire. Store file_path only.
+      
+      // Assert that we're storing a path, not a URL
+      this.assertIsPath(finalPath, 'file_path');
+      
       const updateData: any = {
-        file_url: finalUrl,
-        file_path: finalPath,
+        file_path: finalPath, // Store path only, generate URL on-demand
         file_size: finalBlob.size,
         processing_status: 'completed',
         parse_method_used: parseMethod,
@@ -864,6 +1024,56 @@ export class ConversationStorageService {
         parseMethod: 'failed',
         error: error instanceof Error ? error.message : 'Unknown error',
       };
+    }
+  }
+
+  // ========================================================================
+  // TYPE GUARD UTILITIES (Prevent accidental URL storage)
+  // ========================================================================
+
+  /**
+   * Check if a string looks like a signed URL (which shouldn't be stored)
+   * Use this in development to catch accidental URL storage
+   * 
+   * @param value - String to check
+   * @returns True if value looks like a signed URL
+   */
+  private looksLikeSignedUrl(value: string | null | undefined): boolean {
+    if (!value) return false;
+    
+    // Signed URLs contain these patterns
+    return (
+      value.includes('/storage/v1/object/sign/') ||
+      value.includes('?token=') ||
+      value.includes('/storage/v1/object/public/')
+    );
+  }
+
+  /**
+   * Assert that value is a file path, not a URL
+   * Throws in development if value looks like a URL
+   * 
+   * @param value - Value to check
+   * @param fieldName - Field name for error message
+   */
+  private assertIsPath(value: string | null | undefined, fieldName: string): void {
+    if (this.looksLikeSignedUrl(value)) {
+      const error = `
+        ❌ CRITICAL ERROR: Attempting to store signed URL in ${fieldName}!
+        
+        Signed URLs expire and must NOT be stored in the database.
+        Store file paths only and generate URLs on-demand.
+        
+        Bad value: ${value}
+        
+        Fix: Store the path portion only, without domain or token.
+        Example: "00000000.../abc123.../conversation.json"
+      `;
+      console.error(error);
+      
+      if (process.env.NODE_ENV === 'development') {
+        throw new Error(`Don't store signed URLs in ${fieldName}`);
+      }
     }
   }
 

@@ -18,13 +18,14 @@ interface MigrationScript {
 }
 
 export class MigrationManager {
-  private supabase = createClient();
+  private supabasePromise = createClient();
 
   /**
    * Get current schema version
    */
   async getCurrentVersion(): Promise<number> {
-    const { data, error } = await this.supabase
+    const supabase = await this.supabasePromise;
+    const { data, error } = await supabase
       .from('schema_migrations')
       .select('version')
       .order('version', { ascending: false })
@@ -42,7 +43,8 @@ export class MigrationManager {
    * Get all applied migrations
    */
   async getAppliedMigrations(): Promise<Migration[]> {
-    const { data, error } = await this.supabase
+    const supabase = await this.supabasePromise;
+    const { data, error } = await supabase
       .from('schema_migrations')
       .select('*')
       .order('version', { ascending: true });
@@ -59,7 +61,8 @@ export class MigrationManager {
    * Check if migration has been applied
    */
   async isMigrationApplied(version: number): Promise<boolean> {
-    const { data, error } = await this.supabase
+    const supabase = await this.supabasePromise;
+    const { data, error } = await supabase
       .from('schema_migrations')
       .select('version')
       .eq('version', version)
@@ -78,7 +81,8 @@ export class MigrationManager {
     checksum: string;
     appliedBy?: string;
   }): Promise<void> {
-    const { error } = await this.supabase
+    const supabase = await this.supabasePromise;
+    const { error } = await supabase
       .from('schema_migrations')
       .insert({
         version: params.version,
@@ -97,7 +101,8 @@ export class MigrationManager {
    * Remove migration record (for rollback)
    */
   async removeMigration(version: number): Promise<void> {
-    const { error } = await this.supabase
+    const supabase = await this.supabasePromise;
+    const { error } = await supabase
       .from('schema_migrations')
       .delete()
       .eq('version', version);

@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 
 export class MigrationTester {
-  private supabase = createClient();
+  private supabasePromise = createClient();
 
   /**
    * Test that migration can be applied and rolled back cleanly
@@ -57,7 +57,8 @@ export class MigrationTester {
     // 2. Or create a custom RPC function with SECURITY DEFINER
     // 3. Or use a direct PostgreSQL connection with proper credentials
     
-    const { error } = await this.supabase.rpc('exec_sql', { sql_script: script });
+    const supabase = await this.supabasePromise;
+    const { error } = await supabase.rpc('exec_sql', { sql_script: script });
     
     if (error) {
       throw new Error(`SQL execution failed: ${error.message}`);
@@ -68,7 +69,8 @@ export class MigrationTester {
    * Verify table exists
    */
   async tableExists(tableName: string): Promise<boolean> {
-    const { data, error } = await this.supabase
+    const supabase = await this.supabasePromise;
+    const { data, error } = await supabase
       .rpc('table_exists', { table_name: tableName });
 
     if (error) {
@@ -83,7 +85,8 @@ export class MigrationTester {
    * Verify column exists
    */
   async columnExists(tableName: string, columnName: string): Promise<boolean> {
-    const { data, error } = await this.supabase
+    const supabase = await this.supabasePromise;
+    const { data, error } = await supabase
       .rpc('column_exists', { 
         table_name: tableName,
         column_name: columnName 
@@ -101,7 +104,8 @@ export class MigrationTester {
    * Verify index exists
    */
   async indexExists(indexName: string): Promise<boolean> {
-    const { data, error } = await this.supabase
+    const supabase = await this.supabasePromise;
+    const { data, error } = await supabase
       .rpc('index_exists', { index_name: indexName });
 
     if (error) {
@@ -116,7 +120,8 @@ export class MigrationTester {
    * Get table row count
    */
   async getRowCount(tableName: string): Promise<number> {
-    const { count, error } = await this.supabase
+    const supabase = await this.supabasePromise;
+    const { count, error } = await supabase
       .from(tableName)
       .select('*', { count: 'exact', head: true });
 

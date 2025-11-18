@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     console.log('✅ [Extract API] Environment variables verified');
 
     // Get server-side Supabase client
-    const supabase = createServerSupabaseClient();
+    const supabase = await createServerSupabaseClient();
     
     // Get current user (optional - will use null if not authenticated)
     const { data: { user } } = await supabase.auth.getUser();

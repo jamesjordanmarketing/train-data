@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const supabase = createServerSupabaseClient();
+    const supabase = await createServerSupabaseClient();
     const service = new ScaffoldingDataService(supabase);
 
     const result = await service.checkCompatibility({

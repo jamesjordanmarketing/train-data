@@ -423,7 +423,10 @@ export const PaginationConfigSchema = z.object({
 
 /**
  * Storage-enabled conversation record matching database schema
- * Used by ConversationStorageService for file + metadata operations
+ * 
+ * CRITICAL: This type does NOT include deprecated URL fields (file_url, raw_response_url)
+ * because signed URLs expire. Always use file_path and generate URLs on-demand via:
+ * ConversationStorageService.getPresignedDownloadUrl(file_path)
  */
 export interface StorageConversation {
   id: string;
@@ -458,14 +461,24 @@ export interface StorageConversation {
   status: 'pending_review' | 'approved' | 'rejected' | 'archived';
   processing_status: 'queued' | 'processing' | 'completed' | 'failed';
 
-  // File storage
-  file_url: string | null;
-  file_size: number | null;
+  // File storage - PATHS ONLY, NEVER URLS
+  /**
+   * Storage path for final conversation JSON
+   * Use ConversationStorageService.getPresignedDownloadUrl(file_path) to get download URL
+   */
   file_path: string | null;
-  storage_bucket: string;
+  file_size: number | null;
+  storage_bucket: string; // Always "conversation-files"
+
+  // DEPRECATED FIELDS - Removed from type to prevent usage
+  // file_url: REMOVED - signed URLs expire, use file_path + generate on-demand
+  // raw_response_url: REMOVED - signed URLs expire, use raw_response_path + generate on-demand
 
   // Raw response storage (for zero data loss)
-  raw_response_url: string | null;
+  /**
+   * Storage path for raw Claude API response
+   * Use ConversationStorageService.getPresignedDownloadUrl(raw_response_path) to get download URL
+   */
   raw_response_path: string | null;
   raw_response_size: number | null;
   raw_stored_at: string | null;
@@ -612,5 +625,18 @@ export interface StorageConversationListResponse {
   page: number;
   limit: number;
   totalPages: number;
+}
+
+/**
+ * Response type for download endpoint
+ * Contains temporary signed URL generated on-demand
+ */
+export interface ConversationDownloadResponse {
+  conversation_id: string;
+  download_url: string; // Signed URL, valid for 1 hour
+  filename: string;
+  file_size: number | null;
+  expires_at: string; // ISO timestamp when signed URL expires
+  expires_in_seconds: number; // Always 3600 (1 hour)
 }
 

@@ -93,7 +93,7 @@ export async function exportFileCleanup(
 
   try {
     // Create Supabase client if not provided
-    const client = supabase || createServerSupabaseClient();
+    const client = supabase || await createServerSupabaseClient();
     const exportService = new ExportService(client);
 
     // Step 1: Find expired exports

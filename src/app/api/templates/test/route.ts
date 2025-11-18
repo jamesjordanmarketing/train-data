@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create Supabase client and fetch template
-    const supabase = createServerSupabaseClient();
+    const supabase = await createServerSupabaseClient();
     const templateService = new TemplateService(supabase);
     
     const template = await templateService.getTemplateById(templateId);

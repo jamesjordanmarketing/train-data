@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
     console.log('[Cron] Starting export metrics aggregation...');
 
     // Create Supabase client and metrics service
-    const supabase = createServerSupabaseClient();
+    const supabase = await createServerSupabaseClient();
     const metricsService = createExportMetricsService(supabase);
 
     // Aggregate metrics for the past hour

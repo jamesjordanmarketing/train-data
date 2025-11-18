@@ -46,7 +46,7 @@ export async function GET(
     }
     
     // Create Supabase client and export service
-    const supabase = createServerSupabaseClient();
+    const supabase = await createServerSupabaseClient();
     const exportService = new ExportService(supabase);
     
     // Get authenticated user

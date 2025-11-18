@@ -50,10 +50,14 @@ const conversation = await conversationStorageService.createConversation({
 // Returns StorageConversation with:
 // - id (database UUID)
 // - conversation_id (unique identifier)
-// - file_url (Supabase Storage URL)
+// - file_path (storage path - use getPresignedDownloadUrl() to get download link)
 // - quality_score, empathy_score, etc.
 // - status ('pending_review')
 // - created_at, updated_at
+//
+// IMPORTANT: file_path is stored, NOT file_url
+// Signed URLs expire after 1 hour. Generate URLs on-demand using:
+// conversationStorageService.getPresignedDownloadUrl(conversation.file_path)
 ```
 
 **What happens:**
@@ -218,10 +222,14 @@ interface StorageConversation {
   status: 'pending_review' | 'approved' | 'rejected' | 'archived';
   processing_status: 'queued' | 'processing' | 'completed' | 'failed';
   
-  // File storage
-  file_url: string | null;
+  // File storage (PATHS ONLY - never URLs)
+  // CRITICAL: Signed URLs expire after 1 hour. Always store file_path.
+  // Generate download URLs on-demand using:
+  // conversationStorageService.getPresignedDownloadUrl(file_path)
+  file_path: string | null; // e.g., "user-id/conv-id/conversation.json"
+  raw_response_path: string | null; // e.g., "raw/user-id/conv-id.json"
   file_size: number | null;
-  file_path: string | null;
+  storage_bucket: string; // Always "conversation-files"
   
   // Emotional progression
   starting_emotion: string | null;
@@ -340,9 +348,14 @@ CREATE TABLE conversations (
   tier VARCHAR(50) DEFAULT 'template',
   quality_score NUMERIC(3,1),
   status VARCHAR(50) DEFAULT 'pending_review',
-  file_url TEXT,
-  file_path TEXT,
+  
+  -- File storage (PATHS ONLY - never URLs)
+  -- DEPRECATED: file_url (removed - signed URLs expire)
+  -- DEPRECATED: raw_response_url (removed - signed URLs expire)
+  file_path TEXT, -- Storage path for final conversation JSON
+  raw_response_path TEXT, -- Storage path for raw Claude response
   storage_bucket VARCHAR(100) DEFAULT 'conversation-files',
+  
   created_by UUID,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   is_active BOOLEAN DEFAULT true
