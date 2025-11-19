@@ -78,9 +78,141 @@ Test and validate new download system with authentication and signed URLs
 
 ## Latest Updates (Nov 18, 2025)
 
+### Session 5 Summary: CRITICAL BUG - Download Still Failing ❌
+
+**Status**: 🔴 **BLOCKING BUG - Download system not working after deployment**
+
+**Problem**: Fix deployed in Session 4 did not resolve the issue. Downloads still failing in production with "Conversation not found" error.
+
+**Test Results** (Nov 18, 2025 - 11:49 PM):
+```
+User Action: Generated conversation successfully
+- Conversation ID: 501e3b87-930e-4bbd-bcf2-1b71614b4d38
+- Generation time: ~34s
+- Cost: $0.0286
+- Status: ✅ Generation succeeded, files stored
+
+User Action: Clicked "Download JSON" button
+- Error: "Conversation not found or you don't have access to it"
+- HTTP Status: 404
+- API Error: "Conversation not found: 501e3b87-930e-4bbd-bcf2-1b71614b4d38"
+```
+
+**Root Cause Analysis**:
+
+**Issue #1: conversation_id field NOT being populated during generation** ❌ CRITICAL
+```
+Evidence from logs:
+- storeRawResponse() creates record with conversation_id field
+- parseAndStoreFinal() UPDATES record but uses .eq('conversation_id', conversationId)
+- If initial insert didn't set conversation_id, the update WHERE clause won't match
+- Download API queries by conversation_id, finds nothing
+
+Key log line (line 96 in conversation-storage-service.ts):
+conversationRecord = {
+  conversation_id: conversationId,  // ← This sets it during storeRawResponse
+  // ...
+}
+
+But parseAndStoreFinal() line 993:
+.update(updateData)
+.eq('conversation_id', conversationId)  // ← If conversation_id is NULL, this matches nothing!
+.select()
+.single();
+```
+
+The session 4 fix changed the API return value but didn't fix the database record creation. The conversation_id field may still be NULL in the database, causing both:
+1. Download queries to fail (can't find by conversation_id)
+2. Parse updates to fail (WHERE conversation_id = X matches no rows)
+
+**Issue #2: Supabase client NULL in server-side generation logging** ⚠️ NON-BLOCKING
+```
+Error: "Cannot read properties of null (reading 'from')"
+Location: generation-log-service.ts line 109
+Root Cause: import { supabase } from '../supabase' returns null in edge runtime
+
+Code problem (line 9 of generation-log-service.ts):
+import { supabase } from '../supabase';  // ← This is client-side singleton, NULL in server
+
+Line 109:
+const { error } = await supabase  // ← supabase is null here
+  .from('generation_logs')
+  .insert({...});
+
+Impact: Generation logs not being saved (but generation succeeds)
+Status: Non-blocking, already wrapped in try-catch
+```
+
+**Issue #3: SAOL tool environment variables not accessible** 🔧 TOOLING
+```
+Error: "Missing required environment variables: SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY"
+Location: supa-agent-ops/src/core/client.ts line 21-25
+
+Root Cause:
+- SAOL runs in VS Code extension context (different from Next.js runtime)
+- process.env in SAOL doesn't have access to .env.local file
+- .env.local is only loaded by Next.js dev server
+- SAOL needs env vars passed directly or via different mechanism
+
+Environment file exists at:
+C:\Users\james\Master\BrightHub\brun\train-data\.env.local
+
+Contains:
+- SUPABASE_URL=https://hqhtbxlgzysfbekexwku.supabase.co
+- SUPABASE_SERVICE_ROLE_KEY=(present)
+- NEXT_PUBLIC_SUPABASE_URL=(present)
+- NEXT_PUBLIC_SUPABASE_ANON_KEY=(present)
+
+But SAOL can't read these because:
+1. Extension runs in different Node process than Next.js
+2. .env.local is Next.js specific (not loaded globally)
+3. SAOL expects process.env to have these set
+
+Solution options:
+a) Set env vars at system/user level (Windows environment variables)
+b) Create .env file at supa-agent-ops/ directory level
+c) Pass env vars explicitly when running SAOL commands
+d) Add env var loading in SAOL CLI bootstrap
+```
+
+**Database State Investigation Needed**:
+```sql
+-- Need to verify if conversation_id is actually being set
+SELECT 
+  id,
+  conversation_id,
+  created_at,
+  file_path,
+  raw_response_path
+FROM conversations 
+WHERE id::text LIKE '501e3b87%' OR conversation_id::text LIKE '501e3b87%';
+
+-- Expected result if bug confirmed:
+-- id: <some integer>
+-- conversation_id: NULL  ← This would be the bug
+-- file_path: '00000000-.../conversation.json'
+-- raw_response_path: 'raw/00000000-.../501e3b87-....json'
+```
+
+**Files That Need Investigation**:
+1. `src/lib/services/conversation-storage-service.ts` - storeRawResponse() and parseAndStoreFinal()
+2. `src/lib/services/generation-log-service.ts` - NULL supabase client
+3. Database: conversations table - verify conversation_id column population
+
+**Priority**: 🔴 **CRITICAL** - Blocks all download functionality
+**Next Steps**: 
+1. Query database to verify conversation_id field is NULL
+2. Fix storeRawResponse() to ensure conversation_id persists
+3. Fix parseAndStoreFinal() update query to use id (primary key) instead
+4. Fix generation-log-service to use createServerSupabaseClient()
+5. Set up SAOL environment variables properly
+
+---
+
 ### Session 4 Summary: Download System Implementation Complete ⭐
 
 **Achievement**: ✅ **Complete download system with authentication implemented!**
+**Status**: ❌ **DEPLOYED BUT NOT WORKING - See Session 5 for failure analysis**
 
 **Implementation Completed** (Based on specification v2):
 
@@ -721,16 +853,76 @@ More secure, works with private buckets
 
 ## Known Issues & Limitations
 
-### Recently Resolved Issue
+### CRITICAL BLOCKING ISSUES
 
-1. **Storage Bucket Download 404** ✅ RESOLVED
+1. **Download System Not Working** 🔴 CRITICAL BLOCKER
+   - **Current Impact**: Users cannot download generated conversations despite successful generation
+   - **Root Cause (Hypothesis)**: conversation_id field not being populated in database during generation
+   - **Evidence**: 
+     - Generation logs show: "Conversation generated: 501e3b87-930e-4bbd-bcf2-1b71614b4d38"
+     - Download API error: "Conversation not found: 501e3b87-930e-4bbd-bcf2-1b71614b4d38"
+     - API queries: `.eq('conversation_id', conversationId)` but field may be NULL
+   - **Session 4 Fix Attempted**: Changed API return to use conversation_id instead of id
+   - **Why Fix Failed**: Changed what API returns to client, but didn't fix database record creation
+   - **Database Issue**: 
+     - storeRawResponse() inserts with conversation_id field
+     - parseAndStoreFinal() updates with `.eq('conversation_id', X)`
+     - If conversation_id is NULL, update WHERE clause matches 0 rows
+     - Download query finds nothing
+   - **Status**: ❌ BLOCKING - requires database investigation + code fix
+   - **Next Action**: Query database to verify conversation_id is NULL, then fix insert/update logic
+
+2. **Generation Logging Failing** ⚠️ NON-BLOCKING
+   - **Current Impact**: Generation logs not being saved (but generation succeeds)
+   - **Root Cause**: `import { supabase } from '../supabase'` returns null in server-side/edge runtime
+   - **Error**: "TypeError: Cannot read properties of null (reading 'from')"
+   - **Location**: `src/lib/services/generation-log-service.ts` line 9 and 109
+   - **Why It Happens**: 
+     - File imports client-side singleton: `import { supabase } from '../supabase'`
+     - This singleton returns null in server-side contexts
+     - Called from Claude API client during generation
+   - **Impact**: Wrapped in try-catch, doesn't block generation, just logs error
+   - **Status**: ⚠️ NON-BLOCKING - logs missing but generation works
+   - **Fix**: Change to use `createServerSupabaseClient()` like other services
+
+3. **SAOL Tool Cannot Access Database** 🔧 TOOLING ISSUE
+   - **Current Impact**: Cannot use SAOL for database inspection during debugging
+   - **Root Cause**: Environment variables not accessible to VS Code extension context
+   - **Error**: "Missing required environment variables: SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY"
+   - **Location**: `supa-agent-ops/src/core/client.ts` line 21-25
+   - **Why It Happens**:
+     - SAOL runs in VS Code extension process (separate from Next.js)
+     - .env.local only loaded by Next.js dev server
+     - process.env in extension doesn't have Next.js env vars
+     - Extension needs direct access to env vars
+   - **Environment File**: `.env.local` exists with all required vars
+   - **Available Vars**:
+     - SUPABASE_URL=https://hqhtbxlgzysfbekexwku.supabase.co ✅
+     - SUPABASE_SERVICE_ROLE_KEY=(present) ✅
+     - NEXT_PUBLIC_SUPABASE_URL=(present) ✅
+     - NEXT_PUBLIC_SUPABASE_ANON_KEY=(present) ✅
+   - **Status**: 🔧 TOOLING - blocks database inspection, not application functionality
+   - **Workaround**: Use Supabase dashboard SQL editor for queries
+   - **Fix Options**:
+     - Option A: Set Windows system environment variables
+     - Option B: Create .env in supa-agent-ops/ directory
+     - Option C: Pass env vars to SAOL commands explicitly
+     - Option D: Update SAOL to load .env.local from parent directory
+
+### Recently Resolved Issue (RESOLUTION FAILED - SEE ABOVE)
+
+1. **Storage Bucket Download 404** ❌ NOT ACTUALLY RESOLVED
    - **Previous Impact**: Could not download conversation JSON files from dashboard
-   - **Root Cause**: Using public URLs on private bucket, no authentication, stored expired URLs
-   - **Solution Implemented**: 
-     - Created download API endpoint with JWT authentication
-     - Generate signed URLs on-demand (never store them)
-     - URLs expire after 1 hour and regenerated per request
-   - **Status**: Implementation complete, awaiting end-to-end testing
+   - **Root Cause Identified**: Using public URLs on private bucket, no authentication, stored expired URLs
+   - **Solution Attempted (Session 4)**: 
+     - Created download API endpoint with JWT authentication ✅
+     - Generate signed URLs on-demand (never store them) ✅
+     - Changed API to return conversation_id instead of id ❌ INSUFFICIENT
+   - **Why Fix Failed**: 
+     - Fixed API return value but didn't fix database record creation
+     - conversation_id field likely NULL in database
+     - Download queries can't find conversations by NULL field
+   - **Status**: ❌ STILL BROKEN - See Issue #1 above for current status
 
 ### Current Limitations
 
@@ -759,44 +951,92 @@ More secure, works with private buckets
 
 ## Success Criteria
 
-### Session 4 Success ✅
+### Session 5 Results ❌
+
+**Testing Revealed Critical Bugs:**
+- ❌ Download functionality broken (404 "Conversation not found")
+- ❌ Session 4 fix insufficient (only changed API return, not database)
+- ❌ conversation_id field likely NULL in database
+- ⚠️ Generation logging service using NULL client (non-blocking)
+- 🔧 SAOL tool cannot access environment variables
+
+**Investigation Completed:**
+- ✅ Identified root cause hypothesis (conversation_id NULL)
+- ✅ Located problem code (storeRawResponse + parseAndStoreFinal)
+- ✅ Documented generation logging bug
+- ✅ Documented SAOL environment issue
+- ✅ Prepared SQL queries for database verification
+- ✅ Updated context document for next agent
+
+**What Was NOT Done:**
+- ❌ Did not query database to verify conversation_id state
+- ❌ Did not fix storeRawResponse/parseAndStoreFinal
+- ❌ Did not test download workflow
+- ❌ Did not fix generation logging service
+- ❌ Did not fix SAOL environment variables
+
+### Session 4 Results ⚠️ DEPLOYED BUT BROKEN
 
 **Implementation Complete:**
 - ✅ Conversation generation working end-to-end
 - ✅ Raw responses stored in Supabase Storage
 - ✅ Final conversations stored in Supabase Storage
-- ✅ Metadata records created in database
+- ⚠️ Metadata records created (but conversation_id may be NULL)
 - ✅ Success page displays without errors
 - ✅ Conversations appear in dashboard
 - ✅ Authentication system implemented (JWT validation)
 - ✅ Download API endpoint created
-- ✅ On-demand signed URL generation
+- ✅ On-demand signed URL generation code
 - ✅ Database schema cleaned (deprecated URL columns)
 - ✅ Service layer updated
 - ✅ Dashboard integrated with download handler
 
-### Next Session Success Criteria (Testing Phase)
+**What Failed in Production:**
+- ❌ Download button returns 404
+- ❌ conversation_id field not queryable
+- ⚠️ Generation logging throws errors (non-blocking)
 
-- [ ] Authentication flow tested end-to-end
-- [ ] Download button works with real user accounts
-- [ ] Signed URLs generated successfully
-- [ ] Downloaded files open correctly
-- [ ] Error handling works (401, 403, 404, 500)
-- [ ] Loading states display correctly
-- [ ] Toast notifications appear appropriately
-- [ ] RLS policies filter conversations by user
-- [ ] Cross-user isolation verified
-- [ ] Performance acceptable (< 500ms URL generation)
+### Next Session Success Criteria (Debug & Fix Phase)
+
+**Phase 1: Investigation (REQUIRED FIRST)**
+- [ ] Run SQL queries to verify conversation_id state in database
+- [ ] Check if conversation_id is NULL for recent conversations
+- [ ] Verify which conversations have conversation_id populated
+- [ ] Document exact database state
+
+**Phase 2: Code Fixes (AFTER INVESTIGATION)**
+- [ ] Fix storeRawResponse() to ensure conversation_id persists
+- [ ] Fix parseAndStoreFinal() to use id instead of conversation_id for updates
+- [ ] Fix generation-log-service.ts to use createServerSupabaseClient()
+- [ ] Test fixes locally before deploying
+
+**Phase 3: Deployment & Testing**
+- [ ] Deploy fixes to production
+- [ ] Generate new test conversation
+- [ ] Verify conversation_id is populated in database
+- [ ] Test download button works
+- [ ] Verify file downloads successfully
+- [ ] Test error cases (unauthorized, not found, etc.)
+
+**Phase 4: Validation (FINAL)**
 - [ ] No URLs stored in database (verification query)
-- [ ] Documentation updated with testing results
+- [ ] conversation_id field populated for all conversations
+- [ ] Generation logs being saved successfully
+- [ ] Download workflow works end-to-end
+- [ ] Performance acceptable (< 500ms URL generation)
+- [ ] Documentation updated with results
 
 ---
 
 ## Resources & References
 
-### Documentation
-- Previous Context: `pmc/system/plans/context-carries/context-carry-info-11-15-25-1114pm.md`
-- This Context: `pmc/system/plans/context-carries/context-carry-info-11-15-25-1114pm-b.md`
+### Documentation (Session 5 - NEW)
+- **NEXT AGENT START HERE**: `NEXT_AGENT_QUICK_START.md` ⭐
+- **Session 5 Summary**: `SESSION_5_SUMMARY.md`
+- **Detailed Bug Analysis**: `DETAILED_BUG_ANALYSIS.md`
+- **Main Context**: This file (`context-carry-info-11-15-25-1114pm.md`)
+
+### Previous Documentation
 - Implementation: `PROMPT4_FILE1_V3_IMPLEMENTATION_SUMMARY.md`
 - Storage Guide: `CONVERSATION_STORAGE_SERVICE_IMPLEMENTATION_SUMMARY.md`
 
@@ -833,39 +1073,99 @@ SELECT * FROM storage.objects WHERE bucket_id = 'conversation-files' LIMIT 10;
 
 ## Quick Reference: Current Status
 
-### ✅ What's Working (Implementation Complete)
-- Conversation generation pipeline (end-to-end)
-- Claude API integration
-- Template resolution
-- Raw response storage (files stored with file_path)
-- Final conversation storage (files stored with file_path)
-- Database metadata creation
-- Dashboard display
-- Success page display
-- **Authentication system (JWT validation)**
-- **Download API endpoint (GET /api/conversations/[id]/download)**
-- **On-demand signed URL generation**
-- **Dashboard download handler with loading states**
-- **Database schema cleanup (URLs deprecated)**
+### ✅ What's Working (Partially Functional)
+- ✅ Conversation generation pipeline (end-to-end)
+- ✅ Claude API integration
+- ✅ Template resolution
+- ✅ Raw response storage (files stored with file_path)
+- ✅ Final conversation storage (files stored with file_path)
+- ⚠️ Database metadata creation (working but conversation_id may be NULL)
+- ✅ Dashboard display
+- ✅ Success page display
+- ✅ Authentication system (JWT validation) - deployed but untested
+- ✅ Download API endpoint (GET /api/conversations/[id]/download) - deployed but broken
+- ✅ On-demand signed URL generation - code exists but never reached
+- ✅ Dashboard download handler with loading states - deployed but returns 404
+- ✅ Database schema cleanup (URLs deprecated)
 
-### ⏳ What Needs Testing
-- End-to-end download workflow with real authentication
-- JWT token validation in production
-- RLS policy filtering by user
-- Cross-user isolation
-- Error handling (401, 403, 404, 500)
-- Signed URL expiry (1 hour)
-- Performance (< 500ms URL generation)
+### ❌ What's Broken (Blocking Issues)
+- ❌ **Download functionality** - Returns 404 "Conversation not found"
+- ❌ **conversation_id field** - Likely NULL in database, breaking queries
+- ⚠️ **Generation logging** - Fails but non-blocking (wrapped in try-catch)
+- 🔧 **SAOL tool** - Cannot access environment variables
 
-### 🎯 Next Priority
-1. **Test authentication flow** (create test users, log in, verify JWT)
-2. **Test download workflow** (click button, verify file downloads)
-3. **Verify RLS policies** (ensure user A can't see user B's conversations)
-4. **Test error handling** (try downloading without auth, non-existent conversation)
-5. **Validate database** (confirm no URLs stored, only paths)
-6. **Document test results** (update context with findings)
+### 🎯 Next Priority (CHANGED - Debugging Phase)
+1. 🔴 **Verify database state** - Query to check if conversation_id is NULL
+2. 🔴 **Fix storeRawResponse()** - Ensure conversation_id persists in database
+3. 🔴 **Fix parseAndStoreFinal()** - Use id (primary key) instead of conversation_id for WHERE
+4. ⚠️ **Fix generation-log-service** - Use createServerSupabaseClient() instead of singleton
+5. 🔧 **Fix SAOL environment** - Set up env vars for VS Code extension context
+6. ✅ **Test download workflow** - Verify fix works end-to-end
 
-### 📊 Recent Changes (Session 4)
+### SQL Queries Needed for Investigation
+```sql
+-- Query 1: Check if conversation_id is NULL for recent conversation
+SELECT 
+  id,
+  conversation_id,
+  created_at,
+  file_path,
+  raw_response_path,
+  processing_status,
+  created_by
+FROM conversations 
+WHERE id::text LIKE '501e3b87%' 
+   OR conversation_id::text LIKE '501e3b87%'
+ORDER BY created_at DESC
+LIMIT 5;
+
+-- Query 2: Count conversations with NULL conversation_id
+SELECT 
+  COUNT(*) as total_conversations,
+  COUNT(conversation_id) as with_conversation_id,
+  COUNT(*) - COUNT(conversation_id) as null_conversation_id
+FROM conversations;
+
+-- Query 3: Check if storeRawResponse is creating records
+SELECT 
+  id,
+  conversation_id,
+  raw_response_path,
+  processing_status,
+  created_at
+FROM conversations 
+WHERE raw_response_path IS NOT NULL
+ORDER BY created_at DESC
+LIMIT 5;
+
+-- Query 4: Check generation logs (if any were saved)
+SELECT 
+  id,
+  conversation_id,
+  status,
+  created_at,
+  error_message
+FROM generation_logs
+ORDER BY created_at DESC
+LIMIT 5;
+```
+
+### 📊 Recent Changes
+
+**Session 5 (Nov 18, 2025 - 11:49 PM)**: Testing & Bug Discovery
+- **Testing**: End-to-end test of download system in production
+- **Result**: ❌ FAILED - "Conversation not found" error
+- **Discovery**: Session 4 fix was insufficient
+  - Fixed API return value (what client receives)
+  - Did NOT fix database record creation (root cause)
+  - conversation_id field likely NULL in database
+- **Additional Bugs Found**:
+  - Generation logging service using NULL supabase client
+  - SAOL tool cannot access environment variables
+- **Status**: 🔴 BLOCKING - Download functionality broken
+- **Context Updated**: This file updated with detailed bug analysis
+
+**Session 4 (Nov 18, 2025)**: Download System Implementation
 - **Implementation**: Complete authentication system + download endpoint
 - **Files Created**: 
   - `src/lib/supabase-server.ts` (auth helpers)
@@ -875,7 +1175,118 @@ SELECT * FROM storage.objects WHERE bucket_id = 'conversation-files' LIMIT 10;
   - `src/lib/services/conversation-storage-service.ts` (on-demand URLs)
   - `src/app/(dashboard)/conversations/page.tsx` (download handler)
   - `src/lib/types/conversations.ts` (removed URL fields)
+  - `src/app/api/conversations/generate-with-scaffolding/route.ts` (return conversation_id)
 - **Migration Applied**: `20251118_deprecate_url_columns.sql`
 - **Generation Status**: ✅ WORKING in production
 - **Storage Status**: ✅ Files stored with paths
-- **Download Status**: ✅ Implementation complete, ⏳ Awaiting testing
+- **Download Status**: ❌ DEPLOYED BUT NOT WORKING (see Session 5)
+
+**For Next Agent**: See detailed bug analysis in `DETAILED_BUG_ANALYSIS.md` (same directory)
+
+---
+
+## Detailed Bug Analysis for Next Agent
+
+### Bug #1: conversation_id Field Not Populated (CRITICAL) ��
+
+**Hypothesis**: The `conversation_id` field in the `conversations` table is NULL for generated conversations, causing download queries to fail.
+
+**Evidence Chain**:
+
+1. **Generation Log** (Nov 18, 2025 - 11:49 PM):
+   - Conversation ID: 501e3b87-930e-4bbd-bcf2-1b71614b4d38
+   - Status: ✓ Conversation generated successfully
+
+2. **Storage Log**: Files stored with conversation ID in path
+   - Raw: `raw/00000000-.../501e3b87-....json` ✅
+   - Final: `00000000-.../501e3b87-.../conversation.json` ✅
+
+3. **Download Attempt**: 404 "Conversation not found"
+   - User authenticated: ✅ 79c81162-6399-41d4-a968-996e0ca0df0c
+   - Query: `.eq('conversation_id', '501e3b87...')` ❌ Returns NULL
+
+**Code Analysis**: `src/lib/services/conversation-storage-service.ts`
+
+- **storeRawResponse() (line 702)**: Creates record with `conversation_id: conversationId`
+- **parseAndStoreFinal() (line 993)**: Updates with `.eq('conversation_id', conversationId)`
+- **getConversation() (line 224)**: Queries with `.eq('conversation_id', conversationId)`
+
+**Problem**: If upsert doesn't persist conversation_id, update WHERE clause matches 0 rows.
+
+**Diagnostic SQL**:
+```sql
+-- Find conversation by UUID in any field
+SELECT id, conversation_id, created_by, file_path, raw_response_path
+FROM conversations 
+WHERE conversation_id = '501e3b87-930e-4bbd-bcf2-1b71614b4d38'
+   OR raw_response_path LIKE '%501e3b87%'
+   OR file_path LIKE '%501e3b87%';
+
+-- Count NULL conversation_id records
+SELECT COUNT(*) as total, COUNT(conversation_id) as with_id
+FROM conversations;
+```
+
+---
+
+### Bug #2: Generation Logging NULL Client (NON-BLOCKING) ⚠️
+
+**Error**: "TypeError: Cannot read properties of null (reading 'from')"  
+**Location**: `src/lib/services/generation-log-service.ts` line 9
+
+**Problem**: Imports client-side singleton that returns null in server context.
+
+**Fix**:
+```typescript
+// Change from:
+import { supabase } from '../supabase';
+
+// To:
+import { createServerSupabaseClient } from '../supabase-server';
+
+// Update method:
+async logGeneration(params) {
+  const supabase = await createServerSupabaseClient();
+  // ... rest of code
+}
+```
+
+---
+
+### Bug #3: SAOL Environment Variables (TOOLING) ���
+
+**Error**: "Missing required environment variables"  
+**Location**: `supa-agent-ops/src/core/client.ts`
+
+**Problem**: VS Code extension can't read `.env.local` (Next.js-specific file)
+
+**Fix Options**:
+1. **Windows Env Vars**: Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY at system level
+2. **SAOL .env**: Create `supa-agent-ops/.env` with required vars
+3. **Workaround**: Use Supabase Dashboard SQL Editor
+
+---
+
+## Next Agent Action Plan
+
+### Step 1: Database Investigation (15 min)
+- Open Supabase Dashboard SQL Editor
+- Run diagnostic queries to verify conversation_id state
+- Document: Is field NULL? How many affected?
+
+### Step 2: Fix Database Record Creation (60 min)
+- Fix `storeRawResponse()` to ensure conversation_id persists
+- Fix `parseAndStoreFinal()` to use id (primary key) for WHERE
+- Add validation and error handling
+
+### Step 3: Fix Generation Logging (15 min)
+- Update `generation-log-service.ts` to use server client
+- Test logs are saved
+
+### Step 4: Deploy & Test (30 min)
+- Commit and push fixes
+- Generate new conversation
+- Verify download works end-to-end
+
+**Total Estimated Time**: 2 hours
+

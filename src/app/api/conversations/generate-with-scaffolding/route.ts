@@ -3,11 +3,15 @@
  * 
  * Generate conversation using scaffolding parameters (persona, emotional arc, training topic).
  * Orchestrates parameter assembly, template selection, and conversation generation.
+ * 
+ * AUTHENTICATION REQUIRED: User must be authenticated to generate conversations.
+ * Conversations will be owned by the authenticated user.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
+import { requireAuth } from '@/lib/supabase-server';
 import { ScaffoldingDataService } from '@/lib/services/scaffolding-data-service';
 import { ParameterAssemblyService } from '@/lib/services/parameter-assembly-service';
 import { TemplateSelectionService } from '@/lib/services/template-selection-service';
@@ -36,11 +40,23 @@ export async function POST(request: NextRequest) {
   const startTime = Date.now();
 
   try {
-    // 1. Parse and validate request
+    // 1. Authenticate user (REQUIRED)
+    console.log('[Generate] Authenticating user...');
+    const { user, response: authErrorResponse } = await requireAuth(request);
+    
+    if (authErrorResponse) {
+      console.warn('[Generate] ❌ Authentication failed');
+      return authErrorResponse; // 401 Unauthorized
+    }
+    
+    const authenticatedUserId = user!.id;
+    console.log(`[Generate] ✓ Authenticated as user: ${authenticatedUserId}`);
+
+    // 2. Parse and validate request
     const body = await request.json();
     const validated = GenerateWithScaffoldingSchema.parse(body);
 
-    // 2. Check for API key
+    // 3. Check for API key
     if (!process.env.ANTHROPIC_API_KEY) {
       console.error('❌ ANTHROPIC_API_KEY not configured');
       return NextResponse.json(
@@ -76,7 +92,7 @@ export async function POST(request: NextRequest) {
       document_id: validated.document_id,
       temperature: validated.temperature,
       max_tokens: validated.max_tokens,
-      created_by: validated.created_by,
+      created_by: authenticatedUserId, // Use authenticated user ID
     });
 
     console.log(`✓ Parameters assembled with template: ${assembled.conversation_params.template_id}`);
@@ -91,7 +107,7 @@ export async function POST(request: NextRequest) {
       templateId: assembled.conversation_params.template_id!,
       parameters: assembled.template_variables,
       tier: validated.tier,
-      userId: validated.created_by || '00000000-0000-0000-0000-000000000000',
+      userId: authenticatedUserId, // Use authenticated user ID (no fallback to system user)
       temperature: assembled.conversation_params.temperature,
       maxTokens: assembled.conversation_params.max_tokens,
       category: [], // Could be derived from training topic category if needed
