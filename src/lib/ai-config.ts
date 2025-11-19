@@ -93,7 +93,7 @@ export const AI_CONFIG: AIConfig & {
   rateLimitPauseMs: 5000, // Pause for 5 seconds when rate limited
   
   // Request configuration
-  timeout: 60000, // 60 seconds
+  timeout: 180000, // 180 seconds (3 minutes) - Increased for complex generations with structured outputs
   maxConcurrentRequests: 3,
   
   // Retry strategy configuration
