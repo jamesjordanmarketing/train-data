@@ -33,7 +33,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAuth, createServerSupabaseClientFromRequest } from '@/lib/supabase-server';
+import { requireAuth, createServerSupabaseClientFromRequest, createServerSupabaseAdminClient } from '@/lib/supabase-server';
 import { ConversationStorageService } from '@/lib/services/conversation-storage-service';
 import { ConversationDownloadResponse } from '@/lib/types/conversations';
 
@@ -83,11 +83,17 @@ export async function GET(
   }
 
   // ================================================================
-  // Step 3: Initialize Service with Authenticated Client
+  // Step 3: Initialize Services
   // ================================================================
-  // Create authenticated Supabase client (RLS will automatically filter by user)
-  const { supabase } = createServerSupabaseClientFromRequest(request);
-  const storageService = new ConversationStorageService(supabase);
+  // Create authenticated Supabase client (for database queries with RLS)
+  const { supabase: authenticatedClient } = createServerSupabaseClientFromRequest(request);
+  
+  // Create admin client for storage operations (private bucket requires service role)
+  // Note: We still use authenticated client for database to respect RLS,
+  // but use admin client for storage since bucket is private
+  const adminClient = createServerSupabaseAdminClient();
+  
+  const storageService = new ConversationStorageService(adminClient);
 
   try {
     // ================================================================
@@ -108,10 +114,23 @@ export async function GET(
     // ================================================================
     // Step 5: Verify User Owns Conversation (Defense in Depth)
     // ================================================================
-    // RLS should already enforce this, but double-check for security
-    const conversation = await storageService.getConversation(conversationId);
+    // CRITICAL: Since we're using admin client for storage (bypasses RLS),
+    // we MUST verify ownership using the authenticated client
+    const authenticatedStorageService = new ConversationStorageService(authenticatedClient);
+    const conversation = await authenticatedStorageService.getConversation(conversationId);
     
-    if (conversation && conversation.created_by !== authenticatedUserId) {
+    if (!conversation) {
+      console.warn(`[GET /api/conversations/${conversationId}/download] ❌ Not Found: Conversation does not exist or user ${authenticatedUserId} doesn't have access`);
+      return NextResponse.json(
+        {
+          error: 'Not Found',
+          message: 'Conversation not found or you do not have access to it',
+        },
+        { status: 404 }
+      );
+    }
+    
+    if (conversation.created_by !== authenticatedUserId) {
       console.warn(`[GET /api/conversations/${conversationId}/download] ❌ Forbidden: User ${authenticatedUserId} does not own conversation (owned by ${conversation.created_by})`);
       return NextResponse.json(
         {
