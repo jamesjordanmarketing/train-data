@@ -6,7 +6,7 @@
  * compliance and cost analysis.
  */
 
-import { supabase } from '../supabase';
+import { createServerSupabaseAdminClient } from '../supabase-server';
 
 // Define types inline to avoid circular dependencies
 interface GenerationLog {
@@ -101,6 +101,9 @@ export const generationLogService = {
    */
   async logGeneration(params: GenerationLogParams): Promise<void> {
     try {
+      // Get admin client for server-side operations
+      const supabase = createServerSupabaseAdminClient();
+      
       // Calculate cost if not provided
       let costUsd = params.costUsd;
       if (!costUsd && params.inputTokens !== undefined && params.outputTokens !== undefined) {
@@ -151,6 +154,8 @@ export const generationLogService = {
    */
   async getLogsByConversation(conversationId: string): Promise<GenerationLog[]> {
     try {
+      const supabase = createServerSupabaseAdminClient();
+      
       const { data, error } = await supabase
         .from('generation_logs')
         .select('*')
@@ -183,6 +188,8 @@ export const generationLogService = {
    */
   async getLogsByDateRange(from: string, to: string): Promise<GenerationLog[]> {
     try {
+      const supabase = createServerSupabaseAdminClient();
+      
       const { data, error } = await supabase
         .from('generation_logs')
         .select('*')
@@ -219,6 +226,8 @@ export const generationLogService = {
     userId?: string 
   }): Promise<number> {
     try {
+      const supabase = createServerSupabaseAdminClient();
+      
       let query = supabase
         .from('generation_logs')
         .select('cost_usd');
@@ -353,6 +362,8 @@ export const generationLogService = {
    */
   async getLogsByRunId(runId: string): Promise<GenerationLog[]> {
     try {
+      const supabase = createServerSupabaseAdminClient();
+      
       const { data, error } = await supabase
         .from('generation_logs')
         .select('*')
@@ -382,6 +393,8 @@ export const generationLogService = {
    */
   async getLogsByTemplateId(templateId: string): Promise<GenerationLog[]> {
     try {
+      const supabase = createServerSupabaseAdminClient();
+      
       const { data, error } = await supabase
         .from('generation_logs')
         .select('*')
@@ -413,6 +426,8 @@ export const generationLogService = {
    */
   async deleteOldLogs(olderThan: string): Promise<number> {
     try {
+      const supabase = createServerSupabaseAdminClient();
+      
       const { error, count } = await supabase
         .from('generation_logs')
         .delete({ count: 'exact' })

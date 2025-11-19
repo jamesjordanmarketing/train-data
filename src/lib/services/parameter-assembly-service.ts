@@ -82,7 +82,7 @@ export class ParameterAssemblyService {
       tier: input.tier,
       template_id,
       temperature: input.temperature || this.determineTemperature(emotional_arc, training_topic),
-      max_tokens: input.max_tokens || 2048,
+      max_tokens: input.max_tokens || 4096,
       target_turn_count: emotional_arc.typical_turn_count_min || 3,
       chunk_id: input.chunk_id,
       chunk_context: input.chunk_context,
