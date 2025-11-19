@@ -15,7 +15,8 @@
  * @module template-resolver
  */
 
-import { supabase } from '../supabase';
+import { createClient } from '../supabase/server';
+import { SupabaseClient } from '@supabase/supabase-js';
 import { 
   injectParameters, 
   validateTemplateResolution,
@@ -69,10 +70,18 @@ export interface ResolveParams {
  * Orchestrates template retrieval, parameter injection, and validation.
  */
 export class TemplateResolver {
+  private supabasePromise: Promise<SupabaseClient>;
   private templateCache = new Map<string, Template>();
   private cacheEnabled = true;
   private cacheTTL = 60000; // 1 minute
   private cacheTimestamps = new Map<string, number>();
+
+  constructor(supabaseClient?: SupabaseClient) {
+    // If client provided, use it; otherwise create one
+    this.supabasePromise = supabaseClient 
+      ? Promise.resolve(supabaseClient)
+      : createClient();
+  }
 
   /**
    * Resolve a template with given parameters
@@ -299,6 +308,7 @@ export class TemplateResolver {
 
     // Fetch from database
     try {
+      const supabase = await this.supabasePromise;
       const { data, error } = await supabase
         .from('prompt_templates')
         .select('*')
@@ -375,6 +385,7 @@ export class TemplateResolver {
     }
 
     try {
+      const supabase = await this.supabasePromise;
       const { data, error } = await supabase
         .from('prompt_templates')
         .select('*')
