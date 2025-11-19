@@ -13,6 +13,7 @@ import { ParameterAssemblyService } from '@/lib/services/parameter-assembly-serv
 import { TemplateSelectionService } from '@/lib/services/template-selection-service';
 import { getConversationGenerationService } from '@/lib/services';
 import type { GenerationParams } from '@/lib/services';
+import type { StorageConversation } from '@/lib/types/conversations';
 
 // Validation schema
 const GenerateWithScaffoldingSchema = z.object({
@@ -110,7 +111,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log(`✓ Conversation generated: ${result.conversation.id}`);
+    // Note: result.conversation is actually a StorageConversation with both id and conversation_id
+    const storageConv = result.conversation as unknown as StorageConversation;
+    const dbId = storageConv.id; // database primary key for updates
+    const conversationUuid = storageConv.conversation_id; // UUID for client
+    
+    console.log(`✓ Conversation generated: ${conversationUuid}`);
     console.log(`  Quality score: ${result.conversation.qualityScore}`);
     console.log(`  Turn count: ${result.conversation.totalTurns}`);
     console.log(`  Cost: $${result.metrics.cost.toFixed(4)}`);
@@ -149,7 +155,7 @@ export async function POST(request: NextRequest) {
           system_prompt: assembled.system_prompt,
         },
       })
-      .eq('id', result.conversation.id);
+      .eq('id', dbId);
 
     if (updateError) {
       console.error('⚠️ Failed to update conversation with scaffolding data:', updateError);
@@ -158,11 +164,11 @@ export async function POST(request: NextRequest) {
       console.log('✓ Conversation updated with scaffolding provenance');
     }
 
-    // 7. Return success response
+    // 7. Return success response (use conversationUuid defined above)
     return NextResponse.json(
       {
         success: true,
-        conversation_id: result.conversation.id,
+        conversation_id: conversationUuid,
         conversation: result.conversation,
         metadata: {
           generation_time_ms: Date.now() - startTime,
