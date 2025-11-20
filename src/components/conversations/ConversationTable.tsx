@@ -262,10 +262,10 @@ export const ConversationTable = React.memo(function ConversationTable({ convers
                 onCheckedChange={handleSelectAll}
               />
             </TableHead>
-            <TableHead className="cursor-pointer" onClick={() => handleSort('conversationId')}>
+            <TableHead className="cursor-pointer" onClick={() => handleSort('title')}>
               <div className="flex items-center gap-2">
-                ID
-                {getSortIcon('conversationId')}
+                Conversation
+                {getSortIcon('title')}
               </div>
             </TableHead>
             <TableHead className="cursor-pointer" onClick={() => handleSort('tier')}>
@@ -323,8 +323,15 @@ export const ConversationTable = React.memo(function ConversationTable({ convers
                     onCheckedChange={() => toggleConversationSelection(conversation.id)}
                   />
                 </TableCell>
-                <TableCell className="font-mono text-sm">
-                  {conversation.conversationId}
+                <TableCell>
+                  <div>
+                    <div className="font-medium">
+                      {conversation.title || 'Untitled Conversation'}
+                    </div>
+                    <div className="text-xs text-muted-foreground font-mono mt-0.5">
+                      {conversation.conversationId}
+                    </div>
+                  </div>
                 </TableCell>
                 <TableCell>
                   <Badge className={tierColors[conversation.tier]}>
