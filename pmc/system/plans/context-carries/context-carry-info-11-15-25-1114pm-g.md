@@ -18,22 +18,6 @@
 3. Verify both raw and enriched downloads work correctly
 4. Deploy fix to production
 
-### SAOL Quick Start
-
-**Location**: `C:\Users\james\Master\BrightHub\brun\train-data\supa-agent-ops\`  
-**Docs**: `saol-agent-quick-start-guide_v1.md`
-
-**Quick Query Example**:
-```javascript
-const { SupabaseAgentOpsLibrary } = require('./supa-agent-ops/dist/index.js');
-const saol = new SupabaseAgentOpsLibrary({
-  supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
-  supabaseKey: process.env.SUPABASE_SERVICE_ROLE_KEY
-});
-
-const result = await saol.executeQuery('SELECT * FROM conversations WHERE conversation_id = $1', ['22c81ac0...']);
-```
-
 ---
 
 ## 🐛 CURRENT BUG: Enriched JSON Download Fails (404 Error)

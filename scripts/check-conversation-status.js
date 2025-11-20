@@ -9,8 +9,8 @@ const supabase = createClient(
 async function checkConversation() {
   const { data, error } = await supabase
     .from('conversations')
-    .select('conversation_id, enrichment_status, enriched_file_path, enriched_file_size, raw_response_path, created_by')
-    .eq('conversation_id', '3bc38a7b-232a-4908-9cf1-271ac2d25102')
+    .select('conversation_id, enrichment_status, enriched_file_path, enriched_file_size, raw_response_path, created_by, processing_status')
+    .eq('conversation_id', '4acf22d3-e8e5-4293-88d6-db03de41675a')
     .single();
 
   if (error) {

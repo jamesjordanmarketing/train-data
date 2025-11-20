@@ -656,6 +656,58 @@ export class ConversationStorageService {
   }
 
   /**
+   * Get download URL for enriched conversation JSON
+   * 
+   * Similar to getRawResponseDownloadUrl but for enriched files.
+   * Enriched files contain predetermined fields populated by the enrichment pipeline.
+   * 
+   * IMPORTANT: This method uses SERVICE_ROLE_KEY credentials to bypass RLS restrictions.
+   * User authentication should be checked at the API route level before calling this.
+   * 
+   * @param conversationId - Conversation UUID
+   * @returns Object with signed URL for enriched file
+   * @throws Error if conversation not found, enrichment not complete, or no enriched file path
+   */
+  async getEnrichedDownloadUrl(
+    conversationId: string
+  ): Promise<ConversationDownloadResponse> {
+    // Fetch conversation record
+    const conversation = await this.getConversation(conversationId);
+    
+    if (!conversation) {
+      throw new Error(`Conversation not found: ${conversationId}`);
+    }
+
+    // Check enrichment status - only allow completed/enriched
+    if (conversation.enrichment_status !== 'completed' && conversation.enrichment_status !== 'enriched') {
+      throw new Error(`Enrichment not complete (status: ${conversation.enrichment_status})`);
+    }
+
+    // Check enriched file path exists
+    if (!conversation.enriched_file_path) {
+      throw new Error(`No enriched file path for conversation: ${conversationId}`);
+    }
+
+    // Generate presigned URL using admin credentials (bypasses RLS)
+    const signedUrl = await this.getPresignedDownloadUrl(conversation.enriched_file_path);
+    
+    // Extract filename from path
+    const filename = conversation.enriched_file_path.split('/').pop() || 'enriched.json';
+    
+    // Calculate expiration timestamp
+    const expiresAt = new Date(Date.now() + 3600 * 1000).toISOString();
+
+    return {
+      conversation_id: conversationId,
+      download_url: signedUrl,
+      filename: filename,
+      file_size: conversation.enriched_file_size,
+      expires_at: expiresAt,
+      expires_in_seconds: 3600,
+    };
+  }
+
+  /**
    * Count conversations by filters
    */
   async countConversations(filters?: StorageConversationFilters): Promise<number> {

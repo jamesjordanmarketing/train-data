@@ -7,7 +7,7 @@ const supabase = createClient(
 );
 
 async function checkFile() {
-  const path = '79c81162-6399-41d4-a968-996e0ca0df0c/3bc38a7b-232a-4908-9cf1-271ac2d25102/enriched.json';
+  const path = '79c81162-6399-41d4-a968-996e0ca0df0c/4acf22d3-e8e5-4293-88d6-db03de41675a/enriched.json';
   
   console.log(`Checking if file exists: ${path}`);
   
