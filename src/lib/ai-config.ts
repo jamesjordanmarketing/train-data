@@ -75,7 +75,7 @@ export const AI_CONFIG: AIConfig & {
   
   // Model configuration
   model: process.env.ANTHROPIC_MODEL || 'claude-3-5-sonnet-20241022',
-  maxTokens: 4096,
+  maxTokens: 24576,
   temperature: 0.7,
   
   // Model tier configurations
