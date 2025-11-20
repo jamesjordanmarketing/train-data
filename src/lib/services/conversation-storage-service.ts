@@ -221,7 +221,14 @@ export class ConversationStorageService {
         reviewed_at,
         review_notes,
         expires_at,
-        is_active
+        is_active,
+        enrichment_status,
+        validation_report,
+        enriched_file_path,
+        enriched_file_size,
+        enriched_at,
+        enrichment_version,
+        enrichment_error
       `)
       .eq('conversation_id', conversationId)
       .single();
