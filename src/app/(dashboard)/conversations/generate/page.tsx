@@ -141,6 +141,25 @@ export default function GeneratePage() {
       setProgress(95);
       setStatus('saving');
 
+      // Trigger enrichment pipeline in separate API call
+      // This ensures enrichment runs in its own serverless function with full execution time
+      if (data.conversation?.conversation_id) {
+        fetch(`/api/conversations/${data.conversation.conversation_id}/enrich`, {
+          method: 'POST'
+        })
+          .then(enrichRes => enrichRes.json())
+          .then(enrichData => {
+            if (enrichData.success) {
+              console.log('Enrichment completed:', enrichData.final_status);
+            } else {
+              console.error('Enrichment failed:', enrichData.error);
+            }
+          })
+          .catch(err => {
+            console.error('Failed to trigger enrichment:', err);
+          });
+      }
+
       setTimeout(() => {
         setProgress(100);
         setStatus('complete');

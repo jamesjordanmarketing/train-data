@@ -216,29 +216,10 @@ export class ConversationGenerationService {
 
       console.log(`[${generationId}] ✅ Raw response stored at ${rawStorageResult.rawPath}`);
 
-      // ENRICHMENT PIPELINE: Trigger enrichment pipeline (non-blocking)
-      if (rawStorageResult.success) {
-        console.log(`[${generationId}] 🚀 Triggering enrichment pipeline...`);
-        
-        // Import orchestrator dynamically to avoid circular dependencies
-        import('./enrichment-pipeline-orchestrator').then(({ getPipelineOrchestrator }) => {
-          const orchestrator = getPipelineOrchestrator();
-          orchestrator
-            .runPipeline(generationId, params.userId)
-            .then(result => {
-              if (result.success) {
-                console.log(`[${generationId}] ✅ Enrichment pipeline completed (status: ${result.finalStatus})`);
-              } else {
-                console.error(`[${generationId}] ❌ Enrichment pipeline failed: ${result.error}`);
-              }
-            })
-            .catch(error => {
-              console.error(`[${generationId}] ❌ Enrichment pipeline threw error:`, error);
-            });
-        }).catch(error => {
-          console.error(`[${generationId}] ❌ Failed to load enrichment orchestrator:`, error);
-        });
-      }
+      // ENRICHMENT PIPELINE: Now triggered separately via /api/conversations/[id]/enrich
+      // This ensures enrichment runs in its own serverless function invocation with full execution time
+      // Fire-and-forget async enrichment doesn't work in Vercel serverless (gets killed after HTTP response)
+      console.log(`[${generationId}] ℹ️ Enrichment will be triggered by client after generation completes`);
 
       // TIER 3: Parse and store final version (NEW)
       console.log(`[${generationId}] Step 4: Parsing and storing final version...`);
