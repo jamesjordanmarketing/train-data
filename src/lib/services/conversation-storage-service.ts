@@ -829,6 +829,7 @@ export class ConversationStorageService {
         raw_response_size: rawSize,
         raw_stored_at: new Date().toISOString(),
         processing_status: 'raw_stored',  // Mark as "raw stored, not yet parsed"
+        enrichment_status: 'not_started', // Initial enrichment status
         status: 'pending_review',  // Default status
         created_by: userId,
         is_active: true,
