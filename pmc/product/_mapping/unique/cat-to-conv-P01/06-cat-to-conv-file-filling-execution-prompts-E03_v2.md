@@ -1082,5 +1082,3 @@ These are NOT required for completion but could be added later:
 - No console errors
 - User can download both raw and enriched JSON
 - Validation reports display correctly
-
-

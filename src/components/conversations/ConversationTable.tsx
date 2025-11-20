@@ -31,13 +31,17 @@ import {
   Check,
   X
 } from 'lucide-react';
-import { Conversation } from '@/lib/types/conversations';
+import { Conversation, StorageConversation } from '@/lib/types/conversations';
 import { useUpdateConversation, useDeleteConversation } from '@/hooks/use-conversations';
 import { useConversationStore } from '@/stores/conversation-store';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { TableSkeleton } from '@/components/ui/skeletons';
 import { useTableKeyboardNavigation } from './useTableKeyboardNavigation';
+import { ConversationActions } from './conversation-actions';
+
+// Type that includes both legacy and storage fields for compatibility
+type ConversationWithEnrichment = Conversation & Partial<Pick<StorageConversation, 'enrichment_status' | 'raw_response_path' | 'enriched_file_path'>>;
 
 const statusColors = {
   draft: 'bg-gray-100 text-gray-700',
@@ -56,8 +60,18 @@ const tierColors = {
   edge_case: 'bg-orange-100 text-orange-700',
 };
 
+const enrichmentStatusColors = {
+  not_started: 'bg-gray-100 text-gray-700',
+  validation_failed: 'bg-red-100 text-red-700',
+  validated: 'bg-blue-100 text-blue-700',
+  enrichment_in_progress: 'bg-yellow-100 text-yellow-700',
+  enriched: 'bg-green-100 text-green-700',
+  normalization_failed: 'bg-orange-100 text-orange-700',
+  completed: 'bg-green-100 text-green-700',
+};
+
 interface ConversationTableProps {
-  conversations: Conversation[];
+  conversations: ConversationWithEnrichment[];
   isLoading: boolean;
 }
 
@@ -209,6 +223,28 @@ export const ConversationTable = React.memo(function ConversationTable({ convers
     return date.toLocaleDateString();
   };
   
+  const getEnrichmentVariant = (status: string): 'default' | 'secondary' | 'destructive' | 'outline' => {
+    switch (status) {
+      case 'completed':
+      case 'enriched':
+        return 'default';
+      case 'validation_failed':
+      case 'normalization_failed':
+        return 'destructive';
+      case 'enrichment_in_progress':
+        return 'secondary';
+      default:
+        return 'outline';
+    }
+  };
+
+  const formatEnrichmentStatus = (status: string): string => {
+    if (!status || status === 'not_started') return 'Pending';
+    return status
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+  };
+  
   // Loading skeleton
   if (isLoading) {
     return <TableSkeleton rows={10} />;
@@ -250,19 +286,20 @@ export const ConversationTable = React.memo(function ConversationTable({ convers
               </div>
             </TableHead>
             <TableHead>Turns</TableHead>
+            <TableHead>Enrichment</TableHead>
             <TableHead className="cursor-pointer" onClick={() => handleSort('createdAt')}>
               <div className="flex items-center gap-2">
                 Created
                 {getSortIcon('createdAt')}
               </div>
             </TableHead>
-            <TableHead className="w-12"></TableHead>
+            <TableHead className="w-12">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {sortedConversations.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={8} className="h-24 text-center text-muted-foreground">
+              <TableCell colSpan={9} className="h-24 text-center text-muted-foreground">
                 No conversations found
               </TableCell>
             </TableRow>
@@ -308,11 +345,26 @@ export const ConversationTable = React.memo(function ConversationTable({ convers
                   )}
                 </TableCell>
                 <TableCell>{conversation.turnCount}</TableCell>
+                <TableCell>
+                  <Badge 
+                    className={enrichmentStatusColors[conversation.enrichment_status || 'not_started']}
+                    variant={getEnrichmentVariant(conversation.enrichment_status || 'not_started')}
+                  >
+                    {formatEnrichmentStatus(conversation.enrichment_status || 'not_started')}
+                  </Badge>
+                </TableCell>
                 <TableCell className="text-sm text-muted-foreground">
                   {formatDate(conversation.createdAt)}
                 </TableCell>
                 <TableCell onClick={(e) => e.stopPropagation()}>
-                  <DropdownMenu>
+                  <div className="flex items-center gap-2">
+                    <ConversationActions
+                      conversationId={conversation.conversationId}
+                      enrichmentStatus={conversation.enrichment_status || 'not_started'}
+                      hasRawResponse={!!conversation.raw_response_path}
+                      compact={true}
+                    />
+                    <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="sm">
                         <MoreVertical className="h-4 w-4" />
@@ -358,6 +410,7 @@ export const ConversationTable = React.memo(function ConversationTable({ convers
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
+                  </div>
                 </TableCell>
               </TableRow>
             ))

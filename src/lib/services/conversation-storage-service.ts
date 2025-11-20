@@ -27,6 +27,7 @@ import type {
   StorageConversationPagination,
   StorageConversationListResponse,
   ConversationDownloadResponse,
+  EnrichedConversation,
 } from '../types/conversations';
 import { validateConversationJSON, validateAndParseConversationJSON } from '../validators/conversation-schema';
 
@@ -673,6 +674,78 @@ export class ConversationStorageService {
     if (error) throw error;
 
     return count || 0;
+  }
+
+  /**
+   * Store enriched conversation JSON
+   * 
+   * @param conversationId - Conversation ID
+   * @param userId - User ID for file path
+   * @param enrichedData - Enriched conversation data
+   * @returns Storage result with path and size
+   */
+  async storeEnrichedConversation(
+    conversationId: string,
+    userId: string,
+    enrichedData: EnrichedConversation
+  ): Promise<{
+    success: boolean;
+    enrichedPath: string;
+    enrichedSize: number;
+    error?: string;
+  }> {
+    try {
+      const enrichedPath = `${userId}/${conversationId}/enriched.json`;
+
+      // Convert to JSON string (pretty-printed)
+      const enrichedJson = JSON.stringify(enrichedData, null, 2);
+      const enrichedBlob = new Blob([enrichedJson], { type: 'application/json' });
+      const enrichedSize = enrichedBlob.size;
+
+      // Upload to storage
+      const { error: uploadError } = await this.supabase.storage
+        .from('conversation-files')
+        .upload(enrichedPath, enrichedBlob, {
+          contentType: 'application/json',
+          upsert: true
+        });
+
+      if (uploadError) {
+        throw new Error(`Enriched file upload failed: ${uploadError.message}`);
+      }
+
+      // Update database
+      const { error: updateError } = await this.supabase
+        .from('conversations')
+        .update({
+          enriched_file_path: enrichedPath,
+          enriched_file_size: enrichedSize,
+          enriched_at: new Date().toISOString(),
+          enrichment_status: 'enriched'
+        })
+        .eq('conversation_id', conversationId);
+
+      if (updateError) {
+        throw new Error(`Database update failed: ${updateError.message}`);
+      }
+
+      console.log(`[Storage] ✅ Enriched file stored at ${enrichedPath}`);
+
+      return {
+        success: true,
+        enrichedPath,
+        enrichedSize
+      };
+
+    } catch (error) {
+      console.error('[Storage] Enriched storage failed:', error);
+      return {
+        success: false,
+        enrichedPath: '',
+        enrichedSize: 0,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      };
+    }
   }
 
   // ========================================================================

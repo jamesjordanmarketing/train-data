@@ -216,6 +216,30 @@ export class ConversationGenerationService {
 
       console.log(`[${generationId}] ✅ Raw response stored at ${rawStorageResult.rawPath}`);
 
+      // ENRICHMENT PIPELINE: Trigger enrichment pipeline (non-blocking)
+      if (rawStorageResult.success) {
+        console.log(`[${generationId}] 🚀 Triggering enrichment pipeline...`);
+        
+        // Import orchestrator dynamically to avoid circular dependencies
+        import('./enrichment-pipeline-orchestrator').then(({ getPipelineOrchestrator }) => {
+          const orchestrator = getPipelineOrchestrator();
+          orchestrator
+            .runPipeline(generationId, params.userId)
+            .then(result => {
+              if (result.success) {
+                console.log(`[${generationId}] ✅ Enrichment pipeline completed (status: ${result.finalStatus})`);
+              } else {
+                console.error(`[${generationId}] ❌ Enrichment pipeline failed: ${result.error}`);
+              }
+            })
+            .catch(error => {
+              console.error(`[${generationId}] ❌ Enrichment pipeline threw error:`, error);
+            });
+        }).catch(error => {
+          console.error(`[${generationId}] ❌ Failed to load enrichment orchestrator:`, error);
+        });
+      }
+
       // TIER 3: Parse and store final version (NEW)
       console.log(`[${generationId}] Step 4: Parsing and storing final version...`);
       const parseResult = await this.storageService.parseAndStoreFinal({
@@ -231,13 +255,29 @@ export class ConversationGenerationService {
         
         // Return partial success - raw data is saved, parse failed
         const durationMs = Date.now() - startTime;
+        
+        // Create minimal Conversation object with all required fields
+        const failedConversation: Conversation = {
+          id: generationId,
+          title: `Parse Failed: ${generationId}`,
+          status: 'pending_review',
+          persona: params.parameters.persona || 'unknown',
+          emotion: params.parameters.emotion || 'unknown',
+          tier: params.tier,
+          category: [],
+          qualityScore: 0,
+          turns: [],
+          totalTurns: 0,
+          totalTokens: 0,
+          parameters: params.parameters,
+          reviewHistory: [],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          createdBy: params.userId,
+        };
+        
         return {
-          conversation: {
-            id: generationId,
-            status: 'pending_review',
-            processing_status: 'parse_failed',
-            conversation_id: generationId,
-          } as any,
+          conversation: failedConversation,
           success: false,
           error: `Parse failed: ${parseResult.error}. Raw response saved for retry.`,
           metrics: {

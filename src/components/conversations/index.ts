@@ -10,4 +10,6 @@ export { FilterBar } from './FilterBar';
 export { Pagination } from './Pagination';
 export { StatsCards } from './StatsCards';
 export { ConversationPreviewModal } from './ConversationPreviewModal';
+export { ValidationReportDialog } from './validation-report-dialog';
+export { ConversationActions } from './conversation-actions';
 

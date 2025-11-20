@@ -510,6 +510,15 @@ export interface StorageConversation {
   // Retention
   expires_at: string | null;
   is_active: boolean;
+
+  // Enrichment pipeline tracking
+  enrichment_status: 'not_started' | 'validation_failed' | 'validated' | 'enrichment_in_progress' | 'enriched' | 'normalization_failed' | 'completed';
+  validation_report: ValidationResult | null;
+  enriched_file_path: string | null;
+  enriched_file_size: number | null;
+  enriched_at: string | null;
+  enrichment_version: string;
+  enrichment_error: string | null;
 }
 
 /**
@@ -638,5 +647,241 @@ export interface ConversationDownloadResponse {
   file_size: number | null;
   expires_at: string; // ISO timestamp when signed URL expires
   expires_in_seconds: number; // Always 3600 (1 hour)
+}
+
+// ============================================================================
+// ENRICHMENT PIPELINE TYPES
+// ============================================================================
+
+/**
+ * Validation result from ConversationValidationService
+ */
+export interface ValidationResult {
+  isValid: boolean;              // Can enrichment proceed?
+  hasBlockers: boolean;          // Are there blocking errors?
+  hasWarnings: boolean;          // Are there non-blocking warnings?
+  blockers: ValidationIssue[];   // Issues that prevent enrichment
+  warnings: ValidationIssue[];   // Issues that don't prevent enrichment
+  conversationId: string;
+  validatedAt: string;           // ISO 8601 timestamp
+  summary: string;               // Human-readable summary
+}
+
+/**
+ * Individual validation issue (blocker or warning)
+ */
+export interface ValidationIssue {
+  code: string;                  // e.g., "MISSING_REQUIRED_FIELD"
+  severity: 'blocker' | 'warning';
+  field: string;                 // e.g., "turns[2].emotional_context.primary_emotion"
+  message: string;               // Human-readable description
+  suggestion?: string;           // How to fix (optional)
+}
+
+// ============================================================================
+// ENRICHMENT PIPELINE TYPES (Data Enrichment Service)
+// ============================================================================
+
+/**
+ * Enriched conversation structure (Target format for training data)
+ * This is the complete format after enrichment but BEFORE AI analysis fields
+ */
+export interface EnrichedConversation {
+  dataset_metadata: DatasetMetadata;
+  consultant_profile: ConsultantProfile;
+  training_pairs: TrainingPair[];
+}
+
+/**
+ * Dataset-level metadata (top of JSON file)
+ */
+export interface DatasetMetadata {
+  dataset_name: string;           // e.g., "fp_conversation_abc123"
+  version: string;                // "1.0.0"
+  created_date: string;           // ISO 8601 date
+  vertical: string;               // "financial_planning_consultant"
+  consultant_persona: string;     // "Elena Morales, CFP - Pathways Financial Planning"
+  target_use: string;             // "LoRA fine-tuning for emotionally intelligent chatbot"
+  conversation_source: string;    // "synthetic_platform_generated"
+  quality_tier: string;           // Mapped from quality_score: "seed_dataset" | "production" | "experimental"
+  total_conversations: number;    // Always 1 (single conversation per file)
+  total_turns: number;            // From minimal JSON turns.length
+  notes: string;                  // e.g., "Generated via template: X"
+}
+
+/**
+ * Consultant profile (static configuration)
+ */
+export interface ConsultantProfile {
+  name: string;
+  business: string;
+  expertise: string;
+  years_experience: number;
+  core_philosophy: {
+    principle_1: string;
+    principle_2: string;
+    principle_3: string;
+    principle_4: string;
+    principle_5: string;
+  };
+  communication_style: {
+    tone: string;
+    techniques: string[];
+    avoid: string[];
+  };
+}
+
+/**
+ * Individual training pair (one per turn from minimal JSON)
+ */
+export interface TrainingPair {
+  id: string;                     // e.g., "fp_confusion_to_clarity_turn1"
+  conversation_id: string;        // e.g., "fp_confusion_to_clarity"
+  turn_number: number;
+  
+  conversation_metadata: {
+    client_persona: string;       // From minimal JSON
+    client_background: string;    // ENRICHED from personas table or constructed
+    session_context: string;      // From minimal JSON
+    conversation_phase: string;   // From minimal JSON
+    expected_outcome: string;     // From minimal JSON
+  };
+  
+  system_prompt: string;          // ENRICHED from generation_logs or reconstructed
+  conversation_history: ConversationHistoryTurn[];  // ENRICHED (built from previous turns)
+  current_user_input: string;     // From minimal JSON (user content or previous user for assistant turns)
+  
+  emotional_context: {
+    detected_emotions: {
+      primary: string;            // From minimal JSON
+      primary_confidence: number; // ENRICHED (default 0.8)
+      secondary?: string;          // From minimal JSON
+      secondary_confidence?: number; // ENRICHED (default 0.7)
+      intensity: number;          // From minimal JSON
+      valence: string;            // ENRICHED (calculated from primary emotion)
+    };
+  };
+  
+  target_response: string | null; // From minimal JSON (content if role=assistant, else null)
+  
+  training_metadata: {
+    difficulty_level: string;                 // ENRICHED from topic complexity
+    key_learning_objective: string;           // ENRICHED from template
+    demonstrates_skills: string[];            // ENRICHED from template
+    conversation_turn: number;                // From minimal JSON turn_number
+    emotional_progression_target: string;     // ENRICHED from emotional_arc
+    quality_score: number;                    // ENRICHED from conversations table
+    quality_criteria: {                       // ENRICHED (breakdown from quality_score)
+      empathy_score: number;
+      clarity_score: number;
+      appropriateness_score: number;
+      brand_voice_alignment: number;
+    };
+    human_reviewed: boolean;                  // DEFAULT: false
+    reviewer_notes: string | null;            // DEFAULT: null
+    use_as_seed_example: boolean;             // DEFAULT: false
+    generate_variations_count: number;        // DEFAULT: 0
+  };
+}
+
+/**
+ * Conversation history turn (for building context)
+ */
+export interface ConversationHistoryTurn {
+  turn: number;
+  role: 'user' | 'assistant';
+  content: string;
+  emotional_state: {
+    primary: string;
+    secondary?: string;
+    intensity: number;
+  };
+}
+
+/**
+ * Database metadata fetched for enrichment
+ */
+export interface DatabaseEnrichmentMetadata {
+  conversation_id: string;
+  created_at: string;
+  quality_score: number;
+  turn_count: number;
+  persona: {
+    name: string;
+    demographics?: string;
+    financial_background?: string;
+  } | null;
+  emotional_arc: {
+    name: string;
+    starting_emotion: string;
+    ending_emotion: string;
+    transformation_pattern?: string;
+  } | null;
+  training_topic: {
+    name: string;
+    complexity_level?: string;
+  } | null;
+  template: {
+    name: string;
+    code?: string;
+    description?: string;
+    learning_objectives?: string[];
+    skills?: string[];
+  } | null;
+  generation_log: {
+    system_prompt?: string;
+  } | null;
+}
+
+// ============================================================================
+// UI-SPECIFIC TYPES FOR ENRICHMENT PIPELINE
+// ============================================================================
+
+/**
+ * Validation report API response
+ */
+export interface ValidationReportResponse {
+  conversation_id: string;
+  enrichment_status: string;
+  processing_status: string;
+  validation_report: ValidationResult | null;
+  enrichment_error: string | null;
+  timeline: {
+    raw_stored_at: string | null;
+    enriched_at: string | null;
+    last_updated: string | null;
+  };
+  pipeline_stages: PipelineStages;
+}
+
+/**
+ * Pipeline stages status
+ */
+export interface PipelineStages {
+  stage_1_generation: PipelineStage;
+  stage_2_validation: PipelineStage;
+  stage_3_enrichment: PipelineStage;
+  stage_4_normalization: PipelineStage;
+}
+
+/**
+ * Individual pipeline stage
+ */
+export interface PipelineStage {
+  name: string;
+  status: 'pending' | 'in_progress' | 'completed' | 'failed';
+  completed_at: string | null;
+}
+
+/**
+ * Download URL response
+ */
+export interface DownloadUrlResponse {
+  conversation_id: string;
+  download_url: string;
+  filename: string;
+  file_size: number | null;
+  expires_at: string;
+  expires_in_seconds: number;
 }
 
