@@ -161,8 +161,9 @@ export function ConversationActions({
   }
 
   // Full button layout for detail views
+  // Buttons stack vertically on small screens (flex-col sm:flex-row)
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-col sm:flex-row flex-wrap gap-2">
       <Button
         variant="outline"
         size="sm"

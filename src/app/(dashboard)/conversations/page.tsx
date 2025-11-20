@@ -1,27 +1,43 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Download, Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
-import type { StorageConversation } from '@/lib/types/conversations';
+import { ConversationTable } from '@/components/conversations/ConversationTable';
+import type { StorageConversation, Conversation } from '@/lib/types/conversations';
+
+/**
+ * Transform StorageConversation (snake_case from API) to Conversation (camelCase for component)
+ */
+function transformStorageToConversation(storage: StorageConversation): Conversation & Partial<Pick<StorageConversation, 'enrichment_status' | 'raw_response_path' | 'enriched_file_path'>> {
+  return {
+    id: storage.id,
+    conversationId: storage.conversation_id,
+    title: storage.conversation_name || undefined,
+    persona: storage.persona_key || '',
+    emotion: storage.starting_emotion || '',
+    tier: storage.tier,
+    status: storage.status as any, // Status types are compatible
+    category: storage.category ? [storage.category] : [],
+    qualityScore: storage.quality_score || undefined,
+    turnCount: storage.turn_count,
+    totalTokens: 0, // Not stored in StorageConversation
+    parameters: {},
+    reviewHistory: [],
+    retryCount: 0,
+    createdAt: storage.created_at,
+    updatedAt: storage.updated_at,
+    createdBy: storage.created_by || '',
+    // Add enrichment fields for ConversationActions component
+    enrichment_status: storage.enrichment_status,
+    raw_response_path: storage.raw_response_path,
+    enriched_file_path: storage.enriched_file_path,
+  };
+}
 
 export default function ConversationsPage() {
   const [conversations, setConversations] = useState<StorageConversation[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [filters, setFilters] = useState({
     status: 'all',
     tier: 'all',
@@ -32,25 +48,10 @@ export default function ConversationsPage() {
     limit: 25,
     total: 0
   });
-  const [viewingConversation, setViewingConversation] = useState<StorageConversation | null>(null);
-  const [downloadingConversationId, setDownloadingConversationId] = useState<string | null>(null);
 
   useEffect(() => {
     loadConversations();
   }, [filters, pagination.page]);
-
-  // Keyboard shortcut: Cmd/Ctrl+D to download when conversation is selected
-  useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (viewingConversation && (e.metaKey || e.ctrlKey) && e.key === 'd') {
-        e.preventDefault();
-        handleDownloadConversation(viewingConversation.conversation_id);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [viewingConversation]);
 
   async function loadConversations() {
     setLoading(true);
@@ -75,113 +76,15 @@ export default function ConversationsPage() {
     }
   }
 
-  async function updateStatus(conversationId: string, status: string) {
-    try {
-      await fetch(`/api/conversations/${conversationId}/status`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status })
-      });
-
-      loadConversations();
-    } catch (error) {
-      console.error('Failed to update status:', error);
-    }
-  }
-
-  function toggleSelection(id: string) {
-    setSelectedIds(prev =>
-      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
-    );
-  }
-
-  function toggleSelectAll() {
-    if (selectedIds.length === conversations.length) {
-      setSelectedIds([]);
-    } else {
-      setSelectedIds(conversations.map(c => c.id));
-    }
-  }
-
-  /**
-   * Download conversation JSON file
-   * 
-   * Calls API endpoint to generate fresh signed URL, then opens it.
-   * Signed URLs are generated on-demand and expire after 1 hour.
-   */
-  async function handleDownloadConversation(conversationId: string) {
-    try {
-      setDownloadingConversationId(conversationId);
-      console.log(`[Download] Requesting download URL for conversation: ${conversationId}`);
-
-      // Call download API endpoint
-      // Supabase client automatically includes JWT in request
-      const response = await fetch(`/api/conversations/${conversationId}/download`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        console.error('[Download] API error:', error);
-        
-        if (response.status === 401) {
-          toast.error('Authentication Required', {
-            description: 'Please log in to download conversations',
-          });
-          return;
-        }
-        
-        if (response.status === 403) {
-          toast.error('Access Denied', {
-            description: 'You do not have permission to download this conversation',
-          });
-          return;
-        }
-        
-        if (response.status === 404) {
-          toast.error('File Not Available', {
-            description: error.message || 'Conversation file not found',
-          });
-          return;
-        }
-
-        throw new Error(error.message || 'Failed to generate download URL');
-      }
-
-      const downloadInfo = await response.json();
-      console.log('[Download] ✅ Received download URL:', {
-        conversation_id: downloadInfo.conversation_id,
-        filename: downloadInfo.filename,
-        expires_at: downloadInfo.expires_at,
-      });
-
-      // Open signed URL in new tab
-      // URL is valid for 1 hour
-      window.open(downloadInfo.download_url, '_blank');
-
-      toast.success('Download Started', {
-        description: `Downloading ${downloadInfo.filename}`,
-      });
-
-    } catch (error: any) {
-      console.error('[Download] Error:', error);
-      toast.error('Download Failed', {
-        description: error.message || 'Failed to download conversation. Please try again.',
-      });
-    } finally {
-      setDownloadingConversationId(null);
-    }
-  }
+  // Transform conversations for the table component
+  const transformedConversations = conversations.map(transformStorageToConversation);
 
   return (
     <div className="p-6">
       <div className="mb-6 flex justify-between items-start">
         <div>
           <h1 className="text-3xl font-bold">Conversations</h1>
-          <p className="text-muted-foreground">Manage generated training conversations</p>
+          <p className="text-muted-foreground">Manage generated training conversations with enrichment pipeline</p>
         </div>
         <Button 
           onClick={() => window.location.href = '/conversations/generate'}
@@ -232,137 +135,14 @@ export default function ConversationsPage() {
             <SelectItem value="6.0">6.0+ (Fair)</SelectItem>
           </SelectContent>
         </Select>
-
-        {selectedIds.length > 0 && (
-          <Button variant="outline">
-            Export Selected ({selectedIds.length})
-          </Button>
-        )}
       </div>
 
-      {/* Table */}
-      <div className="border rounded-lg">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-12">
-                <Checkbox 
-                  checked={selectedIds.length === conversations.length && conversations.length > 0}
-                  onCheckedChange={toggleSelectAll}
-                />
-              </TableHead>
-              <TableHead>Conversation</TableHead>
-              <TableHead>Tier</TableHead>
-              <TableHead>Quality</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Turns</TableHead>
-              <TableHead>Created</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={8} className="text-center py-8">
-                  Loading...
-                </TableCell>
-              </TableRow>
-            ) : conversations.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={8} className="text-center py-8">
-                  No conversations found
-                </TableCell>
-              </TableRow>
-            ) : (
-              conversations.map(conversation => (
-                <TableRow key={conversation.id}>
-                  <TableCell>
-                    <Checkbox
-                      checked={selectedIds.includes(conversation.id)}
-                      onCheckedChange={() => toggleSelection(conversation.id)}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <div className="font-medium">{conversation.conversation_name || 'Untitled'}</div>
-                    <div className="text-sm text-muted-foreground">{conversation.conversation_id}</div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="outline">{conversation.tier}</Badge>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1">
-                      <span className="font-medium">{conversation.quality_score?.toFixed(1) || 'N/A'}</span>
-                      <span className="text-xs text-muted-foreground">/10.0</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge
-                      variant={
-                        conversation.status === 'approved' ? 'default' :
-                        conversation.status === 'rejected' ? 'destructive' :
-                        'secondary'
-                      }
-                    >
-                      {conversation.status.replace('_', ' ')}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{conversation.turn_count}</TableCell>
-                  <TableCell>
-                    <div className="text-sm">
-                      {new Date(conversation.created_at).toLocaleDateString()}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setViewingConversation(conversation)}
-                      >
-                        View
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={(e) => {
-                          e.stopPropagation(); // Don't trigger row click
-                          handleDownloadConversation(conversation.conversation_id);
-                        }}
-                        disabled={downloadingConversationId === conversation.conversation_id}
-                        title="Download JSON"
-                      >
-                        {downloadingConversationId === conversation.conversation_id ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                        ) : (
-                          <Download className="h-4 w-4" />
-                        )}
-                      </Button>
-                      {conversation.status === 'pending_review' && (
-                        <>
-                          <Button
-                            size="sm"
-                            variant="default"
-                            onClick={() => updateStatus(conversation.conversation_id, 'approved')}
-                          >
-                            Approve
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="destructive"
-                            onClick={() => updateStatus(conversation.conversation_id, 'rejected')}
-                          >
-                            Reject
-                          </Button>
-                        </>
-                      )}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+      {/* Conversation Table with Enrichment Features */}
+      <ConversationTable 
+        conversations={transformedConversations}
+        isLoading={loading}
+        compactActions={false}
+      />
 
       {/* Pagination */}
       <div className="mt-4 flex items-center justify-between">
@@ -386,120 +166,6 @@ export default function ConversationsPage() {
           </Button>
         </div>
       </div>
-
-      {/* View Conversation Dialog */}
-      {viewingConversation && (
-        <Dialog open={!!viewingConversation} onOpenChange={() => setViewingConversation(null)}>
-          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>{viewingConversation.conversation_name || 'Conversation Details'}</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span className="font-medium">ID:</span> {viewingConversation.conversation_id}
-                </div>
-                <div>
-                  <span className="font-medium">Tier:</span> {viewingConversation.tier}
-                </div>
-                <div>
-                  <span className="font-medium">Quality Score:</span> {viewingConversation.quality_score?.toFixed(1) || 'N/A'}/10.0
-                </div>
-                <div>
-                  <span className="font-medium">Turn Count:</span> {viewingConversation.turn_count}
-                </div>
-                <div>
-                  <span className="font-medium">Starting Emotion:</span> {viewingConversation.starting_emotion || 'N/A'}
-                </div>
-                <div>
-                  <span className="font-medium">Ending Emotion:</span> {viewingConversation.ending_emotion || 'N/A'}
-                </div>
-                <div>
-                  <span className="font-medium">Persona:</span> {viewingConversation.persona_key || 'N/A'}
-                </div>
-                <div>
-                  <span className="font-medium">Status:</span> {viewingConversation.status}
-                </div>
-                <div>
-                  <span className="font-medium">Processing Status:</span> {viewingConversation.processing_status}
-                </div>
-                <div>
-                  <span className="font-medium">Created:</span> {new Date(viewingConversation.created_at).toLocaleString()}
-                </div>
-                {viewingConversation.reviewed_by && (
-                  <>
-                    <div>
-                      <span className="font-medium">Reviewed By:</span> {viewingConversation.reviewed_by}
-                    </div>
-                    <div>
-                      <span className="font-medium">Reviewed At:</span> {viewingConversation.reviewed_at ? new Date(viewingConversation.reviewed_at).toLocaleString() : 'N/A'}
-                    </div>
-                  </>
-                )}
-              </div>
-
-              {viewingConversation.review_notes && (
-                <div>
-                  <span className="font-medium">Review Notes:</span>
-                  <p className="mt-1 text-sm text-muted-foreground">{viewingConversation.review_notes}</p>
-                </div>
-              )}
-
-              {viewingConversation.description && (
-                <div>
-                  <span className="font-medium">Description:</span>
-                  <p className="mt-1 text-sm text-muted-foreground">{viewingConversation.description}</p>
-                </div>
-              )}
-
-              <div className="flex gap-2">
-                {/* Download Button - Generates fresh signed URL on-demand */}
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => handleDownloadConversation(viewingConversation.conversation_id)}
-                  disabled={downloadingConversationId === viewingConversation.conversation_id}
-                  title="Download conversation JSON file"
-                >
-                  {downloadingConversationId === viewingConversation.conversation_id ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Generating...
-                    </>
-                  ) : (
-                    <>
-                      <Download className="mr-2 h-4 w-4" />
-                      Download JSON
-                    </>
-                  )}
-                </Button>
-                {viewingConversation.status === 'pending_review' && (
-                  <>
-                    <Button
-                      variant="default"
-                      onClick={() => {
-                        updateStatus(viewingConversation.conversation_id, 'approved');
-                        setViewingConversation(null);
-                      }}
-                    >
-                      Approve
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      onClick={() => {
-                        updateStatus(viewingConversation.conversation_id, 'rejected');
-                        setViewingConversation(null);
-                      }}
-                    >
-                      Reject
-                    </Button>
-                  </>
-                )}
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
     </div>
   );
 }

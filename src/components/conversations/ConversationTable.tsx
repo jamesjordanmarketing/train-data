@@ -73,9 +73,10 @@ const enrichmentStatusColors = {
 interface ConversationTableProps {
   conversations: ConversationWithEnrichment[];
   isLoading: boolean;
+  compactActions?: boolean; // If true, show actions in dropdown; if false, show full buttons
 }
 
-export const ConversationTable = React.memo(function ConversationTable({ conversations, isLoading }: ConversationTableProps) {
+export const ConversationTable = React.memo(function ConversationTable({ conversations, isLoading, compactActions = true }: ConversationTableProps) {
   const { 
     selectedConversationIds, 
     toggleConversationSelection,
@@ -357,12 +358,12 @@ export const ConversationTable = React.memo(function ConversationTable({ convers
                   {formatDate(conversation.createdAt)}
                 </TableCell>
                 <TableCell onClick={(e) => e.stopPropagation()}>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2 justify-end">
                     <ConversationActions
                       conversationId={conversation.conversationId}
                       enrichmentStatus={conversation.enrichment_status || 'not_started'}
                       hasRawResponse={!!conversation.raw_response_path}
-                      compact={true}
+                      compact={compactActions}
                     />
                     <DropdownMenu>
                     <DropdownMenuTrigger asChild>
