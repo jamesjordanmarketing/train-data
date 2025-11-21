@@ -169,6 +169,325 @@ Stage 5: Storage         → Save enriched JSON to storage
 
 ---
 
+## 💾 JSON Storage Architecture
+
+### Overview: Three Types of JSON Files
+
+The system stores **three distinct JSON files** for each conversation, representing different stages of the processing lifecycle. All files are stored as blobs in Supabase Storage, with metadata tracked in the PostgreSQL database.
+
+### Storage Pattern Details
+
+#### 1. **Raw JSON** (Claude API Response - Zero Data Loss)
+
+**Purpose**: Stores the exact response from Claude API before any parsing or validation. Enables debugging, retry logic, and guarantees zero data loss even if Claude returns malformed JSON.
+
+**Storage Location**:
+- **Bucket**: `conversation-files`
+- **Path Pattern**: `raw/{userId}/{conversationId}.json`
+- **Example Path**: `raw/00000000-0000-0000-0000-000000000000/8d8e2e10-f513-4bcd-9df3-cd260f6bc3aa.json`
+
+**Database Fields** (in `conversations` table):
+```sql
+raw_response_path        TEXT          -- Storage path (NOT URL)
+raw_response_size        BIGINT        -- File size in bytes
+raw_stored_at            TIMESTAMPTZ   -- When raw file was stored
+raw_response_url         TEXT          -- DEPRECATED - DO NOT USE
+```
+
+**Stored By**: `ConversationStorageService.storeRawResponse()` (lines 834-900)
+
+**Lifecycle Stage**: Immediately after Claude API call, before any validation
+
+**Initial Status Set**: `enrichment_status = 'not_started'`
+
+**Key Characteristics**:
+- May contain invalid JSON (stored anyway for debugging)
+- Stored BEFORE parsing attempts
+- Never deleted (permanent record)
+- Used for parse retries if initial parse fails
+
+---
+
+#### 2. **Enriched JSON** (Validated + Predetermined Fields Populated)
+
+**Purpose**: Enhanced version of the conversation with all predetermined fields populated by the 5-stage enrichment pipeline. Includes quality scores, emotional analysis, validation reports, and normalized data. This is the "high-quality" version ready for fine-tuning.
+
+**Storage Location**:
+- **Bucket**: `conversation-files`
+- **Path Pattern**: `{userId}/{conversationId}/enriched.json`
+- **Example Path**: `00000000-0000-0000-0000-000000000000/8d8e2e10-f513-4bcd-9df3-cd260f6bc3aa/enriched.json`
+
+**Database Fields** (in `conversations` table):
+```sql
+enriched_file_path       TEXT          -- Storage path to enriched.json
+enriched_file_size       BIGINT        -- File size in bytes
+enriched_at              TIMESTAMPTZ   -- When enrichment completed
+enrichment_version       VARCHAR(20)   -- Pipeline version (e.g., 'v1.0')
+enrichment_status        VARCHAR(50)   -- Current pipeline stage (see below)
+enrichment_error         TEXT          -- Error message if enrichment failed
+validation_report        JSONB         -- Validation results (blockers/warnings)
+```
+
+**Enrichment Status Values**:
+- `'not_started'` - Initial state after raw storage
+- `'validated'` - Passed validation stage
+- `'enrichment_in_progress'` - Currently enriching
+- `'enriched'` - Enrichment complete, file stored
+- `'completed'` - All stages complete, ready for download
+- `'validation_failed'` - Failed validation, no enriched file created
+- `'normalization_failed'` - Failed normalization
+
+**Stored By**: `ConversationStorageService.storeEnrichedConversation()` (lines 746-830)
+
+**Lifecycle Stage**: After successful completion of 5-stage enrichment pipeline
+
+**File Format**: Pretty-printed JSON with 2-space indentation
+
+**Key Characteristics**:
+- Only created if validation passes
+- Contains predetermined fields populated by AI analysis
+- Includes quality metrics and emotional arc analysis
+- Formatted for human readability
+- This is what users download via "Enhanced JSON" button
+
+---
+
+#### 3. **Final Processed Conversation** (Complete Metadata + Normalized Turns)
+
+**Purpose**: Fully processed conversation with complete metadata, normalized structure, and extracted conversation turns. This is the "master record" used for dashboard display and exports. Also creates normalized `conversation_turns` records.
+
+**Storage Location**:
+- **Bucket**: `conversation-files`
+- **Path Pattern**: `{userId}/{conversationId}/conversation.json`
+- **Example Path**: `00000000-0000-0000-0000-000000000000/8d8e2e10-f513-4bcd-9df3-cd260f6bc3aa/conversation.json`
+
+**Database Fields** (in `conversations` table):
+```sql
+file_path                TEXT          -- Storage path (NOT URL)
+file_size                BIGINT        -- File size in bytes
+storage_bucket           VARCHAR(255)  -- Bucket name (conversation-files)
+storage_path             TEXT          -- Deprecated, use file_path
+file_url                 TEXT          -- DEPRECATED - DO NOT USE
+
+-- Metadata extracted from conversation
+turn_count               INTEGER       -- Number of turns in conversation
+quality_score            DECIMAL       -- Overall quality score
+empathy_score            DECIMAL       -- Empathy rating
+clarity_score            DECIMAL       -- Clarity rating
+appropriateness_score    DECIMAL       -- Appropriateness rating
+brand_voice_alignment    DECIMAL       -- Brand alignment score
+starting_emotion         VARCHAR(100)  -- Initial emotional state
+ending_emotion           VARCHAR(100)  -- Final emotional state
+```
+
+**Stored By**: `ConversationStorageService.createConversation()` (lines 53-150)
+
+**Lifecycle Stage**: Final storage after successful parsing and metadata extraction
+
+**Additional Database Records**: Also creates normalized records in `conversation_turns` table:
+```sql
+CREATE TABLE conversation_turns (
+  id UUID PRIMARY KEY,
+  conversation_id UUID REFERENCES conversations(conversation_id),
+  turn_number INTEGER,
+  role VARCHAR(20),        -- 'user' or 'assistant'
+  content TEXT,
+  token_count INTEGER,
+  word_count INTEGER,
+  char_count INTEGER,
+  created_at TIMESTAMPTZ
+);
+```
+
+**Key Characteristics**:
+- Created during initial conversation generation (not enrichment)
+- Contains full metadata extracted from conversation
+- Enables searchable turn-by-turn records
+- Used for dashboard display and filtering
+
+---
+
+### Storage Access Pattern: On-Demand Signed URLs
+
+**CRITICAL SECURITY NOTE**: The system NEVER stores presigned URLs in the database. URLs are generated on-demand when needed.
+
+**Why?**
+- Supabase signed URLs expire after 1 hour
+- Storing URLs would result in broken links
+- On-demand generation ensures URLs are always valid
+
+**How It Works**:
+
+```typescript
+// ❌ WRONG - Never do this
+const url = await storage.createSignedUrl(path, 3600);
+await supabase.from('conversations').update({ file_url: url }); // Bad!
+
+// ✅ CORRECT - Store path, generate URL on-demand
+await supabase.from('conversations').update({ file_path: path });
+
+// Later, when user requests download:
+const { file_path } = await getConversation(id);
+const signedUrl = await storage.from('bucket').createSignedUrl(file_path, 3600);
+return { downloadUrl: signedUrl };
+```
+
+**Service Methods**:
+- `getPresignedDownloadUrl(path)` - Generic helper for generating signed URLs
+- `getRawResponseDownloadUrl(conversationId)` - For raw JSON downloads
+- `getEnrichedDownloadUrl(conversationId)` - For enriched JSON downloads
+
+**URL Expiration**: 1 hour (3600 seconds)
+
+---
+
+### Lifecycle Diagram
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ 1. GENERATION PHASE                                             │
+│    Claude API → Raw JSON Stored                                 │
+│    Path: raw/{userId}/{conversationId}.json                     │
+│    Status: enrichment_status = 'not_started'                    │
+└────────────────────────┬────────────────────────────────────────┘
+                         │
+                         ↓
+┌─────────────────────────────────────────────────────────────────┐
+│ 2. PARSING PHASE                                                │
+│    Raw JSON → Parse/Validate → Final Conversation JSON          │
+│    Path: {userId}/{conversationId}/conversation.json            │
+│    + Create normalized conversation_turns records               │
+└────────────────────────┬────────────────────────────────────────┘
+                         │
+                         ↓
+┌─────────────────────────────────────────────────────────────────┐
+│ 3. ENRICHMENT PHASE (5 Stages)                                  │
+│    Validation → Normalization → Enrichment → Quality → Storage  │
+│    Path: {userId}/{conversationId}/enriched.json                │
+│    Status: enrichment_status = 'completed'                      │
+└─────────────────────────────────────────────────────────────────┘
+                         │
+                         ↓
+┌─────────────────────────────────────────────────────────────────┐
+│ 4. DOWNLOAD PHASE                                               │
+│    User clicks download → Service generates signed URL          │
+│    - "Raw JSON" → raw response (minimal data)                   │
+│    - "Enhanced JSON" → enriched version (complete metadata)     │
+│    Both URLs valid for 1 hour                                   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### Database Schema Summary
+
+**Primary Table**: `conversations`
+
+**Core Identification**:
+- `id` (UUID) - Primary key, auto-generated
+- `conversation_id` (UUID) - Unique identifier, used in storage paths
+- `created_by` (UUID) - User who created the conversation
+
+**Raw JSON Storage Fields**:
+- `raw_response_path` - Path to raw Claude response
+- `raw_response_size` - Size in bytes
+- `raw_stored_at` - Timestamp
+- ~~`raw_response_url`~~ - DEPRECATED
+
+**Final Conversation Storage Fields**:
+- `file_path` - Path to conversation.json
+- `file_size` - Size in bytes
+- `storage_bucket` - Always 'conversation-files'
+- ~~`file_url`~~ - DEPRECATED
+
+**Enriched JSON Storage Fields**:
+- `enriched_file_path` - Path to enriched.json
+- `enriched_file_size` - Size in bytes
+- `enriched_at` - Timestamp
+- `enrichment_status` - Pipeline stage
+- `enrichment_version` - Pipeline version
+- `enrichment_error` - Error message if failed
+- `validation_report` - JSONB validation results
+
+**Metadata Fields** (extracted from conversation):
+- `conversation_name`, `title`, `description`
+- `turn_count` - Number of conversation turns
+- `quality_score`, `empathy_score`, `clarity_score`, etc.
+- `starting_emotion`, `ending_emotion`
+- `tier`, `status`, `processing_status`
+
+**Related Tables**:
+- `conversation_turns` - Normalized turn-by-turn records
+- `personas` - Referenced by `persona_id`
+- `emotional_arcs` - Referenced by `emotional_arc_id`
+- `training_topics` - Referenced by `training_topic_id`
+
+---
+
+### Example: Complete Storage for One Conversation
+
+**Conversation ID**: `8d8e2e10-f513-4bcd-9df3-cd260f6bc3aa`  
+**User ID**: `00000000-0000-0000-0000-000000000000`
+
+**Three Files Stored**:
+
+1. **Raw JSON**:
+   - Path: `raw/00000000-0000-0000-0000-000000000000/8d8e2e10-f513-4bcd-9df3-cd260f6bc3aa.json`
+   - Size: ~35,000 bytes
+   - Purpose: Original Claude response
+
+2. **Final Conversation**:
+   - Path: `00000000-0000-0000-0000-000000000000/8d8e2e10-f513-4bcd-9df3-cd260f6bc3aa/conversation.json`
+   - Size: ~40,000 bytes
+   - Purpose: Parsed and validated conversation
+
+3. **Enriched JSON**:
+   - Path: `00000000-0000-0000-0000-000000000000/8d8e2e10-f513-4bcd-9df3-cd260f6bc3aa/enriched.json`
+   - Size: ~38,407 bytes
+   - Purpose: AI-enhanced with predetermined fields
+
+**Database Record** (simplified):
+```json
+{
+  "id": "...",
+  "conversation_id": "8d8e2e10-f513-4bcd-9df3-cd260f6bc3aa",
+  "raw_response_path": "raw/00000000.../8d8e2e10.json",
+  "file_path": "00000000.../8d8e2e10.../conversation.json",
+  "enriched_file_path": "00000000.../8d8e2e10.../enriched.json",
+  "enrichment_status": "completed",
+  "turn_count": 12,
+  "quality_score": 8.5
+}
+```
+
+**Plus Normalized Turns** (in `conversation_turns` table):
+```json
+[
+  { "turn_number": 1, "role": "user", "content": "...", ... },
+  { "turn_number": 2, "role": "assistant", "content": "...", ... },
+  ...
+]
+```
+
+---
+
+### Key Takeaways for Next Agent
+
+1. **Three JSON Types**: Raw (original), Final (parsed), Enriched (AI-enhanced)
+2. **Storage Pattern**: Blobs in Supabase Storage, metadata in PostgreSQL
+3. **Path Strategy**: Store paths in DB, generate signed URLs on-demand (never store URLs)
+4. **Two-Layer Auth**: User auth at API, admin credentials at service layer
+5. **Enrichment Pipeline**: Separate workflow that creates enriched version if validation passes
+6. **Download Options**: Users can download either Raw (minimal) or Enhanced (complete) versions
+
+**When debugging storage issues**:
+- Check database for correct path values (not URLs)
+- Verify files exist in Supabase Storage at those paths
+- Confirm enrichment_status matches expected stage
+- Use admin credentials for storage operations (bypass RLS)
+
+---
+
 ## 📁 Important Files
 
 ### Modified This Session
