@@ -1,7 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '../../../../lib/supabase';
+import { createClient } from '@supabase/supabase-js';
 import { documentProcessor } from '../../../../lib/file-processing/document-processor';
 import { ProcessDocumentRequest, ProcessDocumentResponse } from '@/lib/types/upload';
+
+// Create Supabase client with service role key for server-side operations
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://placeholder',
+  process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder',
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  }
+);
 
 export const runtime = 'nodejs';
 export const maxDuration = 300; // 5 minutes max (for large files)

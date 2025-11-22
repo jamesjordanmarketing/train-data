@@ -1,7 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '../../../../lib/supabase'
-import { workflowService } from '../../../../lib/database'
 import { createClient } from '@supabase/supabase-js'
+import { workflowService } from '../../../../lib/database'
+
+// Create Supabase client with service role key for server-side operations
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://placeholder',
+  process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder',
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  }
+);
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'

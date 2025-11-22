@@ -1,5 +1,17 @@
-import { supabase } from './supabase';
+import { createClient } from '@supabase/supabase-js';
 import { Chunk, ChunkDimensions, ChunkRun, PromptTemplate, ChunkExtractionJob, ChunkType } from '../types/chunks';
+
+// Create Supabase client with service role key for server-side operations
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://placeholder',
+  process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder',
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  }
+);
 
 export const chunkService = {
   // Create a new chunk
