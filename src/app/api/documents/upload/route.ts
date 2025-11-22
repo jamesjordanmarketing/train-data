@@ -23,72 +23,6 @@ export const runtime = 'nodejs';
 export const maxDuration = 60; // 60 second timeout
 
 /**
- * Retry helper with exponential backoff
- * @param processUrl - URL to trigger processing
- * @param authHeader - Authorization header
- * @param documentId - Document ID for logging
- * @param maxRetries - Maximum number of retry attempts (default: 3)
- * @returns Promise that resolves when processing is triggered or rejects after all retries fail
- */
-async function triggerProcessingWithRetry(
-  processUrl: string,
-  authHeader: string,
-  documentId: string,
-  maxRetries: number = 3
-): Promise<void> {
-  let lastError: Error | null = null;
-
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      console.log(`[Upload] Processing trigger attempt ${attempt}/${maxRetries} for document ${documentId}`);
-
-      const response = await fetch(processUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': authHeader
-        },
-        body: JSON.stringify({ documentId }),
-        // Add timeout to prevent hanging
-        signal: AbortSignal.timeout(10000) // 10 second timeout per attempt
-      });
-
-      // Check if response is OK
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`HTTP ${response.status}: ${errorText}`);
-      }
-
-      // Parse response to check for success
-      const data = await response.json();
-
-      if (!data.success) {
-        throw new Error(data.error || 'Processing endpoint returned failure');
-      }
-
-      // Success!
-      console.log(`[Upload] Successfully triggered processing for document ${documentId} on attempt ${attempt}`);
-      return;
-
-    } catch (error) {
-      lastError = error instanceof Error ? error : new Error(String(error));
-
-      console.error(`[Upload] Processing trigger attempt ${attempt} failed for document ${documentId}:`, lastError.message);
-
-      // If this isn't the last attempt, wait before retrying (exponential backoff)
-      if (attempt < maxRetries) {
-        const delayMs = Math.min(1000 * Math.pow(2, attempt - 1), 5000); // 1s, 2s, 4s (max 5s)
-        console.log(`[Upload] Retrying in ${delayMs}ms...`);
-        await new Promise(resolve => setTimeout(resolve, delayMs));
-      }
-    }
-  }
-
-  // All retries failed
-  throw new Error(`Failed after ${maxRetries} attempts: ${lastError?.message || 'Unknown error'}`);
-}
-
-/**
  * POST /api/documents/upload
  * Handles document file uploads with metadata
  * 
@@ -269,36 +203,14 @@ export async function POST(request: NextRequest) {
     }
 
     // ================================================
-    // STEP 6: Trigger Background Text Extraction
+    // STEP 6: Note on Processing Trigger
     // ================================================
-    // Note: This is a non-blocking call with retry mechanism and error handling
-    // We don't await it to keep upload response fast, but we track failures
-    const processUrl = `${request.nextUrl.origin}/api/documents/process`;
-
-    console.log(`[Upload] Triggering text extraction for document ${document.id} at ${processUrl}`);
-
-    // Trigger processing with retry mechanism
-    triggerProcessingWithRetry(processUrl, authHeader, document.id).catch(err => {
-      // If all retries fail, update document status to error
-      console.error(`[Upload] Failed to trigger text extraction after retries for document ${document.id}:`, err);
-
-      // Update document to error state with detailed message
-      supabase
-        .from('documents')
-        .update({
-          status: 'error',
-          processing_error: `Failed to start text extraction: ${err.message || 'Processing service unreachable'}. Please retry processing from the dashboard.`,
-          processing_progress: 0
-        })
-        .eq('id', document.id)
-        .then(({ error: updateError }) => {
-          if (updateError) {
-            console.error(`[Upload] Failed to update error status for document ${document.id}:`, updateError);
-          } else {
-            console.log(`[Upload] Document ${document.id} marked as error due to processing trigger failure`);
-          }
-        });
-    });
+    // Processing is now triggered from the client side after upload succeeds
+    // This ensures more reliable processing initiation and better error visibility
+    // The client-side trigger has better retry logic and user feedback
+    // Server-side background trigger removed due to Vercel serverless limitations
+    
+    console.log(`[Upload] Document ${document.id} created successfully. Client will trigger processing.`);
 
     // ================================================
     // STEP 7: Return Success Response

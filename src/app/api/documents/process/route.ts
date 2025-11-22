@@ -32,7 +32,9 @@ export const maxDuration = 300; // 5 minutes max (for large files)
  *   - 500: { success: false, error: string }
  */
 export async function POST(request: NextRequest) {
-  console.log('[ProcessAPI] Received processing request');
+  const startTime = Date.now();
+  console.log('[ProcessAPI] ========== NEW PROCESSING REQUEST ==========');
+  console.log('[ProcessAPI] Timestamp:', new Date().toISOString());
   
   try {
     // ================================================
@@ -121,7 +123,9 @@ export async function POST(request: NextRequest) {
     const result = await documentProcessor.processDocument(documentId);
 
     if (result.success) {
-      console.log(`[ProcessAPI] Processing successful. Extracted ${result.textLength} characters`);
+      const duration = Date.now() - startTime;
+      console.log(`[ProcessAPI] Processing successful. Extracted ${result.textLength} characters in ${duration}ms`);
+      console.log('[ProcessAPI] ========== PROCESSING COMPLETE ==========');
       
       const response: ProcessDocumentResponse = {
         success: true,
@@ -130,7 +134,9 @@ export async function POST(request: NextRequest) {
       
       return NextResponse.json(response, { status: 200 });
     } else {
-      console.error(`[ProcessAPI] Processing failed:`, result.error);
+      const duration = Date.now() - startTime;
+      console.error(`[ProcessAPI] Processing failed after ${duration}ms:`, result.error);
+      console.error('[ProcessAPI] ========== PROCESSING FAILED ==========');
       
       const response: ProcessDocumentResponse = {
         success: false,
@@ -142,7 +148,9 @@ export async function POST(request: NextRequest) {
     }
 
   } catch (error) {
-    console.error('[ProcessAPI] Unexpected error:', error);
+    const duration = Date.now() - startTime;
+    console.error(`[ProcessAPI] Unexpected error after ${duration}ms:`, error);
+    console.error('[ProcessAPI] ========== PROCESSING ERROR ==========');
     
     const response: ProcessDocumentResponse = {
       success: false,

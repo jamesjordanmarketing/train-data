@@ -1,33 +1,27 @@
-# Context Carryover - Chunks Module: Bug Fixes Complete
+# Context Carryover - Chunks Module Bug Fixes Required
 
 **Date:** November 22, 2025  
-**Session:** Bug Fixes Complete - Ready for Testing & Deployment  
-**Status:** ✅ FIXES IMPLEMENTED - TESTING REQUIRED
+**Session:** Diagnostic Complete - Ready for Implementation  
+**Status:** 🔴 BUGS IDENTIFIED - Implementation Required
 
 ---
 
 ## 🎯 Active Development Focus
 
-**PRIMARY TASK**: Test and deploy fixes for chunks-alpha module processing bugs.
+**PRIMARY TASK**: Fix critical bugs in chunks-alpha module preventing document upload and chunk viewing functionality.
 
 **CURRENT STATE**:
-- ✅ **Bug #1 FIXED**: Null supabase client bug (document upload & viewing)
-- ✅ **Bug #2 FIXED**: Stuck "Queued" processing bug (client-side trigger)
-- ✅ Implementation complete with enhanced logging
-- ✅ Code quality verified (no TypeScript/lint errors)
-- ⏳ **Testing required before production deployment**
-- ⏳ **Vercel deployment pending test verification**
+- ✅ Diagnostic complete - root cause identified
+- ✅ Fix specification documented
+- ✅ Database validated as healthy (using SAOL)
+- ✅ Evidence chain complete with code traces
+- 🔴 **Two critical bugs require immediate fixing**
+- 🔴 **Module is 100% non-functional** - blocks all document upload and chunk viewing
 
 **ISSUE SUMMARY**:
-Fixed two critical bugs in chunks module:
-1. **Null Supabase Client**: Server-side imports were using deprecated client → Fixed with direct createClient() calls
-2. **Stuck Processing**: Server-side background trigger was unreliable → Replaced with client-side trigger
+Both bugs stem from the **same root cause**: Server-side API routes and services are importing a deprecated `supabase` client export that returns `null` when code runs on the server.
 
-**NEXT RECOMMENDED FOCUS**: 
-1. Test document upload workflow end-to-end
-2. Verify processing transitions from "Queued" → "Processing" → "Completed"
-3. Deploy to production if tests pass
-4. Monitor logs for 24 hours post-deployment
+**NEXT RECOMMENDED FOCUS**: Implement the fixes documented in `pmc/product/_mapping/unique/cat-to-conv-P01/06-cat-to-conv-chunks-broken-spec_v1.md` to restore chunks module functionality.
 
 ---
 
@@ -47,15 +41,15 @@ Generates high-quality AI training conversations for fine-tuning large language 
 4. **Management Dashboard**: UI for reviewing, downloading, and managing conversations
 5. **Download System**: Export both raw and enriched JSON formats
 
-#### Module 2: Document Chunking (FIXED - TESTING REQUIRED)
+#### Module 2: Document Chunking (BROKEN - REQUIRES FIXING)
 Uploads documents, extracts text, chunks content, and generates AI-powered dimension analysis for training data creation.
 
-**Core Capabilities (RECENTLY FIXED)**:
-1. **Document Upload**: Upload PDF, DOCX, TXT files ✅ FIXED
-2. **Text Extraction**: Extract text from documents ✅ FIXED
+**Core Capabilities (CURRENTLY BROKEN)**:
+1. **Document Upload**: Upload PDF, DOCX, TXT files ❌ BROKEN
+2. **Text Extraction**: Extract text from documents
 3. **Chunk Extraction**: Split documents into chunks
 4. **Dimension Generation**: AI analysis of chunks
-5. **Chunk Dashboard**: View and manage chunks ✅ FIXED
+5. **Chunk Dashboard**: View and manage chunks ❌ BROKEN
 
 **Technology Stack**:
 - Framework: Next.js 14 (App Router)
@@ -219,115 +213,39 @@ Successfully used **Supabase Agent Ops Library (SAOL)** to validate database hea
 
 ---
 
-## 🐛 Bug #3: Stuck "Queued" Processing (FIXED - November 22, 2025 PM)
-
-### Symptoms
-- **User Action**: Upload file successfully
-- **Expected**: Status changes from "Queued" → "Processing" → "Completed" within 30 seconds
-- **Actual**: Document stuck showing "Queued" for 24+ minutes
-- **Logs**: Status API polled repeatedly (20+ times) with no status change
-- **Impact**: Documents never processed, users unable to extract text
-
-### Root Cause
-**Unreliable server-side background processing trigger** in upload endpoint:
-
-```typescript
-// OLD CODE (broken)
-triggerProcessingWithRetry(processUrl, authHeader, document.id).catch(err => {
-  // This runs AFTER upload response is sent (fire-and-forget)
-  // If trigger fails, user never knows
-  // Document stuck in 'uploaded' status forever
-});
-```
-
-**Problems**:
-1. **Vercel Serverless**: Self-invocation via fetch() can timeout/fail
-2. **Fire-and-Forget**: Errors happen after response sent, no user visibility
-3. **No Fallback**: If trigger fails, no retry mechanism from client
-4. **Silent Failure**: User sees "success" but processing never starts
-
-### Solution Implemented
-
-**Client-Side Processing Trigger** (reliable):
-
-```typescript
-// NEW CODE (working)
-// In src/app/(dashboard)/upload/page.tsx
-const documentId = data.document?.id;
-if (documentId) {
-  fetch('/api/documents/process', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
-    body: JSON.stringify({ documentId })
-  }).then(procResponse => {
-    if (procResponse.ok) {
-      console.log(`Processing started for ${documentId}`);
-    } else {
-      toast.warning('Upload succeeded but processing may be delayed');
-    }
-  }).catch(procError => {
-    toast.warning('Processing trigger failed');
-  });
-}
-```
-
-**Benefits**:
-- ✅ Client-side has better error visibility
-- ✅ User sees warnings if processing fails to trigger
-- ✅ Can implement retry logic with user confirmation
-- ✅ Works reliably in serverless environment
-- ✅ Debuggable in browser Network tab
-
-### Files Modified
-1. **`src/app/(dashboard)/upload/page.tsx`** - Added client-side trigger after upload (lines 97-119)
-2. **`src/app/api/documents/upload/route.ts`** - Removed unreliable server-side trigger (removed lines 33-95, 273-302)
-3. **`src/app/api/documents/process/route.ts`** - Enhanced logging for debugging
-
-### Implementation Summary
-See: `STUCK_QUEUED_BUG_FIX_SUMMARY.md` for complete details
-
----
-
 ## 📋 Implementation Checklist
 
-### ✅ Phase 1: Fix Null Supabase Client Bug (COMPLETED)
+### Phase 1: Fix the 3 Files (30-60 minutes)
 
-- [x] **Fix `src/app/api/documents/upload/route.ts`**
-  - [x] Replace `import { supabase } from '../../../../lib/supabase';` with createClient import
-  - [x] Add service role client initialization after imports
-  - [x] Verify no TypeScript errors
-  - [x] Test upload endpoint locally
+- [ ] **Fix `src/app/api/documents/upload/route.ts`**
+  - [ ] Replace `import { supabase } from '../../../../lib/supabase';` with createClient import
+  - [ ] Add service role client initialization after imports
+  - [ ] Verify no TypeScript errors
+  - [ ] Test upload endpoint locally
 
-- [x] **Fix `src/app/api/documents/[id]/route.ts`**
-  - [x] Replace `import { supabase } from '../../../../lib/supabase';` with createClient import
-  - [x] Add service role client initialization after imports
-  - [x] Verify no TypeScript errors
-  - [x] Test GET endpoint locally
+- [ ] **Fix `src/app/api/documents/[id]/route.ts`**
+  - [ ] Replace `import { supabase } from '../../../../lib/supabase';` with createClient import
+  - [ ] Add service role client initialization after imports
+  - [ ] Verify no TypeScript errors
+  - [ ] Test GET endpoint locally
 
-- [x] **Fix `src/lib/chunk-service.ts`**
-  - [x] Replace `import { supabase } from './supabase';` with createClient import
-  - [x] Add service role client initialization after imports
-  - [x] Verify no TypeScript errors
-  - [x] Verify chunk service methods work
+- [ ] **Fix `src/lib/chunk-service.ts`**
+  - [ ] Replace `import { supabase } from './supabase';` with createClient import
+  - [ ] Add service role client initialization after imports
+  - [ ] Verify no TypeScript errors
+  - [ ] Verify chunk service methods work
 
-### ✅ Phase 2: Fix Stuck Processing Bug (COMPLETED)
+### Phase 2: Search for Additional Broken Imports
 
-- [x] Implement client-side processing trigger in `src/app/(dashboard)/upload/page.tsx`
-- [x] Remove unreliable server-side trigger from `src/app/api/documents/upload/route.ts`
-- [x] Enhance logging in `src/app/api/documents/process/route.ts`
-- [x] Verify no TypeScript/lint errors
-- [x] Document fix in `STUCK_QUEUED_BUG_FIX_SUMMARY.md`
+- [ ] Run grep search for other files using broken pattern:
+  ```bash
+  grep -r "from.*lib/supabase" src/app/api/
+  grep -r "from.*lib/supabase" src/lib/
+  ```
+- [ ] Fix any additional files found with same pattern
+- [ ] Verify no TypeScript compilation errors: `npm run build`
 
-### ✅ Phase 3: Code Quality Checks (COMPLETED)
-
-- [x] Run grep search for other files using broken pattern (9 files fixed total)
-- [x] Fix any additional files found with same pattern
-- [x] Verify no TypeScript compilation errors: `npm run build`
-
-### ⏳ Phase 4: Testing (READY TO START)
+### Phase 3: Testing
 
 - [ ] **Upload Test**:
   - [ ] Navigate to https://train-data-three.vercel.app/upload
@@ -349,28 +267,7 @@ See: `STUCK_QUEUED_BUG_FIX_SUMMARY.md` for complete details
   - [ ] Test enrichment pipeline
   - [ ] Test conversation downloads
 
-- [ ] **Processing Progression Test** (NEW - for Bug #3):
-  - [ ] Upload a file
-  - [ ] Verify status shows "Queued" for < 5 seconds
-  - [ ] Verify status changes to "Processing"
-  - [ ] Verify status changes to "Completed" within 60 seconds
-  - [ ] NOT EXPECTED: Status stuck on "Queued" for > 30 seconds
-
-- [ ] **Browser Console Check** (NEW - for Bug #3):
-  - [ ] Open DevTools → Console
-  - [ ] Upload a file
-  - [ ] Verify "[Upload] Triggering processing for document..." appears
-  - [ ] Verify "[Upload] Processing started for..." appears
-  - [ ] No errors in console
-
-- [ ] **Network Tab Check** (NEW - for Bug #3):
-  - [ ] Open DevTools → Network
-  - [ ] Upload a file
-  - [ ] Verify POST to /api/documents/upload (200 OK)
-  - [ ] Verify POST to /api/documents/process (200 OK) immediately after
-  - [ ] Verify GET to /api/documents/status polling every 2 seconds
-
-### ⏳ Phase 5: Deployment (READY TO START)
+### Phase 4: Deployment
 
 - [ ] Commit changes with descriptive message
 - [ ] Push to main branch

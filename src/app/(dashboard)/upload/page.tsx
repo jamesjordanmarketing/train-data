@@ -89,8 +89,38 @@ export default function UploadPage() {
 
           completedCount++;
           
+          // Immediately trigger processing from client side
+          const documentId = data.document?.id;
+          if (documentId) {
+            console.log(`[Upload] Triggering processing for document ${documentId}`);
+            
+            // Trigger processing with fire-and-forget (don't block UI)
+            fetch('/api/documents/process', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({ documentId })
+            }).then(procResponse => {
+              if (procResponse.ok) {
+                console.log(`[Upload] Processing started for ${documentId}`);
+              } else {
+                console.error(`[Upload] Failed to start processing for ${documentId}`);
+                toast.warning(`Upload succeeded but processing may be delayed`, {
+                  description: 'Try refreshing the page if status doesn\'t update'
+                });
+              }
+            }).catch(procError => {
+              console.error(`[Upload] Processing trigger error:`, procError);
+              toast.warning(`Processing trigger failed`, {
+                description: 'Document uploaded but may need manual processing'
+              });
+            });
+          }
+          
           toast.success(`Uploaded: ${file.name}`, {
-            description: 'Text extraction started automatically'
+            description: 'Processing started automatically'
           });
 
         } catch (error) {
