@@ -1,0 +1,385 @@
+[dotenv@17.2.3] injecting env (4) from ..\.env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+[2025-11-21T23:53:25.430Z] INFO: Starting schema introspection {"table":"prompt_templates","transport":"pg"}
+[2025-11-21T23:53:25.666Z] INFO: Schema introspection completed {"tables":1,"executionTimeMs":235}
+{
+  "name": "prompt_templates",
+  "exists": true,
+  "rowCount": 7,
+  "columns": [
+    {
+      "name": "id",
+      "type": "uuid",
+      "nullable": false,
+      "default": "gen_random_uuid()",
+      "isPrimaryKey": true,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "template_name",
+      "type": "character varying",
+      "nullable": false,
+      "default": null,
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "description",
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "category",
+      "type": "character varying",
+      "nullable": true,
+      "default": null,
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "tier",
+      "type": "character varying",
+      "nullable": true,
+      "default": "'template'::character varying",
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "template_text",
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "structure",
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "variables",
+      "type": "jsonb",
+      "nullable": true,
+      "default": null,
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "tone",
+      "type": "character varying",
+      "nullable": true,
+      "default": null,
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "complexity_baseline",
+      "type": "integer",
+      "nullable": true,
+      "default": null,
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "style_notes",
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "example_conversation",
+      "type": "character varying",
+      "nullable": true,
+      "default": null,
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "quality_threshold",
+      "type": "numeric",
+      "nullable": true,
+      "default": null,
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "required_elements",
+      "type": "ARRAY",
+      "nullable": true,
+      "default": null,
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "usage_count",
+      "type": "integer",
+      "nullable": true,
+      "default": "0",
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "rating",
+      "type": "numeric",
+      "nullable": true,
+      "default": "0",
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "success_rate",
+      "type": "numeric",
+      "nullable": true,
+      "default": "0",
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "version",
+      "type": "integer",
+      "nullable": true,
+      "default": "1",
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "is_active",
+      "type": "boolean",
+      "nullable": true,
+      "default": "true",
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "created_at",
+      "type": "timestamp with time zone",
+      "nullable": true,
+      "default": "now()",
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "updated_at",
+      "type": "timestamp with time zone",
+      "nullable": true,
+      "default": "now()",
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "created_by",
+      "type": "uuid",
+      "nullable": true,
+      "default": null,
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "last_modified_by",
+      "type": "uuid",
+      "nullable": true,
+      "default": null,
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "last_modified",
+      "type": "timestamp with time zone",
+      "nullable": true,
+      "default": "now()",
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "emotional_arc_id",
+      "type": "uuid",
+      "nullable": true,
+      "default": null,
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "emotional_arc_type",
+      "type": "character varying",
+      "nullable": true,
+      "default": null,
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "suitable_personas",
+      "type": "ARRAY",
+      "nullable": true,
+      "default": null,
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "suitable_topics",
+      "type": "ARRAY",
+      "nullable": true,
+      "default": null,
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    },
+    {
+      "name": "methodology_principles",
+      "type": "ARRAY",
+      "nullable": true,
+      "default": null,
+      "isPrimaryKey": false,
+      "isForeignKey": false,
+      "foreignKeyTable": null,
+      "foreignKeyColumn": null
+    }
+  ],
+  "indexes": [
+    {
+      "name": "idx_prompt_templates_active",
+      "table": "prompt_templates",
+      "columns": [
+        "is_active"
+      ],
+      "isUnique": false,
+      "isPrimary": false,
+      "indexDef": "CREATE INDEX idx_prompt_templates_active ON public.prompt_templates USING btree (is_active)",
+      "sizeBytes": 16384
+    },
+    {
+      "name": "idx_prompt_templates_arc_type",
+      "table": "prompt_templates",
+      "columns": [
+        "emotional_arc_type"
+      ],
+      "isUnique": false,
+      "isPrimary": false,
+      "indexDef": "CREATE INDEX idx_prompt_templates_arc_type ON public.prompt_templates USING btree (emotional_arc_type)",
+      "sizeBytes": 16384
+    },
+    {
+      "name": "idx_prompt_templates_emotional_arc",
+      "table": "prompt_templates",
+      "columns": [
+        "emotional_arc_id"
+      ],
+      "isUnique": false,
+      "isPrimary": false,
+      "indexDef": "CREATE INDEX idx_prompt_templates_emotional_arc ON public.prompt_templates USING btree (emotional_arc_id)",
+      "sizeBytes": 16384
+    },
+    {
+      "name": "idx_prompt_templates_tier",
+      "table": "prompt_templates",
+      "columns": [
+        "tier"
+      ],
+      "isUnique": false,
+      "isPrimary": false,
+      "indexDef": "CREATE INDEX idx_prompt_templates_tier ON public.prompt_templates USING btree (tier)",
+      "sizeBytes": 16384
+    },
+    {
+      "name": "prompt_templates_pkey",
+      "table": "prompt_templates",
+      "columns": [
+        "id"
+      ],
+      "isUnique": true,
+      "isPrimary": true,
+      "indexDef": "CREATE UNIQUE INDEX prompt_templates_pkey ON public.prompt_templates USING btree (id)",
+      "sizeBytes": 16384
+    },
+    {
+      "name": "prompt_templates_template_name_key",
+      "table": "prompt_templates",
+      "columns": [
+        "template_name"
+      ],
+      "isUnique": true,
+      "isPrimary": false,
+      "indexDef": "CREATE UNIQUE INDEX prompt_templates_template_name_key ON public.prompt_templates USING btree (template_name)",
+      "sizeBytes": 16384
+    }
+  ],
+  "constraints": [
+    {
+      "name": "prompt_templates_pkey",
+      "type": "PRIMARY KEY",
+      "definition": "PRIMARY KEY (id)",
+      "columns": "{id}"
+    },
+    {
+      "name": "prompt_templates_template_name_key",
+      "type": "UNIQUE",
+      "definition": "UNIQUE (template_name)",
+      "columns": "{template_name}"
+    }
+  ],
+  "policies": [],
+  "rlsEnabled": false,
+  "sizeBytes": 237568
+}
