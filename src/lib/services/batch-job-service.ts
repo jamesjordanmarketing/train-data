@@ -56,6 +56,7 @@ export const batchJobService = {
         .from('batch_jobs')
         .insert({
           name: job.name,
+          job_type: 'generation', // Required: type of batch job
           status: job.status || 'queued',
           priority: job.priority || 'normal',
           total_items: items.length,
