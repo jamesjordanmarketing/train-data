@@ -5,10 +5,13 @@
  * Manages batch generation jobs with concurrent processing and error handling.
  */
 
-import { supabase } from '../supabase';
+import { createServerSupabaseAdminClient } from '../supabase-server';
 import type { BatchJob, BatchItem, TierType } from '@/lib/types';
 
 type BatchJobStatus = 'queued' | 'processing' | 'paused' | 'completed' | 'failed' | 'cancelled';
+
+// Create admin client for batch operations
+const supabase = createServerSupabaseAdminClient();
 
 /**
  * Batch Job Service
