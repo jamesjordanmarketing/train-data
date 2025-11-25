@@ -174,15 +174,6 @@ draft → generated → pending_review → approved/rejected/needs_revision
 
 ---
 
-## Supabase Agent Ops Library (SAOL)
-
-**For all Supabase operations use the Supabase Agent Ops Library (SAOL).**
-
-**Library location:** `C:\Users\james\Master\BrightHub\brun\train-data\supa-agent-ops\`  
-**Quick Start Guide:** `C:\Users\james\Master\BrightHub\brun\train-data\supa-agent-ops\saol-agent-quick-start-guide_v1.md`
-
----
-
 ## Type System Reference
 
 ### Core Data Types
@@ -289,8 +280,14 @@ interface QualityMetrics {
 5. **Document** - Note what broke and how fixed
 
 ---
+## Supabase Agent Ops Library (SAOL)
 
-## Quick Reference: Essential Commands
+**For all Supabase operations use the Supabase Agent Ops Library (SAOL).**
+
+**Library location:** `C:\Users\james\Master\BrightHub\brun\train-data\supa-agent-ops\`  
+**Quick Start Guide:** `C:\Users\james\Master\BrightHub\brun\train-data\supa-agent-ops\QUICK_START.md`
+
+### Quick Reference: Essential SAOL Commands
 
 ### Database Operations
 ```bash

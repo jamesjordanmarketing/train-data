@@ -43,6 +43,7 @@ export interface EmotionalArc {
   typical_turn_count_max?: number;
   complexity_baseline?: number;
   tier?: string;
+  conversation_category?: 'core' | 'edge';
   suitable_personas: string[];
   suitable_topics: string[];
   example_conversation_id?: string;

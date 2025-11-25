@@ -1,0 +1,162 @@
+[
+  {
+    "id": "cfcfdc83-100a-4153-a689-105e7998beae",
+    "topic_key": "career_change_income_reduction",
+    "name": "Career Change with Income Reduction",
+    "category": "career",
+    "description": "Planning for career change that involves temporary or permanent income reduction.",
+    "complexity_level": "intermediate"
+  },
+  {
+    "id": "ecb118d1-ed61-4131-a1bd-7c6b30964433",
+    "topic_key": "negotiating_compensation",
+    "name": "Compensation Negotiation Strategy",
+    "category": "career",
+    "description": "Negotiating salary, RSUs, and benefits packages effectively.",
+    "complexity_level": "intermediate"
+  },
+  {
+    "id": "9e5859f7-2345-45c0-bad8-a6b62b762d85",
+    "topic_key": "vacation_vs_debt_payoff",
+    "name": "Vacation Spending vs Debt Payoff",
+    "category": "cash_flow",
+    "description": "Balancing desire for experiences/vacation with debt reduction goals.",
+    "complexity_level": "beginner"
+  },
+  {
+    "id": "e8f15221-e30b-491a-9765-676313ac5e27",
+    "topic_key": "spending_priorities",
+    "name": "Values-Based Spending Decisions",
+    "category": "cash_flow",
+    "description": "Aligning spending with personal values and priorities.",
+    "complexity_level": "beginner"
+  },
+  {
+    "id": "a04a104f-96a6-4d0c-b0ea-5f44f4a2203d",
+    "topic_key": "mortgage_payoff_strategy",
+    "name": "Accelerated Mortgage Payoff",
+    "category": "debt",
+    "description": "Evaluating whether to pay off mortgage early vs invest the difference.",
+    "complexity_level": "intermediate"
+  },
+  {
+    "id": "3c748fe8-0365-42c4-83c3-05482b235317",
+    "topic_key": "refinancing_evaluation",
+    "name": "Mortgage Refinancing Decision",
+    "category": "debt",
+    "description": "Evaluating when refinancing makes sense considering costs and break-even.",
+    "complexity_level": "intermediate"
+  },
+  {
+    "id": "aa8a0197-da37-43b6-a5b6-6ff581c94b61",
+    "topic_key": "grandparent_529",
+    "name": "Grandparent 529 Contributions",
+    "category": "education",
+    "description": "Coordinating education savings when grandparents want to contribute.",
+    "complexity_level": "intermediate"
+  },
+  {
+    "id": "435503ea-a8aa-43d6-979a-e5b3ffad03bd",
+    "topic_key": "student_loan_payoff",
+    "name": "Student Loan Repayment Strategy",
+    "category": "education",
+    "description": "Optimizing student loan repayment vs other financial goals.",
+    "complexity_level": "intermediate"
+  },
+  {
+    "id": "aee7b6c2-42e2-4ef4-8184-be12abe38eb5",
+    "topic_key": "estate_planning_basics",
+    "name": "Essential Estate Planning",
+    "category": "estate",
+    "description": "Getting started with wills, trusts, and beneficiary designations.",
+    "complexity_level": "beginner"
+  },
+  {
+    "id": "a0388d73-5fd4-4efe-9dff-80d153d83c8b",
+    "topic_key": "eldercare_costs",
+    "name": "Planning for Eldercare Expenses",
+    "category": "family",
+    "description": "Anticipating and planning for costs of caring for aging parents.",
+    "complexity_level": "advanced"
+  },
+  {
+    "id": "6ccb9f83-4056-4ac3-90d9-1d213b275de1",
+    "topic_key": "stay_home_parent_finances",
+    "name": "Single Income Family Planning",
+    "category": "family",
+    "description": "Financial planning when one parent stays home with children.",
+    "complexity_level": "intermediate"
+  },
+  {
+    "id": "0cbe618f-411f-44ab-b00c-08ce0f06d4be",
+    "topic_key": "insurance_laddering",
+    "name": "Life Insurance Laddering Strategy",
+    "category": "insurance",
+    "description": "Using multiple term policies with different durations to match changing coverage needs.",
+    "complexity_level": "advanced"
+  },
+  {
+    "id": "9eaa050e-b981-4bbc-82fd-806ba26d5b75",
+    "topic_key": "long_term_care",
+    "name": "Long-Term Care Planning",
+    "category": "insurance",
+    "description": "Evaluating long-term care insurance options and alternative strategies.",
+    "complexity_level": "advanced"
+  },
+  {
+    "id": "663b5a9c-920d-4386-9b6a-8b467d4655d9",
+    "topic_key": "esg_investing",
+    "name": "ESG and Values-Based Investing",
+    "category": "investment",
+    "description": "Incorporating environmental, social, and governance factors into investment decisions.",
+    "complexity_level": "intermediate"
+  },
+  {
+    "id": "0d7584a8-50f5-4a43-8dcd-b9f04d91691c",
+    "topic_key": "investment_fee_structures",
+    "name": "Understanding Investment Fees",
+    "category": "investment",
+    "description": "Decoding advisor fees, fund expenses, and total investment costs.",
+    "complexity_level": "intermediate"
+  },
+  {
+    "id": "e76d5907-e4e1-432c-9a7b-365fda055ee9",
+    "topic_key": "financial_organization",
+    "name": "Financial Document Organization",
+    "category": "organization",
+    "description": "Creating systems for organizing financial accounts, documents, and information.",
+    "complexity_level": "beginner"
+  },
+  {
+    "id": "99d753ea-71fa-4716-ae82-e4dc7cfe2e02",
+    "topic_key": "hiding_financial_problems",
+    "name": "Financial Transparency in Relationships",
+    "category": "relationships",
+    "description": "Addressing hidden financial problems and building transparency with partner.",
+    "complexity_level": "intermediate"
+  },
+  {
+    "id": "37682a4d-ea80-44c0-b7fe-9079a645fa99",
+    "topic_key": "ignored_401k",
+    "name": "Optimizing Neglected 401k",
+    "category": "retirement",
+    "description": "Reviewing and optimizing 401k that has been on autopilot, including fund selection and contribution rate.",
+    "complexity_level": "beginner"
+  },
+  {
+    "id": "c2ae62f4-7164-45f6-a083-14abe5af7b67",
+    "topic_key": "roth_ira_conversion",
+    "name": "Roth IRA Conversion Strategy",
+    "category": "retirement",
+    "description": "Converting traditional IRA to Roth IRA, understanding tax implications, timing strategies, and long-term benefits.",
+    "complexity_level": "advanced"
+  },
+  {
+    "id": "fae4e8b2-fe40-48e8-b626-141308392088",
+    "topic_key": "tax_loss_harvesting",
+    "name": "Tax-Loss Harvesting Strategy",
+    "category": "tax",
+    "description": "Using investment losses to offset gains and reduce tax liability.",
+    "complexity_level": "advanced"
+  }
+]

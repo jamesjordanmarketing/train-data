@@ -342,8 +342,9 @@ From codebase investigation:
 
 Before implementing the UI, the next agent must clarify with the user:
 
-1. **Terminology:** What should we call "core" vs "edge"?
-   - Options: "standard/edge", "typical/boundary", "base/test", "foundational/validation"
+1. **Terminology:** What should we call the grouping of  "core" & "edge"?
+   - Meaning I would like a node name for this grouping. I don't want to call them "conversation types" because that is already used for something else.  
+   - Options: Suggest some options.
    
 2. **Database Schema:** Should we add a column to differentiate? Where?
    - Option A: Add `conversation_category` to `emotional_arcs` table (values: 'standard', 'edge_case')
@@ -1171,13 +1172,12 @@ Update main navigation to include "Bulk Generator" link:
 **Status:** AWAITING USER CLARIFICATION
 
 **Questions for User:**
-1. **Terminology:** What should we call "core" vs "edge"?
-   - Suggested alternatives: "standard/edge", "typical/boundary", "base/test", "foundational/validation"
+1. **Terminology:** What should we call "core" | "edge" collectively?
+   - Suggested alternatives: "conversation_category". Name a few other options.
    
 2. **Database Schema:** Which column differentiates core from edge?
    - Option A: Use existing `arc_type` on `emotional_arcs` table
    - Option B: Add new `conversation_category` column
-   - Option C: Add boolean `is_edge_case` column
    
 3. **Edge Case Logic:** Is user's hypothesis correct?
    - User believes: "Edge arc + any persona + any topic = edge conversation"
@@ -1282,20 +1282,16 @@ Update main navigation to include "Bulk Generator" link:
 
 > "Before I implement the bulk generator UI, I need clarification on edge case infrastructure:
 > 
-> **1. Terminology:** You mentioned that 'conversation type' is already used for 'INTENT'. What should we call the distinction between regular conversations and edge case conversations?
->    - Suggested options: 'standard/edge', 'typical/boundary', 'base/test', 'foundational/validation'
->    - Or do you have a preference?
-> 
-> **2. Database Column:** Which column should differentiate core from edge?
+> **1. Database Column:** Which column should differentiate core from edge?
 >    - Option A: Use existing `arc_type` column on `emotional_arcs` table
 >    - Option B: Add new column like `conversation_category`
 >    - Option C: Add boolean `is_edge_case` to arcs
 > 
-> **3. Edge Case Logic Confirmation:** You hypothesized that 'extreme emotional arcs + any persona + any topic = edge conversation'. Is this correct?
+> **2. Edge Case Logic Confirmation:** You hypothesized that 'extreme emotional arcs + any persona + any topic = edge conversation'. Is this correct?
 >    - If YES: We only need to identify/create edge case arcs
 >    - If NO: Do we also need to define edge case topics?
 > 
-> **4. Existing Edge Arcs:** Do edge case emotional arcs already exist in the database, or do I need to create them?
+> **3. Existing Edge Arcs:** Do edge case emotional arcs already exist in the database, or do I need to create them?
 >    - I'll query the database to check
 >    - If they don't exist, please provide 10 edge case arc names/descriptions to create"
 

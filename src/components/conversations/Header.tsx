@@ -18,8 +18,11 @@ export function Header() {
   const currentView = useConversationStore((state) => state.currentView);
   const setCurrentView = useConversationStore((state) => state.setCurrentView);
   
-  const navigationItems = [
+  type ViewType = 'dashboard' | 'bulk-generator' | 'templates' | 'review-queue';
+  
+  const navigationItems: { id: ViewType; label: string; href: string }[] = [
     { id: 'dashboard', label: 'Dashboard', href: '/conversations' },
+    { id: 'bulk-generator', label: 'Bulk Generator', href: '/bulk-generator' },
     { id: 'templates', label: 'Templates', href: '/conversations/templates' },
     { id: 'review-queue', label: 'Review Queue', href: '/conversations/review-queue' },
   ];
@@ -43,7 +46,7 @@ export function Header() {
                     ? 'font-medium text-foreground' 
                     : 'text-muted-foreground hover:text-foreground transition-colors'
                 }
-                onClick={() => setCurrentView(item.id as any)}
+                onClick={() => setCurrentView(item.id)}
               >
                 {item.label}
               </Link>

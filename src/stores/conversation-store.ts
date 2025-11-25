@@ -15,7 +15,7 @@ interface ConversationState {
   selectedConversationIds: string[];
   filterConfig: FilterConfig;
   sidebarCollapsed: boolean;
-  currentView: 'dashboard' | 'templates' | 'scenarios' | 'edge-cases' | 'review-queue' | 'settings';
+  currentView: 'dashboard' | 'bulk-generator' | 'templates' | 'scenarios' | 'edge-cases' | 'review-queue' | 'settings';
   
   // ============================================================================
   // Modal State (session-specific, not persisted)
