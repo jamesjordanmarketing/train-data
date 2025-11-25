@@ -342,10 +342,11 @@ export class BatchGenerationService {
     try {
       const supabase = await createClient();
       
-      // First, get the emotional arc type from the emotional arc ID
+      // First, get the emotional arc key from the emotional arc ID
+      // Note: The column is 'arc_key' in emotional_arcs, which maps to 'emotional_arc_type' in prompt_templates
       const { data: arcData, error: arcError } = await supabase
         .from('emotional_arcs')
-        .select('arc_type')
+        .select('arc_key')
         .eq('id', emotionalArcId)
         .single();
       
@@ -369,8 +370,9 @@ export class BatchGenerationService {
         return fallbackData.id;
       }
       
-      const arcType = arcData.arc_type;
-      console.log(`[BatchGeneration] Looking for template with arc_type=${arcType}, tier=${tier}`);
+      // arc_key from emotional_arcs maps to emotional_arc_type in prompt_templates
+      const arcType = arcData.arc_key;
+      console.log(`[BatchGeneration] Looking for template with emotional_arc_type=${arcType}, tier=${tier}`);
       
       // Now find a matching template
       const { data: templateData, error: templateError } = await supabase
