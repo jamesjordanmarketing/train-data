@@ -65,6 +65,38 @@ etc.
 
 This is scary too, because it is so broad.
 
+Brainstorming...
+I am thinking what about a 
+
+
+1. Perhaps a question up front, what is your purpose for this set of data?
+We could have a "greatest" hits of most productive uses of LoRA training data. The question(s) would have to be carefully crafted.  We don't want answers like "train my model". That is not useful information. Maybe the question is: "what specifically do you expect this data set to do for you" or "What is your primary thesis for the type of LLM training you want to do" or "on which one of these thrusts do you want your model to be trained? Options: [emotional arc/intelligence, the facts of your business, your business philosophy, your business unique value, your customer service skill levels wanted, et al., free form entry]
+
+
 
 Validate your solution hypotheses against both the codebase here: `C:\Users\james\Master\BrightHub\brun\train-data\src`
 and the Supabase data and schema.
+
+## Supabase Agent Ops Library (SAOL)
+
+**CRITICAL: You MUST use the Supabase Agent Ops Library (SAOL) for ALL database operations.**  
+Do not use raw `supabase-js` or other scripts. SAOL is safe, robust, and handles edge cases for you.
+
+**Library Path:** `C:\Users\james\Master\BrightHub\brun\train-data\supa-agent-ops\`  
+**Quick Start:** `C:\Users\james\Master\BrightHub\brun\train-data\supa-agent-ops\QUICK_START.md` (READ THIS FIRST)  
+**Troubleshooting:** `C:\Users\james\Master\BrightHub\brun\train-data\supa-agent-ops\TROUBLESHOOTING.md`
+
+### Key Rules
+1. **Use Service Role Key:** Operations require admin privileges. Ensure `SUPABASE_SERVICE_ROLE_KEY` is loaded.  
+2. **Run Preflight:** Always run `agentPreflight({ table })` before modifying data.  
+3. **No Manual Escaping:** SAOL handles special characters automatically.
+
+### Quick Reference: One-Liner Commands
+
+```bash
+# Query conversations (Safe & Robust)
+node -e "require('dotenv').config({path:'../.env.local'});const saol=require('supa-agent-ops');(async()=>{console.log(await saol.agentQuery({table:'conversations',limit:5}))})();"
+
+# Check schema (Deep Introspection)
+node -e "require('dotenv').config({path:'../.env.local'});const saol=require('supa-agent-ops');(async()=>{console.log(await saol.agentIntrospectSchema({table:'conversations',transport:'pg'}))})();"
+```
