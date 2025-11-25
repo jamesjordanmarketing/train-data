@@ -4,12 +4,20 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ConversationTable } from '@/components/conversations/ConversationTable';
-import type { StorageConversation, Conversation } from '@/lib/types/conversations';
+import type { StorageConversation, Conversation, ConversationStatus } from '@/lib/types/conversations';
 
 /**
  * Transform StorageConversation (snake_case from API) to Conversation (camelCase for component)
  */
 function transformStorageToConversation(storage: StorageConversation): Conversation & Partial<Pick<StorageConversation, 'enrichment_status' | 'raw_response_path' | 'enriched_file_path'>> {
+  // Map StorageConversation status to ConversationStatus
+  const statusMap: Record<StorageConversation['status'], ConversationStatus> = {
+    'pending_review': 'pending_review',
+    'approved': 'approved',
+    'rejected': 'rejected',
+    'archived': 'none',
+  };
+
   return {
     id: storage.id,
     conversationId: storage.conversation_id,
@@ -17,7 +25,7 @@ function transformStorageToConversation(storage: StorageConversation): Conversat
     persona: storage.persona_key || '',
     emotion: storage.starting_emotion || '',
     tier: storage.tier,
-    status: storage.status as any, // Status types are compatible
+    status: statusMap[storage.status],
     category: storage.category ? [storage.category] : [],
     qualityScore: storage.quality_score || undefined,
     turnCount: storage.turn_count,
@@ -86,15 +94,27 @@ export default function ConversationsPage() {
           <h1 className="text-3xl font-bold">Conversations</h1>
           <p className="text-muted-foreground">Manage generated training conversations with enrichment pipeline</p>
         </div>
-        <Button 
-          onClick={() => window.location.href = '/conversations/generate'}
-          className="bg-green-600 hover:bg-green-700"
-        >
-          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-          Generate New
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            onClick={() => window.location.href = '/bulk-generator'}
+            variant="outline"
+            className="bg-blue-50 hover:bg-blue-100 border-blue-200"
+          >
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7h16M4 12h16M4 17h16" />
+            </svg>
+            Bulk Generator
+          </Button>
+          <Button 
+            onClick={() => window.location.href = '/conversations/generate'}
+            className="bg-green-600 hover:bg-green-700"
+          >
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Generate New
+          </Button>
+        </div>
       </div>
 
       {/* Filters */}
