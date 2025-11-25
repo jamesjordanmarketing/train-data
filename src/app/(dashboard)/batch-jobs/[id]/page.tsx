@@ -17,7 +17,8 @@ import {
   Ban,
   ArrowLeft,
   RefreshCw,
-  AlertTriangle
+  AlertTriangle,
+  Sparkles
 } from 'lucide-react';
 
 interface BatchJobStatus {
@@ -44,6 +45,15 @@ export default function BatchJobPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
+  
+  // Enrichment state
+  const [enriching, setEnriching] = useState(false);
+  const [enrichResult, setEnrichResult] = useState<{
+    successful: number;
+    failed: number;
+    skipped: number;
+    total: number;
+  } | null>(null);
 
   // Fetch status
   const fetchStatus = useCallback(async () => {
@@ -98,6 +108,53 @@ export default function BatchJobPage() {
       setError(err instanceof Error ? err.message : `Failed to ${action} job`);
     } finally {
       setActionLoading(false);
+    }
+  };
+
+  // Bulk enrich handler
+  const handleEnrichAll = async () => {
+    if (!status || status.status !== 'completed') return;
+    
+    try {
+      setEnriching(true);
+      setEnrichResult(null);
+      
+      // Get all successful conversation IDs from batch items
+      const response = await fetch(`/api/conversations/batch/${jobId}/items?status=completed`);
+      const items = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(items.error || 'Failed to fetch batch items');
+      }
+      
+      const conversationIds = items.data
+        ?.map((item: { conversation_id: string | null }) => item.conversation_id)
+        .filter(Boolean) || [];
+      
+      if (conversationIds.length === 0) {
+        setEnrichResult({ successful: 0, failed: 0, skipped: 0, total: 0 });
+        return;
+      }
+      
+      // Trigger bulk enrichment
+      const enrichResponse = await fetch('/api/conversations/bulk-enrich', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ conversationIds }),
+      });
+      
+      const enrichData = await enrichResponse.json();
+      
+      if (!enrichResponse.ok) {
+        throw new Error(enrichData.error || 'Enrichment failed');
+      }
+      
+      setEnrichResult(enrichData.summary);
+      
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Enrichment failed');
+    } finally {
+      setEnriching(false);
     }
   };
 
@@ -356,8 +413,38 @@ export default function BatchJobPage() {
               {status.progress.failed > 0 && ` (${status.progress.failed} failed)`}
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
+            {/* Enrichment Result */}
+            {enrichResult && (
+              <div className="p-3 rounded-md bg-white dark:bg-slate-900 border">
+                <p className="text-sm font-medium mb-1">Enrichment Complete</p>
+                <p className="text-xs text-muted-foreground">
+                  {enrichResult.successful} enriched, {enrichResult.skipped} skipped, {enrichResult.failed} failed
+                </p>
+              </div>
+            )}
+            
             <div className="flex flex-wrap gap-3">
+              {/* Enrich All Button */}
+              {!enrichResult && status.progress.successful > 0 && (
+                <Button 
+                  variant="secondary"
+                  onClick={handleEnrichAll}
+                  disabled={enriching}
+                >
+                  {enriching ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Enriching...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="mr-2 h-4 w-4" />
+                      Enrich All
+                    </>
+                  )}
+                </Button>
+              )}
               <Button onClick={() => router.push('/conversations')}>
                 View Conversations
               </Button>
