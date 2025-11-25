@@ -10,6 +10,7 @@
  * - Pause/Resume/Cancel controls
  * - Automatic retry on failures
  * - Cost estimation
+ * - Auto-selection of templates when nil UUID is provided
  * 
  * @module batch-generation-service
  */
@@ -18,7 +19,11 @@ import { randomUUID } from 'crypto';
 import { getConversationGenerationService, type GenerationParams } from './conversation-generation-service';
 import { batchJobService } from './batch-job-service';
 import { conversationService } from './conversation-service';
+import { createClient } from '@/lib/supabase/server';
 import type { TierType } from '@/lib/types';
+
+// Nil UUID used as placeholder when no template is specified
+const NIL_UUID = '00000000-0000-0000-0000-000000000000';
 
 /**
  * Batch generation request parameters
@@ -324,6 +329,90 @@ export class BatchGenerationService {
   }
 
   /**
+   * Auto-select a template based on emotional arc and tier
+   * 
+   * This is used when the bulk generator passes NIL_UUID as templateId.
+   * It queries for an active template matching the emotional arc.
+   * 
+   * @param emotionalArcId - The emotional arc ID from parameters
+   * @param tier - The tier level (template, scenario, edge_case)
+   * @returns A valid template ID or null if none found
+   */
+  private async autoSelectTemplate(emotionalArcId: string, tier: TierType): Promise<string | null> {
+    try {
+      const supabase = await createClient();
+      
+      // First, get the emotional arc type from the emotional arc ID
+      const { data: arcData, error: arcError } = await supabase
+        .from('emotional_arcs')
+        .select('arc_type')
+        .eq('id', emotionalArcId)
+        .single();
+      
+      if (arcError || !arcData) {
+        console.warn(`[BatchGeneration] Could not find emotional arc ${emotionalArcId}:`, arcError);
+        // Fall back to finding any active template for the tier
+        const { data: fallbackData, error: fallbackError } = await supabase
+          .from('prompt_templates')
+          .select('id')
+          .eq('is_active', true)
+          .eq('tier', tier)
+          .limit(1)
+          .single();
+        
+        if (fallbackError || !fallbackData) {
+          console.error(`[BatchGeneration] No active templates found for tier ${tier}`);
+          return null;
+        }
+        
+        console.log(`[BatchGeneration] Using fallback template ${fallbackData.id} for tier ${tier}`);
+        return fallbackData.id;
+      }
+      
+      const arcType = arcData.arc_type;
+      console.log(`[BatchGeneration] Looking for template with arc_type=${arcType}, tier=${tier}`);
+      
+      // Now find a matching template
+      const { data: templateData, error: templateError } = await supabase
+        .from('prompt_templates')
+        .select('id')
+        .eq('is_active', true)
+        .eq('emotional_arc_type', arcType)
+        .eq('tier', tier)
+        .order('rating', { ascending: false })
+        .limit(1)
+        .single();
+      
+      if (templateError || !templateData) {
+        // Try without tier filter
+        const { data: anyTierData, error: anyTierError } = await supabase
+          .from('prompt_templates')
+          .select('id')
+          .eq('is_active', true)
+          .eq('emotional_arc_type', arcType)
+          .order('rating', { ascending: false })
+          .limit(1)
+          .single();
+        
+        if (anyTierError || !anyTierData) {
+          console.warn(`[BatchGeneration] No template found for arc_type=${arcType}`);
+          return null;
+        }
+        
+        console.log(`[BatchGeneration] Auto-selected template ${anyTierData.id} (any tier) for arc ${arcType}`);
+        return anyTierData.id;
+      }
+      
+      console.log(`[BatchGeneration] Auto-selected template ${templateData.id} for arc ${arcType}, tier ${tier}`);
+      return templateData.id;
+      
+    } catch (error) {
+      console.error(`[BatchGeneration] Error auto-selecting template:`, error);
+      return null;
+    }
+  }
+
+  /**
    * Estimate cost and time for batch generation
    * 
    * @param itemCount - Number of conversations to generate
@@ -456,9 +545,30 @@ export class BatchGenerationService {
       // Update item status to processing
       await batchJobService.updateItemStatus(item.id, 'processing');
       
+      // Resolve template ID - auto-select if NIL_UUID was provided
+      let templateId = item.parameters.templateId;
+      
+      if (!templateId || templateId === NIL_UUID) {
+        console.log(`[BatchGeneration] Auto-selecting template for item ${item.id}`);
+        
+        // Try to auto-select based on emotional arc
+        const emotionalArcId = item.parameters.emotional_arc_id;
+        if (emotionalArcId) {
+          const autoSelectedId = await this.autoSelectTemplate(emotionalArcId, item.tier);
+          if (autoSelectedId) {
+            templateId = autoSelectedId;
+            console.log(`[BatchGeneration] Auto-selected template ${templateId} for item ${item.id}`);
+          } else {
+            throw new Error('No suitable template found for the emotional arc. Please ensure templates are configured in the database.');
+          }
+        } else {
+          throw new Error('Cannot auto-select template: no emotional_arc_id provided. Please either provide a valid templateId or include emotional_arc_id in parameters.');
+        }
+      }
+      
       // Generate conversation
       const generationParams: GenerationParams = {
-        templateId: item.parameters.templateId,
+        templateId,
         parameters: item.parameters,
         tier: item.tier,
         userId,

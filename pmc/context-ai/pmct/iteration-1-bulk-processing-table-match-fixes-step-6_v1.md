@@ -258,6 +258,7 @@ COMMENT ON COLUMN batch_jobs.status IS
 4. **Expected result:** Job creates successfully, redirects to `/batch-jobs/[id]`
 5. **Verify:** No `batch_jobs_status_check` error in logs
 
+
 ### Verification Query
 
 After a successful generation, run via SAOL:
@@ -273,6 +274,74 @@ const result = await saol.agentQuery({
 });
 console.log('Queued jobs:', result.data);
 ```
+
+---
+
+## 7. Additional Fix: Template Auto-Selection (November 25, 2025)
+
+### 7.1 Issue Discovered
+
+After applying the status constraint fix, batch generation jobs were being created but **all items failed** with:
+
+```
+Template resolution failed: Template not found
+```
+
+### 7.2 Root Cause Analysis
+
+From runtime logs (`pmc/_archive/batch-runtime-7.csv`):
+
+```
+templateId: '00000000-0000-0000-0000-000000000000'
+Error fetching template: { code: 'PGRST116', details: 'The result contains 0 rows' }
+```
+
+**Source of NIL UUID:**
+- `src/app/(dashboard)/bulk-generator/page.tsx` line 21:
+  ```typescript
+  const DEFAULT_TEMPLATE_ID = '00000000-0000-0000-0000-000000000000';
+  ```
+- This hardcoded NIL UUID was passed to `generateParameterSets()` and sent to the batch API
+
+### 7.3 Fix Applied
+
+**File:** `src/lib/services/batch-generation-service.ts`
+
+**Changes:**
+1. Added `NIL_UUID` constant detection
+2. Added `autoSelectTemplate()` method that:
+   - Takes `emotionalArcId` and `tier` parameters
+   - Looks up `arc_type` from `emotional_arcs` table
+   - Finds matching template from `prompt_templates` table
+   - Falls back to any active template for tier if arc-specific not found
+3. Modified `processItem()` to auto-select template when NIL UUID is detected
+
+**Key Code Addition:**
+```typescript
+// Nil UUID used as placeholder when no template is specified
+const NIL_UUID = '00000000-0000-0000-0000-000000000000';
+
+// In processItem():
+if (!templateId || templateId === NIL_UUID) {
+  const emotionalArcId = item.parameters.emotional_arc_id;
+  const autoSelectedId = await this.autoSelectTemplate(emotionalArcId, item.tier);
+  // ... use autoSelectedId
+}
+```
+
+### 7.4 Deployment Required
+
+After this code change, deploy to Vercel:
+```bash
+git add -A
+git commit -m "fix: auto-select template when NIL UUID provided in batch generation"
+git push origin main
+```
+
+### 7.5 What This Does NOT Fix
+
+- The bulk-generator UI still sends NIL UUID (not a problem now)
+- Future improvement: Add template selector dropdown to the UI
 
 ---
 
@@ -300,7 +369,8 @@ console.log('Queued jobs:', result.data);
 
 ---
 
-**Document Version:** 2.0 (Revised with accurate DB queries)  
-**Last Updated:** November 25, 2025 22:05 UTC  
-**Methodology:** Direct SAOL database queries only  
+**Document Version:** 3.0 (Added template auto-selection fix)  
+**Last Updated:** November 26, 2025 03:30 UTC  
+**Methodology:** Direct SAOL database queries + runtime log analysis  
 **Classification:** Internal Development Use
+
