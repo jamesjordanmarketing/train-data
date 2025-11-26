@@ -482,11 +482,13 @@ export const batchJobService = {
     try {
       await this.updateJobStatus(id, 'cancelled');
 
-      // Update all pending/queued items to cancelled
+      // Update all pending/queued items to failed (cancelled is not a valid batch_items status)
+      // Valid statuses for batch_items: queued, processing, completed, failed
       const { error } = await supabase
         .from('batch_items')
         .update({ 
-          status: 'cancelled',
+          status: 'failed',
+          error: 'Job cancelled by user',
           updated_at: new Date().toISOString(),
         })
         .eq('batch_job_id', id)

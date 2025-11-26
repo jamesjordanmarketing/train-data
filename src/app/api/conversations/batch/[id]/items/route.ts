@@ -5,7 +5,7 @@
  * Returns the batch items for a job, with optional filtering
  * 
  * Query Parameters:
- * - status: Filter by item status (completed, failed, pending, processing)
+ * - status: Filter by item status (completed, failed, queued, processing)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -34,12 +34,13 @@ export async function GET(
     
     const supabase = createServerSupabaseAdminClient();
     
-    // Build query
+    // Build query - using correct column names from batch_items schema:
+    // batch_job_id (not job_id), position (not item_index), error (not error_message)
     let query = supabase
       .from('batch_items')
-      .select('id, job_id, item_index, status, conversation_id, error_message, attempts, created_at, updated_at')
-      .eq('job_id', jobId)
-      .order('item_index', { ascending: true });
+      .select('id, batch_job_id, position, status, conversation_id, error, created_at, updated_at')
+      .eq('batch_job_id', jobId)
+      .order('position', { ascending: true });
     
     // Apply status filter if provided
     if (statusFilter) {
@@ -57,11 +58,12 @@ export async function GET(
     }
     
     // Return items with summary
+    // Note: batch_items uses 'queued' not 'pending'
     const summary = {
       total: items?.length || 0,
       completed: items?.filter(i => i.status === 'completed').length || 0,
       failed: items?.filter(i => i.status === 'failed').length || 0,
-      pending: items?.filter(i => i.status === 'pending').length || 0,
+      queued: items?.filter(i => i.status === 'queued').length || 0,
       processing: items?.filter(i => i.status === 'processing').length || 0,
     };
     

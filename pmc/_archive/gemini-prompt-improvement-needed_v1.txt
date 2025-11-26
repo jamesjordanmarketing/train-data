@@ -1,0 +1,116 @@
+`I’m exploring a single-tenant, modular deployment pattern while we experiment with the best way to adapt domain-specific reference material into generated interactions. The idea is that each time we want to support a new interaction type, we create a variant of the base module with updated meta-configuration. This gives us room to test and learn before committing to a final design.
+
+The main challenge I need to reason about is how to expand the volume and diversity of generated interactions.
+
+### We currently have three categories:
+
+1. **Template-Driven**
+2. **Scenario-Driven**
+3. **Edge-Case-Driven**
+
+I understand how these behave internally, but what I need clarity on is the *user-facing* distinction:
+
+---
+
+### **1. What is the conceptual purpose of each type—*from the user’s perspective*?**
+
+I know how the engine treats these under the hood, but I’m not sure how to justify showing all three categories to the user. What is the actual conceptual difference between them in terms of what they are *for*?
+
+### **2. Why does the user need to see the distinction at all?**
+
+If all the user does is select parameters and generate an interaction, what value does it add to expose the classification?
+Does this classification help them meaningfully?
+Or is it simply differentiating between:
+
+* a pre-assembled interaction structure
+  vs.
+* a more general “fill in the variables” pattern without baked-in behavioral rules?
+
+### **3. Our preventative filtering is causing friction.**
+
+Many interaction combinations get flagged as “compatibility warnings” because certain emotional arcs, behavioral rules, or stylistic constraints don’t fit together.
+
+Is this distinction between the categories basically just:
+
+* **generalized on-the-fly prompt population** (scenario + edge)
+  vs.
+* **pre-constructed, specialized blueprints** for certain interactions (template)?
+
+### **4. What are “edge cases,” practically speaking, and why are they functionally different from scenarios?**
+
+I need a clearer conceptual and operational difference.
+
+### **5. We need to reduce friction for creating interactions.**
+
+From a usability standpoint, would it be better if all interactions were treated as “scenario-based,” meaning highly parameterized and neutral—while specialized patterns remain invisible system optimizations?
+Users would just get “interaction types,” while the system handles distinctions internally.
+
+---
+
+### **Task**
+
+Provide a deep dive into this situation and write a detailed operational/processing-level analysis (not code-level). Develop **two possible solutions** for resolving the user-experience and classification problems. Identify areas where my reasoning is incorrect.
+
+Write your final response to the following (obfuscated) location identifier:
+`/workspace/content/review/conversation-type-analysis_v1b.md`
+
+---
+
+### **Background Context (Generalized)**
+
+The platform transforms unstructured reference material into structured interaction pairs suitable for downstream modeling or high-volume generation workflows. Non-technical contributors provide source material; the system segments it; interactions are generated; they are reviewed; optionally expanded; and then exported.
+
+### **Conceptual Architecture (Generalized)**
+
+* **Foundational Layer:** seed examples that establish tone and behavioral patterns
+* **Scenario Layer:** parameterized variations across contexts
+* **Edge Layer:** rare or unusual situations that preserve system reliability under atypical conditions
+
+### **Key Differentiator:**
+
+A set of style-preservation techniques maintains consistency across high-volume generation.
+
+### **Supporting Documents (Obfuscated)**
+
+* System Overview
+* Functional Specification
+
+### **Directory Structure (Obfuscated)**
+
+```
+src/
+├── interface/
+│   ├── workspace/          # Main workspace views
+│   ├── dashboard/          # Overview stats
+│   └── ingest/             # Document ingestion
+├── api/
+│   └── segments/           # Content segmentation endpoints
+├── components/
+│   ├── ui/
+│   └── modules/
+└── core/
+    ├── types/
+    ├── database/
+    ├── generation-config/
+    └── client/
+```
+
+Additional views to be implemented:
+
+* review queue
+* template library
+* scenario library
+* edge-case repository
+
+### **Mock/Test Data (Obfuscated)**
+
+* interactions table
+* templates table
+* segments table
+* fixtures directory
+
+### **Database Operations (Obfuscated)**
+
+Use the provided ops library here: \sall for safe queries, schema introspection, and controlled writes.`
+
+
