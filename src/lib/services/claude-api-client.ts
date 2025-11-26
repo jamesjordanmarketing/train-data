@@ -172,7 +172,7 @@ export class ClaudeAPIClient {
           durationMs,
           status: 'success',
           retryAttempt: 0,
-          createdBy: config.userId || 'system',
+          createdBy: config.userId || '00000000-0000-0000-0000-000000000000', // Use NIL UUID instead of 'system' string
         });
       } catch (logError) {
         // Log error but don't fail the generation
@@ -209,7 +209,7 @@ export class ClaudeAPIClient {
           errorMessage: apiError.message,
           errorCode: apiError.code,
           retryAttempt: 0,
-          createdBy: config.userId || 'system',
+          createdBy: config.userId || '00000000-0000-0000-0000-000000000000', // Use NIL UUID instead of 'system' string
         });
       } catch (logError) {
         // Log error but don't fail the generation

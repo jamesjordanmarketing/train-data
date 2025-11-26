@@ -855,8 +855,11 @@ export class ConversationStorageService {
       console.log(`[storeRawResponse] Storing raw response for conversation ${conversationId}`);
       console.log(`[storeRawResponse] Raw response size: ${rawResponse.length} bytes`);
 
+      // Sanitize userId for file path - use NIL UUID if empty or invalid
+      const sanitizedUserIdForPath = this.sanitizeUUID(userId) || '00000000-0000-0000-0000-000000000000';
+
       // STEP 1: Upload raw response to storage (under /raw directory)
-      const rawPath = `raw/${userId}/${conversationId}.json`;
+      const rawPath = `raw/${sanitizedUserIdForPath}/${conversationId}.json`;
       
       // Store as blob (text content, not parsed)
       const rawBlob = new Blob([rawResponse], { type: 'application/json' });
@@ -890,15 +893,21 @@ export class ConversationStorageService {
         processing_status: 'raw_stored',  // Mark as "raw stored, not yet parsed"
         enrichment_status: 'not_started', // Initial enrichment status
         status: 'pending_review',  // Default status
-        created_by: userId,
+        created_by: sanitizedUserIdForPath, // Reuse sanitized userId
         is_active: true,
       };
 
       // Add optional scaffolding metadata if provided
-      if (metadata?.templateId) conversationRecord.template_id = metadata.templateId;
-      if (metadata?.personaId) conversationRecord.persona_id = metadata.personaId;
-      if (metadata?.emotionalArcId) conversationRecord.emotional_arc_id = metadata.emotionalArcId;
-      if (metadata?.trainingTopicId) conversationRecord.training_topic_id = metadata.trainingTopicId;
+      // IMPORTANT: Sanitize all UUID fields to prevent "invalid input syntax for type uuid" errors
+      const sanitizedTemplateId = this.sanitizeUUID(metadata?.templateId);
+      const sanitizedPersonaId = this.sanitizeUUID(metadata?.personaId);
+      const sanitizedEmotionalArcId = this.sanitizeUUID(metadata?.emotionalArcId);
+      const sanitizedTrainingTopicId = this.sanitizeUUID(metadata?.trainingTopicId);
+      
+      if (sanitizedTemplateId) conversationRecord.template_id = sanitizedTemplateId;
+      if (sanitizedPersonaId) conversationRecord.persona_id = sanitizedPersonaId;
+      if (sanitizedEmotionalArcId) conversationRecord.emotional_arc_id = sanitizedEmotionalArcId;
+      if (sanitizedTrainingTopicId) conversationRecord.training_topic_id = sanitizedTrainingTopicId;
       if (metadata?.tier) conversationRecord.tier = metadata.tier;
 
       // Upsert: Create if doesn't exist, update if exists
@@ -1163,6 +1172,46 @@ export class ConversationStorageService {
   // ========================================================================
   // TYPE GUARD UTILITIES (Prevent accidental URL storage)
   // ========================================================================
+
+  /**
+   * Sanitize a value intended for a UUID column
+   * Returns null for empty strings, undefined, or invalid UUIDs
+   * This prevents database errors like "invalid input syntax for type uuid"
+   * 
+   * @param value - Value to sanitize
+   * @returns Valid UUID string or null
+   */
+  private sanitizeUUID(value: string | null | undefined): string | null {
+    // Handle null/undefined
+    if (value === null || value === undefined) {
+      return null;
+    }
+    
+    // Handle empty string
+    if (value === '') {
+      return null;
+    }
+    
+    // Handle non-string types
+    if (typeof value !== 'string') {
+      return null;
+    }
+    
+    // Trim whitespace
+    const trimmed = value.trim();
+    if (trimmed === '') {
+      return null;
+    }
+    
+    // Basic UUID format validation (allows standard UUID and NIL UUID)
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(trimmed)) {
+      console.warn(`[sanitizeUUID] Invalid UUID format: "${trimmed.substring(0, 50)}..."`);
+      return null;
+    }
+    
+    return trimmed;
+  }
 
   /**
    * Check if a string looks like a signed URL (which shouldn't be stored)
