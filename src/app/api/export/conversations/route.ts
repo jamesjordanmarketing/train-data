@@ -15,10 +15,11 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase-server';
-import { ExportService, CreateExportLogInput } from '@/lib/export-service';
+import { ExportService } from '@/lib/export-service';
 import { getTransformer } from '@/lib/export-transformers';
 import { ExportRequestSchema } from '@/lib/validations/export-schemas';
-import { Conversation, ConversationTurn, FilterConfig } from '@/lib/types';
+import { Conversation, ConversationTurn, FilterConfig, ExportConfig } from '@/lib/types';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 const SYNC_THRESHOLD = 500; // Process synchronously if < 500 conversations
 const EXPORT_EXPIRY_HOURS = 24; // Files expire after 24 hours
@@ -282,12 +283,12 @@ function applyFilters(query: any, filters?: FilterConfig): any {
  * Handle background export processing for large datasets (≥500 conversations)
  */
 async function handleBackgroundExport(
-  supabase: any,
+  supabase: SupabaseClient,
   userId: string,
-  config: any,
+  config: ExportConfig,
   conversationCount: number,
-  conversationIds?: string[],
-  filters?: FilterConfig
+  _conversationIds?: string[],
+  _filters?: FilterConfig
 ): Promise<NextResponse> {
   const exportService = new ExportService(supabase);
   
@@ -319,10 +320,10 @@ async function handleBackgroundExport(
  * Returns URL to download the file
  */
 async function storeExportFile(
-  supabase: any,
+  _supabase: SupabaseClient,
   filename: string,
-  content: string,
-  mimeType: string
+  _content: string,
+  _mimeType: string
 ): Promise<string> {
   try {
     // In production, upload to Supabase Storage

@@ -39,7 +39,7 @@ export async function GET(
       category: enhancedCategory,
       success: true
     })
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: 'Failed to fetch category', success: false },
       { status: 500 }

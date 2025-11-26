@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
       },
     })
 
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: 'Export failed', success: false },
       { status: 500 }

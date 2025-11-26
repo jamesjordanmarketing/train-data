@@ -8,7 +8,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { conversationService } from '@/lib/conversation-service';
 import { CreateTurnSchema } from '@/lib/types/conversations';
 import { AppError } from '@/lib/types/errors';
-import { z } from 'zod';
 
 /**
  * GET /api/conversations/[id]/turns

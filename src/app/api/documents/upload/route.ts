@@ -134,7 +134,7 @@ export async function POST(request: NextRequest) {
 
     console.log(`Uploading file: ${file.name} (${file.size} bytes) to ${file_path}`);
 
-    const { data: uploadData, error: uploadError } = await supabase.storage
+    const { error: uploadError } = await supabase.storage
       .from('documents')
       .upload(file_path, fileBuffer, {
         contentType: file.type,

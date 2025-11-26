@@ -52,13 +52,13 @@ import { AppError } from '@/lib/types/errors';
  *   "qualityDistribution": {
  *     "excellent": 45,
  *     "good": 80,
- *     "fair": 20,
- *     "poor": 5
+ *     \"fair\": 20,
+ *     \"poor\": 5
  *   }
  * }
  * ```
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     // Get basic stats
     const stats = await conversationService.getStats();

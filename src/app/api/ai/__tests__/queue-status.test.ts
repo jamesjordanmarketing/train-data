@@ -8,7 +8,7 @@
  * - Error handling
  */
 
-import { describe, test, expect, beforeEach, jest } from '@jest/globals';
+import { describe, test, expect, beforeEach } from '@jest/globals';
 import { GET } from '../queue-status/route';
 import { NextRequest } from 'next/server';
 import { getRateLimiter, resetRateLimiter } from '@/lib/ai/rate-limiter';

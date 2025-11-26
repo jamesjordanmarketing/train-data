@@ -102,7 +102,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function validateTemplates(templates: any[], service: any) {
+async function validateTemplates(templates: Record<string, unknown>[], _service: unknown) {
   const valid = [];
   const invalid = [];
   const duplicates = [];
@@ -111,11 +111,11 @@ async function validateTemplates(templates: any[], service: any) {
     const errors = [];
     
     // Check required fields
-    if (!template.name || template.name.length === 0) {
+    if (!template.name || (template.name as string).length === 0) {
       errors.push('Name is required');
     }
     
-    if (!template.structure || template.structure.length < 10) {
+    if (!template.structure || (template.structure as string).length < 10) {
       errors.push('Structure must be at least 10 characters');
     }
     
@@ -123,11 +123,11 @@ async function validateTemplates(templates: any[], service: any) {
     const placeholderRegex = /\{\{(\w+)\}\}/g;
     const placeholders = new Set<string>();
     let match;
-    while ((match = placeholderRegex.exec(template.structure)) !== null) {
+    while ((match = placeholderRegex.exec(template.structure as string)) !== null) {
       placeholders.add(match[1]);
     }
     
-    const variableNames = new Set(template.variables?.map((v: any) => v.name) || []);
+    const variableNames = new Set((template.variables as { name: string }[] | undefined)?.map((v) => v.name) || []);
     const missingVars = Array.from(placeholders).filter(p => !variableNames.has(p));
     
     if (missingVars.length > 0) {

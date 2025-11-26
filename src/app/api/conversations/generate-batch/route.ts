@@ -128,7 +128,7 @@ export async function POST(request: NextRequest) {
  * GET /api/conversations/generate-batch
  * Get information about batch generation
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   return NextResponse.json({
     success: true,
     info: {

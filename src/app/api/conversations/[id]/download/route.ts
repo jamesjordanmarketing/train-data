@@ -204,7 +204,7 @@ export async function GET(
 /**
  * OPTIONS handler for CORS preflight (if needed)
  */
-export async function OPTIONS(request: NextRequest) {
+export async function OPTIONS(_request: NextRequest) {
   return NextResponse.json({}, { status: 200 });
 }
 

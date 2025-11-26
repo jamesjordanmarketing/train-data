@@ -58,7 +58,7 @@ interface QueueStatusResponse {
 /**
  * GET handler - Returns current queue and rate limit status
  */
-export async function GET(request: NextRequest): Promise<NextResponse<QueueStatusResponse>> {
+export async function GET(_request: NextRequest): Promise<NextResponse<QueueStatusResponse>> {
   try {
     // Get rate limiter status
     const rateLimiter = getRateLimiter();
@@ -142,7 +142,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<QueueStatu
 /**
  * OPTIONS handler for CORS preflight
  */
-export async function OPTIONS(request: NextRequest) {
+export async function OPTIONS(_request: NextRequest) {
   return new NextResponse(null, {
     status: 200,
     headers: {

@@ -102,7 +102,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function validateEdgeCases(edgeCases: any[], service: any) {
+async function validateEdgeCases(edgeCases: Record<string, unknown>[], _service: unknown) {
   const valid = [];
   const invalid = [];
   const duplicates = [];
@@ -111,7 +111,7 @@ async function validateEdgeCases(edgeCases: any[], service: any) {
     const errors = [];
     
     // Check required fields
-    if (!edgeCase.name || edgeCase.name.length === 0) {
+    if (!edgeCase.name || (edgeCase.name as string).length === 0) {
       errors.push('Name is required');
     }
     

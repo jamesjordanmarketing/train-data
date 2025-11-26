@@ -18,7 +18,7 @@ export async function saveWorkflowDraft(formData: FormData) {
     revalidatePath(`/workflow/${documentId}`)
     
     return { success: true, message: 'Draft saved successfully' }
-  } catch (error) {
+  } catch (_error) {
     return { success: false, message: 'Failed to save draft' }
   }
 }
@@ -51,7 +51,7 @@ export async function submitWorkflowStep(formData: FormData) {
     }
 
     return { success: true, message: 'Step completed successfully' }
-  } catch (error) {
+  } catch (_error) {
     return { success: false, message: 'Failed to submit step' }
   }
 }
@@ -71,7 +71,7 @@ export async function submitCompleteWorkflow(formData: FormData) {
     redirect('/dashboard')
 
     return { success: true, message: 'Workflow submitted successfully' }
-  } catch (error) {
+  } catch (_error) {
     return { success: false, message: 'Failed to submit workflow' }
   }
 }

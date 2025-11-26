@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
       success: true
     })
 
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: 'Assessment failed', success: false },
       { status: 500 }

@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
         let actualConversationId = conversationId;
         
         // Try conversation_id first (correct field)
-        const { data: convByConvId, error: _convError1 } = await supabase
+        const { data: convByConvId } = await supabase
           .from('conversations')
           .select('conversation_id, created_by, enrichment_status, raw_response_path')
           .eq('conversation_id', conversationId)
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
         } else {
           // Fallback: try by id (database row ID) - fixes legacy bug where wrong ID was stored
           console.log(`[BulkEnrich] ⚠️ Not found by conversation_id, trying by id...`);
-          const { data: convById, error: _convError2 } = await supabase
+          const { data: convById } = await supabase
             .from('conversations')
             .select('conversation_id, created_by, enrichment_status, raw_response_path')
             .eq('id', conversationId)

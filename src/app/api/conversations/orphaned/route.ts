@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { conversationChunkService } from '@/lib/database';
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const orphaned = await conversationChunkService.getOrphanedConversations();
     return NextResponse.json(orphaned);

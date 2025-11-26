@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -178,7 +178,7 @@ export default function BatchJobsListPage() {
             <Layers className="h-12 w-12 text-muted-foreground mb-4" />
             <h3 className="text-lg font-medium mb-2">No Batch Jobs</h3>
             <p className="text-muted-foreground text-center mb-6 max-w-sm">
-              You haven't created any batch generation jobs yet. Start by creating a new batch to generate multiple conversations at once.
+              You haven&apos;t created any batch generation jobs yet. Start by creating a new batch to generate multiple conversations at once.
             </p>
             <Button onClick={() => router.push('/bulk-generator')}>
               <Plus className="mr-2 h-4 w-4" />

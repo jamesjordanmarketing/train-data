@@ -102,7 +102,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function validateScenarios(scenarios: any[], service: any) {
+async function validateScenarios(scenarios: Record<string, unknown>[], _service: unknown) {
   const valid = [];
   const invalid = [];
   const duplicates = [];
@@ -111,7 +111,7 @@ async function validateScenarios(scenarios: any[], service: any) {
     const errors = [];
     
     // Check required fields
-    if (!scenario.name || scenario.name.length === 0) {
+    if (!scenario.name || (scenario.name as string).length === 0) {
       errors.push('Name is required');
     }
     
@@ -119,7 +119,7 @@ async function validateScenarios(scenarios: any[], service: any) {
       errors.push('Template ID is required');
     }
     
-    if (!scenario.context || scenario.context.length < 10) {
+    if (!scenario.context || (scenario.context as string).length < 10) {
       errors.push('Context must be at least 10 characters');
     }
     
