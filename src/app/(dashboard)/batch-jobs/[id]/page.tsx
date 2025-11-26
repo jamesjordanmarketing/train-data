@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -18,7 +18,8 @@ import {
   ArrowLeft,
   RefreshCw,
   AlertTriangle,
-  Sparkles
+  Sparkles,
+  StopCircle
 } from 'lucide-react';
 
 interface BatchJobStatus {
@@ -55,6 +56,12 @@ export default function BatchJobPage() {
     total: number;
   } | null>(null);
 
+  // Processing state
+  const [processingActive, setProcessingActive] = useState(false);
+  const processingRef = useRef(false);
+  const [lastItemError, setLastItemError] = useState<string | null>(null);
+  const [processLogs, setProcessLogs] = useState<string[]>([]);
+
   // Fetch status
   const fetchStatus = useCallback(async () => {
     try {
@@ -74,33 +81,134 @@ export default function BatchJobPage() {
     }
   }, [jobId]);
 
-  // Initial fetch and polling
+  // Process next item in queue
+  const processNextItem = useCallback(async (): Promise<boolean> => {
+    try {
+      const response = await fetch(`/api/batch-jobs/${jobId}/process-next`, {
+        method: 'POST',
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to process item');
+      }
+
+      // Update status from response
+      if (data.progress) {
+        setStatus(prev => prev ? {
+          ...prev,
+          progress: data.progress,
+          status: data.status === 'job_completed' ? 'completed' 
+               : data.status === 'job_cancelled' ? 'cancelled' 
+               : prev.status,
+        } : null);
+      }
+
+      // Log the result
+      const timestamp = new Date().toLocaleTimeString();
+      if (data.success && data.conversationId) {
+        setProcessLogs(prev => [...prev.slice(-50), `[${timestamp}] ✓ Item ${data.itemId?.slice(0, 8)}... completed`]);
+        setLastItemError(null);
+      } else if (data.itemId) {
+        setProcessLogs(prev => [...prev.slice(-50), `[${timestamp}] ✗ Item ${data.itemId?.slice(0, 8)}... failed: ${data.error || 'Unknown'}`]);
+        setLastItemError(data.error || 'Unknown error');
+      }
+
+      // Return whether there are more items to process
+      return data.status === 'processed' && data.remainingItems > 0;
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : 'Processing error';
+      setLastItemError(errorMsg);
+      setProcessLogs(prev => [...prev.slice(-50), `[${new Date().toLocaleTimeString()}] ✗ Error: ${errorMsg}`]);
+      return false;
+    }
+  }, [jobId]);
+
+  // Start processing loop
+  const startProcessing = useCallback(async () => {
+    if (processingRef.current) return;
+    
+    processingRef.current = true;
+    setProcessingActive(true);
+    setProcessLogs(prev => [...prev, `[${new Date().toLocaleTimeString()}] Starting batch processing...`]);
+
+    let hasMore = true;
+    while (hasMore && processingRef.current) {
+      hasMore = await processNextItem();
+      
+      // Small delay between items to prevent overwhelming
+      if (hasMore) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+    }
+
+    if (processingRef.current) {
+      setProcessLogs(prev => [...prev, `[${new Date().toLocaleTimeString()}] Processing complete.`]);
+    } else {
+      setProcessLogs(prev => [...prev, `[${new Date().toLocaleTimeString()}] Processing stopped by user.`]);
+    }
+
+    processingRef.current = false;
+    setProcessingActive(false);
+    await fetchStatus();
+  }, [processNextItem, fetchStatus]);
+
+  // Stop processing
+  const stopProcessing = useCallback(() => {
+    processingRef.current = false;
+    setProcessLogs(prev => [...prev, `[${new Date().toLocaleTimeString()}] Stopping...`]);
+  }, []);
+
+  // Initial fetch and auto-start processing for queued jobs
   useEffect(() => {
     fetchStatus();
+  }, [fetchStatus]);
 
-    // Poll every 5 seconds while job is active
-    const interval = setInterval(() => {
-      if (status?.status === 'processing' || status?.status === 'queued') {
-        fetchStatus();
-      }
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [fetchStatus, status?.status]);
+  // Auto-start processing when job is queued and no processing is active
+  useEffect(() => {
+    if (status?.status === 'queued' && !processingActive && !processingRef.current) {
+      // Auto-start processing for queued jobs
+      startProcessing();
+    }
+  }, [status?.status, processingActive, startProcessing]);
 
   // Job control actions
   const handleAction = async (action: 'pause' | 'resume' | 'cancel') => {
     try {
       setActionLoading(true);
-      const response = await fetch(`/api/conversations/batch/${jobId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action })
-      });
 
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || `Failed to ${action} job`);
+      if (action === 'cancel') {
+        // Use the new cancel endpoint
+        stopProcessing(); // Stop the processing loop first
+        
+        const response = await fetch(`/api/batch-jobs/${jobId}/cancel`, {
+          method: 'POST',
+        });
+
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.error || 'Failed to cancel job');
+        }
+
+        setProcessLogs(prev => [...prev, `[${new Date().toLocaleTimeString()}] Job cancelled.`]);
+      } else {
+        // Use the old endpoint for pause/resume
+        const response = await fetch(`/api/conversations/batch/${jobId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action })
+        });
+
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.error || `Failed to ${action} job`);
+        }
+
+        if (action === 'pause') {
+          stopProcessing();
+        } else if (action === 'resume') {
+          startProcessing();
+        }
       }
 
       await fetchStatus();
@@ -348,47 +456,64 @@ export default function BatchJobPage() {
           <CardTitle>Actions</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-3">
-          {status.status === 'processing' && (
+          {/* Processing status indicator */}
+          {processingActive && (
+            <Badge variant="secondary" className="animate-pulse">
+              <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+              Processing...
+            </Badge>
+          )}
+          
+          {/* Start Processing (for queued jobs that aren't auto-started) */}
+          {status.status === 'queued' && !processingActive && (
+            <Button 
+              onClick={startProcessing}
+              disabled={actionLoading}
+            >
+              <Play className="mr-2 h-4 w-4" />
+              Start Processing
+            </Button>
+          )}
+          
+          {/* Stop Processing (replaces Pause for active processing) */}
+          {processingActive && (
             <Button 
               variant="outline" 
-              onClick={() => handleAction('pause')}
+              onClick={stopProcessing}
               disabled={actionLoading}
             >
-              {actionLoading ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <Pause className="mr-2 h-4 w-4" />
-              )}
-              Pause
+              <StopCircle className="mr-2 h-4 w-4" />
+              Stop
             </Button>
           )}
-          {status.status === 'paused' && (
+          
+          {/* Resume Processing (for stopped but not cancelled jobs) */}
+          {(status.status === 'processing' || status.status === 'paused') && !processingActive && status.progress.completed < status.progress.total && (
             <Button 
-              onClick={() => handleAction('resume')}
+              onClick={startProcessing}
               disabled={actionLoading}
             >
-              {actionLoading ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <Play className="mr-2 h-4 w-4" />
-              )}
-              Resume
+              <Play className="mr-2 h-4 w-4" />
+              Resume Processing
             </Button>
           )}
+          
+          {/* Cancel Job */}
           {(isActive || isPaused) && (
             <Button 
               variant="destructive" 
               onClick={() => handleAction('cancel')}
-              disabled={actionLoading}
+              disabled={actionLoading || processingActive}
             >
               {actionLoading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
                 <Ban className="mr-2 h-4 w-4" />
               )}
-              Cancel
+              Cancel Job
             </Button>
           )}
+          
           <Button 
             variant="outline" 
             onClick={fetchStatus}
@@ -399,6 +524,29 @@ export default function BatchJobPage() {
           </Button>
         </CardContent>
       </Card>
+
+      {/* Processing Log Card */}
+      {processLogs.length > 0 && (
+        <Card className="mb-6">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Processing Log</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="max-h-40 overflow-y-auto font-mono text-xs bg-slate-50 dark:bg-slate-900 rounded p-2 space-y-0.5">
+              {processLogs.slice(-20).map((log, i) => (
+                <div key={i} className={log.includes('✓') ? 'text-green-600' : log.includes('✗') ? 'text-red-600' : 'text-muted-foreground'}>
+                  {log}
+                </div>
+              ))}
+            </div>
+            {lastItemError && (
+              <div className="mt-2 p-2 rounded bg-red-50 dark:bg-red-950/30 text-red-600 text-xs">
+                Last error: {lastItemError}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Completion Card */}
       {isCompleted && (

@@ -178,6 +178,7 @@ export type BatchJob = {
   estimatedTimeRemaining?: number;
   priority: 'high' | 'normal' | 'low';
   items: BatchItem[];
+  createdBy?: string;
   configuration: {
     tier: TierType;
     sharedParameters: Record<string, any>;

@@ -16,8 +16,19 @@ import {
   Pause,
   Ban,
   AlertTriangle,
-  Layers
+  Layers,
+  StopCircle
 } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 interface BatchJob {
   id: string;
@@ -37,6 +48,8 @@ export default function BatchJobsListPage() {
   const [jobs, setJobs] = useState<BatchJob[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [cancellingJobId, setCancellingJobId] = useState<string | null>(null);
+  const [jobToCancel, setJobToCancel] = useState<BatchJob | null>(null);
 
   const fetchJobs = async () => {
     try {
@@ -65,6 +78,36 @@ export default function BatchJobsListPage() {
     const interval = setInterval(fetchJobs, 30000);
     return () => clearInterval(interval);
   }, []);
+
+  // Cancel a batch job
+  const handleCancelJob = async (job: BatchJob) => {
+    try {
+      setCancellingJobId(job.id);
+      const response = await fetch(`/api/batch-jobs/${job.id}/cancel`, {
+        method: 'POST',
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to cancel job');
+      }
+
+      // Refresh jobs list
+      await fetchJobs();
+      setError(null);
+    } catch (err) {
+      console.error('Failed to cancel job:', err);
+      setError(err instanceof Error ? err.message : 'Failed to cancel job');
+    } finally {
+      setCancellingJobId(null);
+      setJobToCancel(null);
+    }
+  };
+
+  // Check if job can be cancelled
+  const canCancelJob = (status: string) => {
+    return status === 'processing' || status === 'paused' || status === 'queued';
+  };
 
   // Status badge styling
   const getStatusBadge = (status: string) => {
@@ -236,8 +279,29 @@ export default function BatchJobsListPage() {
                       </div>
                     </div>
                     
-                    <div className="text-right">
-                      <p className="text-2xl font-bold">{percentage}%</p>
+                    <div className="flex items-center gap-4">
+                      {/* Stop Button for active jobs */}
+                      {canCancelJob(job.status) && (
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          disabled={cancellingJobId === job.id}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setJobToCancel(job);
+                          }}
+                        >
+                          {cancellingJobId === job.id ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          ) : (
+                            <StopCircle className="mr-2 h-4 w-4" />
+                          )}
+                          Stop
+                        </Button>
+                      )}
+                      <div className="text-right">
+                        <p className="text-2xl font-bold">{percentage}%</p>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -246,6 +310,43 @@ export default function BatchJobsListPage() {
           })}
         </div>
       )}
+
+      {/* Cancel Confirmation Dialog */}
+      <AlertDialog open={!!jobToCancel} onOpenChange={(open) => !open && setJobToCancel(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Stop Batch Job?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to stop the batch job &quot;{jobToCancel?.name}&quot;? 
+              This will cancel all pending items and cannot be undone.
+              <br /><br />
+              <span className="text-muted-foreground">
+                {jobToCancel?.completedItems || 0}/{jobToCancel?.totalItems || 0} items completed
+                {jobToCancel?.successfulItems ? ` (${jobToCancel.successfulItems} successful)` : ''}
+              </span>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Continue Job</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={() => jobToCancel && handleCancelJob(jobToCancel)}
+            >
+              {cancellingJobId === jobToCancel?.id ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Stopping...
+                </>
+              ) : (
+                <>
+                  <StopCircle className="mr-2 h-4 w-4" />
+                  Stop Job
+                </>
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -162,6 +162,7 @@ export const batchJobService = {
         estimatedTimeRemaining: jobData.estimated_time_remaining,
         priority: jobData.priority,
         items,
+        createdBy: jobData.created_by,
         configuration: {
           tier: jobData.tier,
           sharedParameters: jobData.shared_parameters || {},
@@ -480,21 +481,42 @@ export const batchJobService = {
    */
   async cancelJob(id: string): Promise<void> {
     try {
-      await this.updateJobStatus(id, 'cancelled');
-
-      // Update all pending/queued items to failed (cancelled is not a valid batch_items status)
-      // Valid statuses for batch_items: queued, processing, completed, failed
-      const { error } = await supabase
+      // First, mark all pending/queued items as failed
+      // Use error_message column (not error) per schema
+      const { error: itemsError } = await supabase
         .from('batch_items')
         .update({ 
           status: 'failed',
-          error: 'Job cancelled by user',
+          error_message: 'Job cancelled by user',
           updated_at: new Date().toISOString(),
         })
         .eq('batch_job_id', id)
         .in('status', ['queued', 'processing']);
 
-      if (error) throw error;
+      if (itemsError) throw itemsError;
+
+      // Get updated failed count
+      const { count: failedCount } = await supabase
+        .from('batch_items')
+        .select('*', { count: 'exact', head: true })
+        .eq('batch_job_id', id)
+        .eq('status', 'failed');
+
+      // Update job status and failed items count
+      const { error: jobError } = await supabase
+        .from('batch_jobs')
+        .update({ 
+          status: 'cancelled',
+          failed_items: failedCount || 0,
+          completed_items: failedCount || 0,
+          completed_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', id);
+
+      if (jobError) throw jobError;
+
+      console.log(`[BatchJobService] Job ${id} cancelled. Failed items: ${failedCount}`);
     } catch (error) {
       console.error('Error cancelling batch job:', error);
       throw error;

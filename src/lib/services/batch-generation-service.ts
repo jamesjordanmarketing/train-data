@@ -212,14 +212,19 @@ export class BatchGenerationService {
     
     console.log(`[BatchGeneration] Created job ${batchJob.id} with ${items.length} items`);
     
-    // Step 4: Start background processing (don't await)
-    this.processJobInBackground(batchJob.id, request.concurrentProcessing || 3, request.errorHandling || 'continue', request.userId).catch(error => {
-      console.error(`[BatchGeneration] Background processing error for job ${batchJob.id}:`, error);
-    });
+    // NOTE: We no longer start background processing here!
+    // Instead, the client must poll /api/batch-jobs/[id]/process-next
+    // This is required because Vercel serverless functions terminate
+    // after sending the HTTP response, killing any background promises.
+    //
+    // The old code that doesn't work in Vercel:
+    // this.processJobInBackground(batchJob.id, ...).catch(...);
+    
+    console.log(`[BatchGeneration] Job ${batchJob.id} created. Client must poll /api/batch-jobs/${batchJob.id}/process-next to start processing.`);
     
     return {
       jobId: batchJob.id,
-      status: 'processing',
+      status: 'queued',  // Changed from 'processing' to 'queued' since we're not starting yet
       estimatedCost: estimate.estimatedCost,
       estimatedTime: estimate.estimatedTime,
     };
