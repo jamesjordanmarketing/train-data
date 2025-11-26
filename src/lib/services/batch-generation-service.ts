@@ -581,14 +581,18 @@ export class BatchGenerationService {
       
       if (result.success) {
         // Update item with conversation ID
+        // CRITICAL: Use conversation_id (the business UUID), not id (the database row UUID)
+        // The bulk-enrich endpoint queries by conversation_id, so we must store the correct value
+        const convId = result.conversation.conversation_id || result.conversation.id;
+        
         await batchJobService.incrementProgress(
           jobId,
           item.id,
           'completed',
-          result.conversation.id
+          convId
         );
         
-        console.log(`[BatchGeneration] Item ${item.id} completed: ${result.conversation.id}`);
+        console.log(`[BatchGeneration] Item ${item.id} completed: ${convId}`);
       } else {
         // Mark as failed
         await batchJobService.incrementProgress(

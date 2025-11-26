@@ -26,6 +26,7 @@ export type QualityMetrics = {
 
 export type Conversation = {
   id: string;
+  conversation_id?: string; // Business UUID (distinct from database row id) - present when loaded from DB
   title: string;
   persona: string;
   emotion: string;

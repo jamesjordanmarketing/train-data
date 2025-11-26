@@ -47,13 +47,37 @@ export async function POST(request: NextRequest) {
         console.log(`[BulkEnrich] Processing ${conversationId}`);
         
         // Get conversation to verify it exists and get user_id
-        const { data: conversation, error: convError } = await supabase
+        // First try by conversation_id (correct), then fallback to id (legacy bug)
+        let conversation = null;
+        let actualConversationId = conversationId;
+        
+        // Try conversation_id first (correct field)
+        const { data: convByConvId, error: _convError1 } = await supabase
           .from('conversations')
           .select('conversation_id, created_by, enrichment_status, raw_response_path')
           .eq('conversation_id', conversationId)
           .single();
         
-        if (convError || !conversation) {
+        if (convByConvId) {
+          conversation = convByConvId;
+          actualConversationId = convByConvId.conversation_id;
+        } else {
+          // Fallback: try by id (database row ID) - fixes legacy bug where wrong ID was stored
+          console.log(`[BulkEnrich] ⚠️ Not found by conversation_id, trying by id...`);
+          const { data: convById, error: _convError2 } = await supabase
+            .from('conversations')
+            .select('conversation_id, created_by, enrichment_status, raw_response_path')
+            .eq('id', conversationId)
+            .single();
+          
+          if (convById) {
+            conversation = convById;
+            actualConversationId = convById.conversation_id;
+            console.log(`[BulkEnrich] ✅ Found by id, actual conversation_id: ${actualConversationId}`);
+          }
+        }
+        
+        if (!conversation) {
           console.log(`[BulkEnrich] ❌ Conversation ${conversationId} not found`);
           results.push({
             conversationId,
@@ -65,7 +89,7 @@ export async function POST(request: NextRequest) {
         
         // Skip if already enriched
         if (conversation.enrichment_status === 'completed') {
-          console.log(`[BulkEnrich] ⏭️ Skipping ${conversationId} - already completed`);
+          console.log(`[BulkEnrich] ⏭️ Skipping ${actualConversationId} - already completed`);
           results.push({
             conversationId,
             status: 'skipped',
@@ -76,7 +100,7 @@ export async function POST(request: NextRequest) {
         
         // Skip if no raw response
         if (!conversation.raw_response_path) {
-          console.log(`[BulkEnrich] ❌ ${conversationId} has no raw response`);
+          console.log(`[BulkEnrich] ❌ ${actualConversationId} has no raw response`);
           results.push({
             conversationId,
             status: 'failed',
@@ -88,18 +112,18 @@ export async function POST(request: NextRequest) {
         // Get user_id from conversation or use system user
         const userId = conversation.created_by || '00000000-0000-0000-0000-000000000000';
         
-        // Run enrichment pipeline
-        const result = await orchestrator.runPipeline(conversationId, userId);
+        // Run enrichment pipeline using the actual conversation_id
+        const result = await orchestrator.runPipeline(actualConversationId, userId);
         
         if (result.success) {
-          console.log(`[BulkEnrich] ✅ ${conversationId} enriched successfully`);
+          console.log(`[BulkEnrich] ✅ ${actualConversationId} enriched successfully`);
           results.push({
             conversationId,
             status: 'enriched',
             enrichmentStatus: result.finalStatus,
           });
         } else {
-          console.log(`[BulkEnrich] ❌ ${conversationId} enrichment failed: ${result.error}`);
+          console.log(`[BulkEnrich] ❌ ${actualConversationId} enrichment failed: ${result.error}`);
           results.push({
             conversationId,
             status: 'failed',
