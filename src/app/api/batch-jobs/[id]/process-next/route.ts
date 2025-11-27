@@ -12,7 +12,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { batchJobService } from '@/lib/services/batch-job-service';
 import { getConversationGenerationService } from '@/lib/services/conversation-generation-service';
-import { createClient } from '@/lib/supabase/server';
+import { createServerSupabaseAdminClient } from '@/lib/supabase-server';
 
 const NIL_UUID = '00000000-0000-0000-0000-000000000000';
 
@@ -40,7 +40,8 @@ async function autoSelectTemplate(
   tier?: string
 ): Promise<string | null> {
   try {
-    const supabase = await createClient();
+    // Use admin client to bypass RLS for template/arc lookups
+    const supabase = createServerSupabaseAdminClient();
     
     // Get the arc_key from emotional_arcs table
     const { data: arcData, error: arcError } = await supabase

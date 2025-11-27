@@ -7,6 +7,38 @@
 
 ---
 
+## 📋 Project Context
+
+### What This Application Does
+
+**Bright Run LoRA Training Data Platform** - A Next.js 14 application that generates high-quality AI training conversations for fine-tuning large language models. The platform enables non-technical domain experts to transform proprietary knowledge into LoRA-ready training datasets.
+
+**Core Capabilities**:
+1. **Conversation Generation**: AI-powered generation using Claude API with predetermined field structure
+2. **Enrichment Pipeline**: 5-stage validation and enrichment process for quality assurance
+3. **Storage System**: File storage (Supabase Storage) + metadata (PostgreSQL)
+4. **Management Dashboard**: UI for reviewing, downloading, and managing conversations
+5. **Download System**: Export both raw (minimal) and enriched (complete) JSON formats
+
+**Technology Stack**:
+- Framework: Next.js 14 (App Router)
+- Language: TypeScript
+- Database: Supabase (PostgreSQL)
+- Storage: Supabase Storage
+- AI: Claude API (Anthropic)
+- UI: Shadcn/UI + Tailwind CSS
+- Deployment: Vercel
+
+### Core Workflow
+
+```
+User → Generate Conversation → Claude API → Raw JSON Stored →
+Enrichment Pipeline (5 stages) → Enriched JSON Stored →
+Dashboard View → Download (Raw or Enriched)
+```
+
+---
+
 ## 🚨 CRITICAL: What Was Fixed This Session
 
 ### Issue: Bulk Enrichment Failing - "Conversation Not Found" for ALL Conversations

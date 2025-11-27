@@ -15,7 +15,7 @@
  * @module template-resolver
  */
 
-import { createClient } from '../supabase/server';
+import { createServerSupabaseAdminClient } from '../supabase-server';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { 
   injectParameters, 
@@ -77,10 +77,10 @@ export class TemplateResolver {
   private cacheTimestamps = new Map<string, number>();
 
   constructor(supabaseClient?: SupabaseClient) {
-    // If client provided, use it; otherwise create one
+    // If client provided, use it; otherwise create admin client for bypassing RLS
     this.supabasePromise = supabaseClient 
       ? Promise.resolve(supabaseClient)
-      : createClient();
+      : Promise.resolve(createServerSupabaseAdminClient());
   }
 
   /**

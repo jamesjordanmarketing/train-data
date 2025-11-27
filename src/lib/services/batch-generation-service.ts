@@ -19,7 +19,7 @@ import { randomUUID } from 'crypto';
 import { getConversationGenerationService, type GenerationParams } from './conversation-generation-service';
 import { batchJobService } from './batch-job-service';
 import { conversationService } from './conversation-service';
-import { createClient } from '@/lib/supabase/server';
+import { createServerSupabaseAdminClient } from '@/lib/supabase-server';
 import type { TierType } from '@/lib/types';
 
 // Nil UUID used as placeholder when no template is specified
@@ -345,7 +345,8 @@ export class BatchGenerationService {
    */
   private async autoSelectTemplate(emotionalArcId: string, tier: TierType): Promise<string | null> {
     try {
-      const supabase = await createClient();
+      // Use admin client to bypass RLS for template/arc lookups
+      const supabase = createServerSupabaseAdminClient();
       
       // First, get the emotional arc key from the emotional arc ID
       // Note: The column is 'arc_key' in emotional_arcs, which maps to 'emotional_arc_type' in prompt_templates
