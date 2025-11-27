@@ -60,7 +60,6 @@ export default function BatchJobPage() {
   const [processingActive, setProcessingActive] = useState(false);
   const processingRef = useRef(false);
   const [lastItemError, setLastItemError] = useState<string | null>(null);
-  const [processLogs, setProcessLogs] = useState<string[]>([]);
 
   // Fetch status
   const fetchStatus = useCallback(async () => {
@@ -104,13 +103,10 @@ export default function BatchJobPage() {
         } : null);
       }
 
-      // Log the result
-      const timestamp = new Date().toLocaleTimeString();
+      // Track last error for display
       if (data.success && data.conversationId) {
-        setProcessLogs(prev => [...prev.slice(-50), `[${timestamp}] ✓ Item ${data.itemId?.slice(0, 8)}... completed`]);
         setLastItemError(null);
       } else if (data.itemId) {
-        setProcessLogs(prev => [...prev.slice(-50), `[${timestamp}] ✗ Item ${data.itemId?.slice(0, 8)}... failed: ${data.error || 'Unknown'}`]);
         setLastItemError(data.error || 'Unknown error');
       }
 
@@ -119,7 +115,6 @@ export default function BatchJobPage() {
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Processing error';
       setLastItemError(errorMsg);
-      setProcessLogs(prev => [...prev.slice(-50), `[${new Date().toLocaleTimeString()}] ✗ Error: ${errorMsg}`]);
       return false;
     }
   }, [jobId]);
@@ -130,7 +125,6 @@ export default function BatchJobPage() {
     
     processingRef.current = true;
     setProcessingActive(true);
-    setProcessLogs(prev => [...prev, `[${new Date().toLocaleTimeString()}] Starting batch processing...`]);
 
     let hasMore = true;
     while (hasMore && processingRef.current) {
@@ -142,12 +136,6 @@ export default function BatchJobPage() {
       }
     }
 
-    if (processingRef.current) {
-      setProcessLogs(prev => [...prev, `[${new Date().toLocaleTimeString()}] Processing complete.`]);
-    } else {
-      setProcessLogs(prev => [...prev, `[${new Date().toLocaleTimeString()}] Processing stopped by user.`]);
-    }
-
     processingRef.current = false;
     setProcessingActive(false);
     await fetchStatus();
@@ -156,7 +144,6 @@ export default function BatchJobPage() {
   // Stop processing
   const stopProcessing = useCallback(() => {
     processingRef.current = false;
-    setProcessLogs(prev => [...prev, `[${new Date().toLocaleTimeString()}] Stopping...`]);
   }, []);
 
   // Initial fetch and auto-start processing for queued jobs
@@ -189,8 +176,6 @@ export default function BatchJobPage() {
           const data = await response.json();
           throw new Error(data.error || 'Failed to cancel job');
         }
-
-        setProcessLogs(prev => [...prev, `[${new Date().toLocaleTimeString()}] Job cancelled.`]);
       } else {
         // Use the old endpoint for pause/resume
         const response = await fetch(`/api/conversations/batch/${jobId}`, {
@@ -524,29 +509,6 @@ export default function BatchJobPage() {
           </Button>
         </CardContent>
       </Card>
-
-      {/* Processing Log Card */}
-      {processLogs.length > 0 && (
-        <Card className="mb-6">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Processing Log</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="max-h-40 overflow-y-auto font-mono text-xs bg-slate-50 dark:bg-slate-900 rounded p-2 space-y-0.5">
-              {processLogs.slice(-20).map((log, i) => (
-                <div key={i} className={log.includes('✓') ? 'text-green-600' : log.includes('✗') ? 'text-red-600' : 'text-muted-foreground'}>
-                  {log}
-                </div>
-              ))}
-            </div>
-            {lastItemError && (
-              <div className="mt-2 p-2 rounded bg-red-50 dark:bg-red-950/30 text-red-600 text-xs">
-                Last error: {lastItemError}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      )}
 
       {/* Completion Card */}
       {isCompleted && (

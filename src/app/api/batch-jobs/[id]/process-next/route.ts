@@ -16,6 +16,40 @@ import { createServerSupabaseAdminClient } from '@/lib/supabase-server';
 
 const NIL_UUID = '00000000-0000-0000-0000-000000000000';
 
+/**
+ * Append log entry to batch job log file in Supabase Storage
+ */
+async function appendBatchLog(jobId: string, message: string): Promise<void> {
+  try {
+    const supabase = createServerSupabaseAdminClient();
+    const logPath = `${jobId}/log.txt`;
+    const timestamp = new Date().toISOString();
+    const logEntry = `[${timestamp}] ${message}\n`;
+    
+    // Try to download existing log file
+    const { data: existingData } = await supabase.storage
+      .from('batch-logs')
+      .download(logPath);
+    
+    let updatedContent = logEntry;
+    if (existingData) {
+      const existingText = await existingData.text();
+      updatedContent = existingText + logEntry;
+    }
+    
+    // Upload updated log file
+    await supabase.storage
+      .from('batch-logs')
+      .upload(logPath, updatedContent, {
+        contentType: 'text/plain',
+        upsert: true,
+      });
+  } catch (error) {
+    // Log to console but don't fail the request
+    console.error(`[BatchLog] Failed to append log for job ${jobId}:`, error);
+  }
+}
+
 interface ProcessResult {
   success: boolean;
   itemId?: string;
@@ -174,6 +208,9 @@ export async function POST(
       const finalStatus = job.failedItems === job.totalItems ? 'failed' : 'completed';
       await batchJobService.updateJobStatus(jobId, finalStatus);
       
+      // Log completion to storage
+      await appendBatchLog(jobId, `Batch job complete - ${job.successfulItems} successful, ${job.failedItems} failed`);
+      
       return NextResponse.json({
         success: true,
         status: 'job_completed',
@@ -191,6 +228,9 @@ export async function POST(
     // Get the first queued item
     const item = queuedItems[0];
     console.log(`[ProcessNext] Processing item ${item.id} (${queuedItems.length} remaining)`);
+
+    // Log to storage
+    await appendBatchLog(jobId, `Processing item ${item.id.slice(0, 8)}... (${queuedItems.length} remaining)`);
 
     // Update item status to processing
     await batchJobService.updateItemStatus(item.id, 'processing');
@@ -234,7 +274,9 @@ export async function POST(
       const durationMs = Date.now() - startTime;
 
       if (result.success) {
-        const convId = result.conversation.conversation_id || result.conversation.id;
+        // Use the PRIMARY KEY (id), not the business key (conversation_id)
+        // The FK constraint on batch_items.conversation_id references conversations.id (PK)
+        const convId = result.conversation.id;
         
         await batchJobService.incrementProgress(
           jobId,
@@ -244,6 +286,9 @@ export async function POST(
         );
 
         console.log(`[ProcessNext] Item ${item.id} completed in ${durationMs}ms: ${convId}`);
+        
+        // Log success to storage
+        await appendBatchLog(jobId, `✓ Item ${item.id.slice(0, 8)}... completed (conversation: ${convId.slice(0, 8)}...)`);
 
         // Get updated job status
         const updatedJob = await batchJobService.getJobById(jobId);
@@ -274,6 +319,9 @@ export async function POST(
         );
 
         console.error(`[ProcessNext] Item ${item.id} failed in ${durationMs}ms: ${result.error}`);
+        
+        // Log failure to storage
+        await appendBatchLog(jobId, `✗ Item ${item.id.slice(0, 8)}... failed: ${result.error || 'Unknown error'}`);
 
         const updatedJob = await batchJobService.getJobById(jobId);
         const remainingItems = updatedJob.items?.filter(i => i.status === 'queued').length || 0;
@@ -298,6 +346,9 @@ export async function POST(
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       
       console.error(`[ProcessNext] Item ${item.id} error in ${durationMs}ms:`, error);
+      
+      // Log error to storage
+      await appendBatchLog(jobId, `✗ Error processing item ${item.id.slice(0, 8)}...: ${errorMessage}`);
 
       await batchJobService.incrementProgress(
         jobId,
