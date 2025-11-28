@@ -59,6 +59,7 @@ export default function BatchJobPage() {
   // Processing state
   const [processingActive, setProcessingActive] = useState(false);
   const processingRef = useRef(false);
+  const autoStartedRef = useRef(false); // Prevent multiple auto-starts
   const [lastItemError, setLastItemError] = useState<string | null>(null);
 
   // Fetch status
@@ -110,34 +111,55 @@ export default function BatchJobPage() {
         setLastItemError(data.error || 'Unknown error');
       }
 
+      // Check if job is complete or cancelled - stop processing
+      if (data.status === 'job_completed' || data.status === 'job_cancelled' || data.status === 'no_items') {
+        console.log(`[BatchJob] Job ${data.status}, stopping processing`);
+        return false;
+      }
+
       // Return whether there are more items to process
-      return data.status === 'processed' && data.remainingItems > 0;
+      // Only continue if status is 'processed' AND there are remaining items
+      const shouldContinue = data.status === 'processed' && data.remainingItems > 0;
+      return shouldContinue;
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Processing error';
       setLastItemError(errorMsg);
+      console.error('[BatchJob] Processing error:', errorMsg);
       return false;
     }
   }, [jobId]);
 
   // Start processing loop
   const startProcessing = useCallback(async () => {
-    if (processingRef.current) return;
+    // Double-check to prevent multiple loops
+    if (processingRef.current) {
+      console.log('[BatchJob] Processing already active, skipping start');
+      return;
+    }
     
     processingRef.current = true;
     setProcessingActive(true);
+    console.log('[BatchJob] Starting processing loop');
 
     let hasMore = true;
-    while (hasMore && processingRef.current) {
+    let iterations = 0;
+    const maxIterations = 1000; // Safety limit to prevent infinite loops
+    
+    while (hasMore && processingRef.current && iterations < maxIterations) {
+      iterations++;
       hasMore = await processNextItem();
       
       // Small delay between items to prevent overwhelming
-      if (hasMore) {
+      if (hasMore && processingRef.current) {
         await new Promise(resolve => setTimeout(resolve, 500));
       }
     }
 
+    console.log(`[BatchJob] Processing loop ended after ${iterations} iterations`);
     processingRef.current = false;
     setProcessingActive(false);
+    
+    // Fetch final status
     await fetchStatus();
   }, [processNextItem, fetchStatus]);
 
@@ -152,12 +174,22 @@ export default function BatchJobPage() {
   }, [fetchStatus]);
 
   // Auto-start processing when job is queued and no processing is active
+  // NOTE: We intentionally omit startProcessing from deps to prevent infinite re-triggers
+  // The autoStartedRef ensures we only auto-start once per page load
   useEffect(() => {
-    if (status?.status === 'queued' && !processingActive && !processingRef.current) {
+    if (
+      status?.status === 'queued' && 
+      !processingActive && 
+      !processingRef.current &&
+      !autoStartedRef.current
+    ) {
+      // Mark that we've auto-started to prevent re-triggers
+      autoStartedRef.current = true;
       // Auto-start processing for queued jobs
       startProcessing();
     }
-  }, [status?.status, processingActive, startProcessing]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status?.status, processingActive]);
 
   // Job control actions
   const handleAction = async (action: 'pause' | 'resume' | 'cancel') => {
