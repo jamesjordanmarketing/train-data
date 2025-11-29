@@ -298,6 +298,12 @@ export async function POST(
         tier: item.tier,
         userId: job.createdBy || '00000000-0000-0000-0000-000000000000',
         runId: jobId,
+        // Pass scaffolding UUIDs for provenance tracking
+        scaffoldingIds: {
+          personaId: item.parameters.persona_id,
+          emotionalArcId: item.parameters.emotional_arc_id,
+          trainingTopicId: item.parameters.training_topic_id,
+        },
       });
 
       const durationMs = Date.now() - startTime;

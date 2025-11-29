@@ -60,6 +60,13 @@ export interface GenerationParams {
 
   /** Optional override for max tokens */
   maxTokens?: number;
+
+  /** Scaffolding IDs (UUIDs) for provenance tracking */
+  scaffoldingIds?: {
+    personaId?: string;
+    emotionalArcId?: string;
+    trainingTopicId?: string;
+  };
 }
 
 /**
@@ -203,9 +210,10 @@ export class ConversationGenerationService {
         metadata: {
           templateId: params.templateId,
           tier: params.tier,
-          personaId: params.parameters?.persona_id,
-          emotionalArcId: params.parameters?.emotional_arc_id,
-          trainingTopicId: params.parameters?.training_topic_id,
+          // Use scaffoldingIds (UUIDs) if provided, fallback to parameters (for backwards compat)
+          personaId: params.scaffoldingIds?.personaId || params.parameters?.persona_id,
+          emotionalArcId: params.scaffoldingIds?.emotionalArcId || params.parameters?.emotional_arc_id,
+          trainingTopicId: params.scaffoldingIds?.trainingTopicId || params.parameters?.training_topic_id,
         },
       });
 
