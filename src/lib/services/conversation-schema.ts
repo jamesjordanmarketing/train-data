@@ -102,5 +102,17 @@ export type ConversationJSON = {
       intensity: number;
     };
   }>;
+  // Added post-generation for audit trail
+  input_parameters?: {
+    persona_id: string;
+    persona_key: string;
+    persona_name: string;
+    emotional_arc_id: string;
+    emotional_arc_key: string;
+    emotional_arc_name: string;
+    training_topic_id: string;
+    training_topic_key: string;
+    training_topic_name: string;
+  };
 };
 

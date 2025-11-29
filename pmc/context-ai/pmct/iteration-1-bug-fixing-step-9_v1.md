@@ -435,3 +435,99 @@ Keep UI logs but optimize rendering with virtualization or batched state updates
 **Fix**: Modify code to use `conversations.id` (PK) instead of `conversations.conversation_id` (business key) when updating `batch_items`.
 
 **Secondary Fix**: Remove logging from UI, write logs to Supabase Storage blob per user request.
+
+---
+
+## Bug #3: Failed Batch Item Parameters (Step 10 Investigation)
+
+### Summary
+
+**Date**: 2025-11-28  
+**Batch Job ID**: `7b34038c-252c-457e-a0b6-215d021efd20`  
+**Failed Item ID**: `a0c9f9b2-8bf8-49c5-bf19-cad437999cb7`  
+**Error**: `Body is unusable: Body has already been read`  
+**Status**: 7/8 items successful (87.5%), 1 failed (12.5%)
+
+### Failed Combination Parameters
+
+The failed batch item had the following parameters:
+
+| Parameter | Value | Name |
+|-----------|-------|------|
+| **Persona ID** | `aa514346-cd61-42ac-adad-498934975402` | **David Chen** |
+| **Emotional Arc ID** | `33d2ac3e-3f92-44a5-a53d-788fdece2545` | **Couple Conflict → Alignment** |
+| **Training Topic ID** | `aee7b6c2-42e2-4ef4-8184-be12abe38eb5` | **Essential Estate Planning** |
+| **Tier** | `template` | - |
+| **Template ID** | `00000000-0000-0000-0000-000000000000` | (NIL_UUID - auto-selected) |
+
+### Comparison with Successful Items
+
+All 7 successful items in the same batch job used:
+
+**Common Parameters**:
+- **Persona**: `aa514346-cd61-42ac-adad-498934975402` (David Chen) - ✅ Same as failed item
+- **Tier**: `template` - ✅ Same as failed item
+
+**Successful Combinations** (7 total):
+
+1. Persona: `aa514346-cd61-42ac-adad-498934975402`, Arc: `53583301-5758-4781-99df-57b9c5fc1949`, Topic: `ecb118d1-ed61-4131-a1bd-7c6b30964433`
+2. Persona: `aa514346-cd61-42ac-adad-498934975402`, Arc: `53583301-5758-4781-99df-57b9c5fc1949`, Topic: `aee7b6c2-42e2-4ef4-8184-be12abe38eb5` ⚠️ **Same topic as failed**
+3. Persona: `aa514346-cd61-42ac-adad-498934975402`, Arc: `33d2ac3e-3f92-44a5-a53d-788fdece2545`, Topic: `a04a104f-96a6-4d0c-b0ea-5f44f4a2203d` ⚠️ **Same arc as failed**
+4. Persona: `aa514346-cd61-42ac-adad-498934975402`, Arc: `33d2ac3e-3f92-44a5-a53d-788fdece2545`, Topic: `ecb118d1-ed61-4131-a1bd-7c6b30964433` ⚠️ **Same arc as failed**
+5. Persona: `aa514346-cd61-42ac-adad-498934975402`, Arc: `53583301-5758-4781-99df-57b9c5fc1949`, Topic: `a04a104f-96a6-4d0c-b0ea-5f44f4a2203d`
+6. Persona: `aa514346-cd61-42ac-adad-498934975402`, Arc: `53583301-5758-4781-99df-57b9c5fc1949`, Topic: `99d753ea-71fa-4716-ae82-e4dc7cfe2e02`
+7. Persona: `aa514346-cd61-42ac-adad-498934975402`, Arc: `33d2ac3e-3f92-44a5-a53d-788fdece2545`, Topic: `99d753ea-71fa-4716-ae82-e4dc7cfe2e02` ⚠️ **Same arc as failed**
+
+**Failed Combination**:
+- Persona: `aa514346-cd61-42ac-adad-498934975402`, Arc: `33d2ac3e-3f92-44a5-a53d-788fdece2545`, Topic: `aee7b6c2-42e2-4ef4-8184-be12abe38eb5`
+
+### Key Observations
+
+1. **The combination is NOT unique** - Both the arc (`33d2ac3e-3f92-44a5-a53d-788fdece2545`) and topic (`aee7b6c2-42e2-4ef4-8184-be12abe38eb5`) were used successfully in other items:
+   - Item #2: Same topic with different arc ✅ Success
+   - Items #3, #4, #7: Same arc with different topics ✅ Success
+
+2. **The failure is NOT parameter-specific** - The exact same combination of persona, arc, and topic should work fine. The failure is due to the "Body Already Read" bug in the Claude API client (see Bug #3 in context-carry-info-11-15-25-1114pm-q.md).
+
+3. **This is a retry candidate** - The parameters themselves are valid. Once Bug #3 is fixed, this exact combination should succeed.
+
+### To Re-run This Failed Combination
+
+Use these exact parameters:
+
+```json
+{
+  "persona_id": "aa514346-cd61-42ac-adad-498934975402",
+  "emotional_arc_id": "33d2ac3e-3f92-44a5-a53d-788fdece2545",
+  "training_topic_id": "aee7b6c2-42e2-4ef4-8184-be12abe38eb5",
+  "tier": "template",
+  "templateId": "00000000-0000-0000-0000-000000000000"
+}
+```
+
+**Human-Readable**:
+- **Persona**: David Chen
+- **Emotional Arc**: Couple Conflict → Alignment
+- **Training Topic**: Essential Estate Planning
+- **Tier**: template
+
+### Database Query Used
+
+Query executed via SAOL (`scripts/find-failed-item-params.js`):
+
+```javascript
+const itemResult = await saol.agentQuery({
+  table: 'batch_items',
+  supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
+  supabaseKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+  where: [{ column: 'id', operator: 'eq', value: 'a0c9f9b2-8bf8-49c5-bf19-cad437999cb7' }],
+  limit: 1,
+  transport: 'supabase'
+});
+```
+
+### Related Files
+
+- Error log: `pmc/_archive/batch-runtime-17.csv`
+- Batch log: `batch-logs/7b34038c-252c-457e-a0b6-215d021efd20/log.txt`
+- Investigation script: `scripts/find-failed-item-params.js`

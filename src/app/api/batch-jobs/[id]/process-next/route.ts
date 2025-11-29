@@ -13,6 +13,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { batchJobService } from '@/lib/services/batch-job-service';
 import { getConversationGenerationService } from '@/lib/services/conversation-generation-service';
 import { createServerSupabaseAdminClient } from '@/lib/supabase-server';
+import { ScaffoldingDataService } from '@/lib/services/scaffolding-data-service';
+import { ParameterAssemblyService } from '@/lib/services/parameter-assembly-service';
+import { TemplateSelectionService } from '@/lib/services/template-selection-service';
 
 const NIL_UUID = '00000000-0000-0000-0000-000000000000';
 
@@ -241,31 +244,57 @@ export async function POST(
     }
 
     try {
-      // Resolve template ID
-      let templateId = item.parameters?.templateId;
+      // Validate required parameters
+      if (!item.parameters?.persona_id) {
+        throw new Error('Missing required parameter: persona_id');
+      }
+      if (!item.parameters?.emotional_arc_id) {
+        throw new Error('Missing required parameter: emotional_arc_id');
+      }
+      if (!item.parameters?.training_topic_id) {
+        throw new Error('Missing required parameter: training_topic_id');
+      }
 
+      // Initialize services for parameter resolution
+      const supabase = createServerSupabaseAdminClient();
+      const scaffoldingService = new ScaffoldingDataService(supabase);
+      const templateSelectionService = new TemplateSelectionService(supabase);
+      const parameterAssemblyService = new ParameterAssemblyService(
+        scaffoldingService,
+        templateSelectionService
+      );
+
+      // Resolve template ID (manual override or auto-select)
+      let templateId = item.parameters?.templateId;
       if (!templateId || templateId === NIL_UUID) {
         console.log(`[ProcessNext] Auto-selecting template for item ${item.id}`);
-
-        const emotionalArcId = item.parameters?.emotional_arc_id;
-        if (emotionalArcId) {
-          const autoSelectedId = await autoSelectTemplate(emotionalArcId, item.tier);
-          if (autoSelectedId) {
-            templateId = autoSelectedId;
-            console.log(`[ProcessNext] Auto-selected template ${templateId}`);
-          } else {
-            throw new Error('No suitable template found for the emotional arc.');
-          }
+        const autoSelectedId = await autoSelectTemplate(item.parameters.emotional_arc_id, item.tier);
+        if (autoSelectedId) {
+          templateId = autoSelectedId;
+          console.log(`[ProcessNext] Auto-selected template ${templateId}`);
         } else {
-          throw new Error('Cannot auto-select template: no emotional_arc_id provided.');
+          throw new Error('No suitable template found for the emotional arc.');
         }
       }
 
-      // Generate conversation
+      // Assemble parameters - this resolves scaffolding data (persona, arc, topic)
+      console.log(`[ProcessNext] Resolving scaffolding data for item ${item.id}...`);
+      const assembled = await parameterAssemblyService.assembleParameters({
+        persona_id: item.parameters.persona_id,
+        emotional_arc_id: item.parameters.emotional_arc_id,
+        training_topic_id: item.parameters.training_topic_id,
+        tier: item.tier,
+        template_id: templateId,
+        created_by: job.createdBy,
+      });
+
+      console.log(`[ProcessNext] ✓ Scaffolding resolved: ${assembled.conversation_params.persona.name}, ${assembled.conversation_params.emotional_arc.name}, ${assembled.conversation_params.training_topic.name}`);
+
+      // Generate conversation with RESOLVED parameters
       const generationService = getConversationGenerationService();
       const result = await generationService.generateSingleConversation({
         templateId,
-        parameters: item.parameters || {},
+        parameters: assembled.template_variables, // ← RESOLVED values, not UUIDs!
         tier: item.tier,
         userId: job.createdBy || '00000000-0000-0000-0000-000000000000',
         runId: jobId,
@@ -277,6 +306,49 @@ export async function POST(
         // Use the PRIMARY KEY (id), not the business key (conversation_id)
         // The FK constraint on batch_items.conversation_id references conversations.id (PK)
         const convId = result.conversation.id;
+        
+        // Update conversation with scaffolding provenance
+        console.log(`[ProcessNext] Updating conversation ${convId} with scaffolding data...`);
+        const { error: updateError } = await supabase
+          .from('conversations')
+          .update({
+            persona_id: item.parameters.persona_id,
+            emotional_arc_id: item.parameters.emotional_arc_id,
+            training_topic_id: item.parameters.training_topic_id,
+            scaffolding_snapshot: {
+              persona: {
+                id: assembled.conversation_params.persona.id,
+                name: assembled.conversation_params.persona.name,
+                persona_key: assembled.conversation_params.persona.persona_key,
+                emotional_baseline: assembled.conversation_params.persona.emotional_baseline,
+              },
+              emotional_arc: {
+                id: assembled.conversation_params.emotional_arc.id,
+                name: assembled.conversation_params.emotional_arc.name,
+                arc_key: assembled.conversation_params.emotional_arc.arc_key,
+                starting_emotion: assembled.conversation_params.emotional_arc.starting_emotion,
+                ending_emotion: assembled.conversation_params.emotional_arc.ending_emotion,
+              },
+              training_topic: {
+                id: assembled.conversation_params.training_topic.id,
+                name: assembled.conversation_params.training_topic.name,
+                topic_key: assembled.conversation_params.training_topic.topic_key,
+                complexity_level: assembled.conversation_params.training_topic.complexity_level,
+              },
+              generation_timestamp: new Date().toISOString(),
+              scaffolding_version: '1.0',
+              compatibility_score: assembled.metadata.compatibility_score,
+              system_prompt: assembled.system_prompt,
+            },
+          })
+          .eq('id', convId);
+
+        if (updateError) {
+          console.error(`[ProcessNext] ⚠️ Failed to update conversation with scaffolding data:`, updateError);
+          // Don't fail the batch item, just log the error
+        } else {
+          console.log(`[ProcessNext] ✓ Conversation updated with scaffolding provenance`);
+        }
         
         await batchJobService.incrementProgress(
           jobId,

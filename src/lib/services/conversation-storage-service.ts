@@ -1092,6 +1092,71 @@ export class ConversationStorageService {
         // analytics.track('json_repair_used', { conversationId, userId });
       }
 
+      // STEP 4.5: Fetch scaffolding data and override client_persona (BUG FIX #6)
+      console.log(`[parseAndStoreFinal] Fetching scaffolding data to validate persona...`);
+      
+      // Fetch conversation record to get scaffolding IDs
+      const { data: convRecord } = await this.supabase
+        .from('conversations')
+        .select('persona_id, emotional_arc_id, training_topic_id')
+        .eq('conversation_id', conversationId)
+        .single();
+
+      if (convRecord?.persona_id) {
+        // Fetch actual persona data
+        const { data: persona } = await this.supabase
+          .from('personas')
+          .select('id, name, archetype, persona_key')
+          .eq('id', convRecord.persona_id)
+          .single();
+
+        const { data: arc } = await this.supabase
+          .from('emotional_arcs')
+          .select('id, name, arc_key')
+          .eq('id', convRecord.emotional_arc_id)
+          .single();
+
+        const { data: topic } = await this.supabase
+          .from('training_topics')
+          .select('id, name, topic_key')
+          .eq('id', convRecord.training_topic_id)
+          .single();
+
+        if (persona) {
+          // Override Claude's generated persona with the actual input persona
+          const correctPersona = `${persona.name} - ${persona.archetype}`;
+          const originalPersona = parsed.conversation_metadata?.client_persona;
+          
+          if (originalPersona !== correctPersona) {
+            console.log(`[parseAndStoreFinal] ⚠️  Persona mismatch detected!`);
+            console.log(`[parseAndStoreFinal]   Claude generated: "${originalPersona}"`);
+            console.log(`[parseAndStoreFinal]   Correct persona: "${correctPersona}"`);
+            console.log(`[parseAndStoreFinal]   Overriding with correct persona...`);
+            
+            parsed.conversation_metadata.client_persona = correctPersona;
+          } else {
+            console.log(`[parseAndStoreFinal] ✅ Persona matches input: "${correctPersona}"`);
+          }
+
+          // Add input_parameters section for audit trail
+          parsed.input_parameters = {
+            persona_id: convRecord.persona_id,
+            persona_key: persona.persona_key,
+            persona_name: persona.name,
+            emotional_arc_id: convRecord.emotional_arc_id || '',
+            emotional_arc_key: arc?.arc_key || '',
+            emotional_arc_name: arc?.name || '',
+            training_topic_id: convRecord.training_topic_id || '',
+            training_topic_key: topic?.topic_key || '',
+            training_topic_name: topic?.name || '',
+          };
+
+          console.log(`[parseAndStoreFinal] ✅ Added input_parameters section for audit trail`);
+        }
+      } else {
+        console.log(`[parseAndStoreFinal] ⚠️  No persona_id in conversation record - skipping persona validation`);
+      }
+
       // STEP 5: Store final parsed conversation to permanent location
       const finalPath = `${userId}/${conversationId}/conversation.json`;
       const finalContent = JSON.stringify(parsed, null, 2);

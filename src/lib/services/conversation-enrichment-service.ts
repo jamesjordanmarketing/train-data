@@ -169,7 +169,7 @@ export class ConversationEnrichmentService {
     if (conversation.persona_id) {
       const { data } = await this.supabase
         .from('personas')
-        .select('name, demographics, financial_background')
+        .select('name, archetype, demographics, financial_background')
         .eq('id', conversation.persona_id)
         .single();
       persona = data;
@@ -375,12 +375,18 @@ export class ConversationEnrichmentService {
       turnIndex
     );
 
+    // Use database persona name if available (BUG FIX #6)
+    // This ensures consistency even if Claude's output was incorrect
+    const client_persona = dbMetadata.persona 
+      ? `${dbMetadata.persona.name} - ${dbMetadata.persona.archetype || 'Client'}`
+      : conversationMetadata.client_persona;
+
     return {
       id,
       conversation_id,
       turn_number: turn.turn_number,
       conversation_metadata: {
-        client_persona: conversationMetadata.client_persona,
+        client_persona, // Use validated persona from database
         client_background,
         session_context: conversationMetadata.session_context,
         conversation_phase: conversationMetadata.conversation_phase,
