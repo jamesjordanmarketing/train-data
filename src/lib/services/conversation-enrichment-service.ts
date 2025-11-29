@@ -141,6 +141,18 @@ export class ConversationEnrichmentService {
       dbMetadata
     );
     
+    // Log scaffolding integration
+    const hasScaffolding = minimalJson.input_parameters && 
+      (minimalJson.input_parameters.persona_key || 
+       minimalJson.input_parameters.emotional_arc_name || 
+       minimalJson.input_parameters.training_topic_name);
+    
+    if (hasScaffolding) {
+      console.log(`[Enrichment] ✅ Added scaffolding metadata to ${training_pairs.length} training pairs`);
+    } else {
+      console.log(`[Enrichment] ⚠️  No input_parameters - training pairs lack scaffolding metadata`);
+    }
+    
     console.log(`[Enrichment] ✅ Enrichment complete: ${training_pairs.length} training pairs created`);
     
     // STEP 5: Copy input_parameters from parsed JSON (if present)
@@ -332,6 +344,7 @@ export class ConversationEnrichmentService {
         turn,
         previousTurns,
         minimalJson.conversation_metadata,
+        minimalJson.input_parameters, // Pass input_parameters for scaffolding
         dbMetadata,
         i
       );
@@ -349,6 +362,7 @@ export class ConversationEnrichmentService {
     turn: MinimalTurn,
     previousTurns: MinimalTurn[],
     conversationMetadata: MinimalConversation['conversation_metadata'],
+    inputParameters: MinimalConversation['input_parameters'],
     dbMetadata: DatabaseEnrichmentMetadata,
     turnIndex: number
   ): TrainingPair {
@@ -403,17 +417,39 @@ export class ConversationEnrichmentService {
       ? `${dbMetadata.persona.name} - ${dbMetadata.persona.archetype || 'Client'}`
       : conversationMetadata.client_persona;
 
+    // Build conversation_metadata with scaffolding (ITERATION 2 ENHANCEMENT)
+    const metadata: any = {
+      client_persona, // Use validated persona from database
+      client_background,
+      session_context: conversationMetadata.session_context,
+      conversation_phase: conversationMetadata.conversation_phase,
+      expected_outcome: conversationMetadata.expected_outcome || 'Provide emotionally intelligent support'
+    };
+
+    // Add scaffolding metadata from input_parameters (for LoRA training effectiveness)
+    if (inputParameters) {
+      if (inputParameters.persona_key) {
+        metadata.persona_archetype = inputParameters.persona_key;
+      }
+      if (inputParameters.emotional_arc_name) {
+        metadata.emotional_arc = inputParameters.emotional_arc_name;
+      }
+      if (inputParameters.emotional_arc_key) {
+        metadata.emotional_arc_key = inputParameters.emotional_arc_key;
+      }
+      if (inputParameters.training_topic_name) {
+        metadata.training_topic = inputParameters.training_topic_name;
+      }
+      if (inputParameters.training_topic_key) {
+        metadata.training_topic_key = inputParameters.training_topic_key;
+      }
+    }
+
     return {
       id,
       conversation_id,
       turn_number: turn.turn_number,
-      conversation_metadata: {
-        client_persona, // Use validated persona from database
-        client_background,
-        session_context: conversationMetadata.session_context,
-        conversation_phase: conversationMetadata.conversation_phase,
-        expected_outcome: conversationMetadata.expected_outcome || 'Provide emotionally intelligent support'
-      },
+      conversation_metadata: metadata,
       system_prompt,
       conversation_history,
       current_user_input,

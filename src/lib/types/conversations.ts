@@ -753,7 +753,12 @@ export interface TrainingPair {
   
   conversation_metadata: {
     client_persona: string;       // From minimal JSON
+    persona_archetype?: string;   // ENRICHED from input_parameters (for LoRA training context)
     client_background: string;    // ENRICHED from personas table or constructed
+    emotional_arc?: string;       // ENRICHED from input_parameters (e.g., "Fear → Confidence")
+    emotional_arc_key?: string;   // ENRICHED from input_parameters (e.g., "fear_to_confidence")
+    training_topic?: string;      // ENRICHED from input_parameters (e.g., "Accelerated Mortgage Payoff")
+    training_topic_key?: string;  // ENRICHED from input_parameters (e.g., "mortgage_payoff_strategy")
     session_context: string;      // From minimal JSON
     conversation_phase: string;   // From minimal JSON
     expected_outcome: string;     // From minimal JSON
