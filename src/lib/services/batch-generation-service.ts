@@ -239,6 +239,14 @@ export class BatchGenerationService {
   async getJobStatus(jobId: string): Promise<BatchJobStatus> {
     const job = await batchJobService.getJobById(jobId);
     
+    console.log(`[BatchGenerationService.getJobStatus] Job data for ${jobId}:`, {
+      status: job.status,
+      totalItems: job.totalItems,
+      completedItems: job.completedItems,
+      successfulItems: job.successfulItems,
+      failedItems: job.failedItems
+    });
+    
     const percentage = job.totalItems > 0 
       ? (job.completedItems / job.totalItems) * 100 
       : 0;

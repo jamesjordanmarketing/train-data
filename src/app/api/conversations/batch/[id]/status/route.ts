@@ -19,6 +19,8 @@ export async function GET(
   try {
     const { id } = params;
     
+    console.log(`[StatusAPI] Fetching status for job ${id}`);
+    
     if (!id) {
       return NextResponse.json(
         {
@@ -34,6 +36,13 @@ export async function GET(
     
     // Get job status
     const status = await batchService.getJobStatus(id);
+    
+    console.log(`[StatusAPI] Returning status:`, {
+      jobId: status.jobId,
+      status: status.status,
+      completed: status.progress.completed,
+      total: status.progress.total
+    });
     
     return NextResponse.json({
       success: true,
