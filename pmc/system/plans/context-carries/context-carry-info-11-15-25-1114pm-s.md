@@ -228,9 +228,40 @@ const topic = await saolClient.getTrainingTopicById(topicId);
 await saolClient.updateConversationStatus(conversationId, 'completed');
 ```
 
-### When to Use SAOL vs Direct Supabase
-- **SAOL**: Business operations (scaffolding, conversations, exports)
-- **Direct Supabase**: Custom queries, storage operations, batch job internals
+**The Supabase Client is unreliable for administrative tasks due to RLS (Row Level Security).**
+**You MUST use the Supabase Agent Ops Library (SAOL) for all database operations.**
+
+### ✅ CORRECT SAOL USAGE PATTERN
+
+SAOL is a **Functional API**, not a class.
+
+**1. Import Pattern (in scripts):**
+```javascript
+// ✅ CORRECT IMPORT (in scripts/ folder)
+require('../load-env.js'); 
+const saol = require('../supa-agent-ops/dist/index.js');
+```
+
+**2. Querying Data (agentQuery):**
+```javascript
+const result = await saol.agentQuery({
+  table: 'batch_jobs',
+  supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
+  supabaseKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+  where: [{ column: 'status', operator: 'eq', value: 'failed' }],
+  limit: 5,
+  transport: 'supabase' // CRITICAL: Use 'supabase' transport
+});
+
+if (result.success) {
+  console.log(result.data);
+}
+```
+
+**3. Introspection:**
+⚠️ **WARNING**: `agentIntrospectSchema` often requires `transport: 'pg'` and a direct `DATABASE_URL` connection string.
+**Better Approach**: Use "Probe Queries" with `agentQuery` to check if columns exist.
+
 
 ---
 

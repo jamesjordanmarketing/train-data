@@ -461,6 +461,7 @@ export class ConversationEnrichmentService {
 
   /**
    * Build client_background from persona data
+   * Handles demographics as JSONB object and financial_background as text
    */
   private buildClientBackground(
     persona: DatabaseEnrichmentMetadata['persona'],
@@ -472,12 +473,41 @@ export class ConversationEnrichmentService {
 
     const parts: string[] = [];
 
+    // Handle demographics as JSONB object (not string)
     if (persona.demographics) {
-      parts.push(persona.demographics);
+      if (typeof persona.demographics === 'object' && persona.demographics !== null) {
+        const demo = persona.demographics as Record<string, unknown>;
+        const demoString = [
+          demo.age !== undefined && demo.age !== null ? `Age ${demo.age}` : null,
+          typeof demo.gender === 'string' ? demo.gender : null,
+          typeof demo.location === 'string' ? demo.location : null,
+          typeof demo.family_status === 'string' ? demo.family_status : null
+        ].filter(Boolean).join(', ');
+        
+        if (demoString) {
+          parts.push(demoString);
+        }
+      } else if (typeof persona.demographics === 'string') {
+        // Handle legacy string format (backward compatibility)
+        parts.push(persona.demographics);
+      }
+      // Silently skip if demographics is neither object nor string
     }
 
+    // Handle financial_background (should be text/string)
     if (persona.financial_background) {
-      parts.push(persona.financial_background);
+      if (typeof persona.financial_background === 'string') {
+        parts.push(persona.financial_background);
+      } else if (typeof persona.financial_background === 'object') {
+        // Unexpected: financial_background is object, stringify it
+        try {
+          const fbString = JSON.stringify(persona.financial_background);
+          parts.push(fbString);
+        } catch {
+          // Skip if serialization fails
+          console.warn(`[Enrichment] ⚠️ Could not serialize financial_background`);
+        }
+      }
     }
 
     if (parts.length === 0) {

@@ -68,11 +68,11 @@ export class EnrichmentPipelineOrchestrator {
     const stagesCompleted: string[] = [];
 
     try {
-      // STAGE 1: Fetch raw JSON
-      console.log(`[Pipeline] Stage 1: Fetching raw JSON`);
-      const rawJson = await this.fetchRawJson(conversationId);
+      // STAGE 1: Fetch parsed JSON (with input_parameters)
+      console.log(`[Pipeline] Stage 1: Fetching parsed JSON`);
+      const rawJson = await this.fetchParsedJson(conversationId);
       if (!rawJson) {
-        throw new Error('No raw response found for conversation');
+        throw new Error('No parsed JSON found for conversation');
       }
 
       // STAGE 2: Validate structure
@@ -223,27 +223,39 @@ export class EnrichmentPipelineOrchestrator {
   }
 
   /**
-   * Fetch raw JSON from storage
+   * Fetch parsed JSON from storage (with input_parameters)
+   * Prefers file_path (parsed), falls back to raw_response_path (raw Claude output)
    */
-  private async fetchRawJson(conversationId: string): Promise<string | null> {
-    // Get raw_response_path from database
+  private async fetchParsedJson(conversationId: string): Promise<string | null> {
+    // Get both paths - prefer file_path which has input_parameters
     const { data: conversation } = await this.supabase
       .from('conversations')
-      .select('raw_response_path')
+      .select('file_path, raw_response_path')
       .eq('conversation_id', conversationId)
       .single();
 
-    if (!conversation?.raw_response_path) {
+    // file_path = parsed JSON with input_parameters (preferred)
+    // raw_response_path = raw Claude output (fallback for backward compatibility)
+    const jsonPath = conversation?.file_path || conversation?.raw_response_path;
+    
+    if (!jsonPath) {
+      console.log(`[Pipeline] ⚠️ No JSON path found for ${conversationId}`);
       return null;
     }
 
-    // Download from storage
+    // Log which path we're using for debugging
+    if (conversation?.file_path) {
+      console.log(`[Pipeline] ✅ Using file_path (has input_parameters): ${jsonPath}`);
+    } else {
+      console.log(`[Pipeline] ⚠️ Falling back to raw_response_path (may lack input_parameters): ${jsonPath}`);
+    }
+
     const { data, error } = await this.supabase.storage
       .from('conversation-files')
-      .download(conversation.raw_response_path);
+      .download(jsonPath);
 
     if (error || !data) {
-      throw new Error(`Failed to download raw response: ${error?.message}`);
+      throw new Error(`Failed to download JSON: ${error?.message}`);
     }
 
     return await data.text();
