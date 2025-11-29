@@ -65,8 +65,36 @@ export default function BatchJobPage() {
   // Fetch status
   const fetchStatus = useCallback(async () => {
     try {
-      const response = await fetch(`/api/conversations/batch/${jobId}/status`);
+      console.log(`[BatchJobPage] Fetching status for job ${jobId}...`);
+      
+      // Add timeout to prevent hanging
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+
+      const response = await fetch(`/api/conversations/batch/${jobId}/status`, {
+        signal: controller.signal,
+        credentials: 'same-origin',
+      });
+      clearTimeout(timeoutId);
+
+      console.log(`[BatchJobPage] Response status: ${response.status}`);
+
+      // Check for auth redirect (302 or 401/403)
+      if (response.status === 401 || response.status === 403) {
+        throw new Error('Authentication required. Please sign in.');
+      }
+
+      if (response.redirected) {
+        console.warn('[BatchJobPage] Response was redirected to:', response.url);
+        throw new Error('Session expired. Please sign in again.');
+      }
+
       const data = await response.json();
+      console.log('[BatchJobPage] Status data:', { 
+        status: data.status, 
+        completed: data.progress?.completed, 
+        total: data.progress?.total 
+      });
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to fetch status');
@@ -75,8 +103,15 @@ export default function BatchJobPage() {
       setStatus(data);
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch status');
+      if (err instanceof Error && err.name === 'AbortError') {
+        console.error('[BatchJobPage] Status fetch timeout');
+        setError('Request timed out. Please refresh the page.');
+      } else {
+        console.error('[BatchJobPage] Status fetch error:', err);
+        setError(err instanceof Error ? err.message : 'Failed to fetch status');
+      }
     } finally {
+      console.log('[BatchJobPage] Setting loading to false');
       setLoading(false);
     }
   }, [jobId]);
@@ -170,8 +205,22 @@ export default function BatchJobPage() {
 
   // Initial fetch and auto-start processing for queued jobs
   useEffect(() => {
+    console.log('[BatchJobPage] Component mounted, fetching initial status...');
     fetchStatus();
   }, [fetchStatus]);
+
+  // Safety mechanism: Force loading to false after 5 seconds if still loading
+  useEffect(() => {
+    const safetyTimer = setTimeout(() => {
+      if (loading) {
+        console.warn('[BatchJobPage] Loading timeout - forcing loading state to false');
+        setLoading(false);
+        setError('Failed to load job status. Please try refreshing.');
+      }
+    }, 5000);
+
+    return () => clearTimeout(safetyTimer);
+  }, [loading]);
 
   // Auto-start processing when job is queued and no processing is active
   // NOTE: We intentionally omit startProcessing from deps to prevent infinite re-triggers
@@ -362,7 +411,7 @@ export default function BatchJobPage() {
     <div className="container mx-auto py-6 max-w-2xl">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <div>
+        <div className="flex-1">
           <Button 
             variant="ghost" 
             size="sm" 
@@ -375,9 +424,24 @@ export default function BatchJobPage() {
           <h1 className="text-2xl font-bold tracking-tight">Batch Job</h1>
           <p className="text-sm text-muted-foreground font-mono mt-1 break-all">{jobId}</p>
         </div>
-        <Badge className={`${getStatusColor(status.status)} text-white`}>
-          {status.status.toUpperCase()}
-        </Badge>
+        <div className="flex items-center gap-3">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              console.log('[BatchJobPage] Manual refresh triggered');
+              setLoading(true);
+              fetchStatus();
+            }}
+            disabled={actionLoading}
+          >
+            <RefreshCw className="mr-2 h-3 w-3" />
+            Refresh
+          </Button>
+          <Badge className={`${getStatusColor(status.status)} text-white`}>
+            {status.status.toUpperCase()}
+          </Badge>
+        </div>
       </div>
 
       {/* Error Banner */}
