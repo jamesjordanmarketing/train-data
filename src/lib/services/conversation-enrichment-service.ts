@@ -34,6 +34,18 @@ interface MinimalConversation {
     expected_outcome?: string;
   };
   turns: MinimalTurn[];
+  input_parameters?: {
+    persona_id: string;
+    persona_name: string;
+    persona_key: string;
+    persona_archetype?: string;
+    emotional_arc_id: string;
+    emotional_arc_name: string;
+    emotional_arc_key: string;
+    training_topic_id: string;
+    training_topic_name: string;
+    training_topic_key: string;
+  };
 }
 
 interface MinimalTurn {
@@ -131,11 +143,21 @@ export class ConversationEnrichmentService {
     
     console.log(`[Enrichment] ✅ Enrichment complete: ${training_pairs.length} training pairs created`);
     
-    return {
+    // STEP 5: Copy input_parameters from parsed JSON (if present)
+    const enrichedResult: any = {
       dataset_metadata,
       consultant_profile,
       training_pairs
     };
+
+    if (minimalJson.input_parameters) {
+      enrichedResult.input_parameters = minimalJson.input_parameters;
+      console.log(`[Enrichment] ✅ Copied input_parameters to enriched JSON`);
+    } else {
+      console.log(`[Enrichment] ⚠️  No input_parameters in parsed JSON - skipping`);
+    }
+    
+    return enrichedResult;
   }
 
   /**

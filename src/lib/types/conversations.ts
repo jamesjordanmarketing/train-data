@@ -690,6 +690,18 @@ export interface EnrichedConversation {
   dataset_metadata: DatasetMetadata;
   consultant_profile: ConsultantProfile;
   training_pairs: TrainingPair[];
+  input_parameters?: {
+    persona_id: string;
+    persona_name: string;
+    persona_key: string;
+    persona_archetype?: string;
+    emotional_arc_id: string;
+    emotional_arc_name: string;
+    emotional_arc_key: string;
+    training_topic_id: string;
+    training_topic_name: string;
+    training_topic_key: string;
+  };
 }
 
 /**
