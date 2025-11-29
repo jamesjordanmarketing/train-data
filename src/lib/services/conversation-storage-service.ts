@@ -1096,31 +1096,73 @@ export class ConversationStorageService {
       console.log(`[parseAndStoreFinal] Fetching scaffolding data to validate persona...`);
       
       // Fetch conversation record to get scaffolding IDs
-      const { data: convRecord } = await this.supabase
+      const { data: convRecord, error: convRecordError } = await this.supabase
         .from('conversations')
         .select('persona_id, emotional_arc_id, training_topic_id')
         .eq('conversation_id', conversationId)
         .single();
 
+      if (convRecordError) {
+        console.log(`[parseAndStoreFinal] ⚠️  Error fetching conversation record:`, convRecordError.message);
+      }
+
+      console.log(`[parseAndStoreFinal] Conversation record scaffolding IDs:`, {
+        persona_id: convRecord?.persona_id || 'NOT SET',
+        emotional_arc_id: convRecord?.emotional_arc_id || 'NOT SET',
+        training_topic_id: convRecord?.training_topic_id || 'NOT SET',
+      });
+
       if (convRecord?.persona_id) {
         // Fetch actual persona data
-        const { data: persona } = await this.supabase
+        const { data: persona, error: personaError } = await this.supabase
           .from('personas')
           .select('id, name, archetype, persona_key')
           .eq('id', convRecord.persona_id)
           .single();
 
-        const { data: arc } = await this.supabase
-          .from('emotional_arcs')
-          .select('id, name, arc_key')
-          .eq('id', convRecord.emotional_arc_id)
-          .single();
+        if (personaError) {
+          console.log(`[parseAndStoreFinal] ⚠️  Error fetching persona:`, personaError.message);
+        } else {
+          console.log(`[parseAndStoreFinal] ✅ Fetched persona: ${persona?.name} (${persona?.persona_key})`);
+        }
 
-        const { data: topic } = await this.supabase
-          .from('training_topics')
-          .select('id, name, topic_key')
-          .eq('id', convRecord.training_topic_id)
-          .single();
+        // Fetch emotional arc (only if ID exists)
+        let arc = null;
+        if (convRecord.emotional_arc_id) {
+          const { data: arcData, error: arcError } = await this.supabase
+            .from('emotional_arcs')
+            .select('id, name, arc_key')
+            .eq('id', convRecord.emotional_arc_id)
+            .single();
+          
+          if (arcError) {
+            console.log(`[parseAndStoreFinal] ⚠️  Error fetching emotional_arc:`, arcError.message);
+          } else {
+            arc = arcData;
+            console.log(`[parseAndStoreFinal] ✅ Fetched emotional_arc: ${arc?.name} (${arc?.arc_key})`);
+          }
+        } else {
+          console.log(`[parseAndStoreFinal] ⚠️  No emotional_arc_id set - skipping arc fetch`);
+        }
+
+        // Fetch training topic (only if ID exists)
+        let topic = null;
+        if (convRecord.training_topic_id) {
+          const { data: topicData, error: topicError } = await this.supabase
+            .from('training_topics')
+            .select('id, name, topic_key')
+            .eq('id', convRecord.training_topic_id)
+            .single();
+          
+          if (topicError) {
+            console.log(`[parseAndStoreFinal] ⚠️  Error fetching training_topic:`, topicError.message);
+          } else {
+            topic = topicData;
+            console.log(`[parseAndStoreFinal] ✅ Fetched training_topic: ${topic?.name} (${topic?.topic_key})`);
+          }
+        } else {
+          console.log(`[parseAndStoreFinal] ⚠️  No training_topic_id set - skipping topic fetch`);
+        }
 
         if (persona) {
           // Override Claude's generated persona with the actual input persona
@@ -1151,7 +1193,7 @@ export class ConversationStorageService {
             training_topic_name: topic?.name || '',
           };
 
-          console.log(`[parseAndStoreFinal] ✅ Added input_parameters section for audit trail`);
+          console.log(`[parseAndStoreFinal] ✅ Added input_parameters section:`, parsed.input_parameters);
         }
       } else {
         console.log(`[parseAndStoreFinal] ⚠️  No persona_id in conversation record - skipping persona validation`);
