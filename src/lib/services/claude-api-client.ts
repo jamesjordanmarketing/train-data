@@ -287,8 +287,20 @@ export class ClaudeAPIClient {
         await this.handleAPIError(response, requestId);
       }
 
-      // Parse response
-      const data = await response.json();
+      // Parse response - read as text first for resilience
+      let data: any;
+      try {
+        const responseText = await response.text();
+        data = JSON.parse(responseText);
+      } catch (parseError) {
+        throw new APIError(
+          'Failed to parse Claude API response as JSON',
+          500,
+          'parse_error',
+          false,
+          { parseError: parseError instanceof Error ? parseError.message : 'Unknown parse error' }
+        );
+      }
 
       // Extract content (Claude returns array of content blocks)
       const content = data.content
@@ -352,22 +364,47 @@ export class ClaudeAPIClient {
 
   /**
    * Handle API error responses
+   * 
+   * IMPORTANT: Reads body as text FIRST, then parses as JSON.
+   * This prevents "Body is unusable: Body has already been read" errors.
+   * 
    * @private
    */
   private async handleAPIError(response: Response, requestId: string): Promise<never> {
     let errorData: any = {};
+    let rawText: string = '';
     
     try {
-      errorData = await response.json();
-    } catch {
-      // If JSON parsing fails, use response text
-      errorData = { message: await response.text() };
+      // Read body ONCE as text - this is the only read operation
+      rawText = await response.text();
+      
+      // Attempt to parse as JSON
+      try {
+        errorData = JSON.parse(rawText);
+      } catch (parseError) {
+        // JSON parsing failed - use raw text as message
+        errorData = { 
+          message: rawText || response.statusText,
+          parseError: 'Response was not valid JSON'
+        };
+      }
+    } catch (readError) {
+      // Network/stream error reading body
+      errorData = { 
+        message: response.statusText || 'Failed to read error response',
+        readError: readError instanceof Error ? readError.message : 'Unknown read error'
+      };
     }
 
     const message = errorData.error?.message || errorData.message || response.statusText;
     const code = errorData.error?.type || 'api_error';
 
     console.error(`[${requestId}] API Error ${response.status}:`, message);
+    
+    // Log raw text for debugging if available
+    if (rawText && rawText !== message) {
+      console.error(`[${requestId}] Raw error response (first 500 chars):`, rawText.substring(0, 500));
+    }
 
     // Categorize error
     const retryable = this.isRetryableStatus(response.status);
