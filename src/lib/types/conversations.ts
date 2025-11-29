@@ -808,6 +808,7 @@ export interface DatabaseEnrichmentMetadata {
   turn_count: number;
   persona: {
     name: string;
+    archetype?: string;
     demographics?: string;
     financial_background?: string;
   } | null;
