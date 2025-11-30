@@ -133,8 +133,14 @@ export default function BatchJobPage() {
         setStatus(prev => prev ? {
           ...prev,
           progress: data.progress,
+          // Map API status to UI status:
+          // - 'job_completed' -> 'completed'
+          // - 'job_cancelled' -> 'cancelled'
+          // - 'processed' (item processed, more to go) -> 'processing'
+          // - 'no_items' -> keep current (will be updated by fetchStatus)
           status: data.status === 'job_completed' ? 'completed' 
-               : data.status === 'job_cancelled' ? 'cancelled' 
+               : data.status === 'job_cancelled' ? 'cancelled'
+               : data.status === 'processed' ? 'processing'
                : prev.status,
         } : null);
       }
@@ -347,7 +353,8 @@ export default function BatchJobPage() {
 
   // Format time remaining
   const formatTimeRemaining = (seconds?: number) => {
-    if (!seconds || seconds <= 0) return 'Calculating...';
+    if (seconds === undefined || seconds === null) return 'Calculating...';
+    if (seconds <= 0) return '-'; // Job is complete or near complete
     if (seconds < 60) return `${seconds}s`;
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;

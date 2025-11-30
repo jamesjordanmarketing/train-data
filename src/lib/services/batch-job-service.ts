@@ -10,8 +10,17 @@ import type { BatchJob, BatchItem, TierType } from '@/lib/types';
 
 type BatchJobStatus = 'queued' | 'processing' | 'paused' | 'completed' | 'failed' | 'cancelled';
 
-// Create admin client for batch operations
-const supabase = createServerSupabaseAdminClient();
+/**
+ * Get fresh Supabase admin client
+ * 
+ * IMPORTANT: We create a fresh client on each call instead of using a module-level singleton.
+ * This ensures each API request gets a client with current environment variables,
+ * which is critical in serverless environments where module-level variables might
+ * be cached across requests with stale connections.
+ */
+function getSupabase() {
+  return createServerSupabaseAdminClient();
+}
 
 /**
  * Batch Job Service
@@ -50,6 +59,7 @@ export const batchJobService = {
     job: Partial<BatchJob> & { createdBy?: string }, 
     items: Partial<BatchItem>[]
   ): Promise<BatchJob> {
+    const supabase = getSupabase();
     try {
       // Step 1: Insert batch job
       const { data: jobData, error: jobError } = await supabase
@@ -117,6 +127,7 @@ export const batchJobService = {
    * ```
    */
   async getJobById(id: string): Promise<BatchJob> {
+    const supabase = getSupabase();
     try {
       // Fetch job
       const { data: jobData, error: jobError } = await supabase
@@ -188,6 +199,7 @@ export const batchJobService = {
    * ```
    */
   async getAllJobs(filters?: { status?: BatchJobStatus; createdBy?: string }): Promise<BatchJob[]> {
+    const supabase = getSupabase();
     try {
       let query = supabase
         .from('batch_jobs')
@@ -272,6 +284,7 @@ export const batchJobService = {
    * ```
    */
   async updateJobStatus(id: string, status: BatchJobStatus): Promise<BatchJob> {
+    const supabase = getSupabase();
     try {
       const updateData: any = {
         status,
@@ -325,6 +338,7 @@ export const batchJobService = {
     conversationId?: string,
     errorMessage?: string
   ): Promise<void> {
+    const supabase = getSupabase();
     try {
       // Update batch item status
       const itemUpdate: any = {
@@ -406,6 +420,7 @@ export const batchJobService = {
    * ```
    */
   async getActiveJobs(userId: string): Promise<BatchJob[]> {
+    const supabase = getSupabase();
     try {
       const { data, error } = await supabase
         .from('batch_jobs')
@@ -480,6 +495,7 @@ export const batchJobService = {
    * ```
    */
   async cancelJob(id: string): Promise<void> {
+    const supabase = getSupabase();
     try {
       // First, mark all pending/queued items as failed
       // Use error_message column (not error) per schema
@@ -535,6 +551,7 @@ export const batchJobService = {
    * ```
    */
   async updateItemStatus(itemId: string, status: string): Promise<void> {
+    const supabase = getSupabase();
     try {
       const { error } = await supabase
         .from('batch_items')
@@ -562,6 +579,7 @@ export const batchJobService = {
    * ```
    */
   async deleteJob(id: string): Promise<void> {
+    const supabase = getSupabase();
     try {
       // Delete items first (if cascade is not set up)
       const { error: itemsError } = await supabase
