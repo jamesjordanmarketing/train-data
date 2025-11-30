@@ -1,16 +1,8 @@
 FIRST we need to architect and complete the full version of the FINAL JSON and JSONL formats that will be ACTUAL LoRA Training Files.  
-We have the current "Enriched JSON" which captures one conversation EXAMPLE. 
+We have the current "Enriched JSON" which captures one conversation EXAMPLE. This is based on our current schema which is here: `C:\Users\james\Master\BrightHub\brun\train-data\pmc\context-ai\pmct\training-data-seeds\c-alpha-build_v3.4_emotional-dataset-JSON-format_v3.json`. PLEASE NOTE that this format schema is OUT OF DATE. The most recent example ENRICHED are the most up to date version. 
 
 So the first thing we need to do is update the `C:\Users\james\Master\BrightHub\brun\train-data\pmc\context-ai\pmct\training-data-seeds\c-alpha-build_v3.4_emotional-dataset-JSON-format_v3.json` schema format to include the new very important scaffolding, parameters, metadata. You can see the details of the implementation here: `C:\Users\james\Master\BrightHub\brun\train-data\pmc\context-ai\pmct\iteration-2-json-updated_v1.md`
 
-You can also see 5 implemented files here: 
-`C:\Users\james\Master\BrightHub\brun\train-data\pmc\_archive\david-chen-confusion-clarity-mortgage-enriched-scaffolds.json`
-`C:\Users\james\Master\BrightHub\brun\train-data\pmc\_archive\jennifer-confusion-clarity-mortgage-enriched-scaffolds.json`
-`C:\Users\james\Master\BrightHub\brun\train-data\pmc\_archive\jennifer-overwhelm-to-empowerment-estate-plannin-scaffolds.json`
-`C:\Users\james\Master\BrightHub\brun\train-data\pmc\_archive\marcus-chen-overwhelm-to-empowerment-estate-plannin-scaffolds.json`
-`C:\Users\james\Master\BrightHub\brun\train-data\pmc\_archive\marcus-chen-overwhelm-to-empowerment-estate-plannin-scaffolds.json`
-
-Read enough of all of these files to be confident you have the breadth of type of values and any "optional" elements that do not appear in all files (I don't think there are any "optional" elements" but I am not sure.
 
 You can write the new version of the schema to: `C:\Users\james\Master\BrightHub\brun\train-data\pmc\context-ai\pmct\training-data-seeds\c-alpha-build_v3.4_emotional-dataset-JSON-format_v4.json`
 
@@ -37,3 +29,32 @@ So your job in this prompt is to:
 
 3. Create an example full file as proof that the "full" schema format is accurate, precise, and capable of mapping multiple conversations in one file. 
 Put the example new full file here: `C:\Users\james\Master\BrightHub\brun\train-data\pmc\context-ai\pmct\training-data-seeds\c-alpha-build_v3.4_emotional-dataset-JSON-example_v4.json`
+
+
+
+concatenate the files into one big file.
+
+I should be able to:
+
+1. Sort and filter the conversations on the \conversations\ page by batch job. Then I must be able to "select all".
+2. I must also be able to select ANY 
+2. Then I must be able to "combine all"
+3. The output must be two files:
+
+Design it.
+
+1. New column on conversations Batch ID. 
+2. We can sort and filter on the Batch ID field.
+3. New page called LoRA Training JSON Files
+4. This page will be empty to begin with.
+5. On the conversations page there will be a "create training files" button. This button has the purpose of concatenating all the files that have been checked in the table. 
+6. Clicking on the create training files button will pop up a dropdown that shows all of the current full production JSON files (it does not show the JSONL files). Selecting one of the full JSON files will then add all the files that have been checked on the conversations table to that specific JSON file. 
+7. The JSONL file is ALWAYS generated alongside the JSON file. I think the easiest would be to just automatically convert the full JSON file to a JSONL file, correct?
+8. On the new LoRA Training JSON Files page if you select a generated JSON file a drop down will allow you to choose to download either the JSON file or the JSONL file.
+
+
+to think about 
+Do we need to concatendate each new file within the XML header/footer nodes or can they simply be concatentated to the end of an existing file
+
+
+
