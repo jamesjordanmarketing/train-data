@@ -1,0 +1,18 @@
+The next spec we are creating is the new production full JSON & JSONL files page. It has the following characteristics and functions.
+
+1. New column on conversations Batch ID. 
+2. We can sort and filter on the Batch ID field.
+3. New page called LoRA Training JSON Files
+4. This page will be empty to begin with.
+5. On the conversations page there will be a "create training files" button. This button has the purpose of correctly adding all the files that have been checked in the table. By "adding" I mean correctly placing each conversation within the production full JSON tiering and node hierarchy.
+6. Clicking on the create training files button will pop up a dropdown that shows all of the current full production JSON files (it does not show the JSONL files). Selecting one of the full JSON files will then add all the files that have been checked on the conversations table to that specific JSON file.
+7. Adding the single conversation JSON files to the production full JSON and JSONL files must be done in robust fault tolerant way that allows the processing of dozens and dozens of files at a time. We may select up to 80 at a time to be added to the full file.
+7. The JSONL file is ALWAYS generated alongside the JSON file. I think the easiest would be to just automatically convert the full JSON file to a JSONL file, correct?
+8. On the new LoRA Training JSON Files page if you select a generated JSON file a drop down will allow you to choose to download either the JSON file or the JSONL file.
+
+
+to think about 
+Do we need to concatendate each new file within the XML header/footer nodes or can they simply be concatentated to the end of an existing file
+
+
+
