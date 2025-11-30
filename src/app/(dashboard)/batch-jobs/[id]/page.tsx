@@ -432,19 +432,6 @@ export default function BatchJobPage() {
           <p className="text-sm text-muted-foreground font-mono mt-1 break-all">{jobId}</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              console.log('[BatchJobPage] Manual refresh triggered');
-              setLoading(true);
-              fetchStatus();
-            }}
-            disabled={actionLoading}
-          >
-            <RefreshCw className="mr-2 h-3 w-3" />
-            Refresh
-          </Button>
           <Badge className={`${getStatusColor(status.status)} text-white`}>
             {status.status.toUpperCase()}
           </Badge>
@@ -552,17 +539,6 @@ export default function BatchJobPage() {
             </Badge>
           )}
           
-          {/* Start Processing (for queued jobs that aren't auto-started) */}
-          {status.status === 'queued' && !processingActive && (
-            <Button 
-              onClick={startProcessing}
-              disabled={actionLoading}
-            >
-              <Play className="mr-2 h-4 w-4" />
-              Start Processing
-            </Button>
-          )}
-          
           {/* Stop Processing (replaces Pause for active processing) */}
           {processingActive && (
             <Button 
@@ -601,15 +577,6 @@ export default function BatchJobPage() {
               Cancel Job
             </Button>
           )}
-          
-          <Button 
-            variant="outline" 
-            onClick={fetchStatus}
-            disabled={actionLoading}
-          >
-            <RefreshCw className="mr-2 h-4 w-4" />
-            Refresh
-          </Button>
         </CardContent>
       </Card>
 

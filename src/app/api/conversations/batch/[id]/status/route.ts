@@ -3,10 +3,17 @@
  * 
  * GET /api/conversations/batch/:id/status
  * Get current status and progress of a batch generation job
+ * 
+ * IMPORTANT: This route uses batchJobService directly (not through BatchGenerationService singleton)
+ * to ensure fresh database queries on every request in serverless environments.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getBatchGenerationService } from '@/lib/services';
+import { batchJobService } from '@/lib/services/batch-job-service';
+
+// Force dynamic rendering - never cache this route
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 /**
  * GET /api/conversations/batch/:id/status
@@ -31,11 +38,28 @@ export async function GET(
       );
     }
     
-    // Get batch generation service
-    const batchService = getBatchGenerationService();
+    // Query database directly using batchJobService (creates fresh Supabase client per request)
+    const job = await batchJobService.getJobById(id);
     
-    // Get job status
-    const status = await batchService.getJobStatus(id);
+    // Calculate percentage
+    const percentage = job.totalItems > 0 
+      ? Math.round((job.completedItems / job.totalItems) * 100 * 10) / 10
+      : 0;
+    
+    const status = {
+      jobId: job.id,
+      status: job.status,
+      progress: {
+        total: job.totalItems,
+        completed: job.completedItems,
+        successful: job.successfulItems,
+        failed: job.failedItems,
+        percentage,
+      },
+      estimatedTimeRemaining: job.estimatedTimeRemaining,
+      startedAt: job.startedAt || undefined,
+      completedAt: job.completedAt || undefined,
+    };
     
     console.log(`[StatusAPI] Returning status:`, {
       jobId: status.jobId,
@@ -44,10 +68,20 @@ export async function GET(
       total: status.progress.total
     });
     
-    return NextResponse.json({
-      success: true,
-      ...status,
-    });
+    // Return with cache control headers to prevent any caching
+    return NextResponse.json(
+      {
+        success: true,
+        ...status,
+      },
+      {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        },
+      }
+    );
     
   } catch (error) {
     console.error('Error getting batch status:', error);
@@ -75,4 +109,3 @@ export async function GET(
     );
   }
 }
-
