@@ -35,7 +35,7 @@ export function useKeyboardShortcuts() {
       // Cmd/Ctrl+A: Select all conversations
       if (modKey && key === 'a') {
         event.preventDefault();
-        selectAllConversations(conversations.map(c => c.id));
+        selectAllConversations(conversations.map(c => c.conversationId));
         return;
       }
       

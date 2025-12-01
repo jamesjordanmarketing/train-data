@@ -52,7 +52,7 @@ export function useTableKeyboardNavigation(conversations: Conversation[]) {
         event.preventDefault();
         const conversation = conversations[focusedRowIndex];
         if (conversation) {
-          toggleSelection(conversation.id);
+          toggleSelection(conversation.conversationId);
         }
         return;
       }

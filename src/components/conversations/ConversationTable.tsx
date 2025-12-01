@@ -228,14 +228,14 @@ export const ConversationTable = React.memo(function ConversationTable({ convers
     return sortDirection === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />;
   };
   
-  const allSelected = conversations.length > 0 && conversations.every(c => selectedConversationIds.includes(c.id));
+  const allSelected = conversations.length > 0 && conversations.every(c => selectedConversationIds.includes(c.conversationId));
   const someSelected = selectedConversationIds.length > 0 && !allSelected;
   
   const handleSelectAll = () => {
     if (allSelected) {
       clearSelection();
     } else {
-      selectAllConversations(conversations.map(c => c.id));
+      selectAllConversations(conversations.map(c => c.conversationId));
     }
   };
   
@@ -557,15 +557,15 @@ export const ConversationTable = React.memo(function ConversationTable({ convers
                 tabIndex={0}
                 className={cn(
                   "cursor-pointer hover:bg-muted/50 outline-none",
-                  selectedConversationIds.includes(conversation.id) && "bg-muted",
+                  selectedConversationIds.includes(conversation.conversationId) && "bg-muted",
                   focusedRowIndex === index && "ring-2 ring-primary ring-inset"
                 )}
                 onClick={() => openConversationDetail(conversation.id)}
               >
                 <TableCell onClick={(e) => e.stopPropagation()}>
                   <Checkbox
-                    checked={selectedConversationIds.includes(conversation.id)}
-                    onCheckedChange={() => toggleConversationSelection(conversation.id)}
+                    checked={selectedConversationIds.includes(conversation.conversationId)}
+                    onCheckedChange={() => toggleConversationSelection(conversation.conversationId)}
                   />
                 </TableCell>
                 <TableCell>

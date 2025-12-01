@@ -283,9 +283,20 @@ Rationale:
 
 ## 7. Implementation Checklist
 
-- [ ] Change `training-file-service.ts` line ~381: `.in('conversation_id', ...)` → `.in('id', ...)`
-- [ ] Change `training-file-service.ts` line ~418: `.in('conversation_id', ...)` → `.in('id', ...)`
-- [ ] Test locally with database
+- [x] ~~Change `training-file-service.ts` line ~381: `.in('conversation_id', ...)` → `.in('id', ...)`~~ (Option A - not implemented)
+- [x] ~~Change `training-file-service.ts` line ~418: `.in('conversation_id', ...)` → `.in('id', ...)`~~ (Option A - not implemented)
+
+### Option B Implementation (COMPLETED)
+
+- [x] **ConversationTable.tsx**: Changed `allSelected` check to use `c.conversationId`
+- [x] **ConversationTable.tsx**: Changed `handleSelectAll` to use `c.conversationId`
+- [x] **ConversationTable.tsx**: Changed row background highlight to check `conversation.conversationId`
+- [x] **ConversationTable.tsx**: Changed checkbox checked state to use `conversation.conversationId`
+- [x] **ConversationTable.tsx**: Changed `onCheckedChange` to pass `conversation.conversationId`
+- [x] **use-keyboard-shortcuts.ts**: Changed Ctrl+A select all to use `c.conversationId`
+- [x] **useTableKeyboardNavigation.ts**: Changed Space key toggle to use `conversation.conversationId`
+- [x] **conversation-list-example.tsx**: Updated example file selection logic
+- [x] Build verified passing
 - [ ] Deploy to Vercel
 - [ ] Verify training file creation works
 - [ ] Create 1 successful training file as smoke test

@@ -183,7 +183,7 @@ export function ConversationListExample() {
           <div
             key={conversation.id}
             className={`bg-white rounded-lg shadow p-6 transition-all ${
-              selectedIds.includes(conversation.id) 
+              selectedIds.includes(conversation.conversationId) 
                 ? 'ring-2 ring-blue-500' 
                 : 'hover:shadow-md'
             }`}
@@ -192,8 +192,8 @@ export function ConversationListExample() {
               {/* Checkbox */}
               <input
                 type="checkbox"
-                checked={selectedIds.includes(conversation.id)}
-                onChange={() => toggleSelection(conversation.id)}
+                checked={selectedIds.includes(conversation.conversationId)}
+                onChange={() => toggleSelection(conversation.conversationId)}
                 className="mt-1 h-4 w-4 text-blue-600 rounded"
               />
               
