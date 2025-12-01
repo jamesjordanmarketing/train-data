@@ -1,0 +1,519 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://brightrun.ai/schemas/emotional-lora-full-v4.0.json",
+  "title": "Full Training File JSON Schema v4.0",
+  "description": "Schema for aggregated LoRA training files containing multiple conversations. Used for human review and as source for JSONL generation.",
+  
+  "type": "object",
+  "required": ["training_file_metadata", "consultant_profile", "conversations"],
+  "additionalProperties": false,
+  
+  "properties": {
+    "training_file_metadata": {
+      "type": "object",
+      "description": "File-level metadata for the aggregated training file",
+      "required": [
+        "file_name",
+        "version",
+        "created_date",
+        "last_updated",
+        "format_spec",
+        "vertical",
+        "total_conversations",
+        "total_training_pairs",
+        "quality_summary",
+        "scaffolding_distribution"
+      ],
+      "properties": {
+        "file_name": {
+          "type": "string",
+          "description": "Unique file identifier",
+          "examples": ["lora_training_batch_2025-11-30", "production_training_v4_batch_001"]
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Schema version",
+          "default": "4.0.0"
+        },
+        "created_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 datetime when file was created"
+        },
+        "last_updated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 datetime of last modification"
+        },
+        "format_spec": {
+          "type": "string",
+          "const": "brightrun-lora-v4",
+          "description": "Format specification identifier"
+        },
+        "target_model": {
+          "type": "string",
+          "description": "Intended target model for fine-tuning (optional)",
+          "examples": ["llama-3.1-8b", "mistral-7b", "gemma-2-9b"]
+        },
+        "vertical": {
+          "type": "string",
+          "const": "financial_planning_consultant",
+          "description": "Business domain"
+        },
+        "total_conversations": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of conversations in this file"
+        },
+        "total_training_pairs": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Total number of training pairs across all conversations"
+        },
+        "quality_summary": {
+          "type": "object",
+          "description": "Aggregated quality metrics",
+          "required": [
+            "avg_quality_score",
+            "min_quality_score",
+            "max_quality_score",
+            "human_reviewed_count",
+            "human_reviewed_percentage"
+          ],
+          "properties": {
+            "avg_quality_score": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 5,
+              "description": "Average quality score across all pairs"
+            },
+            "min_quality_score": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 5,
+              "description": "Lowest quality score in the file"
+            },
+            "max_quality_score": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 5,
+              "description": "Highest quality score in the file"
+            },
+            "human_reviewed_count": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of pairs reviewed by humans"
+            },
+            "human_reviewed_percentage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Percentage of pairs reviewed by humans"
+            }
+          }
+        },
+        "scaffolding_distribution": {
+          "type": "object",
+          "description": "Distribution of scaffolding metadata for dataset balancing",
+          "required": ["personas", "emotional_arcs", "training_topics"],
+          "properties": {
+            "personas": {
+              "type": "object",
+              "description": "Count of conversations by persona archetype",
+              "additionalProperties": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "examples": [
+                {
+                  "pragmatic_optimist": 8,
+                  "anxious_planner": 9,
+                  "overwhelmed_avoider": 8
+                }
+              ]
+            },
+            "emotional_arcs": {
+              "type": "object",
+              "description": "Count of conversations by emotional arc",
+              "additionalProperties": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "examples": [
+                {
+                  "confusion_to_clarity": 10,
+                  "shame_to_acceptance": 8,
+                  "fear_to_confidence": 7
+                }
+              ]
+            },
+            "training_topics": {
+              "type": "object",
+              "description": "Count of conversations by training topic",
+              "additionalProperties": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "examples": [
+                {
+                  "mortgage_payoff_strategy": 12,
+                  "hiding_financial_problems": 8,
+                  "estate_planning_basics": 5
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    
+    "consultant_profile": {
+      "type": "object",
+      "description": "Static persona configuration (same structure as individual files)",
+      "required": [
+        "name",
+        "business",
+        "expertise",
+        "years_experience",
+        "core_philosophy",
+        "communication_style"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Full name with credentials"
+        },
+        "business": {
+          "type": "string",
+          "description": "Business or practice name"
+        },
+        "expertise": {
+          "type": "string",
+          "description": "Area of specialization"
+        },
+        "years_experience": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "core_philosophy": {
+          "type": "object",
+          "required": ["principle_1", "principle_2", "principle_3", "principle_4", "principle_5"],
+          "properties": {
+            "principle_1": { "type": "string" },
+            "principle_2": { "type": "string" },
+            "principle_3": { "type": "string" },
+            "principle_4": { "type": "string" },
+            "principle_5": { "type": "string" }
+          }
+        },
+        "communication_style": {
+          "type": "object",
+          "required": ["tone", "techniques", "avoid"],
+          "properties": {
+            "tone": { "type": "string" },
+            "techniques": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "avoid": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    
+    "conversations": {
+      "type": "array",
+      "description": "Array of conversation objects, each containing its own metadata and training pairs",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/conversation_object"
+      }
+    }
+  },
+  
+  "$defs": {
+    "conversation_object": {
+      "type": "object",
+      "description": "A single conversation with its metadata and training pairs",
+      "required": ["conversation_metadata", "training_pairs"],
+      "properties": {
+        "conversation_metadata": {
+          "type": "object",
+          "description": "Per-conversation metadata for traceability",
+          "required": [
+            "conversation_id",
+            "source_file",
+            "created_date",
+            "total_turns",
+            "quality_tier",
+            "scaffolding"
+          ],
+          "properties": {
+            "conversation_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "UUID of the original conversation"
+            },
+            "source_file": {
+              "type": "string",
+              "description": "Original enriched JSON filename"
+            },
+            "created_date": {
+              "type": "string",
+              "format": "date",
+              "description": "When the conversation was generated"
+            },
+            "batch_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Batch job UUID that generated this conversation (optional)"
+            },
+            "total_turns": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Number of turns in this conversation"
+            },
+            "quality_tier": {
+              "type": "string",
+              "enum": ["seed_dataset", "production", "experimental", "rejected"],
+              "description": "Quality classification"
+            },
+            "scaffolding": {
+              "type": "object",
+              "description": "Scaffolding metadata summary for this conversation",
+              "required": [
+                "persona_key",
+                "persona_name",
+                "emotional_arc_key",
+                "emotional_arc",
+                "training_topic_key",
+                "training_topic"
+              ],
+              "properties": {
+                "persona_key": {
+                  "type": "string",
+                  "enum": ["pragmatic_optimist", "anxious_planner", "overwhelmed_avoider"]
+                },
+                "persona_name": {
+                  "type": "string",
+                  "examples": ["David Chen - The Pragmatic Optimist"]
+                },
+                "emotional_arc_key": {
+                  "type": "string",
+                  "enum": ["confusion_to_clarity", "shame_to_acceptance", "fear_to_confidence", "overwhelm_to_empowerment"]
+                },
+                "emotional_arc": {
+                  "type": "string",
+                  "examples": ["Confusion → Clarity"]
+                },
+                "training_topic_key": {
+                  "type": "string",
+                  "examples": ["mortgage_payoff_strategy", "hiding_financial_problems"]
+                },
+                "training_topic": {
+                  "type": "string",
+                  "examples": ["Accelerated Mortgage Payoff"]
+                }
+              }
+            }
+          }
+        },
+        
+        "training_pairs": {
+          "type": "array",
+          "description": "Training pairs for this conversation",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/training_pair"
+          }
+        }
+      }
+    },
+    
+    "training_pair": {
+      "type": "object",
+      "description": "A single training example (same structure as individual files)",
+      "required": [
+        "id",
+        "conversation_id",
+        "turn_number",
+        "conversation_metadata",
+        "system_prompt",
+        "conversation_history",
+        "current_user_input",
+        "emotional_context",
+        "target_response",
+        "training_metadata"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique turn identifier"
+        },
+        "conversation_id": {
+          "type": "string",
+          "description": "Groups turns into conversations"
+        },
+        "turn_number": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "conversation_metadata": {
+          "$ref": "#/$defs/pair_conversation_metadata"
+        },
+        "system_prompt": {
+          "type": "string",
+          "minLength": 100
+        },
+        "conversation_history": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/history_turn"
+          }
+        },
+        "current_user_input": {
+          "type": "string",
+          "minLength": 1
+        },
+        "emotional_context": {
+          "$ref": "#/$defs/emotional_context"
+        },
+        "target_response": {
+          "type": ["string", "null"]
+        },
+        "training_metadata": {
+          "$ref": "#/$defs/training_metadata"
+        }
+      }
+    },
+    
+    "pair_conversation_metadata": {
+      "type": "object",
+      "description": "Per-pair metadata with scaffolding (v4 fields)",
+      "required": [
+        "client_persona",
+        "persona_archetype",
+        "client_background",
+        "emotional_arc",
+        "emotional_arc_key",
+        "training_topic",
+        "training_topic_key",
+        "session_context",
+        "conversation_phase",
+        "expected_outcome"
+      ],
+      "properties": {
+        "client_persona": { "type": "string" },
+        "persona_archetype": {
+          "type": "string",
+          "enum": ["pragmatic_optimist", "anxious_planner", "overwhelmed_avoider"]
+        },
+        "client_background": { "type": "string" },
+        "emotional_arc": { "type": "string" },
+        "emotional_arc_key": {
+          "type": "string",
+          "enum": ["confusion_to_clarity", "shame_to_acceptance", "fear_to_confidence", "overwhelm_to_empowerment"]
+        },
+        "training_topic": { "type": "string" },
+        "training_topic_key": { "type": "string" },
+        "session_context": { "type": "string" },
+        "conversation_phase": {
+          "type": "string",
+          "enum": [
+            "initial_opportunity_exploration",
+            "initial_shame_revelation",
+            "initial_crisis_disclosure",
+            "exploring_deeper_concern",
+            "practical_implementation",
+            "commitment_and_closure"
+          ]
+        },
+        "expected_outcome": { "type": "string" }
+      }
+    },
+    
+    "history_turn": {
+      "type": "object",
+      "required": ["turn", "role", "content", "emotional_state"],
+      "properties": {
+        "turn": { "type": "integer", "minimum": 1 },
+        "role": { "type": "string", "enum": ["user", "assistant"] },
+        "content": { "type": "string" },
+        "emotional_state": {
+          "type": "object",
+          "required": ["primary", "intensity"],
+          "properties": {
+            "primary": { "type": "string" },
+            "secondary": { "type": "string" },
+            "intensity": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        }
+      }
+    },
+    
+    "emotional_context": {
+      "type": "object",
+      "required": ["detected_emotions"],
+      "properties": {
+        "detected_emotions": {
+          "type": "object",
+          "required": ["primary", "primary_confidence", "intensity", "valence"],
+          "properties": {
+            "primary": { "type": "string" },
+            "primary_confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+            "secondary": { "type": "string" },
+            "secondary_confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+            "intensity": { "type": "number", "minimum": 0, "maximum": 1 },
+            "valence": { "type": "string", "enum": ["positive", "negative", "mixed"] }
+          }
+        }
+      }
+    },
+    
+    "training_metadata": {
+      "type": "object",
+      "required": [
+        "difficulty_level",
+        "key_learning_objective",
+        "demonstrates_skills",
+        "conversation_turn",
+        "emotional_progression_target",
+        "quality_score",
+        "quality_criteria",
+        "human_reviewed",
+        "reviewer_notes",
+        "use_as_seed_example",
+        "generate_variations_count"
+      ],
+      "properties": {
+        "difficulty_level": { "type": "string" },
+        "key_learning_objective": { "type": "string" },
+        "demonstrates_skills": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "conversation_turn": { "type": "integer", "minimum": 1 },
+        "emotional_progression_target": { "type": "string" },
+        "quality_score": { "type": "number", "minimum": 1, "maximum": 5 },
+        "quality_criteria": {
+          "type": "object",
+          "required": ["empathy_score", "clarity_score", "appropriateness_score", "brand_voice_alignment"],
+          "properties": {
+            "empathy_score": { "type": "number", "minimum": 1, "maximum": 5 },
+            "clarity_score": { "type": "number", "minimum": 1, "maximum": 5 },
+            "appropriateness_score": { "type": "number", "minimum": 1, "maximum": 5 },
+            "brand_voice_alignment": { "type": "number", "minimum": 1, "maximum": 5 }
+          }
+        },
+        "human_reviewed": { "type": "boolean" },
+        "reviewer_notes": { "type": ["string", "null"] },
+        "use_as_seed_example": { "type": "boolean" },
+        "generate_variations_count": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

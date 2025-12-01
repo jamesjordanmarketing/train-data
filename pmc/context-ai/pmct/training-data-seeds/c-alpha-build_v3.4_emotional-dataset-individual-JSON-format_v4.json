@@ -1,0 +1,495 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://brightrun.ai/schemas/emotional-lora-individual-v4.0.json",
+  "title": "Individual Conversation JSON Schema v4.0",
+  "description": "Schema for single enriched conversation files - output of the enrichment pipeline. Each file contains one complete conversation with all training pairs.",
+  
+  "type": "object",
+  "required": ["dataset_metadata", "consultant_profile", "training_pairs"],
+  "additionalProperties": false,
+  
+  "properties": {
+    "dataset_metadata": {
+      "type": "object",
+      "description": "File-level metadata for audit trail and provenance tracking",
+      "required": [
+        "dataset_name",
+        "version",
+        "created_date",
+        "vertical",
+        "consultant_persona",
+        "target_use",
+        "conversation_source",
+        "quality_tier",
+        "total_conversations",
+        "total_turns",
+        "notes"
+      ],
+      "properties": {
+        "dataset_name": {
+          "type": "string",
+          "pattern": "^fp_conversation_[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "description": "Unique identifier in format: fp_conversation_<uuid>"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Semantic version (always 1.0.0 for individual files)",
+          "default": "1.0.0"
+        },
+        "created_date": {
+          "type": "string",
+          "format": "date",
+          "description": "ISO date format (YYYY-MM-DD)"
+        },
+        "vertical": {
+          "type": "string",
+          "const": "financial_planning_consultant",
+          "description": "Business domain"
+        },
+        "consultant_persona": {
+          "type": "string",
+          "description": "Full persona identifier with credentials",
+          "examples": ["Elena Morales, CFP - Pathways Financial Planning"]
+        },
+        "target_use": {
+          "type": "string",
+          "const": "LoRA fine-tuning for emotionally intelligent chatbot",
+          "description": "Intended training purpose"
+        },
+        "conversation_source": {
+          "type": "string",
+          "enum": ["synthetic_platform_generated", "synthetic_expert_authored", "real_anonymized"],
+          "description": "Source type of the conversation"
+        },
+        "quality_tier": {
+          "type": "string",
+          "enum": ["seed_dataset", "production", "experimental", "rejected"],
+          "description": "Quality classification level"
+        },
+        "total_conversations": {
+          "type": "integer",
+          "const": 1,
+          "description": "Always 1 for individual files"
+        },
+        "total_turns": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of turns in this conversation"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Generation context (template name, special conditions, etc.)"
+        }
+      }
+    },
+    
+    "consultant_profile": {
+      "type": "object",
+      "description": "Static persona configuration for the AI assistant being trained",
+      "required": [
+        "name",
+        "business",
+        "expertise",
+        "years_experience",
+        "core_philosophy",
+        "communication_style"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Full name with credentials",
+          "examples": ["Elena Morales, CFP"]
+        },
+        "business": {
+          "type": "string",
+          "description": "Business or practice name",
+          "examples": ["Pathways Financial Planning"]
+        },
+        "expertise": {
+          "type": "string",
+          "description": "Area of specialization"
+        },
+        "years_experience": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Years of professional experience"
+        },
+        "core_philosophy": {
+          "type": "object",
+          "description": "Five core principles guiding the consultant's approach",
+          "required": ["principle_1", "principle_2", "principle_3", "principle_4", "principle_5"],
+          "properties": {
+            "principle_1": { "type": "string" },
+            "principle_2": { "type": "string" },
+            "principle_3": { "type": "string" },
+            "principle_4": { "type": "string" },
+            "principle_5": { "type": "string" }
+          }
+        },
+        "communication_style": {
+          "type": "object",
+          "description": "Communication approach and guidelines",
+          "required": ["tone", "techniques", "avoid"],
+          "properties": {
+            "tone": {
+              "type": "string",
+              "description": "Overall tone description"
+            },
+            "techniques": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1,
+              "description": "Communication techniques to use"
+            },
+            "avoid": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1,
+              "description": "Things to avoid in communication"
+            }
+          }
+        }
+      }
+    },
+    
+    "training_pairs": {
+      "type": "array",
+      "description": "Array of turn objects, each representing one exchange in the conversation",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/training_pair"
+      }
+    }
+  },
+  
+  "$defs": {
+    "training_pair": {
+      "type": "object",
+      "description": "A single training example representing one turn in the conversation",
+      "required": [
+        "id",
+        "conversation_id",
+        "turn_number",
+        "conversation_metadata",
+        "system_prompt",
+        "conversation_history",
+        "current_user_input",
+        "emotional_context",
+        "target_response",
+        "training_metadata"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique turn identifier within the conversation",
+          "examples": ["educational_turn1", "therapeutic_turn2"]
+        },
+        "conversation_id": {
+          "type": "string",
+          "description": "Groups turns into conversations",
+          "examples": ["educational", "therapeutic"]
+        },
+        "turn_number": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "1-based position in conversation"
+        },
+        
+        "conversation_metadata": {
+          "$ref": "#/$defs/conversation_metadata"
+        },
+        
+        "system_prompt": {
+          "type": "string",
+          "minLength": 100,
+          "description": "Complete system prompt text defining the AI's role, principles, and behavior"
+        },
+        
+        "conversation_history": {
+          "type": "array",
+          "description": "Array of previous turns. Empty array for turn 1.",
+          "items": {
+            "$ref": "#/$defs/history_turn"
+          }
+        },
+        
+        "current_user_input": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The exact user message in this turn"
+        },
+        
+        "emotional_context": {
+          "$ref": "#/$defs/emotional_context"
+        },
+        
+        "target_response": {
+          "type": ["string", "null"],
+          "description": "The ideal assistant response. Null for turn 1 (user's opening message)."
+        },
+        
+        "training_metadata": {
+          "$ref": "#/$defs/training_metadata"
+        }
+      }
+    },
+    
+    "conversation_metadata": {
+      "type": "object",
+      "description": "Per-pair metadata with scaffolding information for training",
+      "required": [
+        "client_persona",
+        "persona_archetype",
+        "client_background",
+        "emotional_arc",
+        "emotional_arc_key",
+        "training_topic",
+        "training_topic_key",
+        "session_context",
+        "conversation_phase",
+        "expected_outcome"
+      ],
+      "properties": {
+        "client_persona": {
+          "type": "string",
+          "description": "Full persona name and archetype",
+          "examples": ["David Chen - The Pragmatic Optimist", "Jennifer Martinez - The Anxious Planner"]
+        },
+        "persona_archetype": {
+          "type": "string",
+          "enum": ["pragmatic_optimist", "anxious_planner", "overwhelmed_avoider"],
+          "description": "Machine-readable archetype key (v4 addition)"
+        },
+        "client_background": {
+          "type": "string",
+          "description": "Demographics and behavioral profile"
+        },
+        "emotional_arc": {
+          "type": "string",
+          "description": "Human-readable emotional arc name (v4 addition)",
+          "examples": ["Confusion → Clarity", "Shame → Acceptance", "Fear → Confidence"]
+        },
+        "emotional_arc_key": {
+          "type": "string",
+          "enum": ["confusion_to_clarity", "shame_to_acceptance", "fear_to_confidence", "overwhelm_to_empowerment"],
+          "description": "Machine-readable emotional arc key (v4 addition)"
+        },
+        "training_topic": {
+          "type": "string",
+          "description": "Human-readable training topic name (v4 addition)",
+          "examples": ["Accelerated Mortgage Payoff", "Financial Transparency in Relationships"]
+        },
+        "training_topic_key": {
+          "type": "string",
+          "description": "Machine-readable training topic key (v4 addition)",
+          "examples": ["mortgage_payoff_strategy", "hiding_financial_problems", "estate_planning_basics"]
+        },
+        "session_context": {
+          "type": "string",
+          "description": "Why this conversation is happening"
+        },
+        "conversation_phase": {
+          "type": "string",
+          "enum": [
+            "initial_opportunity_exploration",
+            "initial_shame_revelation",
+            "initial_crisis_disclosure",
+            "exploring_deeper_concern",
+            "practical_implementation",
+            "commitment_and_closure"
+          ],
+          "description": "Current stage of the conversation"
+        },
+        "expected_outcome": {
+          "type": "string",
+          "description": "What this turn should accomplish"
+        }
+      }
+    },
+    
+    "history_turn": {
+      "type": "object",
+      "description": "A previous turn in conversation history",
+      "required": ["turn", "role", "content", "emotional_state"],
+      "properties": {
+        "turn": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Turn number"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["user", "assistant"],
+          "description": "Who sent this message"
+        },
+        "content": {
+          "type": "string",
+          "description": "Message content"
+        },
+        "emotional_state": {
+          "type": "object",
+          "required": ["primary", "intensity"],
+          "properties": {
+            "primary": {
+              "type": "string",
+              "description": "Primary emotion"
+            },
+            "secondary": {
+              "type": "string",
+              "description": "Secondary emotion (optional)"
+            },
+            "intensity": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Emotional intensity 0-1"
+            }
+          }
+        }
+      }
+    },
+    
+    "emotional_context": {
+      "type": "object",
+      "description": "Emotional analysis of the current turn",
+      "required": ["detected_emotions"],
+      "properties": {
+        "detected_emotions": {
+          "type": "object",
+          "required": ["primary", "primary_confidence", "intensity", "valence"],
+          "properties": {
+            "primary": {
+              "type": "string",
+              "description": "Most prominent detected emotion"
+            },
+            "primary_confidence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Confidence in primary detection"
+            },
+            "secondary": {
+              "type": "string",
+              "description": "Second detected emotion (optional)"
+            },
+            "secondary_confidence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Confidence in secondary detection"
+            },
+            "intensity": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Overall emotional intensity"
+            },
+            "valence": {
+              "type": "string",
+              "enum": ["positive", "negative", "mixed"],
+              "description": "Emotional valence"
+            }
+          }
+        }
+      }
+    },
+    
+    "training_metadata": {
+      "type": "object",
+      "description": "Metadata for training pipeline and quality control",
+      "required": [
+        "difficulty_level",
+        "key_learning_objective",
+        "demonstrates_skills",
+        "conversation_turn",
+        "emotional_progression_target",
+        "quality_score",
+        "quality_criteria",
+        "human_reviewed",
+        "reviewer_notes",
+        "use_as_seed_example",
+        "generate_variations_count"
+      ],
+      "properties": {
+        "difficulty_level": {
+          "type": "string",
+          "description": "Complexity level identifier",
+          "examples": ["intermediate_conversation_turn_1", "intermediate_conversation_turn_2"]
+        },
+        "key_learning_objective": {
+          "type": "string",
+          "description": "Main lesson for the model to learn"
+        },
+        "demonstrates_skills": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Skills demonstrated in this turn"
+        },
+        "conversation_turn": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Same as turn_number"
+        },
+        "emotional_progression_target": {
+          "type": "string",
+          "description": "Desired emotional change with values",
+          "examples": ["confusion(0.8) → clarity(0.8)", "shame(0.8) → acceptance(0.8)"]
+        },
+        "quality_score": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "Overall quality rating 1-5"
+        },
+        "quality_criteria": {
+          "type": "object",
+          "required": ["empathy_score", "clarity_score", "appropriateness_score", "brand_voice_alignment"],
+          "properties": {
+            "empathy_score": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 5,
+              "description": "How well response acknowledges emotions"
+            },
+            "clarity_score": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 5,
+              "description": "How clear and understandable"
+            },
+            "appropriateness_score": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 5,
+              "description": "How appropriate for context"
+            },
+            "brand_voice_alignment": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 5,
+              "description": "How well matches consultant's style"
+            }
+          }
+        },
+        "human_reviewed": {
+          "type": "boolean",
+          "description": "Whether a human has reviewed this"
+        },
+        "reviewer_notes": {
+          "type": ["string", "null"],
+          "description": "Human reviewer comments"
+        },
+        "use_as_seed_example": {
+          "type": "boolean",
+          "description": "Use for synthetic generation seeds"
+        },
+        "generate_variations_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "How many variations to create"
+        }
+      }
+    }
+  }
+}

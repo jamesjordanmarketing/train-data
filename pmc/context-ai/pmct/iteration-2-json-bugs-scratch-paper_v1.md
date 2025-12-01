@@ -230,20 +230,63 @@ if (seconds <= 0) return '-';  // Job is complete
 
 ---
 
-## Verification Needed
+## VERIFICATION COMPLETE - 12/1/25 ✅
 
-After deploying to Vercel:
+### Issue: Original Fixes Did Not Work
 
-1. Create a new batch job
-2. Monitor the batch-jobs/[id] page
-3. Verify:
-   - Status badge shows "PROCESSING" during generation
-   - Status badge shows "COMPLETED" when done
-   - Estimated remaining shows actual time, then "-" when complete
-   - Refresh button fetches fresh data correctly
+After deploying the initial fixes, the bug persisted. Job ID `27eaf2df-9619-4baf-ac59-f74989f05d23` still showed:
+- API: `status: "queued", completed: 0`
+- Database: `status: "completed", completed_items: 3`
 
-4. Query database directly to confirm API returns matching data:
-```bash
-curl "https://train-data-three.vercel.app/api/conversations/batch/{job-id}/status"
+### Root Cause Analysis - Deeper Investigation
+
+The `getSupabase()` function fix was correct but the **status API route** was using `getBatchGenerationService()` which is a DIFFERENT singleton pattern that may have been caching the old behavior.
+
+### Additional Fix #4: Rewrote Status API Route
+
+**File**: `src/app/api/conversations/batch/[id]/status/route.ts`
+
+**Problem**: The status route was using `getBatchGenerationService()` singleton instead of `batchJobService` directly.
+
+**Solution**: Completely rewrote the route to:
+1. Import `batchJobService` directly (bypasses singleton)
+2. Add `export const dynamic = 'force-dynamic'`
+3. Add `export const revalidate = 0`
+4. Add explicit Cache-Control headers
+
+### Additional Fix #5: Removed Unnecessary UI Buttons
+
+**File**: `src/app/(dashboard)/batch-jobs/[id]/page.tsx`
+
+Removed:
+1. "Start Processing" button (processing now starts automatically)
+2. Header "Refresh" button (page auto-refreshes)
+3. Actions card "Refresh" button
+
+### Final Verification ✅
+
+**Production API Response (after fix):**
+```json
+{
+  "success": true,
+  "jobId": "27eaf2df-9619-4baf-ac59-f74989f05d23",
+  "status": "completed",
+  "progress": {
+    "total": 3,
+    "completed": 3,
+    "successful": 3,
+    "failed": 0,
+    "percentage": 100
+  },
+  "estimatedTimeRemaining": 0
+}
 ```
+
+**Commit**: `5941c8f` - "Fix batch job status API returning stale data - use batchJobService directly"
+
+### Summary
+
+The bug required two separate fixes:
+1. `batch-job-service.ts`: `getSupabase()` function (initial fix, necessary but not sufficient)
+2. `status/route.ts`: Bypass `getBatchGenerationService()` singleton, use `batchJobService` directly (required for fix to work)
 
