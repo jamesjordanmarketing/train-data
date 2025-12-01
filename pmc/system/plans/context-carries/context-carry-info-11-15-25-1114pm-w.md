@@ -38,16 +38,16 @@ This session focused on creating foundational specifications for the LoRA Traini
 
 ### Write Comprehensive Generation Page Specification
 
-**Objective**: Transform the skeleton spec into a full, executable specification for the "LoRA Training JSON Files" page feature.
+**Objective**: Transform the skeleton spec into a full, Execution Plan for the "LoRA Training JSON Files" page feature.
 
 **Input File** (skeleton to upgrade):
 ```
-C:\Users\james\Master\BrightHub\BRun\train-data\pmc\context-ai\pmct\iteration-2-full-production-json-files-generation-spec_v.01.txt
+C:\Users\james\Master\BrightHub\brun\train-data\pmc\context-ai\pmct\iteration-2-full-production-json-files-generation-spec_v.02.md
 ```
 
 **Output File** (write upgraded spec here):
 ```
-C:\Users\james\Master\BrightHub\BRun\train-data\pmc\context-ai\pmct\iteration-2-full-production-json-files-generation-spec_v1.md
+C:\Users\james\Master\BrightHub\brun\train-data\pmc\context-ai\pmct\iteration-2-full-production-json-files-generation-execution_v1.md
 ```
 
 ### User-Confirmed Requirements
@@ -269,20 +269,8 @@ From production enriched files:
 
 ## 📋 Specification Writing Guidelines
 
-When writing `iteration-2-full-production-json-files-generation-spec_v1.md`, include:
+When writing `C:\Users\james\Master\BrightHub\BRun\train-data\pmc\context-ai\pmct\iteration-2-full-production-json-files-generation-execution_v1.md`, use the following format:`C:\Users\james\Master\BrightHub\brun\train-data\pmc\product\_mapping\fr-maps\04-FR-wireframes-execution-E05.md`
 
-### Required Sections
-
-1. **Executive Summary** - What this feature does
-2. **Database Schema Changes** - New `training_files` table, any column additions
-3. **Storage Architecture** - Where files are stored, naming conventions
-4. **Service Architecture** - New services, modifications to existing
-5. **API Endpoints** - All new routes needed
-6. **UI Components** - New page, modifications to conversations page
-7. **Data Flow Diagrams** - How conversations get added to training files
-8. **Validation Rules** - Selection criteria, duplicate prevention
-9. **Error Handling** - All error scenarios and messages
-10. **Implementation Checklist** - Step-by-step tasks
 
 ### Use Full File Paths
 
@@ -311,14 +299,14 @@ Show actual code patterns from the codebase when specifying how to implement.
 **Write a comprehensive, executable specification** for the LoRA Training JSON Files feature.
 
 **Read these files first**:
-1. `pmc/context-ai/pmct/iteration-2-full-production-json-files-generation-spec_v.01.txt` (skeleton)
-2. `pmc/context-ai/pmct/iteration-2-full-production-json-file-schema-spec_v1.md` (JSON format spec)
+1. `C:\Users\james\Master\BrightHub\brun\train-data\pmc\context-ai\pmct\iteration-2-full-production-json-files-generation-spec_v.02.md` (skeleton)
+2. `C:\Users\james\Master\BrightHub\brun\train-data\pmc\context-ai\pmct\iteration-2-full-production-json-file-schema-spec_v1.md` (JSON format spec)
 3. `src/lib/export-service.ts` (existing export handling)
 4. `src/lib/services/batch-job-service.ts` (batch job patterns)
 
 **Output location**:
 ```
-C:\Users\james\Master\BrightHub\BRun\train-data\pmc\context-ai\pmct\iteration-2-full-production-json-files-generation-spec_v1.md
+C:\Users\james\Master\BrightHub\BRun\train-data\pmc\context-ai\pmct\iteration-2-full-production-json-files-generation-execution_v1.md
 ```
 
 ### Architectural Decisions You Must Make

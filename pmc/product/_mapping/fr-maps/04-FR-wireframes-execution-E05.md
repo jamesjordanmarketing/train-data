@@ -264,7 +264,7 @@ This segment is **strategically critical** because:
 
 ### Required SQL Operations
 
-**Execute these SQL statements in Supabase SQL Editor BEFORE implementing prompts.**
+**Execute these SQL statements using the SAOL library BEFORE implementing prompts.**
 
 This migration creates the `export_logs` table for audit trail and the `IExportTransformer` interface pattern.
 
@@ -455,7 +455,7 @@ export type ExportConfig = {
 **Task T-1.1.1: Create Export Logs Table Migration (VERIFICATION ONLY)**
 
 The migration SQL has already been executed above in "Database Setup Instructions". Your task is to VERIFY it was created correctly:
-
+**Use the SAOL library to confirm this information BEFORE implementing prompts.**
 1. Check table exists with correct columns:
    ```sql
    SELECT column_name, data_type, is_nullable 
@@ -987,7 +987,7 @@ Not applicable for this prompt (backend service only).
    ```
 
 **Database Verification Queries:**
-
+**Use the SAOL library to confirm this information BEFORE implementing prompts.**
 ```sql
 -- Verify table structure
 SELECT 
