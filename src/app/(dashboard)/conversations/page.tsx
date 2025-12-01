@@ -96,6 +96,16 @@ export default function ConversationsPage() {
         </div>
         <div className="flex gap-2">
           <Button 
+            onClick={() => window.location.href = '/training-files'}
+            variant="outline"
+            className="bg-green-50 hover:bg-green-100 border-green-200"
+          >
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+            Training Files
+          </Button>
+          <Button 
             onClick={() => window.location.href = '/bulk-generator'}
             variant="outline"
             className="bg-blue-50 hover:bg-blue-100 border-blue-200"

@@ -3,7 +3,7 @@
 import { useAuth } from '../../../lib/auth-context'
 import { DocumentSelectorServer } from '../../../components/server/DocumentSelectorServer'
 import { useRouter } from 'next/navigation'
-import { Upload } from 'lucide-react'
+import { Upload, FileJson } from 'lucide-react'
 
 export default function DashboardPage() {
   const { user, profile, signOut, isLoading } = useAuth()
@@ -55,6 +55,13 @@ export default function DashboardPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                 </svg>
                 Conversations
+              </button>
+              <button
+                onClick={() => router.push('/training-files')}
+                className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors flex items-center gap-2"
+              >
+                <FileJson className="w-4 h-4" />
+                Training Files
               </button>
               <button
                 onClick={() => router.push('/upload')}

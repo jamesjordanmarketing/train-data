@@ -84,6 +84,7 @@
     "sonner": "^2.0.3",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
+    "uuid": "^13.0.0",
     "vaul": "^1.1.2",
     "zod": "^4.1.12",
     "zustand": "^5.0.8"
@@ -97,6 +98,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/supertest": "^6.0.2",
+    "@types/uuid": "^10.0.0",
     "dotenv": "^17.2.3",
     "eslint": "^8",
     "eslint-config-next": "14.2.15",

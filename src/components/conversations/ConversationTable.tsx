@@ -17,6 +17,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
 } from '@/components/ui/dropdown-menu';
 import { 
   MoreVertical, 
@@ -29,7 +31,9 @@ import {
   ArrowUp,
   ArrowDown,
   Check,
-  X
+  X,
+  FileJson,
+  Plus
 } from 'lucide-react';
 import { Conversation, StorageConversation } from '@/lib/types/conversations';
 import { useUpdateConversation, useDeleteConversation } from '@/hooks/use-conversations';
@@ -39,6 +43,18 @@ import { toast } from 'sonner';
 import { TableSkeleton } from '@/components/ui/skeletons';
 import { useTableKeyboardNavigation } from './useTableKeyboardNavigation';
 import { ConversationActions } from './conversation-actions';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 // Type that includes both legacy and storage fields for compatibility
 type ConversationWithEnrichment = Conversation & Partial<Pick<StorageConversation, 'enrichment_status' | 'raw_response_path' | 'enriched_file_path'>>;
@@ -88,9 +104,96 @@ export const ConversationTable = React.memo(function ConversationTable({ convers
   
   const [sortColumn, setSortColumn] = useState<keyof Conversation>('createdAt');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [showCreateTrainingFileDialog, setShowCreateTrainingFileDialog] = useState(false);
+  const [newFileName, setNewFileName] = useState('');
+  const [newFileDescription, setNewFileDescription] = useState('');
+  const [selectedTrainingFileId, setSelectedTrainingFileId] = useState<string | null>(null);
   
   const updateMutation = useUpdateConversation();
   const deleteMutation = useDeleteConversation();
+  const queryClient = useQueryClient();
+
+  // Fetch training files for dropdown
+  const { data: trainingFiles } = useQuery({
+    queryKey: ['training-files'],
+    queryFn: async () => {
+      const response = await fetch('/api/training-files');
+      if (!response.ok) throw new Error('Failed to fetch training files');
+      const json = await response.json();
+      return json.files;
+    },
+    enabled: selectedConversationIds.length > 0,
+  });
+
+  // Create new training file mutation
+  const createTrainingFileMutation = useMutation({
+    mutationFn: async ({
+      name,
+      description,
+      conversation_ids,
+    }: {
+      name: string;
+      description?: string;
+      conversation_ids: string[];
+    }) => {
+      const response = await fetch('/api/training-files', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, description, conversation_ids }),
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to create training file');
+      }
+      
+      return response.json();
+    },
+    onSuccess: () => {
+      toast.success('Training file created successfully');
+      queryClient.invalidateQueries({ queryKey: ['training-files'] });
+      clearSelection();
+      setShowCreateTrainingFileDialog(false);
+      setNewFileName('');
+      setNewFileDescription('');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+
+  // Add to existing training file mutation
+  const addToTrainingFileMutation = useMutation({
+    mutationFn: async ({
+      training_file_id,
+      conversation_ids,
+    }: {
+      training_file_id: string;
+      conversation_ids: string[];
+    }) => {
+      const response = await fetch(`/api/training-files/${training_file_id}/add-conversations`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ conversation_ids }),
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to add conversations');
+      }
+      
+      return response.json();
+    },
+    onSuccess: () => {
+      toast.success('Conversations added to training file');
+      queryClient.invalidateQueries({ queryKey: ['training-files'] });
+      clearSelection();
+      setSelectedTrainingFileId(null);
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
   
   // Memoized sorting logic for performance
   const sortedConversations = useMemo(() => {
@@ -212,6 +315,37 @@ export const ConversationTable = React.memo(function ConversationTable({ convers
       });
     }
   }, [updateMutation]);
+
+  // Handler functions for training files
+  const handleCreateNewFile = () => {
+    if (!newFileName.trim()) {
+      toast.error('Please enter a file name');
+      return;
+    }
+    
+    if (selectedConversationIds.length === 0) {
+      toast.error('No conversations selected');
+      return;
+    }
+    
+    createTrainingFileMutation.mutate({
+      name: newFileName.trim(),
+      description: newFileDescription.trim() || undefined,
+      conversation_ids: selectedConversationIds,
+    });
+  };
+
+  const handleAddToExistingFile = (fileId: string) => {
+    if (selectedConversationIds.length === 0) {
+      toast.error('No conversations selected');
+      return;
+    }
+    
+    addToTrainingFileMutation.mutate({
+      training_file_id: fileId,
+      conversation_ids: selectedConversationIds,
+    });
+  };
   
   const getQualityScoreColor = (score: number) => {
     if (score >= 8) return 'text-green-600 font-semibold';
@@ -252,8 +386,119 @@ export const ConversationTable = React.memo(function ConversationTable({ convers
   }
   
   return (
-    <div className="rounded-md border">
-      <Table>
+    <>
+      {/* Create Training Files Button */}
+      {selectedConversationIds.length > 0 && (
+        <div className="mb-4 flex items-center gap-2 p-4 bg-muted/50 rounded-md border">
+          <span className="text-sm text-muted-foreground">
+            {selectedConversationIds.length} conversation{selectedConversationIds.length !== 1 ? 's' : ''} selected
+          </span>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="default">
+                <FileJson className="h-4 w-4 mr-2" />
+                Create Training Files
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-64">
+              <DropdownMenuLabel>Add to Training File</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              
+              <DropdownMenuItem onClick={() => setShowCreateTrainingFileDialog(true)}>
+                <Plus className="h-4 w-4 mr-2" />
+                Create New Training File
+              </DropdownMenuItem>
+              
+              {trainingFiles && trainingFiles.length > 0 && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuLabel className="text-xs text-muted-foreground">
+                    Existing Files
+                  </DropdownMenuLabel>
+                  {trainingFiles.map((file: any) => (
+                    <DropdownMenuItem
+                      key={file.id}
+                      onClick={() => handleAddToExistingFile(file.id)}
+                      disabled={addToTrainingFileMutation.isPending}
+                    >
+                      <FileJson className="h-4 w-4 mr-2" />
+                      <div className="flex-1">
+                        <div className="font-medium">{file.name}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {file.conversation_count} conversations
+                        </div>
+                      </div>
+                    </DropdownMenuItem>
+                  ))}
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      )}
+
+      {/* Dialog for creating new training file */}
+      <Dialog open={showCreateTrainingFileDialog} onOpenChange={setShowCreateTrainingFileDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create New Training File</DialogTitle>
+            <DialogDescription>
+              Create a new LoRA training file with {selectedConversationIds.length} selected conversations
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="name">File Name *</Label>
+              <Input
+                id="name"
+                value={newFileName}
+                onChange={(e) => setNewFileName(e.target.value)}
+                placeholder="e.g., Training Batch Alpha"
+                maxLength={255}
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="description">Description (optional)</Label>
+              <Textarea
+                id="description"
+                value={newFileDescription}
+                onChange={(e) => setNewFileDescription(e.target.value)}
+                placeholder="Describe this training file..."
+                rows={3}
+              />
+            </div>
+            
+            <div className="bg-muted p-3 rounded-md text-sm">
+              <div className="font-medium mb-1">Selected Conversations:</div>
+              <div className="text-muted-foreground">
+                {selectedConversationIds.length} conversations will be added to this training file
+              </div>
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowCreateTrainingFileDialog(false)}
+              disabled={createTrainingFileMutation.isPending}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleCreateNewFile}
+              disabled={createTrainingFileMutation.isPending || !newFileName.trim()}
+            >
+              {createTrainingFileMutation.isPending ? 'Creating...' : 'Create Training File'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <div className="rounded-md border">
+        <Table>
         <TableHeader>
           <TableRow>
             <TableHead className="w-12">
@@ -425,6 +670,7 @@ export const ConversationTable = React.memo(function ConversationTable({ convers
           )}
         </TableBody>
       </Table>
-    </div>
+      </div>
+    </>
   );
 });
