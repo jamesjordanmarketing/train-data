@@ -16,7 +16,7 @@
  */
 
 import { randomUUID } from 'crypto';
-import { getConversationGenerationService, type GenerationParams } from './conversation-generation-service';
+import { getConversationGenerationService, type GenerationParams, TruncatedResponseError, UnexpectedStopReasonError } from './conversation-generation-service';
 import { batchJobService } from './batch-job-service';
 import { conversationService } from './conversation-service';
 import { createServerSupabaseAdminClient } from '@/lib/supabase-server';
@@ -623,6 +623,12 @@ export class BatchGenerationService {
     } catch (error) {
       console.error(`[BatchGeneration] Item ${item.id} processing error:`, error);
       
+      // Log specific error types for truncation/validation failures
+      if (error instanceof TruncatedResponseError || error instanceof UnexpectedStopReasonError) {
+        console.log(`[BatchGeneration] Item ${item.id} failed generation already stored for analysis`);
+        console.log(`[BatchGeneration] Error type: ${error.name}`);
+      }
+      
       await batchJobService.incrementProgress(
         jobId,
         item.id,
@@ -630,6 +636,8 @@ export class BatchGenerationService {
         undefined,
         error instanceof Error ? error.message : 'Unknown error'
       );
+      
+      // Don't throw - continue to next item (batch resilience)
     }
   }
 }

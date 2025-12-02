@@ -17,18 +17,48 @@
  */
 
 import { randomUUID } from 'crypto';
-import { ClaudeAPIClient, getClaudeAPIClient } from './claude-api-client';
+import { ClaudeAPIClient, getClaudeAPIClient, type ClaudeAPIResponse } from './claude-api-client';
 import { TemplateResolver, getTemplateResolver } from './template-resolver';
 import { QualityValidator, getQualityValidator } from './quality-validator';
 import { ConversationStorageService } from './conversation-storage-service';
 import { conversationService } from './conversation-service';
 import { generationLogService } from './generation-log-service';
+import { getFailedGenerationService, type CreateFailedGenerationInput } from './failed-generation-service';
+import { detectTruncatedContent } from '../utils/truncation-detection';
+import { AI_CONFIG } from '../ai-config';
 import type {
   Conversation,
   ConversationTurn,
   ConversationStatus,
   TierType,
 } from '@/lib/types';
+
+/**
+ * Custom error for truncated responses
+ */
+export class TruncatedResponseError extends Error {
+  constructor(
+    message: string,
+    public stopReason: string | null,
+    public pattern: string | null
+  ) {
+    super(message);
+    this.name = 'TruncatedResponseError';
+  }
+}
+
+/**
+ * Custom error for unexpected stop reasons
+ */
+export class UnexpectedStopReasonError extends Error {
+  constructor(
+    message: string,
+    public stopReason: string
+  ) {
+    super(message);
+    this.name = 'UnexpectedStopReasonError';
+  }
+}
 
 /**
  * Parameters for conversation generation
@@ -201,7 +231,28 @@ export class ConversationGenerationService {
         `[${generationId}] ✓ API response received (${apiResponse.usage.output_tokens} tokens, $${apiResponse.cost.toFixed(4)})`
       );
 
-      // TIER 2: Store raw response BEFORE any parsing (NEW)
+      // NEW: Step 2.5: Validate API response BEFORE storage
+      try {
+        this.validateAPIResponse(apiResponse, generationId);
+      } catch (validationError) {
+        console.error(`[${generationId}] ❌ Response validation failed:`, validationError);
+        
+        // Store as failed generation for analysis
+        await this.storeFailedGeneration(
+          validationError as Error,
+          {
+            prompt: resolvedTemplate.resolvedPrompt,
+            apiResponse,
+            params,
+          },
+          generationId
+        );
+        
+        // Re-throw to prevent production storage
+        throw validationError;
+      }
+
+      // TIER 2: Store raw response BEFORE any parsing (ONLY if validation passed)
       console.log(`[${generationId}] Step 3: Storing raw response...`);
       const rawStorageResult = await this.storageService.storeRawResponse({
         conversationId: generationId,
@@ -311,6 +362,135 @@ export class ConversationGenerationService {
           totalTokens: 0,
         },
       };
+    }
+  }
+
+  /**
+   * Validate Claude API response for completeness
+   * Checks stop_reason and content truncation patterns
+   * 
+   * @param apiResponse - Response from Claude API
+   * @param generationId - ID for logging
+   * @throws TruncatedResponseError if content is truncated
+   * @throws UnexpectedStopReasonError if stop_reason is not 'end_turn'
+   * @private
+   */
+  private validateAPIResponse(
+    apiResponse: ClaudeAPIResponse,
+    generationId: string
+  ): void {
+    console.log(`[${generationId}] Validating API response...`);
+
+    // VALIDATION 1: Check stop_reason
+    if (apiResponse.stop_reason !== 'end_turn') {
+      console.warn(`[${generationId}] ⚠️ Unexpected stop_reason: ${apiResponse.stop_reason}`);
+      throw new UnexpectedStopReasonError(
+        `Generation failed: stop_reason was '${apiResponse.stop_reason}' instead of 'end_turn'`,
+        apiResponse.stop_reason
+      );
+    }
+
+    // VALIDATION 2: Check content for truncation patterns
+    const truncationCheck = detectTruncatedContent(apiResponse.content);
+    
+    if (truncationCheck.isTruncated) {
+      console.warn(`[${generationId}] ⚠️ Content appears truncated: ${truncationCheck.details}`);
+      console.warn(`[${generationId}] Pattern: ${truncationCheck.pattern}, Confidence: ${truncationCheck.confidence}`);
+      
+      throw new TruncatedResponseError(
+        `Generation failed: content truncated (${truncationCheck.pattern})`,
+        apiResponse.stop_reason,
+        truncationCheck.pattern
+      );
+    }
+
+    console.log(`[${generationId}] ✓ Response validation passed`);
+  }
+
+  /**
+   * Store failed generation with full diagnostic context
+   * Creates RAW Error File Report and database record
+   * 
+   * @param error - The error that caused failure
+   * @param context - Generation context (prompt, config, response)
+   * @param generationId - ID for tracking
+   * @private
+   */
+  private async storeFailedGeneration(
+    error: Error,
+    context: {
+      prompt: string;
+      apiResponse: ClaudeAPIResponse;
+      params: GenerationParams;
+    },
+    generationId: string
+  ): Promise<void> {
+    try {
+      console.log(`[${generationId}] Storing as failed generation...`);
+
+      const failedGenService = getFailedGenerationService();
+
+      // Determine failure type and details
+      let failureType: 'truncation' | 'parse_error' | 'api_error' | 'validation_error' = 'api_error';
+      let truncationPattern: string | null = null;
+      let truncationDetails: string | null = null;
+
+      if (error instanceof TruncatedResponseError) {
+        failureType = 'truncation';
+        truncationPattern = error.pattern;
+        truncationDetails = error.message;
+      } else if (error instanceof UnexpectedStopReasonError) {
+        failureType = 'truncation';  // Unexpected stop_reason treated as truncation
+        truncationPattern = 'unexpected_stop_reason';
+        truncationDetails = `stop_reason was '${error.stopReason}' instead of 'end_turn'`;
+      }
+
+      // Build failed generation input
+      const input: CreateFailedGenerationInput = {
+        conversation_id: generationId,
+        run_id: context.params.runId,
+        
+        prompt: context.prompt,
+        model: context.apiResponse.model,
+        max_tokens: context.params.maxTokens || AI_CONFIG.maxTokens,
+        temperature: context.params.temperature || AI_CONFIG.temperature,
+        structured_outputs_enabled: true,
+        
+        raw_response: {
+          id: context.apiResponse.id,
+          model: context.apiResponse.model,
+          stop_reason: context.apiResponse.stop_reason,
+          usage: context.apiResponse.usage,
+          cost: context.apiResponse.cost,
+          durationMs: context.apiResponse.durationMs,
+        },
+        response_content: context.apiResponse.content,
+        
+        stop_reason: context.apiResponse.stop_reason,
+        input_tokens: context.apiResponse.usage.input_tokens,
+        output_tokens: context.apiResponse.usage.output_tokens,
+        
+        failure_type: failureType,
+        truncation_pattern: truncationPattern,
+        truncation_details: truncationDetails,
+        
+        error_message: error.message,
+        error_stack: error.stack,
+        
+        created_by: context.params.userId,
+        
+        persona_id: context.params.scaffoldingIds?.personaId,
+        emotional_arc_id: context.params.scaffoldingIds?.emotionalArcId,
+        training_topic_id: context.params.scaffoldingIds?.trainingTopicId,
+        template_id: context.params.templateId,
+      };
+
+      await failedGenService.storeFailedGeneration(input);
+
+      console.log(`[${generationId}] ✅ Failed generation stored for analysis`);
+    } catch (storeError) {
+      console.error(`[${generationId}] ❌ Error storing failed generation:`, storeError);
+      // Don't throw - we already have the original error to throw
     }
   }
 

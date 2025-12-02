@@ -42,6 +42,7 @@ export interface ClaudeAPIResponse {
   id: string;
   content: string;
   model: string;
+  stop_reason: 'end_turn' | 'max_tokens' | 'stop_sequence' | 'tool_use';
   usage: {
     input_tokens: number;
     output_tokens: number;
@@ -164,6 +165,7 @@ export class ClaudeAPIClient {
           responsePayload: {
             id: response.id,
             content: response.content,
+            stop_reason: response.stop_reason,
           },
           modelUsed: response.model,
           inputTokens: response.usage.input_tokens,
@@ -307,6 +309,20 @@ export class ClaudeAPIClient {
         .map((block: any) => block.text)
         .join('\n');
 
+      // Capture stop_reason from API response
+      const stopReason = data.stop_reason;
+
+      // Log stop_reason for debugging (ALWAYS log this)
+      console.log(`[${requestId}] stop_reason: ${stopReason}`);
+      console.log(`[${requestId}] output_tokens: ${data.usage.output_tokens}`);
+      console.log(`[${requestId}] max_tokens configured: ${maxTokens}`);
+
+      // Warn if stop_reason indicates truncation
+      if (stopReason === 'max_tokens') {
+        console.warn(`[${requestId}] ⚠️ Response truncated due to max_tokens limit`);
+        console.warn(`[${requestId}] Input: ${data.usage.input_tokens}, Output: ${data.usage.output_tokens}, Max: ${maxTokens}`);
+      }
+
       // Calculate cost
       const tier = this.getModelTier(model);
       const cost = calculateCost(
@@ -319,6 +335,7 @@ export class ClaudeAPIClient {
         id: data.id,
         content,
         model: data.model,
+        stop_reason: stopReason,
         usage: {
           input_tokens: data.usage.input_tokens,
           output_tokens: data.usage.output_tokens,
