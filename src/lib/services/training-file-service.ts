@@ -115,14 +115,21 @@ export class TrainingFileService {
    */
   async createTrainingFile(input: CreateTrainingFileInput): Promise<TrainingFile> {
     try {
-      // 1. Validate conversations exist and are eligible
-      const validationResult = await this.validateConversationsForTraining(input.conversation_ids);
+      // 1. Resolve IDs to canonical conversation_ids (handles PK vs Business Key)
+      const canonicalIds = await this.resolveToConversationIds(input.conversation_ids);
+
+      if (canonicalIds.length === 0 && input.conversation_ids.length > 0) {
+        throw new Error('Conversation validation failed: No conversations found (ID resolution failed)');
+      }
+
+      // 2. Validate conversations exist and are eligible (using canonical IDs)
+      const validationResult = await this.validateConversationsForTraining(canonicalIds);
       if (!validationResult.isValid) {
         throw new Error(`Conversation validation failed: ${validationResult.errors.join(', ')}`);
       }
 
-      // 2. Fetch enriched JSON files for all conversations
-      const conversations = await this.fetchEnrichedConversations(input.conversation_ids);
+      // 3. Fetch enriched JSON files for all conversations (using canonical IDs)
+      const conversations = await this.fetchEnrichedConversations(canonicalIds);
       
       // 3. Build full training JSON
       const fullJSON = await this.aggregateConversationsToFullJSON(
@@ -172,8 +179,8 @@ export class TrainingFileService {
       
       if (error) throw error;
       
-      // 8. Add conversation associations
-      const associations = input.conversation_ids.map(conv_id => ({
+      // 8. Add conversation associations (using canonical IDs)
+      const associations = canonicalIds.map(conv_id => ({
         training_file_id: trainingFile.id,
         conversation_id: conv_id,
         added_by: input.created_by,
@@ -198,7 +205,14 @@ export class TrainingFileService {
    */
   async addConversationsToTrainingFile(input: AddConversationsInput): Promise<TrainingFile> {
     try {
-      // 1. Check for duplicates
+      // 1. Resolve IDs to canonical conversation_ids (handles PK vs Business Key)
+      const canonicalIds = await this.resolveToConversationIds(input.conversation_ids);
+
+      if (canonicalIds.length === 0 && input.conversation_ids.length > 0) {
+        throw new Error('Validation failed: No conversations found (ID resolution failed)');
+      }
+
+      // 2. Check for duplicates (using canonical IDs)
       const { data: existing } = await this.supabase
         .from('training_file_conversations')
         .select('conversation_id')
@@ -206,19 +220,19 @@ export class TrainingFileService {
       
       if (existing && existing.length > 0) {
         const existingIds = existing.map(e => e.conversation_id);
-        const duplicates = input.conversation_ids.filter(id => existingIds.includes(id));
+        const duplicates = canonicalIds.filter(id => existingIds.includes(id));
         if (duplicates.length > 0) {
           throw new Error(`Conversations already in training file: ${duplicates.join(', ')}`);
         }
       }
       
-      // 2. Validate new conversations
-      const validationResult = await this.validateConversationsForTraining(input.conversation_ids);
+      // 3. Validate new conversations (using canonical IDs)
+      const validationResult = await this.validateConversationsForTraining(canonicalIds);
       if (!validationResult.isValid) {
         throw new Error(`Validation failed: ${validationResult.errors.join(', ')}`);
       }
       
-      // 3. Get existing training file
+      // 4. Get existing training file
       const { data: existingFile } = await this.supabase
         .from('training_files')
         .select('*')
@@ -227,35 +241,35 @@ export class TrainingFileService {
       
       if (!existingFile) throw new Error('Training file not found');
       
-      // 4. Download existing JSON file
+      // 5. Download existing JSON file
       const existingJSON = await this.downloadJSONFile(existingFile.json_file_path);
       
-      // 5. Fetch new conversations
-      const newConversations = await this.fetchEnrichedConversations(input.conversation_ids);
+      // 6. Fetch new conversations (using canonical IDs)
+      const newConversations = await this.fetchEnrichedConversations(canonicalIds);
       
-      // 6. Merge conversations into existing JSON
+      // 7. Merge conversations into existing JSON
       const updatedJSON = this.mergeConversationsIntoFullJSON(existingJSON, newConversations);
       
-      // 7. Regenerate JSONL
+      // 8. Regenerate JSONL
       const updatedJSONL = this.convertFullJSONToJSONL(updatedJSON);
       
-      // 8. Upload updated files
+      // 9. Upload updated files
       await this.uploadToStorage(existingFile.json_file_path, JSON.stringify(updatedJSON, null, 2));
       await this.uploadToStorage(existingFile.jsonl_file_path, updatedJSONL);
       
-      // 9. Recalculate metadata
+      // 10. Recalculate metadata (using canonical IDs)
       const allConversationIds = [
         ...(existing?.map(e => e.conversation_id) || []),
-        ...input.conversation_ids
+        ...canonicalIds
       ];
       const allConversations = await this.fetchEnrichedConversations(allConversationIds);
       const metadata = this.calculateMetadata(updatedJSON, allConversations);
       
-      // 10. Update database record
+      // 11. Update database record (using canonical IDs count)
       const { data: updated, error } = await this.supabase
         .from('training_files')
         .update({
-          conversation_count: existingFile.conversation_count + input.conversation_ids.length,
+          conversation_count: existingFile.conversation_count + canonicalIds.length,
           total_training_pairs: metadata.totalTrainingPairs,
           json_file_size: Buffer.byteLength(JSON.stringify(updatedJSON)),
           jsonl_file_size: Buffer.byteLength(updatedJSONL),
@@ -273,8 +287,8 @@ export class TrainingFileService {
       
       if (error) throw error;
       
-      // 11. Add new conversation associations
-      const associations = input.conversation_ids.map(conv_id => ({
+      // 12. Add new conversation associations (using canonical IDs)
+      const associations = canonicalIds.map(conv_id => ({
         training_file_id: input.training_file_id,
         conversation_id: conv_id,
         added_by: input.added_by,
@@ -369,6 +383,55 @@ export class TrainingFileService {
   // ============================================================================
   // PRIVATE HELPER METHODS
   // ============================================================================
+
+  /**
+   * Resolves mixed IDs (PK or Business Key) to canonical conversation_ids.
+   * Matches the pattern from bulk-enrich endpoint for consistency.
+   * 
+   * This handles a legacy bug where the UI sometimes sends the database row ID (id)
+   * instead of the business key (conversation_id). Once the UI is fixed, this fallback
+   * can be removed.
+   */
+  private async resolveToConversationIds(mixedIds: string[]): Promise<string[]> {
+    if (!mixedIds || mixedIds.length === 0) return [];
+
+    // Try conversation_id first (correct field)
+    const { data: byConvId, error: convIdError } = await this.supabase
+      .from('conversations')
+      .select('conversation_id')
+      .in('conversation_id', mixedIds);
+
+    if (convIdError) {
+      console.error('[TrainingFileService] Error querying by conversation_id:', convIdError);
+      throw new Error(`Database error: ${convIdError.message}`);
+    }
+
+    const foundConvIds = new Set(byConvId?.map(r => r.conversation_id) || []);
+
+    // For IDs not found by conversation_id, try by id (PK) as fallback
+    const notFoundByConvId = mixedIds.filter(id => !foundConvIds.has(id));
+
+    if (notFoundByConvId.length > 0) {
+      console.warn(`[TrainingFileService] ⚠️ ${notFoundByConvId.length} IDs not found by conversation_id, trying by id (PK)...`);
+
+      const { data: byId, error: idError } = await this.supabase
+        .from('conversations')
+        .select('conversation_id')
+        .in('id', notFoundByConvId);
+
+      if (idError) {
+        console.error('[TrainingFileService] Error querying by id:', idError);
+        throw new Error(`Database error: ${idError.message}`);
+      }
+
+      byId?.forEach(r => {
+        foundConvIds.add(r.conversation_id);
+        console.log(`[TrainingFileService] ✅ Resolved id to conversation_id: ${r.conversation_id}`);
+      });
+    }
+
+    return Array.from(foundConvIds);
+  }
 
   private async validateConversationsForTraining(
     conversation_ids: string[]
