@@ -395,6 +395,9 @@ export class TrainingFileService {
   private async resolveToConversationIds(mixedIds: string[]): Promise<string[]> {
     if (!mixedIds || mixedIds.length === 0) return [];
 
+    // DEBUG: Log what IDs we received
+    console.log(`[TrainingFileService] 🔍 Resolving ${mixedIds.length} IDs:`, JSON.stringify(mixedIds));
+
     // Try conversation_id first (correct field)
     const { data: byConvId, error: convIdError } = await this.supabase
       .from('conversations')
@@ -406,6 +409,8 @@ export class TrainingFileService {
       throw new Error(`Database error: ${convIdError.message}`);
     }
 
+    console.log(`[TrainingFileService] Found ${byConvId?.length || 0} by conversation_id`);
+
     const foundConvIds = new Set(byConvId?.map(r => r.conversation_id) || []);
 
     // For IDs not found by conversation_id, try by id (PK) as fallback
@@ -413,10 +418,11 @@ export class TrainingFileService {
 
     if (notFoundByConvId.length > 0) {
       console.warn(`[TrainingFileService] ⚠️ ${notFoundByConvId.length} IDs not found by conversation_id, trying by id (PK)...`);
+      console.log(`[TrainingFileService] IDs to try by PK:`, JSON.stringify(notFoundByConvId));
 
       const { data: byId, error: idError } = await this.supabase
         .from('conversations')
-        .select('conversation_id')
+        .select('id, conversation_id')
         .in('id', notFoundByConvId);
 
       if (idError) {
@@ -424,13 +430,22 @@ export class TrainingFileService {
         throw new Error(`Database error: ${idError.message}`);
       }
 
-      byId?.forEach(r => {
-        foundConvIds.add(r.conversation_id);
-        console.log(`[TrainingFileService] ✅ Resolved id to conversation_id: ${r.conversation_id}`);
-      });
+      console.log(`[TrainingFileService] Found ${byId?.length || 0} by id (PK)`);
+
+      if (byId && byId.length > 0) {
+        byId.forEach(r => {
+          foundConvIds.add(r.conversation_id);
+          console.log(`[TrainingFileService] ✅ Resolved PK ${r.id} → conversation_id: ${r.conversation_id}`);
+        });
+      } else {
+        console.error(`[TrainingFileService] ❌ NO CONVERSATIONS FOUND for these IDs:`, JSON.stringify(notFoundByConvId));
+      }
     }
 
-    return Array.from(foundConvIds);
+    const result = Array.from(foundConvIds);
+    console.log(`[TrainingFileService] Final resolution: ${result.length} conversation_ids`, JSON.stringify(result));
+
+    return result;
   }
 
   private async validateConversationsForTraining(

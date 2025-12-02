@@ -6,7 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerSupabaseClient } from '@/lib/supabase-server';
+import { createServerSupabaseClient, createServerSupabaseAdminClient } from '@/lib/supabase-server';
 import { createTrainingFileService } from '@/lib/services/training-file-service';
 import { z, ZodError } from 'zod';
 
@@ -22,16 +22,19 @@ const CreateTrainingFileSchema = z.object({
  */
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createServerSupabaseClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    
+    // Use user client for auth check
+    const supabaseUser = await createServerSupabaseClient();
+    const { data: { user }, error: authError } = await supabaseUser.auth.getUser();
+
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    
-    const service = createTrainingFileService(supabase);
+
+    // Use ADMIN client for database operations to bypass RLS
+    const supabaseAdmin = createServerSupabaseAdminClient();
+    const service = createTrainingFileService(supabaseAdmin);
     const files = await service.listTrainingFiles({ status: 'active' });
-    
+
     return NextResponse.json({ files });
   } catch (error) {
     console.error('Error listing training files:', error);
@@ -48,42 +51,46 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createServerSupabaseClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    
+    // Use user client for auth check
+    const supabaseUser = await createServerSupabaseClient();
+    const { data: { user }, error: authError } = await supabaseUser.auth.getUser();
+
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    
+
     const body = await request.json();
     const validated = CreateTrainingFileSchema.parse(body);
-    
-    const service = createTrainingFileService(supabase);
+
+    // Use ADMIN client for database operations to bypass RLS
+    // (conversations may be created by system user, not the current user)
+    const supabaseAdmin = createServerSupabaseAdminClient();
+    const service = createTrainingFileService(supabaseAdmin);
     const trainingFile = await service.createTrainingFile({
       name: validated.name,
       description: validated.description,
       conversation_ids: validated.conversation_ids,
       created_by: user.id,
     });
-    
+
     return NextResponse.json({ trainingFile }, { status: 201 });
   } catch (error) {
     console.error('Error creating training file:', error);
-    
+
     if (error instanceof ZodError) {
       return NextResponse.json(
         { error: 'Validation error', details: error.issues },
         { status: 400 }
       );
     }
-    
+
     if (error instanceof Error) {
       return NextResponse.json(
         { error: error.message },
         { status: 400 }
       );
     }
-    
+
     return NextResponse.json(
       { error: 'Failed to create training file' },
       { status: 500 }
