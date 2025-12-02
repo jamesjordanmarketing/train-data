@@ -19,60 +19,24 @@ export interface TruncationDetectionResult {
 
 /**
  * Truncation patterns to detect
+ * 
+ * IMPORTANT: Reduced to single reliable pattern after BUG-1 analysis (2025-12-02)
+ * The previous patterns (long_unclosed_string, mid_word, etc.) caused 100% false 
+ * positive rate on valid Claude structured output responses.
+ * 
+ * The escaped quote pattern is THE key indicator of truncation in structured outputs:
+ * - When Claude is mid-sentence and gets truncated, it often was typing a quote
+ * - JSON escaping makes this appear as \\" at the end of content
+ * - Normal content NEVER ends with an escaped quote followed by nothing
  */
 const TRUNCATION_PATTERNS = [
   {
+    // Matches content ending with escaped quote (\\")
+    // This indicates Claude was mid-escape-sequence when truncated
+    // Example: "She said \"hello" becomes truncated "She said \\"
     pattern: /\\"\s*$/,
-    name: 'escaped_quote',
-    desc: 'Ends with escaped quote (incomplete string literal)',
-    confidence: 'high' as const,
-  },
-  {
-    pattern: /\\\s*$/,
-    name: 'lone_backslash',
-    desc: 'Ends with lone backslash (incomplete escape sequence)',
-    confidence: 'high' as const,
-  },
-  {
-    pattern: /[a-zA-Z][-a-zA-Z]*[a-z]\s*$/,
-    name: 'mid_word',
-    desc: 'Ends mid-word without punctuation',
-    confidence: 'medium' as const,
-  },
-  {
-    pattern: /,\s*$/,
-    name: 'trailing_comma',
-    desc: 'Ends with comma (incomplete list/object)',
-    confidence: 'medium' as const,
-  },
-  {
-    pattern: /:\s*$/,
-    name: 'trailing_colon',
-    desc: 'Ends after property colon (incomplete JSON key-value)',
-    confidence: 'high' as const,
-  },
-  {
-    pattern: /\(\s*$/,
-    name: 'open_paren',
-    desc: 'Ends with unclosed parenthesis',
-    confidence: 'medium' as const,
-  },
-  {
-    pattern: /\[\s*$/,
-    name: 'open_bracket',
-    desc: 'Ends with unclosed bracket',
-    confidence: 'medium' as const,
-  },
-  {
-    pattern: /\{\s*$/,
-    name: 'open_brace',
-    desc: 'Ends with unclosed brace',
-    confidence: 'medium' as const,
-  },
-  {
-    pattern: /"[^"]{50,}\s*$/,
-    name: 'long_unclosed_string',
-    desc: 'Ends with long unclosed string (>50 chars without closing quote)',
+    name: 'truncated_escape_sequence',
+    desc: 'Content ends with escaped quote indicating mid-sentence truncation',
     confidence: 'high' as const,
   },
 ];
@@ -120,32 +84,15 @@ export function detectTruncatedContent(content: string): TruncationDetectionResu
     }
   }
 
-  // Check if ends with proper punctuation (NOT truncated)
-  if (PROPER_ENDINGS.test(trimmed)) {
-    return {
-      isTruncated: false,
-      pattern: null,
-      details: 'Content appears complete (ends with proper punctuation)',
-      confidence: 'high',
-    };
-  }
-
-  // Long content without proper ending is suspicious
-  if (trimmed.length > 100) {
-    return {
-      isTruncated: true,
-      pattern: 'no_punctuation',
-      details: 'Long content does not end with expected punctuation',
-      confidence: 'low',
-    };
-  }
-
-  // Short content without clear pattern
+  // No truncation patterns matched - content is complete
+  // NOTE: Removed the "long content without proper ending" check as it caused
+  // false positives. With structured outputs, Claude guarantees valid JSON,
+  // so we only need to check for the specific escape sequence pattern above.
   return {
     isTruncated: false,
     pattern: null,
     details: 'Content appears complete (no truncation patterns detected)',
-    confidence: 'medium',
+    confidence: 'high',
   };
 }
 
