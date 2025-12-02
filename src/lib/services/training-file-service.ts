@@ -75,7 +75,7 @@ export interface FullTrainingJSON {
     created_date: string;
     last_updated: string;
     format_spec: string;
-    target_model?: string;
+    target_model: string;
     vertical: string;
     total_conversations: number;
     total_training_pairs: number;
@@ -487,6 +487,8 @@ export class TrainingFileService {
 
   private async fetchEnrichedConversations(conversation_ids: string[]): Promise<any[]> {
     // Fetch conversation metadata from database
+    // Note: persona_key, emotional_arc_key, topic_key DB columns may be null
+    // The actual scaffolding data is in scaffolding_snapshot JSONB
     const { data: conversations, error } = await this.supabase
       .from('conversations')
       .select(`
@@ -501,7 +503,8 @@ export class TrainingFileService {
         appropriateness_score,
         brand_voice_alignment,
         created_at,
-        tier
+        tier,
+        scaffolding_snapshot
       `)
       .in('conversation_id', conversation_ids);
     
@@ -568,6 +571,7 @@ export class TrainingFileService {
         created_date: now.toISOString(),
         last_updated: now.toISOString(),
         format_spec: 'brightrun-lora-v4',
+        target_model: 'claude-sonnet-4-5',
         vertical: 'financial_planning_consultant',
         total_conversations: conversations.length,
         total_training_pairs: 0, // Calculated below
@@ -629,46 +633,72 @@ export class TrainingFileService {
       const trainingPairs = enrichedJSON.training_pairs || [];
       totalPairs += trainingPairs.length;
       
-      // Track scaffolding distribution
-      if (metadata.persona_key) {
-        fullJSON.training_file_metadata.scaffolding_distribution.personas[metadata.persona_key] = 
-          (fullJSON.training_file_metadata.scaffolding_distribution.personas[metadata.persona_key] || 0) + 1;
+      // Extract scaffolding keys from scaffolding_snapshot JSONB (primary) or fall back to DB columns
+      // DB columns (persona_key, emotional_arc_key, topic_key) are often null
+      const scaffoldingSnapshot = metadata.scaffolding_snapshot || {};
+      const personaKey = metadata.persona_key || scaffoldingSnapshot?.persona?.persona_key || '';
+      const emotionalArcKey = metadata.emotional_arc_key || scaffoldingSnapshot?.emotional_arc?.arc_key || '';
+      const topicKey = metadata.topic_key || scaffoldingSnapshot?.training_topic?.topic_key || '';
+      
+      // Track scaffolding distribution using extracted keys
+      if (personaKey) {
+        fullJSON.training_file_metadata.scaffolding_distribution.personas[personaKey] = 
+          (fullJSON.training_file_metadata.scaffolding_distribution.personas[personaKey] || 0) + 1;
       }
-      if (metadata.emotional_arc_key) {
-        fullJSON.training_file_metadata.scaffolding_distribution.emotional_arcs[metadata.emotional_arc_key] = 
-          (fullJSON.training_file_metadata.scaffolding_distribution.emotional_arcs[metadata.emotional_arc_key] || 0) + 1;
+      if (emotionalArcKey) {
+        fullJSON.training_file_metadata.scaffolding_distribution.emotional_arcs[emotionalArcKey] = 
+          (fullJSON.training_file_metadata.scaffolding_distribution.emotional_arcs[emotionalArcKey] || 0) + 1;
       }
-      if (metadata.topic_key) {
-        fullJSON.training_file_metadata.scaffolding_distribution.training_topics[metadata.topic_key] = 
-          (fullJSON.training_file_metadata.scaffolding_distribution.training_topics[metadata.topic_key] || 0) + 1;
+      if (topicKey) {
+        fullJSON.training_file_metadata.scaffolding_distribution.training_topics[topicKey] = 
+          (fullJSON.training_file_metadata.scaffolding_distribution.training_topics[topicKey] || 0) + 1;
       }
       
-      // Track quality scores
+      // Track quality scores - prefer DB column, fall back to enriched JSON training pairs
       if (metadata.quality_score !== null && metadata.quality_score !== undefined) {
         qualityScores.push(metadata.quality_score);
+      } else {
+        // Extract quality scores from training pairs in enriched JSON
+        for (const pair of trainingPairs) {
+          if (pair.training_metadata?.quality_score !== null && pair.training_metadata?.quality_score !== undefined) {
+            qualityScores.push(pair.training_metadata.quality_score);
+          }
+        }
       }
       
-      // Extract persona name, emotional arc, and training topic from first training pair
+      // Extract persona name, emotional arc, and training topic from scaffolding_snapshot or first training pair
       const firstPair = trainingPairs[0];
-      const personaName = firstPair?.conversation_metadata?.client_persona || '';
-      const emotionalArc = firstPair?.conversation_metadata?.emotional_arc || '';
-      const trainingTopic = firstPair?.conversation_metadata?.training_topic || '';
+      const personaName = scaffoldingSnapshot?.persona?.name || firstPair?.conversation_metadata?.client_persona || '';
+      const emotionalArcName = scaffoldingSnapshot?.emotional_arc?.name || firstPair?.conversation_metadata?.emotional_arc || '';
+      const trainingTopicName = scaffoldingSnapshot?.training_topic?.name || firstPair?.conversation_metadata?.training_topic || '';
       
-      // Add conversation to conversations array
+      // Calculate quality tier from training pairs if DB quality_score is null
+      let qualityTier = this.mapQualityTier(metadata.quality_score);
+      if (!metadata.quality_score && trainingPairs.length > 0) {
+        const pairScores = trainingPairs
+          .filter((p: any) => p.training_metadata?.quality_score != null)
+          .map((p: any) => p.training_metadata.quality_score);
+        if (pairScores.length > 0) {
+          const avgScore = pairScores.reduce((a: number, b: number) => a + b, 0) / pairScores.length;
+          qualityTier = this.mapQualityTier(avgScore);
+        }
+      }
+      
+      // Add conversation to conversations array with properly populated scaffolding keys
       fullJSON.conversations.push({
         conversation_metadata: {
           conversation_id: metadata.conversation_id,
           source_file: `fp_conversation_${metadata.conversation_id}.json`,
           created_date: metadata.created_at.split('T')[0],
           total_turns: trainingPairs.length,
-          quality_tier: this.mapQualityTier(metadata.quality_score),
+          quality_tier: qualityTier,
           scaffolding: {
-            persona_key: metadata.persona_key || '',
+            persona_key: personaKey,
             persona_name: personaName,
-            emotional_arc_key: metadata.emotional_arc_key || '',
-            emotional_arc: emotionalArc,
-            training_topic_key: metadata.topic_key || '',
-            training_topic: trainingTopic,
+            emotional_arc_key: emotionalArcKey,
+            emotional_arc: emotionalArcName,
+            training_topic_key: topicKey,
+            training_topic: trainingTopicName,
           },
         },
         training_pairs: trainingPairs,
@@ -712,28 +742,55 @@ export class TrainingFileService {
       
       totalPairs += trainingPairs.length;
       
-      // Update scaffolding distribution
-      if (metadata.persona_key) {
-        mergedJSON.training_file_metadata.scaffolding_distribution.personas[metadata.persona_key] = 
-          (mergedJSON.training_file_metadata.scaffolding_distribution.personas[metadata.persona_key] || 0) + 1;
+      // Extract scaffolding keys from scaffolding_snapshot JSONB (primary) or fall back to DB columns
+      const scaffoldingSnapshot = metadata.scaffolding_snapshot || {};
+      const personaKey = metadata.persona_key || scaffoldingSnapshot?.persona?.persona_key || '';
+      const emotionalArcKey = metadata.emotional_arc_key || scaffoldingSnapshot?.emotional_arc?.arc_key || '';
+      const topicKey = metadata.topic_key || scaffoldingSnapshot?.training_topic?.topic_key || '';
+      
+      // Update scaffolding distribution using extracted keys
+      if (personaKey) {
+        mergedJSON.training_file_metadata.scaffolding_distribution.personas[personaKey] = 
+          (mergedJSON.training_file_metadata.scaffolding_distribution.personas[personaKey] || 0) + 1;
       }
-      if (metadata.emotional_arc_key) {
-        mergedJSON.training_file_metadata.scaffolding_distribution.emotional_arcs[metadata.emotional_arc_key] = 
-          (mergedJSON.training_file_metadata.scaffolding_distribution.emotional_arcs[metadata.emotional_arc_key] || 0) + 1;
+      if (emotionalArcKey) {
+        mergedJSON.training_file_metadata.scaffolding_distribution.emotional_arcs[emotionalArcKey] = 
+          (mergedJSON.training_file_metadata.scaffolding_distribution.emotional_arcs[emotionalArcKey] || 0) + 1;
       }
-      if (metadata.topic_key) {
-        mergedJSON.training_file_metadata.scaffolding_distribution.training_topics[metadata.topic_key] = 
-          (mergedJSON.training_file_metadata.scaffolding_distribution.training_topics[metadata.topic_key] || 0) + 1;
+      if (topicKey) {
+        mergedJSON.training_file_metadata.scaffolding_distribution.training_topics[topicKey] = 
+          (mergedJSON.training_file_metadata.scaffolding_distribution.training_topics[topicKey] || 0) + 1;
       }
       
+      // Track quality scores - prefer DB column, fall back to enriched JSON training pairs
       if (metadata.quality_score !== null && metadata.quality_score !== undefined) {
         qualityScores.push(metadata.quality_score);
+      } else {
+        // Extract quality scores from training pairs in enriched JSON
+        for (const pair of trainingPairs) {
+          if (pair.training_metadata?.quality_score !== null && pair.training_metadata?.quality_score !== undefined) {
+            qualityScores.push(pair.training_metadata.quality_score);
+          }
+        }
       }
       
+      // Extract names from scaffolding_snapshot or first training pair
       const firstPair = trainingPairs[0];
-      const personaName = firstPair?.conversation_metadata?.client_persona || '';
-      const emotionalArc = firstPair?.conversation_metadata?.emotional_arc || '';
-      const trainingTopic = firstPair?.conversation_metadata?.training_topic || '';
+      const personaName = scaffoldingSnapshot?.persona?.name || firstPair?.conversation_metadata?.client_persona || '';
+      const emotionalArcName = scaffoldingSnapshot?.emotional_arc?.name || firstPair?.conversation_metadata?.emotional_arc || '';
+      const trainingTopicName = scaffoldingSnapshot?.training_topic?.name || firstPair?.conversation_metadata?.training_topic || '';
+      
+      // Calculate quality tier from training pairs if DB quality_score is null
+      let qualityTier = this.mapQualityTier(metadata.quality_score);
+      if (!metadata.quality_score && trainingPairs.length > 0) {
+        const pairScores = trainingPairs
+          .filter((p: any) => p.training_metadata?.quality_score != null)
+          .map((p: any) => p.training_metadata.quality_score);
+        if (pairScores.length > 0) {
+          const avgScore = pairScores.reduce((a: number, b: number) => a + b, 0) / pairScores.length;
+          qualityTier = this.mapQualityTier(avgScore);
+        }
+      }
       
       mergedJSON.conversations.push({
         conversation_metadata: {
@@ -741,14 +798,14 @@ export class TrainingFileService {
           source_file: `fp_conversation_${metadata.conversation_id}.json`,
           created_date: metadata.created_at.split('T')[0],
           total_turns: trainingPairs.length,
-          quality_tier: this.mapQualityTier(metadata.quality_score),
+          quality_tier: qualityTier,
           scaffolding: {
-            persona_key: metadata.persona_key || '',
+            persona_key: personaKey,
             persona_name: personaName,
-            emotional_arc_key: metadata.emotional_arc_key || '',
-            emotional_arc: emotionalArc,
-            training_topic_key: metadata.topic_key || '',
-            training_topic: trainingTopic,
+            emotional_arc_key: emotionalArcKey,
+            emotional_arc: emotionalArcName,
+            training_topic_key: topicKey,
+            training_topic: trainingTopicName,
           },
         },
         training_pairs: trainingPairs,
