@@ -23,7 +23,7 @@ export const MODEL_CONFIGS: Record<string, ModelConfig> = {
     maxTokens: 4096
   },
   sonnet: {
-    name: 'claude-3-5-sonnet-20241022',
+    name: 'claude-sonnet-4-5-20250929',
     rateLimit: 50,
     rateLimitWindow: 60,
     costPerMillionInputTokens: 3,
@@ -74,7 +74,7 @@ export const AI_CONFIG: AIConfig & {
   baseUrl: process.env.ANTHROPIC_API_BASE_URL || 'https://api.anthropic.com/v1',
   
   // Model configuration
-  model: process.env.ANTHROPIC_MODEL || 'claude-3-5-sonnet-20241022',
+  model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-5-20250929',
   maxTokens: 24576,
   temperature: 0.7,
   

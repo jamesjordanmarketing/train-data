@@ -51,7 +51,7 @@ export class ConversationGenerator {
     // API configuration
     this.apiKey = config.apiKey || process.env.ANTHROPIC_API_KEY || '';
     this.apiUrl = config.apiUrl || process.env.ANTHROPIC_API_BASE_URL || 'https://api.anthropic.com/v1';
-    this.defaultModel = config.defaultModel || process.env.ANTHROPIC_MODEL || 'claude-3-5-sonnet-20241022';
+    this.defaultModel = config.defaultModel || process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-5-20250929';
 
     if (!this.apiKey) {
       console.warn('⚠️  ANTHROPIC_API_KEY not configured');
