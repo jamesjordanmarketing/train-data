@@ -24,7 +24,7 @@ import { ConversationStorageService } from './conversation-storage-service';
 import { conversationService } from './conversation-service';
 import { generationLogService } from './generation-log-service';
 import { getFailedGenerationService, type CreateFailedGenerationInput } from './failed-generation-service';
-import { detectTruncatedContent } from '../utils/truncation-detection';
+import { detectTruncatedContent, detectTruncatedTurns } from '../utils/truncation-detection';
 import { AI_CONFIG } from '../ai-config';
 import type {
   Conversation,
@@ -390,7 +390,7 @@ export class ConversationGenerationService {
       );
     }
 
-    // VALIDATION 2: Check content for truncation patterns
+    // VALIDATION 2: Check content for truncation patterns (on raw JSON)
     const truncationCheck = detectTruncatedContent(apiResponse.content);
     
     if (truncationCheck.isTruncated) {
@@ -402,6 +402,38 @@ export class ConversationGenerationService {
         apiResponse.stop_reason,
         truncationCheck.pattern
       );
+    }
+
+    // VALIDATION 3: Check individual turn content for truncation (CRITICAL FIX)
+    // Structured outputs guarantee valid JSON structure, but content INSIDE turns may be truncated
+    try {
+      const parsed = JSON.parse(apiResponse.content);
+      
+      if (parsed.turns && Array.isArray(parsed.turns)) {
+        const truncatedTurns = detectTruncatedTurns(parsed.turns);
+        
+        if (truncatedTurns.length > 0) {
+          const details = truncatedTurns
+            .map(t => `Turn ${t.turnIndex}: ${t.result.pattern}`)
+            .join(', ');
+          
+          console.warn(`[${generationId}] ⚠️ Truncated turns detected: ${details}`);
+          
+          throw new TruncatedResponseError(
+            `Content truncated in ${truncatedTurns.length} turn(s): ${details}`,
+            apiResponse.stop_reason,
+            truncatedTurns[0].result.pattern
+          );
+        }
+      }
+    } catch (parseError) {
+      // If JSON parsing fails, we'll catch it later in the pipeline
+      // Don't throw here - let the normal parse error handling deal with it
+      if (parseError instanceof TruncatedResponseError) {
+        throw parseError;  // Re-throw TruncatedResponseError
+      }
+      // Log but don't throw for other parse errors - they'll be handled downstream
+      console.warn(`[${generationId}] Could not parse content for turn-level validation: ${parseError instanceof Error ? parseError.message : 'Unknown error'}`);
     }
 
     console.log(`[${generationId}] ✓ Response validation passed`);
