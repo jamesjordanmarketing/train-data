@@ -241,16 +241,17 @@ export class ConversationEnrichmentService {
     if (conversation.template_id) {
       const { data } = await this.supabase
         .from('prompt_templates')
-        .select('template_name, category, suitable_topics, suitable_personas')
+        .select('template_name, category, suitable_personas')
         .eq('id', conversation.template_id)
         .single();
       
       // Map template fields to expected structure
+      // NOTE: learning_objectives is NOT populated from template - it's derived from training_topic instead
       template = data ? {
         name: data.template_name,
         code: data.category,
         description: null,
-        learning_objectives: Array.isArray(data.suitable_topics) ? data.suitable_topics : null,
+        learning_objectives: null, // Derived from training_topic in buildTrainingMetadata()
         skills: Array.isArray(data.suitable_personas) ? data.suitable_personas : null
       } : null;
     }
@@ -357,6 +358,13 @@ export class ConversationEnrichmentService {
 
   /**
    * Build a single training_pair from a minimal turn
+   * 
+   * @param turn - Current turn being processed
+   * @param previousTurns - All turns before current
+   * @param conversationMetadata - Metadata from Claude's response
+   * @param inputParameters - Scaffolding parameters (persona_key, training_topic_key, etc.)
+   * @param dbMetadata - Database metadata (persona, training_topic, template, etc.)
+   * @param turnIndex - Zero-based index of current turn
    */
   private buildTrainingPair(
     turn: MinimalTurn,
@@ -407,6 +415,7 @@ export class ConversationEnrichmentService {
     // Build training_metadata
     const training_metadata = this.buildTrainingMetadata(
       turn,
+      inputParameters,
       dbMetadata,
       turnIndex
     );
@@ -596,9 +605,15 @@ export class ConversationEnrichmentService {
 
   /**
    * Build training_metadata from database and calculations
+   * 
+   * @param turn - Current turn being processed
+   * @param inputParameters - Scaffolding parameters (for training_topic_key)
+   * @param dbMetadata - Database metadata (for training_topic.name as fallback)
+   * @param turnIndex - Zero-based index of current turn
    */
   private buildTrainingMetadata(
     turn: MinimalTurn,
+    inputParameters: MinimalConversation['input_parameters'],
     dbMetadata: DatabaseEnrichmentMetadata,
     turnIndex: number
   ): TrainingPair['training_metadata'] {
@@ -607,8 +622,10 @@ export class ConversationEnrichmentService {
     const complexity = dbMetadata.training_topic?.complexity_level || 'intermediate';
     const difficulty_level = `${complexity}_conversation_turn_${turn.turn_number}`;
 
-    // Get learning objective from template
-    const key_learning_objective = dbMetadata.template?.learning_objectives?.[0] || 
+    // Get learning objective from training topic (FIX: was incorrectly using template.suitable_topics)
+    // Priority: training_topic_key from input → training_topic.name from DB → default
+    const key_learning_objective = inputParameters?.training_topic_key || 
+      dbMetadata.training_topic?.name || 
       'Provide emotionally intelligent financial guidance';
 
     // Get skills from template
