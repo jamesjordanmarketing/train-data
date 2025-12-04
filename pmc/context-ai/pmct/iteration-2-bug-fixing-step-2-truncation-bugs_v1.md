@@ -12,7 +12,7 @@ Investigation reveals **4 critical bugs** in the truncation detection and failed
 
 1. **TRUNCATION DETECTION ONLY CHECKS THE ENTIRE API RESPONSE, NOT INDIVIDUAL TURNS** - The `detectTruncatedContent()` function runs against the entire raw JSON response, NOT against individual assistant turn content. This means truncated content INSIDE turns passes validation.
 
-2. **VALIDATION ONLY RUNS ON RAW JSON STRUCTURE** - The `validateAPIResponse()` method in `conversation-generation-service.ts` checks if the raw JSON ends with proper punctuation (`}`, `]`, etc.), which will ALWAYS pass for structured outputs because Claude returns valid JSON.
+2. **VALIDATION ONLY RUNS ON RAW JSON STRUCTURE** - The `validateAPIResponse()` methodL in `conversation-generation-service.ts` checks if the raw JSON ends with proper punctuation (`}`, `]`, etc.), which will ALWAYS pass for structured outputs because Claude returns valid JSON.
 
 3. **CONVERSATION 1e1e3991 SHOWS STOP_REASON: end_turn** - The log shows this conversation was validated successfully with `stop_reason: end_turn` and 1564 output tokens. The truncation is happening INSIDE the content strings, not in the API response structure.
 
