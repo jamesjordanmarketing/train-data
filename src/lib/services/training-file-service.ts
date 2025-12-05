@@ -397,19 +397,27 @@ export class TrainingFileService {
 
     // DEBUG: Log what IDs we received
     console.log(`[TrainingFileService] 🔍 Resolving ${mixedIds.length} IDs:`, JSON.stringify(mixedIds));
+    console.log(`[TrainingFileService] Sample ID type:`, typeof mixedIds[0], `Value: "${mixedIds[0]}"`);
 
     // Try conversation_id first (correct field)
+    console.log(`[TrainingFileService] 📡 Executing Supabase query: .in('conversation_id', [...])`);
     const { data: byConvId, error: convIdError } = await this.supabase
       .from('conversations')
       .select('conversation_id')
       .in('conversation_id', mixedIds);
 
     if (convIdError) {
-      console.error('[TrainingFileService] Error querying by conversation_id:', convIdError);
+      console.error('[TrainingFileService] ❌ Error querying by conversation_id:', convIdError);
+      console.error('[TrainingFileService] Error details:', JSON.stringify(convIdError, null, 2));
       throw new Error(`Database error: ${convIdError.message}`);
     }
 
-    console.log(`[TrainingFileService] Found ${byConvId?.length || 0} by conversation_id`);
+    console.log(`[TrainingFileService] ✅ Query successful. Found ${byConvId?.length || 0} by conversation_id`);
+    if (byConvId && byConvId.length > 0) {
+      console.log(`[TrainingFileService] Sample result:`, JSON.stringify(byConvId[0]));
+    } else {
+      console.log(`[TrainingFileService] ⚠️ No results returned from conversation_id query!`);
+    }
 
     const foundConvIds = new Set(byConvId?.map(r => r.conversation_id) || []);
 

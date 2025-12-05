@@ -60,7 +60,18 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
+    
+    // 🔍 DEBUG: Log raw request body
+    console.log('[CREATE-TRAINING-FILE API] 📥 Received request body:', {
+      name: body.name,
+      description: body.description,
+      conversation_ids_count: body.conversation_ids?.length,
+      conversation_ids: body.conversation_ids
+    });
+    
     const validated = CreateTrainingFileSchema.parse(body);
+    
+    console.log('[CREATE-TRAINING-FILE API] ✅ Validated:', validated.conversation_ids.length, 'conversation IDs');
 
     // Use ADMIN client for database operations to bypass RLS
     // (conversations may be created by system user, not the current user)
@@ -73,9 +84,11 @@ export async function POST(request: NextRequest) {
       created_by: user.id,
     });
 
+    console.log('[CREATE-TRAINING-FILE API] ✅ Successfully created training file:', trainingFile.id);
+
     return NextResponse.json({ trainingFile }, { status: 201 });
   } catch (error) {
-    console.error('Error creating training file:', error);
+    console.error('[CREATE-TRAINING-FILE API] ❌ Error creating training file:', error);
 
     if (error instanceof ZodError) {
       return NextResponse.json(
