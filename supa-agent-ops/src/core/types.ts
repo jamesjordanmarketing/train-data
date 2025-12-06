@@ -398,6 +398,8 @@ export interface QueryFilter {
   column: string;
   operator: QueryOperator;
   value: any;
+  // Backward compatibility alias
+  field?: string;  // Alias for 'column'
 }
 
 /**
@@ -422,13 +424,15 @@ export interface AggregateSpec {
  */
 export interface QueryParams {
   table: string;
-  select?: string[];
+  select?: string | string[];  // Allow both string ('*') and array (['col1', 'col2'])
   where?: QueryFilter[];
   orderBy?: OrderSpec[];
   limit?: number;
   offset?: number;
   count?: boolean;
   aggregate?: AggregateSpec[];
+  // Backward compatibility aliases
+  filters?: QueryFilter[];  // Alias for 'where'
 }
 
 /**

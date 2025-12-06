@@ -20,7 +20,14 @@ import { generateRecoverySteps } from '../errors/handlers';
  * Applies a single filter to a Supabase query builder
  */
 function applyFilter(query: any, filter: QueryFilter): any {
-  const { column, operator, value } = filter;
+  // Support backward compatibility: use 'field' alias if 'column' is not provided
+  const column = filter.column || filter.field;
+  const { operator, value } = filter;
+  
+  if (!column) {
+    logger.warn('Filter missing column name, skipping');
+    return query;
+  }
   
   switch (operator) {
     case 'eq':
@@ -94,6 +101,7 @@ export async function agentQuery(params: QueryParams): Promise<QueryResult> {
       table,
       select = ['*'],
       where = [],
+      filters,  // Backward compatibility alias for 'where'
       orderBy = [],
       limit,
       offset,
@@ -101,17 +109,30 @@ export async function agentQuery(params: QueryParams): Promise<QueryResult> {
       aggregate = []
     } = params;
 
+    // Use filters as fallback if where is empty (backward compatibility)
+    const actualWhere = where.length > 0 ? where : (filters || []);
+
     logger.info(`Executing query on table: ${table}`);
+
+    // Normalize select parameter - handle both string and array
+    let selectStr: string;
+    if (Array.isArray(select)) {
+      selectStr = select.join(',');
+    } else if (typeof select === 'string') {
+      selectStr = select;
+    } else {
+      selectStr = '*';
+    }
 
     // Build base query
     let query = supabase.from(table).select(
-      select.join(','),
+      selectStr,
       { count: count ? 'exact' : undefined }
     );
 
     // Apply filters
-    if (where.length > 0) {
-      query = applyFilters(query, where);
+    if (actualWhere.length > 0) {
+      query = applyFilters(query, actualWhere);
     }
 
     // Apply ordering
@@ -210,9 +231,12 @@ export async function agentQuery(params: QueryParams): Promise<QueryResult> {
     const executionTimeMs = Date.now() - startTime;
     logger.error(`Query operation failed: ${error.message}`);
 
+    // Use filters as fallback if where is empty (backward compatibility)
+    const actualWhere = params.where && params.where.length > 0 ? params.where : (params.filters || []);
+
     // Generate recovery steps
     const recoverySteps = generateRecoverySteps([{
-      record: { table: params.table, filters: params.where },
+      record: { table: params.table, filters: actualWhere },
       error: {
         code: error.code || 'QUERY_ERROR',
         message: error.message

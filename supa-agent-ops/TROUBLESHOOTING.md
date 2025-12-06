@@ -1,6 +1,51 @@
 # Supabase Agent Ops Library (SAOL) Troubleshooting Guide
 
+**Version:** 2.1
+**Last Updated:** December 6, 2025
+
 This guide addresses common issues agents and developers may encounter when using SAOL.
+
+---
+
+## 🆕 Recently Fixed Issues (v2.1)
+
+### Issue: `select.join is not a function`
+**Status:** ✅ FIXED in v2.1
+
+**Previous Behavior:**
+```javascript
+// This would cause an error
+const result = await saol.agentQuery({
+  table: 'conversations',
+  select: '*'  // ← Error: string not supported
+});
+```
+
+**Fix Applied:**
+SAOL now accepts `select` parameter in multiple formats:
+- String: `select: '*'` or `select: 'col1,col2,col3'`
+- Array: `select: ['col1', 'col2', 'col3']`
+
+**Action Required:** Rebuild SAOL after updating:
+```bash
+cd supa-agent-ops
+npm run build
+```
+
+### Issue: `filters` vs `where` Parameter Confusion
+**Status:** ✅ FIXED in v2.1
+
+**Previous Behavior:**
+Using `filters` instead of `where` would cause errors.
+
+**Fix Applied:**
+SAOL now supports backward compatibility:
+- Recommended: `where: [{ column: 'status', operator: 'eq', value: 'active' }]`
+- Also works: `filters: [{ field: 'status', operator: 'eq', value: 'active' }]`
+
+Both `column`/`field` parameter names are now accepted in filters.
+
+---
 
 ## 1. Environment Variable Errors
 
